@@ -1,3 +1,6 @@
+import {useTable, useFilters, useSortBy} from "react-table";
+import React from "react";
+
 export function resolveGrade(id) {
     return window.grades[id]
 }
@@ -16,6 +19,10 @@ export function resolveTag(id) {
 
 export function resolveSetter(id) {
     return window.setters[id]
+}
+
+export function resolveBoulders() {
+    return Object.values(window.boulders);
 }
 
 export function getBoulders() {
@@ -57,4 +64,82 @@ export function getBoulders() {
     }
 
     return boulders
+}
+
+export function EditableCell({cell: {value: initialValue}, row: {index}, column: {id}, updateMyData}) {
+
+    const [value, setValue] = React.useState(initialValue);
+
+    const onChange = e => {
+        setValue(e.target.value)
+    };
+
+    // We'll only update the external data when the input is blurred
+    const onBlur = () => {
+        updateMyData(index, id, value)
+    };
+
+    // If the initialValue is changed externall, sync it up with our state
+    React.useEffect(() => {
+        setValue(initialValue)
+    }, [initialValue]);
+
+    return <input value={value} onChange={onChange} onBlur={onBlur} />
+}
+
+export function Table({columns, data}) {
+
+    const {
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+    } = useTable(
+        {
+            columns,
+            data,
+        },
+        useFilters,
+        useSortBy
+    );
+
+    return (
+        <div>
+            <div className="table">
+                {headerGroups.map(headerGroup => (
+                    <ul {...headerGroup.getHeaderGroupProps()} className="table-row">
+                        {headerGroup.headers.map(column => (
+                            <li {...column.getHeaderProps(column.getSortByToggleProps())} className="table-column">
+
+                                <div>
+                                    {column.canFilter ? column.render('Filter') : null}
+                                    <span>{column.isSorted ? column.isSortedDesc ? ' 🔽' : ' 🔼' : ''}</span>
+                                </div>
+
+                                {column.render('Header')}
+                            </li>
+                        ))}
+                    </ul>
+                ))}
+            </div>
+
+            <div {...getTableBodyProps()} className="table">
+                {rows.map(
+                    (row) => {
+                        prepareRow(row);
+
+                        return (
+                            <ul {...row.getRowProps()} className="table-row">
+                                {row.cells.map(cell => {
+                                    return <li {...cell.getCellProps()} className="table-column">
+                                        {cell.render('Cell')}
+                                    </li>
+                                })}
+                            </ul>
+                        )
+                    }
+                )}
+            </div>
+        </div>
+    )
 }

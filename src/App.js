@@ -1,6 +1,13 @@
 import React from 'react';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+} from "react-router-dom";
 import './App.css';
-import Boulder from "./Boulder";
+import CurrentRanking from "./views/CurrentRanking";
+import Boulder from "./views/Boulder";
 
 const gradeStorageId = 'grades';
 const colorStorageId = 'colors';
@@ -128,7 +135,7 @@ class App extends React.Component {
                     boulders[boulder.id] = boulder;
                 }
 
-                localStorage.setItem(boulderStorageId, JSON.    stringify(boulders));
+                localStorage.setItem(boulderStorageId, JSON.stringify(boulders));
                 window[boulderStorageId] = boulders;
             })
         ]).then(() => {
@@ -150,11 +157,32 @@ class App extends React.Component {
         }
 
         return (
-            <div className="App">
-                <header className="App-header">
-                    <Boulder/>
-                </header>
-            </div>
+            <Router>
+                <div className="App">
+                    <header className="App-header">
+                        <ul>
+                            <li>
+                                <Link to="/">home</Link>
+                            </li>
+                            <li>
+                                <Link to="/boulder">boulder</Link>
+                            </li>
+                            <li>
+                                <Link to="/ranking/current">current ranking</Link>
+                            </li>
+                        </ul>
+
+                        <Switch>
+                            <Route path="/boulder">
+                                <Boulder/>
+                            </Route>
+                            <Route path="/ranking/current">
+                                <CurrentRanking/>
+                            </Route>
+                        </Switch>
+                    </header>
+                </div>
+            </Router>
         );
     }
 }

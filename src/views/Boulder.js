@@ -1,51 +1,35 @@
 import React from 'react';
-import {useTable} from 'react-table'
-import {getBoulders} from "./Helpers";
+import {getBoulders, Table, EditableCell} from "../Helpers";
 
-function Table({columns, data}) {
+function SelectFilter({column: {filterValue, setFilter, preFilteredRows, id},}) {
+    // Calculate the options for filtering
+    // using the preFilteredRows
+    const options = React.useMemo(() => {
+        const options = new Set();
 
-    const {
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-    } = useTable({
-        columns,
-        data,
-    });
+        preFilteredRows.forEach(row => {
+            options.add(row.values[id])
+        });
 
+        return [...options.values()].sort()
+
+    }, [id, preFilteredRows]);
+
+    // Render a multi-select box
     return (
-        <div>
-            <div className="table">
-                {headerGroups.map(headerGroup => (
-                    <ul {...headerGroup.getHeaderGroupProps()} className="table-row">
-                        {headerGroup.headers.map(column => (
-                            <li {...column.getHeaderProps()} className="table-column">
-                                {column.render('Header')}
-                            </li>
-                        ))}
-                    </ul>
-                ))}
-            </div>
-
-            <div {...getTableBodyProps()} className="table">
-                {rows.map(
-                    (row) => {
-                        prepareRow(row);
-
-                        return (
-                            <ul {...row.getRowProps()} className="table-row">
-                                {row.cells.map(cell => {
-                                    return <li {...cell.getCellProps()} className="table-column">
-                                        {cell.render('Cell')}
-                                    </li>
-                                })}
-                            </ul>
-                        )
-                    }
-                )}
-            </div>
-        </div>
+        <select
+            value={filterValue}
+            onChange={e => {
+                setFilter(e.target.value || undefined)
+            }}
+        >
+            <option value="">All</option>
+            {options.map((option, i) => (
+                <option key={i} value={option}>
+                    {option}
+                </option>
+            ))}
+        </select>
     )
 }
 
@@ -53,18 +37,24 @@ const columns = [
     {
         Header: 'Name',
         accessor: 'name',
+        Filter: null
     },
     {
         Header: 'Color',
         accessor: 'color',
+        Filter: SelectFilter,
+        filter: 'equals',
     },
     {
         Header: 'Grade',
-        accessor: 'grade'
+        accessor: 'grade',
+        Filter: SelectFilter,
+        Cell: EditableCell
     },
     {
         Header: 'Score',
         accessor: 'score',
+        Filter: null,
         Cell: ({row}) => {
 
             if (row.original.score) {
@@ -75,15 +65,18 @@ const columns = [
     },
     {
         Header: 'Start',
-        accessor: 'startWall.name'
+        accessor: 'startWall.name',
+        Filter: SelectFilter
     },
     {
         Header: 'End',
-        accessor: 'endWall.name'
+        accessor: 'endWall.name',
+        Filter: SelectFilter
     },
     {
         Header: 'Setters',
         accessor: 'setters',
+        Filter: null,
         Cell: ({row}) => {
             return row.original.setters.map(setter => {
                 return setter.username + ' ';
@@ -93,6 +86,7 @@ const columns = [
     {
         Header: 'Tags',
         accessor: 'tags',
+        Filter: null,
         Cell: ({row}) => {
             return row.original.tags.map(tag => {
                 return tag.emoji + ' ';
@@ -102,6 +96,7 @@ const columns = [
 ];
 
 class Boulder extends React.Component {
+
 
     constructor(props) {
         super(props);
