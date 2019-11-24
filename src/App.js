@@ -5,9 +5,12 @@ import {
     Route,
     Link
 } from "react-router-dom";
-import './App.css';
+
 import CurrentRanking from "./views/CurrentRanking";
 import Boulder from "./views/Boulder";
+import Dashboard from "./views/admin/Dashboard";
+import Add from "./views/admin/boulder/Add";
+import StyleGuide from "./views/StyleGuide";
 
 const gradeStorageId = 'grades';
 const colorStorageId = 'colors';
@@ -25,6 +28,10 @@ class App extends React.Component {
             loading: true,
             resource: null
         };
+    }
+
+    static isAdmin() {
+        return window.location.pathname.includes('/admin');
     }
 
     static storageLoaded() {
@@ -52,7 +59,7 @@ class App extends React.Component {
 
     componentDidMount() {
 
-        if (App.storageLoaded()) {
+        if (App.storageLoaded() && !App.isAdmin()) {
             window.grades = JSON.parse(localStorage.getItem(gradeStorageId));
             window.colors = JSON.parse(localStorage.getItem(colorStorageId));
             window.walls = JSON.parse(localStorage.getItem(wallStorageId));
@@ -158,29 +165,43 @@ class App extends React.Component {
 
         return (
             <Router>
-                <div className="App">
-                    <header className="App-header">
+                <div className="app">
+                    <header className="header">
                         <ul>
                             <li>
-                                <Link to="/">home</Link>
-                            </li>
-                            <li>
-                                <Link to="/boulder">boulder</Link>
-                            </li>
-                            <li>
-                                <Link to="/ranking/current">current ranking</Link>
+                                <Link to="/admin">Dashboard</Link>
                             </li>
                         </ul>
+                    </header>
 
+                    <div className="content">
                         <Switch>
+                            <Route exact path="/admin">
+                                <Dashboard/>
+                            </Route>
+
                             <Route path="/boulder">
                                 <Boulder/>
                             </Route>
                             <Route path="/ranking/current">
                                 <CurrentRanking/>
                             </Route>
+
+                            <Route exact path="/admin/boulder">
+                            </Route>
+
+                            <Route path="/admin/boulder/add">
+                                <Add/>
+                            </Route>
+
+                            <Route path="/styleguide">
+                                <StyleGuide/>
+                            </Route>
                         </Switch>
-                    </header>
+                    </div>
+
+                    <footer>
+                    </footer>
                 </div>
             </Router>
         );

@@ -1,37 +1,5 @@
 import React from 'react';
-import {getBoulders, Table, EditableCell} from "../Helpers";
-
-function SelectFilter({column: {filterValue, setFilter, preFilteredRows, id},}) {
-    // Calculate the options for filtering
-    // using the preFilteredRows
-    const options = React.useMemo(() => {
-        const options = new Set();
-
-        preFilteredRows.forEach(row => {
-            options.add(row.values[id])
-        });
-
-        return [...options.values()].sort()
-
-    }, [id, preFilteredRows]);
-
-    // Render a multi-select box
-    return (
-        <select
-            value={filterValue}
-            onChange={e => {
-                setFilter(e.target.value || undefined)
-            }}
-        >
-            <option value="">All</option>
-            {options.map((option, i) => (
-                <option key={i} value={option}>
-                    {option}
-                </option>
-            ))}
-        </select>
-    )
-}
+import {getBoulders, Table, SelectFilter} from "../Helpers";
 
 const columns = [
     {
@@ -49,7 +17,7 @@ const columns = [
         Header: 'Grade',
         accessor: 'grade',
         Filter: SelectFilter,
-        Cell: EditableCell
+        Cell: null
     },
     {
         Header: 'Score',
@@ -110,7 +78,7 @@ class Boulder extends React.Component {
     componentDidMount() {
 
         Promise.all([
-            fetch('/ascent/active-boulders').then((response) => response.json()).then(response => {
+            fetch('/ascent/active-boulder').then((response) => response.json()).then(response => {
                 for (const score of response) {
                     const result = this.state.data.find((boulder) => {
                         return boulder.id === score.boulderId

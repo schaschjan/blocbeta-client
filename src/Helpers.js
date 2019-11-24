@@ -1,4 +1,4 @@
-import {useTable, useFilters, useSortBy} from "react-table";
+import {useTable, useFilters, useSortBy, useRowSelect} from "react-table";
 import React from "react";
 
 export function resolveGrade(id) {
@@ -74,6 +74,8 @@ export function EditableCell({cell: {value: initialValue}, row: {index}, column:
         setValue(e.target.value)
     };
 
+    console.log(initialValue);
+
     // We'll only update the external data when the input is blurred
     const onBlur = () => {
         updateMyData(index, id, value)
@@ -90,21 +92,24 @@ export function EditableCell({cell: {value: initialValue}, row: {index}, column:
 export function Table({columns, data}) {
 
     const {
+        getTableProps,
         getTableBodyProps,
         headerGroups,
         rows,
         prepareRow,
+        state: { selectedRowPaths },
     } = useTable(
         {
             columns,
             data,
         },
         useFilters,
-        useSortBy
+        useSortBy,
+        useRowSelect
     );
 
     return (
-        <div>
+        <div {...getTableProps()}>
             <div className="table">
                 {headerGroups.map(headerGroup => (
                     <ul {...headerGroup.getHeaderGroupProps()} className="table-row">
@@ -141,5 +146,37 @@ export function Table({columns, data}) {
                 )}
             </div>
         </div>
+    )
+}
+
+export function SelectFilter({column: {filterValue, setFilter, preFilteredRows, id},}) {
+    // Calculate the options for filtering
+    // using the preFilteredRows
+    const options = React.useMemo(() => {
+        const options = new Set();
+
+        preFilteredRows.forEach(row => {
+            options.add(row.values[id])
+        });
+
+        return [...options.values()].sort()
+
+    }, [id, preFilteredRows]);
+
+    // Render a multi-select box
+    return (
+        <select
+            value={filterValue}
+            onChange={e => {
+                setFilter(e.target.value || undefined)
+            }}
+        >
+            <option value="">All</option>
+            {options.map((option, i) => (
+                <option key={i} value={option}>
+                    {option}
+                </option>
+            ))}
+        </select>
     )
 }
