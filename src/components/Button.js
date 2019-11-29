@@ -12,9 +12,9 @@ export default function Button(props) {
         classNames += ` button--${props.type}`;
     }
 
-    return (
-        <div className={classNames}>
-            {props.children}
-        </div>
-    )
+    if (props.disabled) {
+        classNames += ' button--disabled';
+    }
+
+    return <div className={classNames}>{props.children}</div>
 }

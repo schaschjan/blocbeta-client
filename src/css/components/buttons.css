@@ -6,6 +6,7 @@
     text-align: center;
     line-height: 3.125rem;
     text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .button:hover {
@@ -21,4 +22,19 @@
     color: var(--color-dark);
     box-sizing: border-box;
     border: 1px solid var(--color-dark);
+}
+
+.button.button--disabled {
+    cursor: not-allowed;
+    background: var(--color-grey);
+}
+
+.button.button--disabled:active {
+    box-shadow: none;
+}
+
+.button--secondary.button--disabled {
+    background: var(--color-light);
+    color: var(--color-grey);
+    border: 1px solid var(--color-grey);
 }

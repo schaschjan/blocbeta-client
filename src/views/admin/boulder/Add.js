@@ -1,5 +1,6 @@
 import React from 'react';
 import useForm from 'react-hook-form';
+import {Field} from "../../../components/Form";
 
 //
 // const GradeSelect = (props) => {
@@ -124,28 +125,23 @@ const Form = (props) => {
     const onSubmit = props.onSubmit;
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <input
-                name="email"
-                ref={register({
-                    required: 'Required',
-                    pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                        message: "invalid email address"
-                    }
-                })}
-            />
-            {errors.email && errors.email.message}
+        <form>
+            <div className="m-1">
+                <Field type="text"
+                       name="name"
+                       ref={register({
+                           required: 'Required',
+                           pattern: {
+                               value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                               message: "invalid email address"
+                           }
+                       })}
+                />
+            </div>
 
-            <input
-                name="username"
-                ref={register({
-                    validate: value => value !== "admin" || "Nice try!"
-                })}
-            />
-            {errors.username && errors.username.message}
-
-            <button type="submit">Submit</button>
+            <div className="m-1">
+                <div className="button" onClick={handleSubmit(onSubmit)}>Submit</div>
+            </div>
         </form>
     );
 };

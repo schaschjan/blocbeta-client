@@ -1,16 +1,20 @@
 import React from 'react';
-import useForm from 'react-hook-form';
 
 export function Field(props) {
 
     return (
         <>
             <input
+                id={props.name}
+                name={props.name}
+                placeholder={props.name}
+                className="form-field"
                 type={props.type}
-                name="email"
                 ref={props.validation}
             />
-            {props.error && props.error.message}
+            {props.error &&
+            <span className="form-error">{props.error}</span>
+            }
         </>
     )
 }

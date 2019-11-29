@@ -1,12 +1,79 @@
 input {
     width: 100%;
     box-sizing: border-box;
-    height: 20px;
     outline: none;
     border: 0;
     border-bottom: 1px solid var(--color-dark);
+    font-size: 1rem;
+    padding: 0.5rem 0;
 }
 
 input:focus {
-    outline: none;
+    border-bottom-width: 2px;
+}
+
+.form-error {
+    font-size: 0.75rem;
+    color: var(--color-error);
+    margin: 0.125rem 0;
+    display: block;
+}
+
+.form-field-help {
+    font-size: 0.75rem;
+    color: var(--color-grey);
+    margin: 0.125rem 0;
+    display: block;
+}
+
+.select {
+    color: var(--color-dark);
+}
+
+.select .select__control {
+    border-radius: 0;
+    border: 0;
+    outline: 0;
+    border-bottom: 1px solid var(--color-dark);
+}
+
+.select .select__control--is-focused {
+    box-shadow: none;
+}
+
+.select .select__control:hover {
+    border-bottom-color: var(--color-dark);
+}
+
+.select .select__value-container {
+    padding: 0;
+}
+
+.select .select__placeholder {
+    color: var(--color-dark);
+    margin: 0 .125rem;
+}
+
+.select .select__menu {
+    border-radius: 0;
+    box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.30);
+    border: 1px solid var(--color-dark);
+    margin: 0;
+}
+
+.select .select__menu-list {
+    padding: 0;
+}
+
+.select .select__option {
+    padding: 1rem;
+    font-size: 1rem;
+}
+
+.select__indicators {
+    padding: .5rem 0 0 0;
+}
+
+.select__indicator-separator {
+    display: none;
 }

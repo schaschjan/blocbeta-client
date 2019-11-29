@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from "../components/Button";
 import {Field} from "../components/Form";
+import Select from "../components/Select";
 
 export default function StyleGuide() {
 
@@ -32,6 +33,31 @@ export default function StyleGuide() {
 
             <div className="m-1">
                 <Field type="text"/>
+                <span className="form-field-help">Help me</span>
+            </div>
+
+            <div className="m-1">
+                <Field type="text" error="Field is required"/>
+                <span className="form-field-help">Help me</span>
+            </div>
+
+            <div className="m-1">
+                <Select
+                    options={[
+                        {value: 'chocolate', label: 'Chocolate'},
+                        {value: 'strawberry', label: 'Strawberry'},
+                        {value: 'vanilla', label: 'Vanilla'},
+                    ]}
+                />
+            </div>
+
+            <div className="m-1">
+                <p>
+                    Hi John, your current scores are Lorem ipsum dolor sit amet, <a href="/styleguide">consectetur</a> adipiscing elit, sed
+                    do
+                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                    exercitation
+                </p>
             </div>
         </div>
     )

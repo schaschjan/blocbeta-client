@@ -2,5 +2,7 @@
 @import "css/variables.css";
 @import "css/utilities/margins.css";
 
+@import "css/components/fonts.css";
 @import "css/components/buttons.css";
 @import "css/components/forms.css";
+@import "css/components/icons.css";
