@@ -1,3 +1,11 @@
+.form-row {
+    margin: 1.25rem 0;
+}
+
+::placeholder{
+    color: var(--color-midgrey);
+}
+
 input {
     width: 100%;
     box-sizing: border-box;
@@ -10,6 +18,11 @@ input {
 
 input:focus {
     border-bottom-width: 2px;
+}
+
+button {
+    border: 0;
+    outline: none;
 }
 
 .form-error {
@@ -50,7 +63,7 @@ input:focus {
 }
 
 .select .select__placeholder {
-    color: var(--color-dark);
+    color: var(--color-midgrey);
     margin: 0 .125rem;
 }
 

@@ -1,8 +1,11 @@
 @import "css/reset.css";
 @import "css/variables.css";
 @import "css/utilities/margins.css";
-
+@import "css/components/common.css";
 @import "css/components/fonts.css";
 @import "css/components/buttons.css";
 @import "css/components/forms.css";
 @import "css/components/icons.css";
+@import "css/components/table.css";
+@import "css/components/header.css";
+@import "css/components/holdStyle.css";

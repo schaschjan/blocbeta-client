@@ -1,0 +1,20 @@
+.header {
+    margin: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.header ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.header ul li {
+    margin: 0 .75rem 0 0;
+}
+
+.header ul li:last-of-type {
+    margin: 0;
+}

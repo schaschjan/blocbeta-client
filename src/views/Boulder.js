@@ -1,5 +1,6 @@
 import React from 'react';
 import {getBoulders, Table, SelectFilter} from "../Helpers";
+import moment from "moment";
 
 const columns = [
     {
@@ -17,7 +18,6 @@ const columns = [
         Header: 'Grade',
         accessor: 'grade',
         Filter: SelectFilter,
-        Cell: null
     },
     {
         Header: 'Score',
@@ -60,11 +60,23 @@ const columns = [
                 return tag.emoji + ' ';
             });
         }
+    },
+    {
+        Header: 'Set',
+        accessor: 'createdAt',
+        Filter: null,
+        Cell: row => (
+            <span>{moment(row.value).fromNow()}</span>
+        )
+    },
+    {
+        Header: 'Ascents',
+        accessor: 'ascents',
+        Filter: null,
     }
 ];
 
 class Boulder extends React.Component {
-
 
     constructor(props) {
         super(props);
@@ -76,9 +88,8 @@ class Boulder extends React.Component {
     }
 
     componentDidMount() {
-
         Promise.all([
-            fetch('/ascent/active-boulder').then((response) => response.json()).then(response => {
+            fetch('/ascent/active-boulders').then((response) => response.json()).then(response => {
                 for (const score of response) {
                     const result = this.state.data.find((boulder) => {
                         return boulder.id === score.boulderId
@@ -95,7 +106,6 @@ class Boulder extends React.Component {
         ]).then(() => {
             this.setState({loading: false})
         });
-
     }
 
     render() {

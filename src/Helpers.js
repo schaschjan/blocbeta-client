@@ -25,12 +25,29 @@ export function resolveBoulders() {
     return Object.values(window.boulders);
 }
 
+export function getOptions(resource) {
+    return Object.values(resource).map(element => {
+        return {
+            value: element.id,
+            label: element.name
+        }
+    });
+}
+
+export function getGradeOptions() {
+    return Object.values(window.grades).map(grade => {
+        return {
+            value: grade.id,
+            label: grade.name
+        }
+    });
+}
+
 export function getBoulders() {
 
     const boulders = Object.values(window.boulders);
 
     for (let boulder of boulders) {
-        const grade = resolveGrade(boulder.grade.id);
         const color = resolveColor(boulder.color.id);
         const startWall = resolveWall(boulder.startWall.id);
 
@@ -52,7 +69,6 @@ export function getBoulders() {
             setters.push(resolveSetter(setter.id))
         }
 
-        boulder.grade = grade.name;
         boulder.color = color.name;
         boulder.startWall = startWall;
         boulder.tags = tags;
@@ -86,7 +102,7 @@ export function EditableCell({cell: {value: initialValue}, row: {index}, column:
         setValue(initialValue)
     }, [initialValue]);
 
-    return <input value={value} onChange={onChange} onBlur={onBlur} />
+    return <input value={value} onChange={onChange} onBlur={onBlur}/>
 }
 
 export function Table({columns, data}) {
@@ -97,7 +113,6 @@ export function Table({columns, data}) {
         headerGroups,
         rows,
         prepareRow,
-        state: { selectedRowPaths },
     } = useTable(
         {
             columns,
@@ -108,43 +123,47 @@ export function Table({columns, data}) {
         useRowSelect
     );
 
+    const columnCount = columns.length;
+
     return (
         <div {...getTableProps()}>
-            <div className="table">
-                {headerGroups.map(headerGroup => (
-                    <ul {...headerGroup.getHeaderGroupProps()} className="table-row">
-                        {headerGroup.headers.map(column => (
-                            <li {...column.getHeaderProps(column.getSortByToggleProps())} className="table-column">
+            {headerGroups.map(headerGroup => (
+                <div {...headerGroup.getHeaderGroupProps()}
+                     className={"collection-filter collection-filter--" + columnCount}>
+                    {headerGroup.headers.map(column => (
+                        <div {...column.getHeaderProps(column.getSortByToggleProps())}
+                             className="collection-filter__item">
 
-                                <div>
-                                    {column.canFilter ? column.render('Filter') : null}
-                                    <span>{column.isSorted ? column.isSortedDesc ? ' 🔽' : ' 🔼' : ''}</span>
-                                </div>
+                            <div>
+                                {column.canFilter ? column.render('Filter') : null}
+                                <span>{column.isSorted ? column.isSortedDesc ? ' 🔽' : ' 🔼' : ''}</span>
+                            </div>
 
-                                {column.render('Header')}
-                            </li>
-                        ))}
-                    </ul>
-                ))}
-            </div>
+                            {column.render('Header')}
+                        </div>
+                    ))}
+                </div>
+            ))}
 
-            <div {...getTableBodyProps()} className="table">
+            <ol {...getTableBodyProps()} className={"row"}>
                 {rows.map(
                     (row) => {
                         prepareRow(row);
 
                         return (
-                            <ul {...row.getRowProps()} className="table-row">
+                            <li {...row.getRowProps()} className={"collection collection--" + columnCount}>
                                 {row.cells.map(cell => {
-                                    return <li {...cell.getCellProps()} className="table-column">
-                                        {cell.render('Cell')}
-                                    </li>
+                                    return (
+                                        <div {...cell.getCellProps()} className="collection__item">
+                                            {cell.render('Cell')}
+                                        </div>
+                                    )
                                 })}
-                            </ul>
+                            </li>
                         )
                     }
                 )}
-            </div>
+            </ol>
         </div>
     )
 }

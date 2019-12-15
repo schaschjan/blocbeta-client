@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function Field(props) {
+export function Input(props) {
 
     return (
         <>
@@ -10,7 +10,7 @@ export function Field(props) {
                 placeholder={props.name}
                 className="form-field"
                 type={props.type}
-                ref={props.validation}
+                ref={props.ref}
             />
             {props.error &&
             <span className="form-error">{props.error}</span>

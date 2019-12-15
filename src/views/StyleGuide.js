@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from "../components/Button";
-import {Field} from "../components/Form";
+import {Input} from "../components/Form";
 import Select from "../components/Select";
 
 export default function StyleGuide() {
@@ -32,17 +32,18 @@ export default function StyleGuide() {
             </div>
 
             <div className="m-1">
-                <Field type="text"/>
+                <Input type="text"/>
                 <span className="form-field-help">Help me</span>
             </div>
 
             <div className="m-1">
-                <Field type="text" error="Field is required"/>
+                <Input type="text" error="Field is required"/>
                 <span className="form-field-help">Help me</span>
             </div>
 
             <div className="m-1">
                 <Select
+                    defaultValue={{value: 'chocolate', label: 'Chocolate'}}
                     options={[
                         {value: 'chocolate', label: 'Chocolate'},
                         {value: 'strawberry', label: 'Strawberry'},

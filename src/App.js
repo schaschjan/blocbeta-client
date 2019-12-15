@@ -9,8 +9,12 @@ import {
 import CurrentRanking from "./views/CurrentRanking";
 import Boulder from "./views/Boulder";
 import Dashboard from "./views/admin/Dashboard";
-import Add from "./views/admin/boulder/Add";
 import StyleGuide from "./views/StyleGuide";
+import Header from "./components/Header";
+
+import AdminBoulderIndex from "./views/admin/boulder/Index.js";
+import AdminBoulderAdd from "./views/admin/boulder/Add";
+import AdminBoulderEdit from "./views/admin/boulder/Edit";
 
 const gradeStorageId = 'grades';
 const colorStorageId = 'colors';
@@ -133,7 +137,7 @@ class App extends React.Component {
                 localStorage.setItem(setterStorageId, JSON.stringify(setters));
                 window[setterStorageId] = setters;
             }),
-            fetch('/boulder/active').then((response) => response.json()).then(response => {
+            fetch('/boulder/filter/active').then((response) => response.json()).then(response => {
 
                 this.setState({resource: 'boulders'});
 
@@ -155,10 +159,8 @@ class App extends React.Component {
 
         if (loading) {
             return (
-                <div className="App">
-                    <header className="App-header">
-                        <em>loading {resource}</em>
-                    </header>
+                <div className="loader">
+                    <em>loading {resource}</em>
                 </div>
             )
         }
@@ -166,13 +168,7 @@ class App extends React.Component {
         return (
             <Router>
                 <div className="app">
-                    <header className="header">
-                        <ul>
-                            <li>
-                                <Link to="/admin">Dashboard</Link>
-                            </li>
-                        </ul>
-                    </header>
+                    <Header/>
 
                     <div className="content">
                         <Switch>
@@ -180,18 +176,24 @@ class App extends React.Component {
                                 <Dashboard/>
                             </Route>
 
-                            <Route path="/boulder">
-                                <Boulder/>
-                            </Route>
-                            <Route path="/ranking/current">
-                                <CurrentRanking/>
-                            </Route>
-
                             <Route exact path="/admin/boulder">
+                                <AdminBoulderIndex/>
                             </Route>
 
                             <Route path="/admin/boulder/add">
-                                <Add/>
+                                <AdminBoulderAdd/>
+                            </Route>
+
+                            <Route path="/admin/boulder/edit/:boulderId">
+                                <AdminBoulderEdit/>
+                            </Route>
+
+                            <Route path="/boulder">
+                                <Boulder/>
+                            </Route>
+
+                            <Route path="/ranking/current">
+                                <CurrentRanking/>
                             </Route>
 
                             <Route path="/styleguide">
