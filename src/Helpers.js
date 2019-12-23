@@ -25,6 +25,49 @@ export function resolveBoulders() {
     return Object.values(window.boulders);
 }
 
+export function getColorOption(id) {
+    const color = resolveColor(id);
+
+    return {
+        label: color.name,
+        value: color.id
+    };
+}
+
+export function getTagOption(id) {
+    const tag = resolveTag(id);
+
+    return {
+        label: `${tag.emoji} – ${tag.name}`,
+        value: tag.id
+    };
+}
+
+export function getWallOption(id) {
+    const wall = resolveWall(id);
+
+    return {
+        label: wall.name,
+        value: wall.id
+    };
+}
+
+export function getSetterOption(id) {
+    const setter = resolveSetter(id);
+
+    return {
+        label: setter.username,
+        value: setter.id
+    };
+}
+
+export function getStatusOption(status) {
+    return {
+        label: status,
+        value: status
+    }
+}
+
 export function getOptions(resource) {
     return Object.values(resource).map(element => {
         return {
@@ -43,43 +86,59 @@ export function getGradeOptions() {
     });
 }
 
-export function getBoulders() {
+export function getGradeOption(id) {
+    const grade = resolveGrade(id);
 
-    const boulders = Object.values(window.boulders);
-
-    for (let boulder of boulders) {
-        const color = resolveColor(boulder.color.id);
-        const startWall = resolveWall(boulder.startWall.id);
-
-        if (!boulder.endWall) {
-            boulder.endWall = null;
-        } else {
-            boulder.endWall = resolveWall(boulder.endWall.id);
-        }
-
-        const tags = [];
-
-        for (let tag of boulder.tags) {
-            tags.push(resolveTag(tag.id))
-        }
-
-        const setters = [];
-
-        for (let setter of boulder.setters) {
-            setters.push(resolveSetter(setter.id))
-        }
-
-        boulder.color = color.name;
-        boulder.startWall = startWall;
-        boulder.tags = tags;
-        boulder.setters = setters;
-
-        for (let tag of boulder.tags) {
-            resolveTag(tag.id);
-        }
+    return {
+        value: grade.id,
+        label: grade.name
     }
+}
 
-    return boulders
+export function getBoulder(id) {
+    return fetch(`/boulder/${id}`)
+        .then(response => response.json())
+}
+
+export function getBoulders(location) {
+
+    return fetch(`/${location}/boulder/filter/active`)
+        .then(response => response.json())
+        .then(boulders => {
+            for (let boulder of boulders) {
+                const color = resolveColor(boulder.color.id);
+                const startWall = resolveWall(boulder.startWall.id);
+
+                if (!boulder.endWall) {
+                    boulder.endWall = null;
+                } else {
+                    boulder.endWall = resolveWall(boulder.endWall.id);
+                }
+
+                const tags = [];
+
+                for (let tag of boulder.tags) {
+                    tags.push(resolveTag(tag.id))
+                }
+
+                const setters = [];
+
+                for (let setter of boulder.setters) {
+                    setters.push(resolveSetter(setter.id))
+                }
+
+                boulder.color = color.name;
+                boulder.startWall = startWall;
+                boulder.tags = tags;
+                boulder.setters = setters;
+
+                for (let tag of boulder.tags) {
+                    resolveTag(tag.id);
+                }
+            }
+
+            return boulders;
+        });
 }
 
 export function EditableCell({cell: {value: initialValue}, row: {index}, column: {id}, updateMyData}) {

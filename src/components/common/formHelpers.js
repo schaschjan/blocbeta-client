@@ -1,5 +1,5 @@
 import Icon from "../Icon";
-import ReactSelect from "react-select";
+import Select from 'react-select'
 import {getOptions} from "../../Helpers";
 import React from "react";
 
@@ -9,7 +9,7 @@ const DropdownIndicator = () => {
 
 export const GradeSelect = () => {
     return (
-        <ReactSelect
+        <Select
             className="select"
             classNamePrefix="select"
             components={{DropdownIndicator}}
@@ -20,7 +20,7 @@ export const GradeSelect = () => {
 
 export const ColorSelect = () => {
     return (
-        <ReactSelect
+        <Select
             className="select"
             classNamePrefix="select"
             components={{DropdownIndicator}}
@@ -31,7 +31,7 @@ export const ColorSelect = () => {
 
 export const WallSelect = (props) => {
     return (
-        <ReactSelect
+        <Select
             className="select"
             classNamePrefix="select"
             components={{DropdownIndicator}}
@@ -49,7 +49,8 @@ export const SetterSelect = () => {
     });
 
     return (
-        <ReactSelect
+        <Select
+            isMulti="true"
             className="select"
             classNamePrefix="select"
             components={{DropdownIndicator}}
@@ -58,16 +59,21 @@ export const SetterSelect = () => {
     )
 };
 
+export const getTagOption = (element) => {
+    return `${element.emoji} - ${element.name}`;
+};
+
 export const TagSelect = () => {
     const options = Object.values(window.tags).map(element => {
         return {
             value: element.id,
-            label: `${element.emoji} - ${element.name}`
+            label: getTagOption(element)
         }
     });
 
     return (
-        <ReactSelect
+        <Select
+            isMulti="true"
             className="select"
             classNamePrefix="select"
             components={{DropdownIndicator}}
@@ -89,13 +95,8 @@ export const StatusSelect = () => {
         }
     ];
 
-    const defaultOptions = {
-        label: 'active',
-        value: 'active'
-    };
-
     return (
-        <ReactSelect
+        <Select
             className="select"
             classNamePrefix="select"
             components={{DropdownIndicator}}

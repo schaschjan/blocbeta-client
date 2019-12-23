@@ -1,0 +1,11 @@
+.d-flex {
+    display: flex;
+}
+
+.f-column {
+    flex-direction: column;
+}
+
+.f-1 {
+    flex: 1;
+}

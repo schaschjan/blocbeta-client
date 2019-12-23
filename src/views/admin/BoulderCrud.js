@@ -1,5 +1,5 @@
 import React from 'react';
-import {Table, SelectFilter, getBoulders} from "../../Helpers";
+import {Table, SelectFilter} from "../../Helpers";
 
 const columns = [
     {
@@ -48,14 +48,6 @@ const columns = [
 ];
 
 export class Active extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            data: getBoulders()
-        };
-    }
 
     render() {
         const {data, loading} = this.state;

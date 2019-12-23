@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+
 import {
     BrowserRouter as Router,
     Switch,
@@ -15,199 +16,133 @@ import Header from "./components/Header";
 import AdminBoulderIndex from "./views/admin/boulder/Index.js";
 import AdminBoulderAdd from "./views/admin/boulder/Add";
 import AdminBoulderEdit from "./views/admin/boulder/Edit";
+import AdminSettingsIndex from "./views/admin/settings/Index.js";
+import AdminErrorIndex from "./views/admin/errors";
+import ApiClient from "./ApiClient";
 
-const gradeStorageId = 'grades';
-const colorStorageId = 'colors';
-const wallStorageId = 'walls';
-const tagStorageId = 'tags';
-const setterStorageId = 'setters';
-const boulderStorageId = 'boulders';
+export default function App() {
 
-class App extends React.Component {
+    const [loading, setLoading] = useState(true);
+    const [resource, setResource] = useState(null);
+    const location = {
+        name: 'Salon du Bloc',
+        slug: 'salon'
+    };
 
-    constructor(props) {
-        super(props);
+    window.location.slug = location.slug;
 
-        this.state = {
-            loading: true,
-            resource: null
-        };
-    }
-
-    static isAdmin() {
-        return window.location.pathname.includes('/admin');
-    }
-
-    static storageLoaded() {
-        if (!localStorage.getItem(gradeStorageId)) {
-            return false
-        }
-        if (!localStorage.getItem(colorStorageId)) {
-            return false
-        }
-        if (!localStorage.getItem(wallStorageId)) {
-            return false
-        }
-        if (!localStorage.getItem(tagStorageId)) {
-            return false
-        }
-        if (!localStorage.getItem(setterStorageId)) {
-            return false
-        }
-        if (!localStorage.getItem(boulderStorageId)) {
-            return false
-        }
-
-        return true
-    }
-
-    componentDidMount() {
-
-        if (App.storageLoaded() && !App.isAdmin()) {
-            window.grades = JSON.parse(localStorage.getItem(gradeStorageId));
-            window.colors = JSON.parse(localStorage.getItem(colorStorageId));
-            window.walls = JSON.parse(localStorage.getItem(wallStorageId));
-            window.tags = JSON.parse(localStorage.getItem(tagStorageId));
-            window.setters = JSON.parse(localStorage.getItem(setterStorageId));
-            window.boulders = JSON.parse(localStorage.getItem(boulderStorageId));
-
-            this.setState({loading: false});
-
-            return
-        }
-
+    useEffect(() => {
         Promise.all([
-            fetch('/grade').then((response) => response.json()).then(response => {
-
-                this.setState({resource: 'grades'});
-
+            ApiClient.getGrades(location.slug).then(response => {
+                setResource('grades');
                 const grades = {};
                 for (const grade of response) {
                     grades[grade.id] = grade;
                 }
 
-                localStorage.setItem(gradeStorageId, JSON.stringify(grades));
-                window[gradeStorageId] = grades
+                window['grades'] = grades
             }),
-            fetch('/color').then((response) => response.json()).then(response => {
-
-                this.setState({resource: 'colors'});
-
+            ApiClient.getHoldStyles(location.slug).then(response => {
+                setResource('colors');
                 const colors = {};
                 for (const color of response) {
                     colors[color.id] = color;
                 }
 
-                localStorage.setItem(colorStorageId, JSON.stringify(colors));
-                window[colorStorageId] = colors;
+                window['colors'] = colors;
             }),
-            fetch('/wall').then((response) => response.json()).then(response => {
-
-                this.setState({resource: 'walls'});
-
+            ApiClient.getWalls(location.slug).then(response => {
+                setResource('walls');
                 const walls = {};
                 for (const wall of response) {
                     walls[wall.id] = wall;
                 }
 
-                localStorage.setItem(wallStorageId, JSON.stringify(walls));
-                window[wallStorageId] = walls;
+                window['walls'] = walls;
             }),
-            fetch('/tag').then((response) => response.json()).then(response => {
-
-                this.setState({resource: 'tags'});
-
+            ApiClient.getTags(location.slug).then(response => {
+                setResource('tags');
                 const tags = {};
                 for (const tag of response) {
                     tags[tag.id] = tag;
                 }
 
-                localStorage.setItem(tagStorageId, JSON.stringify(tags));
-                window[tagStorageId] = tags;
+                window['tags'] = tags;
             }),
-            fetch('/user/setters').then((response) => response.json()).then(response => {
-
-                this.setState({resource: 'setters'});
-
+            ApiClient.getSetters(location.slug).then(response => {
+                setResource('setters');
                 const setters = {};
                 for (const setter of response) {
                     setters[setter.id] = setter;
                 }
 
-                localStorage.setItem(setterStorageId, JSON.stringify(setters));
-                window[setterStorageId] = setters;
-            }),
-            fetch('/boulder/filter/active').then((response) => response.json()).then(response => {
-
-                this.setState({resource: 'boulders'});
-
-                const boulders = {};
-                for (const boulder of response) {
-                    boulders[boulder.id] = boulder;
-                }
-
-                localStorage.setItem(boulderStorageId, JSON.stringify(boulders));
-                window[boulderStorageId] = boulders;
+                window['setters'] = setters;
             })
         ]).then(() => {
-            this.setState({loading: false})
+            setLoading(false);
         })
-    }
 
-    render() {
-        const {loading, resource} = this.state;
+    }, []);
 
-        if (loading) {
-            return (
+    if (loading) {
+        return (
+            <Router>
+                <Header location={location}/>
                 <div className="loader">
                     <em>loading {resource}</em>
                 </div>
-            )
-        }
-
-        return (
-            <Router>
-                <div className="app">
-                    <Header/>
-
-                    <div className="content">
-                        <Switch>
-                            <Route exact path="/admin">
-                                <Dashboard/>
-                            </Route>
-
-                            <Route exact path="/admin/boulder">
-                                <AdminBoulderIndex/>
-                            </Route>
-
-                            <Route path="/admin/boulder/add">
-                                <AdminBoulderAdd/>
-                            </Route>
-
-                            <Route path="/admin/boulder/edit/:boulderId">
-                                <AdminBoulderEdit/>
-                            </Route>
-
-                            <Route path="/boulder">
-                                <Boulder/>
-                            </Route>
-
-                            <Route path="/ranking/current">
-                                <CurrentRanking/>
-                            </Route>
-
-                            <Route path="/styleguide">
-                                <StyleGuide/>
-                            </Route>
-                        </Switch>
-                    </div>
-
-                    <footer>
-                    </footer>
-                </div>
             </Router>
-        );
+        )
     }
-}
 
-export default App;
+    return (
+        <Router>
+            <div className="app">
+                <Header location={location}/>
+
+                <div className="content">
+                    <Switch>
+                        <Route exact path="/:location/admin">
+                            <Dashboard/>
+                        </Route>
+
+                        <Route exact path="/:location/admin/boulder">
+                            <AdminBoulderIndex/>
+                        </Route>
+
+                        <Route exact path="/:location/admin/error">
+                            <AdminErrorIndex/>
+                        </Route>
+
+                        <Route path="/:location/admin/boulder/add">
+                            <AdminBoulderAdd/>
+                        </Route>
+
+                        <Route path="/:location/admin/boulder/edit/:boulderId">
+                            <AdminBoulderEdit/>
+                        </Route>
+
+                        <Route exact path="/:location/admin/settings">
+                            <AdminSettingsIndex/>
+                        </Route>
+
+                        <Route path="/:location/boulder">
+                            <Boulder/>
+                        </Route>
+
+                        <Route path="/:location/ranking/current">
+                            <CurrentRanking/>
+                        </Route>
+
+                        <Route path="/:location/styleguide">
+                            <StyleGuide/>
+                        </Route>
+                    </Switch>
+                </div>
+
+                <footer>
+                </footer>
+            </div>
+        </Router>
+    );
+}

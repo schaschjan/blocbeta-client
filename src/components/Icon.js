@@ -6,7 +6,7 @@ export default function Icon(props) {
     if (props.name === 'indicator') {
         icon = (
             <svg>
-                <g id="🎨-Styleguide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="🎨-Styleguide" stroke="none" fill="none">
                     <g id="mobile---XS-(&lt;-576px)-Input-Forms" transform="translate(-335.000000, -1475.000000)">
                         <g id="outline-arrow_forward_ios-24px"
                            transform="translate(345.000000, 1480.000000) rotate(90.000000) translate(-345.000000, -1480.000000) translate(335.000000, 1470.000000)">

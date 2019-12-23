@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {getBoulders, SelectFilter} from "../../../Helpers";
 import moment from "moment";
 import HoldStyle from "../../../components/HoldStyle";
 import Grade from "../../../components/Grade";
 import {useFilters, useRowSelect, useSortBy, useTable} from "react-table";
 import {Link} from "react-router-dom";
+import Button from "../../../components/Button";
+import {useParams} from "react-router-dom";
 
 const columns = [
     {
@@ -29,7 +31,14 @@ const columns = [
     {
         Header: 'Name',
         accessor: 'name',
-        Filter: null
+        Filter: null,
+        Cell: ({cell, row}) => {
+            return (
+                <Link to={`/${window.location.slug}/admin/boulder/edit/${row.original.id}`}>
+                    {cell.value}
+                </Link>
+            )
+        }
     },
     {
         Header: 'Color',
@@ -153,15 +162,13 @@ function Table({columns, data}) {
 
                         return (
                             <li {...row.getRowProps()} className={"collection collection--" + columnCount}>
-                                <Link to={`/admin/boulder/edit/${row.original.id}`}>
-                                    {row.cells.map(cell => {
-                                        return (
-                                            <div {...cell.getCellProps()} className="collection__item">
-                                                {cell.render('Cell')}
-                                            </div>
-                                        )
-                                    })}
-                                </Link>
+                                {row.cells.map(cell => {
+                                    return (
+                                        <div {...cell.getCellProps()} className="collection__item">
+                                            {cell.render('Cell')}
+                                        </div>
+                                    )
+                                })}
                             </li>
                         )
                     }
@@ -185,13 +192,33 @@ function Table({columns, data}) {
 
 export default function Index() {
 
-    const [data, setData] = useState(getBoulders());
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const {location} = useParams();
+
+    useEffect(() => {
+        getBoulders(location).then(boulders => {
+            setData(boulders);
+            setLoading(false);
+        });
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="loader">
+                <em>loading</em>
+            </div>
+        )
+    }
 
     return (
         <div className="container">
-            <h1>Boulder ({data.length})</h1>
+            <h1>Boulder </h1>
 
-            <Table columns={columns} data={data}/>
+            <div className="d-flex f-column">
+                <Table columns={columns} data={data}/>
+                <Button>Add</Button>
+            </div>
         </div>
     )
 };

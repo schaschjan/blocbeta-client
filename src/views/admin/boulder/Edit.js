@@ -1,40 +1,56 @@
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {BoulderForm} from "./Add";
+import BoulderForm from "./Form";
+import ApiClient from "../../../ApiClient";
+import {
+    getColorOption,
+    getGradeOption,
+    getSetterOption,
+    getStatusOption,
+    getTagOption,
+    getWallOption
+} from "../../../Helpers";
 
-export default function Edit(props) {
+export default function Edit() {
     const {boulderId} = useParams();
 
-    const [hasError, setErrors] = useState(false);
-    const [boulder, setBoulder] = useState({});
+    const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    async function fetchData() {
-        const res = await fetch(`/boulder/${boulderId}`);
-        res
-            .json()
-            .then(res => setBoulder(res))
-            .catch(err => setErrors(err))
-            .finally(() => setLoading(false))
-    }
-
     useEffect(() => {
-        fetchData();
-    }, [loading]);
+        ApiClient.getBoulder(boulderId).then(boulder => {
+
+            const data = {
+                name: boulder.name,
+                tags: boulder.tags.map(tag => getTagOption(tag.id)),
+                color: getColorOption(boulder.color.id),
+                grade: getGradeOption(boulder.grade.id),
+                startWall: getWallOption(boulder.startWall.id),
+                endWall: (boulder.endWall) ? getWallOption(boulder.endWall.id) : null,
+                setters: boulder.setters.map(setter => getSetterOption(setter.id)),
+                status: getStatusOption(boulder.status)
+            };
+
+            setData(data);
+            setLoading(false);
+        });
+    }, [boulderId]);
+
+    const onSubmit = (data) => {
+        console.log(data);
+    };
 
     if (loading) {
         return (
-            <div className="container">
-                <em>loading…</em>
+            <div className="loader">
+                <em>loading</em>
             </div>
         )
     }
 
     return (
         <div className="container">
-            <h1>Edit Boulder {boulder.name}</h1>
-
-            <BoulderForm/>
+            <BoulderForm values={data} onSubmit={onSubmit}/>
         </div>
     )
 }
