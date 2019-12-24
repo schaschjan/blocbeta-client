@@ -6,96 +6,6 @@ import Grade from "../../../components/Grade";
 import {useFilters, useRowSelect, useSortBy, useTable} from "react-table";
 import {Link} from "react-router-dom";
 import Button from "../../../components/Button";
-import {useParams} from "react-router-dom";
-
-const columns = [
-    {
-        id: 'edit',
-        Header: () => {
-            return (
-                <div>
-                    <select>
-                        <option>Select…</option>
-                        <option>Activate</option>
-                        <option>Deactivate</option>
-                        <option>Prune ascents</option>
-                    </select>
-                </div>
-            )
-        },
-        accessor: null,
-        Cell: ({row}) => {
-            return <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-        }
-    },
-    {
-        Header: 'Name',
-        accessor: 'name',
-        Filter: null,
-        Cell: ({cell, row}) => {
-            return (
-                <Link to={`/${window.location.slug}/admin/boulder/edit/${row.original.id}`}>
-                    {cell.value}
-                </Link>
-            )
-        }
-    },
-    {
-        Header: 'Color',
-        accessor: 'color',
-        Filter: SelectFilter,
-        filter: 'equals',
-        Cell: ({cell}) => {
-            return <HoldStyle name={cell.value}/>
-        }
-    },
-    {
-        Header: 'Grade',
-        accessor: 'grade.id',
-        Filter: SelectFilter,
-        Cell: ({cell}) => {
-            return <Grade id={cell.value}/>
-        }
-    },
-    {
-        Header: 'Start',
-        accessor: 'startWall.name',
-        Filter: SelectFilter
-    },
-    {
-        Header: 'End',
-        accessor: 'endWall.name',
-        Filter: SelectFilter
-    },
-    {
-        Header: 'Setters',
-        accessor: 'setters',
-        Filter: null,
-        Cell: ({row}) => {
-            return row.original.setters.map(setter => {
-                return setter.username + ' ';
-            });
-        }
-    },
-    {
-        Header: 'Tags',
-        accessor: 'tags',
-        Filter: null,
-        Cell: ({row}) => {
-            return row.original.tags.map(tag => {
-                return tag.emoji + ' ';
-            });
-        }
-    },
-    {
-        Header: 'Set',
-        accessor: 'createdAt',
-        Filter: null,
-        Cell: row => (
-            <span>{moment().fromNow()}</span>
-        )
-    },
-];
 
 const IndeterminateCheckbox = React.forwardRef(
     ({indeterminate, ...rest}, ref) => {
@@ -114,7 +24,96 @@ const IndeterminateCheckbox = React.forwardRef(
     }
 );
 
-function Table({columns, data}) {
+function Table({data}) {
+
+    const columns = React.useMemo(() => [
+        {
+            id: 'edit',
+            Header: () => {
+                return (
+                    <div>
+                        <select>
+                            <option>Select…</option>
+                            <option>Activate</option>
+                            <option>Deactivate</option>
+                            <option>Prune ascents</option>
+                        </select>
+                    </div>
+                )
+            },
+            accessor: null,
+            Cell: ({row}) => {
+                return <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            }
+        },
+        {
+            Header: 'Name',
+            accessor: 'name',
+            Filter: null,
+            Cell: ({cell, row}) => {
+                return (
+                    <Link to={`/${window.location.slug}/admin/boulder/edit/${row.original.id}`}>
+                        {cell.value}
+                    </Link>
+                )
+            }
+        },
+        {
+            Header: 'Color',
+            accessor: 'color',
+            Filter: SelectFilter,
+            filter: 'equals',
+            Cell: ({cell}) => {
+                return <HoldStyle name={cell.value}/>
+            }
+        },
+        {
+            Header: 'Grade',
+            accessor: 'grade.id',
+            Filter: SelectFilter,
+            Cell: ({cell}) => {
+                return <Grade id={cell.value}/>
+            }
+        },
+        {
+            Header: 'Start',
+            accessor: 'startWall.name',
+            Filter: SelectFilter
+        },
+        {
+            Header: 'End',
+            accessor: 'endWall.name',
+            Filter: SelectFilter
+        },
+        {
+            Header: 'Setters',
+            accessor: 'setters',
+            Filter: null,
+            Cell: ({row}) => {
+                return row.original.setters.map(setter => {
+                    return setter.username + ' ';
+                });
+            }
+        },
+        {
+            Header: 'Tags',
+            accessor: 'tags',
+            Filter: null,
+            Cell: ({row}) => {
+                return row.original.tags.map(tag => {
+                    return tag.emoji + ' ';
+                });
+            }
+        },
+        {
+            Header: 'Set',
+            accessor: 'createdAt',
+            Filter: null,
+            Cell: row => (
+                <span>{moment().fromNow()}</span>
+            )
+        },
+    ]);
 
     const {
         getTableProps,
@@ -194,10 +193,9 @@ export default function Index() {
 
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const {location} = useParams();
 
     useEffect(() => {
-        getBoulders(location).then(boulders => {
+        getBoulders(window.location.slug).then(boulders => {
             setData(boulders);
             setLoading(false);
         });
@@ -213,11 +211,13 @@ export default function Index() {
 
     return (
         <div className="container">
-            <h1>Boulder </h1>
+            <h1>Boulder ({data.length})</h1>
 
             <div className="d-flex f-column">
-                <Table columns={columns} data={data}/>
-                <Button>Add</Button>
+                <Table data={data}/>
+                <Link to={`/${window.location.slug}/admin/boulder/add`}>
+                    <Button>Add</Button>
+                </Link>`
             </div>
         </div>
     )

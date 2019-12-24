@@ -50,7 +50,7 @@ export default function Edit() {
 
     return (
         <div className="container">
-            <BoulderForm values={data} onSubmit={onSubmit}/>
+            <BoulderForm values={data} onSubmit={onSubmit} buttonText="update"/>
         </div>
     )
 }

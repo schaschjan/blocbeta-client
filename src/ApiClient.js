@@ -17,12 +17,25 @@ class ApiClient {
     }
 
     static getSetters(location) {
-        return fetch(`/${location}/user/setters`).then(response => response.json());
+        return fetch(`/${location}/setter`).then(response => response.json());
+    }
+
+    static getLocations() {
+        return fetch(`/location`).then(response => response.json());
     }
 
     static getBoulder(id) {
         return fetch(`/${window.location.slug}/boulder/${id}`).then(response => response.json());
     }
+
+    static getErrors() {
+        return fetch(`/${window.location.slug}/error`).then(response => response.json());
+    }
+
+    static getErrorsCount() {
+        return fetch(`/${window.location.slug}/error/count`).then(response => response.json());
+    }
 }
+
 
 export default ApiClient;

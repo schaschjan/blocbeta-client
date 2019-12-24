@@ -19,20 +19,34 @@ import AdminBoulderEdit from "./views/admin/boulder/Edit";
 import AdminSettingsIndex from "./views/admin/settings/Index.js";
 import AdminErrorIndex from "./views/admin/errors";
 import ApiClient from "./ApiClient";
+import {isAdmin} from "./Helpers";
 
 export default function App() {
 
     const [loading, setLoading] = useState(true);
     const [resource, setResource] = useState(null);
+
     const location = {
         name: 'Salon du Bloc',
-        slug: 'salon'
+        slug: 'salon',
+        id: 28
     };
 
+    window.location.name = location.name;
     window.location.slug = location.slug;
+    window.location.id = location.id;
 
     useEffect(() => {
         Promise.all([
+            ApiClient.getLocations().then(response => {
+                setResource('locations');
+                const locations = {};
+                for (const location of response) {
+                    locations[location.url] = location;
+                }
+
+                window['locations'] = locations
+            }),
             ApiClient.getGrades(location.slug).then(response => {
                 setResource('grades');
                 const grades = {};
@@ -77,6 +91,10 @@ export default function App() {
                 }
 
                 window['setters'] = setters;
+            }),
+            ApiClient.getErrorsCount().then(response => {
+                setResource('errors');
+                window['errors'] = response.count;
             })
         ]).then(() => {
             setLoading(false);
@@ -86,12 +104,9 @@ export default function App() {
 
     if (loading) {
         return (
-            <Router>
-                <Header location={location}/>
-                <div className="loader">
-                    <em>loading {resource}</em>
-                </div>
-            </Router>
+            <div className="loader">
+                <em>loading {resource}</em>
+            </div>
         )
     }
 
@@ -102,39 +117,39 @@ export default function App() {
 
                 <div className="content">
                     <Switch>
-                        <Route exact path="/:location/admin">
+                        <Route exact path="/:locationSlug/admin">
                             <Dashboard/>
                         </Route>
 
-                        <Route exact path="/:location/admin/boulder">
+                        <Route exact path="/:locationSlug/admin/boulder">
                             <AdminBoulderIndex/>
                         </Route>
 
-                        <Route exact path="/:location/admin/error">
+                        <Route exact path="/:locationSlug/admin/errors">
                             <AdminErrorIndex/>
                         </Route>
 
-                        <Route path="/:location/admin/boulder/add">
+                        <Route path="/:locationSlug/admin/boulder/add">
                             <AdminBoulderAdd/>
                         </Route>
 
-                        <Route path="/:location/admin/boulder/edit/:boulderId">
+                        <Route path="/:locationSlug/admin/boulder/edit/:boulderId">
                             <AdminBoulderEdit/>
                         </Route>
 
-                        <Route exact path="/:location/admin/settings">
+                        <Route exact path="/:locationSlug/admin/settings">
                             <AdminSettingsIndex/>
                         </Route>
 
-                        <Route path="/:location/boulder">
+                        <Route path="/:locationSlug/boulder">
                             <Boulder/>
                         </Route>
 
-                        <Route path="/:location/ranking/current">
+                        <Route path="/:locationSlug/ranking/current">
                             <CurrentRanking/>
                         </Route>
 
-                        <Route path="/:location/styleguide">
+                        <Route path="/:locationSlug/styleguide">
                             <StyleGuide/>
                         </Route>
                     </Switch>

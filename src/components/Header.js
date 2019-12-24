@@ -1,33 +1,65 @@
 import React from 'react';
 import {Link} from "react-router-dom";
+import {getPath} from "../Helpers";
 
-export default function Header(props) {
+const redirectLocation = (event) => {
+
+    const currentLocation = window.location.slug;
+    const changeLocation = event.target.value;
+
+    window.location.pathname = window.location.pathname.replace(currentLocation, changeLocation);
+};
+
+const LocationSelect = () => {
+    const currentLocationSlug = window.location.slug;
+
+    return (
+        <select onChange={redirectLocation}>
+            {Object.values(window.locations).map(location => {
+
+                if (!location.public) {
+                    return null
+                }
+
+                if (location.url === currentLocationSlug) {
+                    return <option selected value={location.url}>{location.name}</option>
+                } else {
+                    return <option value={location.url}>{location.name}</option>
+                }
+            })}
+        </select>
+    )
+};
+
+export default function Header() {
 
     return (
         <header className="header">
             <ul>
                 <li>
-                    <Link to={`/${props.location.slug}/admin`}>
-                        <strong>BlocBeta</strong> @{props.location.name}
+                    <Link to={getPath('/admin')}>
+                        <strong>BlocBeta</strong> @ <LocationSelect/>
                     </Link>
                 </li>
             </ul>
 
             <ul>
                 <li>
-                    <Link to={`/${props.location.slug}/admin/boulder`}>Boulder</Link>
+                    <Link to={getPath('/admin/boulder')}>Boulder</Link>
                 </li>
                 <li>
-                    <Link to="/admin">Events</Link>
+                    <Link to={getPath('/admin/events')}>Events</Link>
                 </li>
                 <li>
-                    <Link to="/admin">Setters</Link>
+                    <Link to={getPath('/admin/setters')}>Setters</Link>
                 </li>
                 <li>
-                    <Link to="/admin">Errors</Link>
+                    <Link to={getPath('/admin/errors')}>
+                        Errors <span className="color-error">({window.errors})</span>
+                    </Link>
                 </li>
                 <li>
-                    <Link to="/admin/settings">Settings</Link>
+                    <Link to={getPath('/admin/settings')}>Settings</Link>
                 </li>
             </ul>
         </header>

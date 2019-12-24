@@ -129,7 +129,7 @@ export default function Form(props) {
             </div>
 
             <div className="form-row">
-                <button type="submit" className="button">Submit</button>
+                <button type="submit" className="button">{props.buttonText}</button>
             </div>
         </form>
     );

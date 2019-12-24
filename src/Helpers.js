@@ -1,6 +1,14 @@
 import {useTable, useFilters, useSortBy, useRowSelect} from "react-table";
 import React from "react";
 
+export function getPath(path) {
+    return `/${window.location.slug}${path}`;
+}
+
+export function isAdmin() {
+    return window.location.pathname.includes('/admin')
+}
+
 export function resolveGrade(id) {
     return window.grades[id]
 }
@@ -139,29 +147,6 @@ export function getBoulders(location) {
 
             return boulders;
         });
-}
-
-export function EditableCell({cell: {value: initialValue}, row: {index}, column: {id}, updateMyData}) {
-
-    const [value, setValue] = React.useState(initialValue);
-
-    const onChange = e => {
-        setValue(e.target.value)
-    };
-
-    console.log(initialValue);
-
-    // We'll only update the external data when the input is blurred
-    const onBlur = () => {
-        updateMyData(index, id, value)
-    };
-
-    // If the initialValue is changed externall, sync it up with our state
-    React.useEffect(() => {
-        setValue(initialValue)
-    }, [initialValue]);
-
-    return <input value={value} onChange={onChange} onBlur={onBlur}/>
 }
 
 export function Table({columns, data}) {
