@@ -51,7 +51,7 @@ export default function Header() {
                     <Link to={getPath('/admin/events')}>Events</Link>
                 </li>
                 <li>
-                    <Link to={getPath('/admin/setters')}>Setters</Link>
+                    <Link to={getPath('/admin/users')}>Users</Link>
                 </li>
                 <li>
                     <Link to={getPath('/admin/errors')}>

@@ -23,8 +23,6 @@ export default function Index() {
         )
     }
 
-    console.log(data);
-
     return (
         <div className="container">
             <h1>Errors ({data.length})</h1>

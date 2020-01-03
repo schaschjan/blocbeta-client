@@ -16,8 +16,12 @@ class ApiClient {
         return fetch(`/${location}/wall`).then(response => response.json());
     }
 
-    static getSetters(location) {
-        return fetch(`/${location}/setter`).then(response => response.json());
+    static getSetters() {
+        return fetch(`/${window.location.slug}/user/setters`).then(response => response.json());
+    }
+
+    static getAdmins() {
+        return fetch(`/${window.location.slug}/user/admins`).then(response => response.json());
     }
 
     static getLocations() {

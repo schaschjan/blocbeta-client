@@ -1,25 +1,15 @@
 import React, {useState, useEffect} from 'react';
-
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
-
-import CurrentRanking from "./views/CurrentRanking";
-import Boulder from "./views/Boulder";
+import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import Dashboard from "./views/admin/Dashboard";
-import StyleGuide from "./views/StyleGuide";
 import Header from "./components/Header";
-
 import AdminBoulderIndex from "./views/admin/boulder/Index.js";
 import AdminBoulderAdd from "./views/admin/boulder/Add";
 import AdminBoulderEdit from "./views/admin/boulder/Edit";
 import AdminSettingsIndex from "./views/admin/settings/Index.js";
 import AdminErrorIndex from "./views/admin/errors";
 import ApiClient from "./ApiClient";
-import {isAdmin} from "./Helpers";
+import NotFound from "./views/NotFound";
+import AdminUserIndex from "./views/admin/users/Index.js";
 
 export default function App() {
 
@@ -35,6 +25,51 @@ export default function App() {
     window.location.name = location.name;
     window.location.slug = location.slug;
     window.location.id = location.id;
+
+    const routes = [
+        {
+            title: "Dashboard",
+            path: "/:locationSlug/admin",
+            render: () => <Dashboard/>,
+            exact: true
+        },
+        {
+            title: "Boulder index",
+            path: "/:locationSlug/admin/boulder",
+            render: () => <AdminBoulderIndex/>,
+            exact: true
+        },
+        {
+            title: "Add boulder",
+            path: "/:locationSlug/admin/boulder/add",
+            render: () => <AdminBoulderAdd/>,
+            exact: true
+        },
+        {
+            title: "Edit boulder",
+            path: "/:locationSlug/admin/boulder/edit/:boulderId",
+            render: () => <AdminBoulderEdit/>,
+            exact: true
+        },
+        {
+            title: "Setter index",
+            path: "/:locationSlug/admin/users",
+            render: () => <AdminUserIndex/>,
+            exact: true
+        },
+        {
+            title: "Setting index",
+            path: "/:locationSlug/admin/settings",
+            render: () => <AdminSettingsIndex/>,
+            exact: true
+        },
+        {
+            title: "Error index",
+            path: "/:locationSlug/admin/errors",
+            render: () => <AdminErrorIndex/>,
+            exact: true
+        }
+    ];
 
     useEffect(() => {
         Promise.all([
@@ -117,46 +152,13 @@ export default function App() {
 
                 <div className="content">
                     <Switch>
-                        <Route exact path="/:locationSlug/admin">
-                            <Dashboard/>
-                        </Route>
-
-                        <Route exact path="/:locationSlug/admin/boulder">
-                            <AdminBoulderIndex/>
-                        </Route>
-
-                        <Route exact path="/:locationSlug/admin/errors">
-                            <AdminErrorIndex/>
-                        </Route>
-
-                        <Route path="/:locationSlug/admin/boulder/add">
-                            <AdminBoulderAdd/>
-                        </Route>
-
-                        <Route path="/:locationSlug/admin/boulder/edit/:boulderId">
-                            <AdminBoulderEdit/>
-                        </Route>
-
-                        <Route exact path="/:locationSlug/admin/settings">
-                            <AdminSettingsIndex/>
-                        </Route>
-
-                        <Route path="/:locationSlug/boulder">
-                            <Boulder/>
-                        </Route>
-
-                        <Route path="/:locationSlug/ranking/current">
-                            <CurrentRanking/>
-                        </Route>
-
-                        <Route path="/:locationSlug/styleguide">
-                            <StyleGuide/>
-                        </Route>
+                        {routes.map((route, i) => (
+                            <Route key={i} {...route} />
+                        ))}
+                        <Route render={() => <NotFound routes={routes}/>}/>
                     </Switch>
                 </div>
 
-                <footer>
-                </footer>
             </div>
         </Router>
     );
