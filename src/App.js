@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import Dashboard from "./views/admin/Dashboard";
 import Header from "./components/Header";
 import AdminBoulderIndex from "./views/admin/boulder/Index.js";
@@ -10,11 +10,32 @@ import AdminErrorIndex from "./views/admin/errors";
 import ApiClient from "./ApiClient";
 import NotFound from "./views/NotFound";
 import AdminUserIndex from "./views/admin/users/Index.js";
+import Context from "./Context";
+import Login from "./views/Login";
+
+const PrivateRoute = ({children, ...rest}) => {
+    return (
+        <Route
+            {...rest}
+            render={({location}) =>
+                Context.isAuthenticated() ? (children) : (
+                    <Redirect
+                        to={{
+                            pathname: "/login",
+                            state: {from: location}
+                        }}
+                    />
+                )
+            }
+        />
+    );
+};
 
 export default function App() {
 
     const [loading, setLoading] = useState(true);
     const [resource, setResource] = useState(null);
+    const [redirect, setRedirect] = useState(false);
 
     const location = {
         name: 'Salon du Bloc',
@@ -28,10 +49,16 @@ export default function App() {
 
     const routes = [
         {
+            title: "Login",
+            path: "/login",
+            render: () => <Login/>,
+            public: true
+        },
+        {
             title: "Dashboard",
             path: "/:locationSlug/admin",
             render: () => <Dashboard/>,
-            exact: true
+            exact: true,
         },
         {
             title: "Boulder index",
@@ -72,6 +99,12 @@ export default function App() {
     ];
 
     useEffect(() => {
+
+        if (!Context.isAuthenticated()) {
+            setLoading(false);
+            return
+        }
+
         Promise.all([
             ApiClient.getLocations().then(response => {
                 setResource('locations');
@@ -148,13 +181,19 @@ export default function App() {
     return (
         <Router>
             <div className="app">
-                <Header location={location}/>
+                {/*<Header location={location}/>*/}
 
                 <div className="content">
                     <Switch>
-                        {routes.map((route, i) => (
-                            <Route key={i} {...route} />
-                        ))}
+                        {routes.map((route, i) => {
+                            console.log(route.public);
+
+                            if (route.public) {
+                                return <Route key={i} {...route} />
+                            }
+
+                            return <PrivateRoute key={i} {...route} />
+                        })}
                         <Route render={() => <NotFound routes={routes}/>}/>
                     </Switch>
                 </div>

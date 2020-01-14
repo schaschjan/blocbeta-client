@@ -1,5 +1,19 @@
 class ApiClient {
 
+    static authorize(username, password) {
+        return fetch(`/holdstyle`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'username': username,
+                'password': password
+            })
+        }).then(response => response.json());
+    }
+
     static getHoldStyles(location) {
         return fetch(`/${location}/holdstyle`).then(response => response.json());
     }

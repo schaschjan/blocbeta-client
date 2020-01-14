@@ -7,7 +7,7 @@ export function Input(props) {
             <input
                 id={props.name}
                 name={props.name}
-                placeholder={props.name}
+                placeholder={props.placeholder}
                 className="form-field"
                 type={props.type}
                 ref={props.ref}
