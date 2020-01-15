@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import {getPath} from "../Helpers";
+import Context from "../Context";
 
 const redirectLocation = (event) => {
 
@@ -11,8 +12,6 @@ const redirectLocation = (event) => {
 };
 
 const LocationSelect = () => {
-    const currentLocationSlug = window.location.slug;
-
     return (
         <select onChange={redirectLocation}>
             {Object.values(window.locations).map(location => {
@@ -21,7 +20,7 @@ const LocationSelect = () => {
                     return null
                 }
 
-                if (location.url === currentLocationSlug) {
+                if (location.url === Context.getLocationUrl()) {
                     return <option selected value={location.url}>{location.name}</option>
                 } else {
                     return <option value={location.url}>{location.name}</option>

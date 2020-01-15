@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
-import Dashboard from "./views/admin/Dashboard";
-import Header from "./components/Header";
+import AdminDashboard from "./views/admin/Dashboard";
 import AdminBoulderIndex from "./views/admin/boulder/Index.js";
 import AdminBoulderAdd from "./views/admin/boulder/Add";
 import AdminBoulderEdit from "./views/admin/boulder/Edit";
@@ -12,8 +11,15 @@ import NotFound from "./views/NotFound";
 import AdminUserIndex from "./views/admin/users/Index.js";
 import Context from "./Context";
 import Login from "./views/Login";
+import Dashboard from "./views/Dashboard";
+import Header from "./components/Header";
 
 const PrivateRoute = ({children, ...rest}) => {
+
+    if (Context.isAuthenticated()) {
+        return <Route {...rest}/>
+    }
+
     return (
         <Route
             {...rest}
@@ -32,33 +38,29 @@ const PrivateRoute = ({children, ...rest}) => {
 };
 
 export default function App() {
-
     const [loading, setLoading] = useState(true);
     const [resource, setResource] = useState(null);
-    const [redirect, setRedirect] = useState(false);
-
-    const location = {
-        name: 'Salon du Bloc',
-        slug: 'salon',
-        id: 28
-    };
-
-    window.location.name = location.name;
-    window.location.slug = location.slug;
-    window.location.id = location.id;
 
     const routes = [
         {
             title: "Login",
             path: "/login",
             render: () => <Login/>,
-            public: true
+            public: true,
+            exact: true,
         },
         {
             title: "Dashboard",
-            path: "/:locationSlug/admin",
+            path: "/:locationSlug/dashboard",
             render: () => <Dashboard/>,
             exact: true,
+        },
+        {
+            title: "Admin Dashboard",
+            path: "/:locationSlug/admin",
+            render: () => <AdminDashboard/>,
+            exact: true,
+            admin: true,
         },
         {
             title: "Boulder index",
@@ -115,7 +117,7 @@ export default function App() {
 
                 window['locations'] = locations
             }),
-            ApiClient.getGrades(location.slug).then(response => {
+            ApiClient.getGrades().then(response => {
                 setResource('grades');
                 const grades = {};
                 for (const grade of response) {
@@ -124,7 +126,7 @@ export default function App() {
 
                 window['grades'] = grades
             }),
-            ApiClient.getHoldStyles(location.slug).then(response => {
+            ApiClient.getHoldStyles().then(response => {
                 setResource('colors');
                 const colors = {};
                 for (const color of response) {
@@ -133,7 +135,7 @@ export default function App() {
 
                 window['colors'] = colors;
             }),
-            ApiClient.getWalls(location.slug).then(response => {
+            ApiClient.getWalls().then(response => {
                 setResource('walls');
                 const walls = {};
                 for (const wall of response) {
@@ -142,7 +144,7 @@ export default function App() {
 
                 window['walls'] = walls;
             }),
-            ApiClient.getTags(location.slug).then(response => {
+            ApiClient.getTags().then(response => {
                 setResource('tags');
                 const tags = {};
                 for (const tag of response) {
@@ -151,7 +153,7 @@ export default function App() {
 
                 window['tags'] = tags;
             }),
-            ApiClient.getSetters(location.slug).then(response => {
+            ApiClient.getSetters().then(response => {
                 setResource('setters');
                 const setters = {};
                 for (const setter of response) {
@@ -167,7 +169,6 @@ export default function App() {
         ]).then(() => {
             setLoading(false);
         })
-
     }, []);
 
     if (loading) {
@@ -181,19 +182,18 @@ export default function App() {
     return (
         <Router>
             <div className="app">
-                {/*<Header location={location}/>*/}
+                <Header/>
 
                 <div className="content">
                     <Switch>
                         {routes.map((route, i) => {
-                            console.log(route.public);
-
                             if (route.public) {
                                 return <Route key={i} {...route} />
                             }
 
                             return <PrivateRoute key={i} {...route} />
                         })}
+
                         <Route render={() => <NotFound routes={routes}/>}/>
                     </Switch>
                 </div>

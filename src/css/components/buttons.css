@@ -1,5 +1,6 @@
 .button {
     width: 100%;
+    padding: 0;
     height: 3.125rem;
     background-color: var(--color-dark);
     color: var(--color-light);
