@@ -1,8 +1,9 @@
 import {useTable, useFilters, useSortBy, useRowSelect} from "react-table";
 import React from "react";
+import Context from "./Context";
 
 export function getPath(path) {
-    return `/${window.location.slug}${path}`;
+    return `/${Context.getLocationUrl()}${path}`;
 }
 
 export function isAdmin() {

@@ -1,20 +1,29 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Link} from "react-router-dom";
 import {getPath} from "../Helpers";
 import Context from "../Context";
+import db from "../db";
 
-const redirectLocation = (event) => {
-
-    const currentLocation = window.location.slug;
-    const changeLocation = event.target.value;
-
-    window.location.pathname = window.location.pathname.replace(currentLocation, changeLocation);
-};
 
 const LocationSelect = () => {
+
+    const [locations, setLocations] = useState([]);
+
+    useEffect(() => {
+        db.locations.toArray().then(locations => {
+            setLocations(locations)
+        });
+    }, []);
+
+    if (!locations) {
+        return null;
+    }
+
+    console.log(locations);
+
     return (
-        <select onChange={redirectLocation}>
-            {Object.values(window.locations).map(location => {
+        <select>
+            {locations.map(location => {
 
                 if (!location.public) {
                     return null

@@ -13,6 +13,9 @@ import Context from "./Context";
 import Login from "./views/Login";
 import Dashboard from "./views/Dashboard";
 import Header from "./components/Header";
+import {openDB, deleteDB, wrap, unwrap} from 'idb';
+import Dexie from "dexie";
+
 
 const PrivateRoute = ({children, ...rest}) => {
 
@@ -38,8 +41,6 @@ const PrivateRoute = ({children, ...rest}) => {
 };
 
 export default function App() {
-    const [loading, setLoading] = useState(true);
-    const [resource, setResource] = useState(null);
 
     const routes = [
         {
@@ -99,90 +100,13 @@ export default function App() {
             exact: true
         }
     ];
-
-    useEffect(() => {
-
-        if (!Context.isAuthenticated()) {
-            setLoading(false);
-            return
-        }
-
-        Promise.all([
-            ApiClient.getLocations().then(response => {
-                setResource('locations');
-                const locations = {};
-                for (const location of response) {
-                    locations[location.url] = location;
-                }
-
-                window['locations'] = locations
-            }),
-            ApiClient.getGrades().then(response => {
-                setResource('grades');
-                const grades = {};
-                for (const grade of response) {
-                    grades[grade.id] = grade;
-                }
-
-                window['grades'] = grades
-            }),
-            ApiClient.getHoldStyles().then(response => {
-                setResource('colors');
-                const colors = {};
-                for (const color of response) {
-                    colors[color.id] = color;
-                }
-
-                window['colors'] = colors;
-            }),
-            ApiClient.getWalls().then(response => {
-                setResource('walls');
-                const walls = {};
-                for (const wall of response) {
-                    walls[wall.id] = wall;
-                }
-
-                window['walls'] = walls;
-            }),
-            ApiClient.getTags().then(response => {
-                setResource('tags');
-                const tags = {};
-                for (const tag of response) {
-                    tags[tag.id] = tag;
-                }
-
-                window['tags'] = tags;
-            }),
-            ApiClient.getSetters().then(response => {
-                setResource('setters');
-                const setters = {};
-                for (const setter of response) {
-                    setters[setter.id] = setter;
-                }
-
-                window['setters'] = setters;
-            }),
-            ApiClient.getErrorsCount().then(response => {
-                setResource('errors');
-                window['errors'] = response.count;
-            })
-        ]).then(() => {
-            setLoading(false);
-        })
-    }, []);
-
-    if (loading) {
-        return (
-            <div className="loader">
-                <em>loading {resource}</em>
-            </div>
-        )
-    }
-
     return (
         <Router>
             <div className="app">
+
+                {Context.isAuthenticated() &&
                 <Header/>
+                }
 
                 <div className="content">
                     <Switch>

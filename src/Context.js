@@ -1,7 +1,8 @@
 import jwt_decode from 'jwt-decode';
+import ApiClient from "./ApiClient";
+import db from './db.js';
 
 class Context {
-
     static isAuthenticated() {
         const token = localStorage.getItem('token');
 
@@ -12,12 +13,65 @@ class Context {
         return true
     }
 
-    static authorize(token) {
+    static init() {
+
+        db.open();
+        db.on('ready', () => {
+            db.locations.count(count => {
+                if (count === 0) {
+                    ApiClient.getLocations().then(response => {
+                        db.locations.bulkAdd(response);
+                    });
+                }
+            });
+
+            db.grades.count(count => {
+                if (count === 0) {
+                    ApiClient.getGrades().then(response => {
+                        db.grades.bulkAdd(response);
+                    });
+                }
+            });
+
+            db.holdStyles.count(count => {
+                if (count === 0) {
+                    ApiClient.getHoldStyles().then(response => {
+                        db.holdStyles.bulkAdd(response);
+                    });
+                }
+            });
+
+            db.walls.count(count => {
+                if (count === 0) {
+                    ApiClient.getWalls().then(response => {
+                        db.walls.bulkAdd(response);
+                    });
+                }
+            });
+
+            db.tags.count(count => {
+                if (count === 0) {
+                    ApiClient.getTags().then(response => {
+                        db.tags.bulkAdd(response);
+                    });
+                }
+            });
+
+            db.setters.count(count => {
+                if (count === 0) {
+                    ApiClient.getSetters().then(response => {
+                        db.setters.bulkAdd(response);
+                    });
+                }
+            });
+        });
+    }
+
+    static authenticate(token) {
         localStorage.setItem('token', token);
         const decoded = jwt_decode(token);
 
         Object.entries(decoded).forEach(([key, value]) => {
-
             if (value instanceof Object) {
                 localStorage.setItem(key, JSON.stringify(value));
             } else {
@@ -36,10 +90,6 @@ class Context {
 
     static getLocation() {
         return JSON.parse(localStorage.getItem('location'))
-    }
-
-    static getWalls() {
-        return window.walls;
     }
 }
 

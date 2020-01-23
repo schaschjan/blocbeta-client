@@ -19,7 +19,8 @@ export default function Login(props) {
                 setError("global", "global", response.message);
             }
 
-            Context.authorize(response.token);
+            Context.authenticate(response.token);
+            Context.init();
         })
     };
 
