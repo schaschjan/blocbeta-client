@@ -7,6 +7,7 @@ db.version(1)
     .stores({holdStyles: '++id'})
     .stores({walls: '++id'})
     .stores({tags: '++id'})
-    .stores({setters: '++id'});
+    .stores({setters: '++id'})
+    .stores({boulders: '++id'});
 
 export default db;

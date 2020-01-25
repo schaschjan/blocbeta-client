@@ -19,8 +19,6 @@ const LocationSelect = () => {
         return null;
     }
 
-    console.log(locations);
-
     return (
         <select>
             {locations.map(location => {
@@ -45,7 +43,7 @@ export default function Header() {
         <header className="header">
             <ul>
                 <li>
-                    <Link to={getPath('/admin')}>
+                    <Link to={getPath('/dashboard')}>
                         <strong>BlocBeta</strong> @ <LocationSelect/>
                     </Link>
                 </li>
@@ -53,21 +51,13 @@ export default function Header() {
 
             <ul>
                 <li>
-                    <Link to={getPath('/admin/boulder')}>Boulder</Link>
+                    <Link to={getPath('/boulder')}>Boulder</Link>
                 </li>
                 <li>
-                    <Link to={getPath('/admin/events')}>Events</Link>
+                    <Link to={getPath('/ranking')}>Ranking</Link>
                 </li>
                 <li>
-                    <Link to={getPath('/admin/users')}>Users</Link>
-                </li>
-                <li>
-                    <Link to={getPath('/admin/errors')}>
-                        Errors <span className="color-error">({window.errors})</span>
-                    </Link>
-                </li>
-                <li>
-                    <Link to={getPath('/admin/settings')}>Settings</Link>
+                    <Link to={getPath('/me  ')}>[{Context.getUsername()}]</Link>
                 </li>
             </ul>
         </header>

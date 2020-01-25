@@ -1,11 +1,14 @@
 import React, {useState, useEffect} from 'react';
-import {getBoulders, SelectFilter} from "../../../Helpers";
 import moment from "moment";
-import HoldStyle from "../../../components/HoldStyle";
-import Grade from "../../../components/Grade";
 import {useFilters, useRowSelect, useSortBy, useTable} from "react-table";
 import {Link} from "react-router-dom";
-import Button from "../../../components/Button";
+import Button from "../../components/Button";
+import {SelectFilter} from "../../Helpers";
+import HoldStyle from "../../components/HoldStyle";
+import Grade from "../../components/Grade";
+import {Loader} from "../../components/Loader";
+import ApiClient from "../../ApiClient";
+import db from "../../db";
 
 const IndeterminateCheckbox = React.forwardRef(
     ({indeterminate, ...rest}, ref) => {
@@ -195,19 +198,38 @@ export default function Index() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getBoulders(window.location.slug).then(boulders => {
-            setData(boulders);
-            setLoading(false);
+
+        async function getData() {
+            const boulders = await db.boulders.toArray();
+
+            for (let boulder of boulders) {
+                boulder.startWall = await db.walls.get(boulder.startWall.id);
+
+                if (boulder.endWall) {
+                    boulder.endWall = await db.walls.get(boulder.endWall.id);
+                }
+
+                boulder.grade = await db.grades.get(boulder.grade.id);
+                boulder.color = await db.holdStyles.get(boulder.color.id);
+
+                for (let [key, tag] of Object.entries(boulder.tags)) {
+                    boulder.tags[key] = await db.tags.get(tag.id);
+                }
+
+                for (let [key, setter] of Object.entries(boulder.setters)) {
+                    boulder.setters[key] = await db.setters.get(setter.id);
+                }
+            }
+        }
+
+        getData();
+
+        ApiClient.getAscents().then(response => {
+
         });
     }, []);
 
-    if (loading) {
-        return (
-            <div className="loader">
-                <em>loading</em>
-            </div>
-        )
-    }
+    if (loading) return <Loader/>;
 
     return (
         <div className="container">

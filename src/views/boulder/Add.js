@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import {getBoulders} from "../../../Helpers";
 import BoulderForm from "./Form";
 
 export default function Add() {

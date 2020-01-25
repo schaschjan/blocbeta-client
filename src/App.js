@@ -1,21 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
-import AdminDashboard from "./views/admin/Dashboard";
-import AdminBoulderIndex from "./views/admin/boulder/Index.js";
-import AdminBoulderAdd from "./views/admin/boulder/Add";
-import AdminBoulderEdit from "./views/admin/boulder/Edit";
-import AdminSettingsIndex from "./views/admin/settings/Index.js";
-import AdminErrorIndex from "./views/admin/errors";
-import ApiClient from "./ApiClient";
 import NotFound from "./views/NotFound";
-import AdminUserIndex from "./views/admin/users/Index.js";
 import Context from "./Context";
 import Login from "./views/Login";
 import Dashboard from "./views/Dashboard";
 import Header from "./components/Header";
-import {openDB, deleteDB, wrap, unwrap} from 'idb';
-import Dexie from "dexie";
-
+import BoulderIndex from "./views/boulder/Index.js";
 
 const PrivateRoute = ({children, ...rest}) => {
 
@@ -57,48 +47,11 @@ export default function App() {
             exact: true,
         },
         {
-            title: "Admin Dashboard",
-            path: "/:locationSlug/admin",
-            render: () => <AdminDashboard/>,
-            exact: true,
-            admin: true,
-        },
-        {
             title: "Boulder index",
-            path: "/:locationSlug/admin/boulder",
-            render: () => <AdminBoulderIndex/>,
+            path: "/:locationSlug/boulder",
+            render: () => <BoulderIndex/>,
             exact: true
         },
-        {
-            title: "Add boulder",
-            path: "/:locationSlug/admin/boulder/add",
-            render: () => <AdminBoulderAdd/>,
-            exact: true
-        },
-        {
-            title: "Edit boulder",
-            path: "/:locationSlug/admin/boulder/edit/:boulderId",
-            render: () => <AdminBoulderEdit/>,
-            exact: true
-        },
-        {
-            title: "Setter index",
-            path: "/:locationSlug/admin/users",
-            render: () => <AdminUserIndex/>,
-            exact: true
-        },
-        {
-            title: "Setting index",
-            path: "/:locationSlug/admin/settings",
-            render: () => <AdminSettingsIndex/>,
-            exact: true
-        },
-        {
-            title: "Error index",
-            path: "/:locationSlug/admin/errors",
-            render: () => <AdminErrorIndex/>,
-            exact: true
-        }
     ];
     return (
         <Router>

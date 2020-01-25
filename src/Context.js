@@ -64,7 +64,19 @@ class Context {
                     });
                 }
             });
+
+            db.boulders.count(count => {
+                if (count === 0) {
+                    ApiClient.getActiveBoulders().then(response => {
+                        db.boulders.bulkAdd(response);
+                    });
+                }
+            });
         });
+    }
+
+    static clearStorage() {
+        localStorage.clear();
     }
 
     static authenticate(token) {
@@ -82,6 +94,10 @@ class Context {
 
     static getToken() {
         return localStorage.getItem('token');
+    }
+
+    static getUsername() {
+        return localStorage.getItem('username');
     }
 
     static getLocationUrl() {
