@@ -151,96 +151,44 @@ export function getBoulders(location) {
 }
 
 export function Table({columns, data}) {
-
+    // Use the state and functions returned from useTable to build your UI
     const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
         rows,
         prepareRow,
-    } = useTable(
-        {
-            columns,
-            data,
-        },
-        useFilters,
-        useSortBy,
-        useRowSelect
-    );
+    } = useTable({
+        columns,
+        data,
+    });
 
-    const columnCount = columns.length;
-
+    // Render the UI for your table
     return (
-        <div {...getTableProps()}>
+        <table {...getTableProps()}>
+            <thead>
             {headerGroups.map(headerGroup => (
-                <div {...headerGroup.getHeaderGroupProps()}
-                     className={"collection-filter collection-filter--" + columnCount}>
+                <tr {...headerGroup.getHeaderGroupProps()}>
                     {headerGroup.headers.map(column => (
-                        <div {...column.getHeaderProps(column.getSortByToggleProps())}
-                             className="collection-filter__item">
-
-                            <div>
-                                {column.canFilter ? column.render('Filter') : null}
-                                <span>{column.isSorted ? column.isSortedDesc ? ' 🔽' : ' 🔼' : ''}</span>
-                            </div>
-
-                            {column.render('Header')}
-                        </div>
+                        <th {...column.getHeaderProps()}>{column.render('Header')}</th>
                     ))}
-                </div>
+                </tr>
             ))}
-
-            <ol {...getTableBodyProps()} className={"row"}>
-                {rows.map(
-                    (row) => {
-                        prepareRow(row);
-
-                        return (
-                            <li {...row.getRowProps()} className={"collection collection--" + columnCount}>
-                                {row.cells.map(cell => {
-                                    return (
-                                        <div {...cell.getCellProps()} className="collection__item">
-                                            {cell.render('Cell')}
-                                        </div>
-                                    )
-                                })}
-                            </li>
-                        )
-                    }
-                )}
-            </ol>
-        </div>
-    )
-}
-
-export function SelectFilter({column: {filterValue, setFilter, preFilteredRows, id},}) {
-    // Calculate the options for filtering
-    // using the preFilteredRows
-    const options = React.useMemo(() => {
-        const options = new Set();
-
-        preFilteredRows.forEach(row => {
-            options.add(row.values[id])
-        });
-
-        return [...options.values()].sort()
-
-    }, [id, preFilteredRows]);
-
-    // Render a multi-select box
-    return (
-        <select
-            value={filterValue}
-            onChange={e => {
-                setFilter(e.target.value || undefined)
-            }}
-        >
-            <option value="">All</option>
-            {options.map((option, i) => (
-                <option key={i} value={option}>
-                    {option}
-                </option>
-            ))}
-        </select>
+            </thead>
+            <tbody {...getTableBodyProps()}>
+            {rows.map(
+                (row, i) => {
+                    prepareRow(row);
+                    return (
+                        <tr {...row.getRowProps()}>
+                            {row.cells.map(cell => {
+                                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                            })}
+                        </tr>
+                    )
+                }
+            )}
+            </tbody>
+        </table>
     )
 }

@@ -1,196 +1,42 @@
 import React, {useState, useEffect} from 'react';
-import moment from "moment";
-import {useFilters, useRowSelect, useSortBy, useTable} from "react-table";
-import {Link} from "react-router-dom";
-import Button from "../../components/Button";
-import {SelectFilter} from "../../Helpers";
-import HoldStyle from "../../components/HoldStyle";
-import Grade from "../../components/Grade";
 import {Loader} from "../../components/Loader";
-import ApiClient from "../../ApiClient";
 import db from "../../db";
+import Context from "../../Context";
+import {Table} from "../../Helpers";
+import ApiClient from "../../ApiClient";
 
-const IndeterminateCheckbox = React.forwardRef(
-    ({indeterminate, ...rest}, ref) => {
-        const defaultRef = React.useRef();
-        const resolvedRef = ref || defaultRef;
+const AdminTable = (data) => {
 
-        React.useEffect(() => {
-            resolvedRef.current.indeterminate = indeterminate
-        }, [resolvedRef, indeterminate]);
-
-        return (
-            <>
-                <input type="checkbox" ref={resolvedRef} {...rest} />
-            </>
-        )
-    }
-);
-
-function Table({data}) {
-
-    const columns = React.useMemo(() => [
-        {
-            id: 'edit',
-            Header: () => {
-                return (
-                    <div>
-                        <select>
-                            <option>Select…</option>
-                            <option>Activate</option>
-                            <option>Deactivate</option>
-                            <option>Prune ascents</option>
-                        </select>
-                    </div>
-                )
-            },
-            accessor: null,
-            Cell: ({row}) => {
-                return <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-            }
-        },
+    const columns = [
         {
             Header: 'Name',
             accessor: 'name',
-            Filter: null,
-            Cell: ({cell, row}) => {
-                return (
-                    <Link to={`/${window.location.slug}/admin/boulder/edit/${row.original.id}`}>
-                        {cell.value}
-                    </Link>
-                )
-            }
         },
         {
             Header: 'Color',
-            accessor: 'color',
-            Filter: SelectFilter,
-            filter: 'equals',
-            Cell: ({cell}) => {
-                return <HoldStyle name={cell.value}/>
-            }
+            accessor: 'color.name',
         },
         {
             Header: 'Grade',
-            accessor: 'grade.id',
-            Filter: SelectFilter,
-            Cell: ({cell}) => {
-                return <Grade id={cell.value}/>
-            }
+            accessor: 'grade.name',
+        },
+        {
+            Header: 'Ascents',
+            accessor: 'ascents',
         },
         {
             Header: 'Start',
             accessor: 'startWall.name',
-            Filter: SelectFilter
         },
         {
-            Header: 'End',
-            accessor: 'endWall.name',
-            Filter: SelectFilter
-        },
-        {
-            Header: 'Setters',
-            accessor: 'setters',
-            Filter: null,
-            Cell: ({row}) => {
-                return row.original.setters.map(setter => {
-                    return setter.username + ' ';
-                });
-            }
-        },
-        {
-            Header: 'Tags',
-            accessor: 'tags',
-            Filter: null,
-            Cell: ({row}) => {
-                return row.original.tags.map(tag => {
-                    return tag.emoji + ' ';
-                });
-            }
-        },
-        {
-            Header: 'Set',
-            accessor: 'createdAt',
-            Filter: null,
-            Cell: row => (
-                <span>{moment().fromNow()}</span>
-            )
-        },
-    ]);
+            Header: 'Me',
+            accessor: 'me.type',
+        }
+    ];
 
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-        selectedFlatRows,
-    } = useTable(
-        {
-            columns,
-            data,
-        },
-        useFilters,
-        useSortBy,
-        useRowSelect,
-    );
+    return <Table columns={columns} data={data.data}/>
 
-    const columnCount = columns.length;
-
-    return (
-        <div {...getTableProps()}>
-            {headerGroups.map(headerGroup => (
-                <div {...headerGroup.getHeaderGroupProps()}
-                     className={"collection-filter collection-filter--" + columnCount}>
-                    {headerGroup.headers.map(column => (
-                        <div {...column.getHeaderProps(column.getSortByToggleProps())}
-                             className="collection-filter__item">
-
-                            <div>
-                                {column.canFilter ? column.render('Filter') : null}
-                                <span>{column.isSorted ? column.isSortedDesc ? ' 🔽' : ' 🔼' : ''}</span>
-                            </div>
-
-                            {column.render('Header')}
-                        </div>
-                    ))}
-                </div>
-            ))}
-
-            <ol {...getTableBodyProps()} className={"row"}>
-                {rows.map(
-                    (row) => {
-                        prepareRow(row);
-
-                        return (
-                            <li {...row.getRowProps()} className={"collection collection--" + columnCount}>
-                                {row.cells.map(cell => {
-                                    return (
-                                        <div {...cell.getCellProps()} className="collection__item">
-                                            {cell.render('Cell')}
-                                        </div>
-                                    )
-                                })}
-                            </li>
-                        )
-                    }
-                )}
-            </ol>
-
-            <code>
-                {JSON.stringify(
-                    {
-                        'selected': selectedFlatRows.map(
-                            d => d.original.id
-                        ),
-                    },
-                    null,
-                    2
-                )}
-            </code>
-        </div>
-    )
-}
+};
 
 export default function Index() {
 
@@ -198,8 +44,11 @@ export default function Index() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-
         async function getData() {
+            const ascents = await ApiClient.getAscents().then(ascents => {
+                return ascents.reduce((obj, item) => Object.assign(obj, {[item.boulderId]: item}), {});
+            });
+
             const boulders = await db.boulders.toArray();
 
             for (let boulder of boulders) {
@@ -219,28 +68,44 @@ export default function Index() {
                 for (let [key, setter] of Object.entries(boulder.setters)) {
                     boulder.setters[key] = await db.setters.get(setter.id);
                 }
+
+                const ascentData = ascents[boulder.id];
+
+                if (!ascentData) {
+                    console.error(boulder.id + ' not found');
+                    continue
+                }
+
+                boulder.points = ascentData.points;
+                boulder.ascents = ascentData.ascents;
+                boulder.me = ascentData.me;
             }
+
+            return boulders;
         }
 
-        getData();
-
-        ApiClient.getAscents().then(response => {
-
+        getData().then(data => {
+            setData(data);
+            setLoading(false);
         });
     }, []);
 
     if (loading) return <Loader/>;
 
+    const Table = () => {
+
+        if (Context.isAdmin()) {
+            return <AdminTable data={data}/>
+        } else {
+            return <div>User Table</div>
+        }
+    };
+
     return (
         <div className="container">
             <h1>Boulder ({data.length})</h1>
 
-            <div className="d-flex f-column">
-                <Table data={data}/>
-                <Link to={`/${window.location.slug}/admin/boulder/add`}>
-                    <Button>Add</Button>
-                </Link>`
-            </div>
+            <Table/>
         </div>
     )
 };

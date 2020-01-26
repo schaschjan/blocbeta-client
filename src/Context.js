@@ -96,6 +96,10 @@ class Context {
         return localStorage.getItem('token');
     }
 
+    static isAdmin() {
+        return localStorage.getItem('roles').includes('ROLE_ADMIN')
+    }
+
     static getUsername() {
         return localStorage.getItem('username');
     }
