@@ -8,6 +8,7 @@ export default function Login(props) {
 
     const {register, handleSubmit, errors, setError} = useForm();
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const onSubmit = data => {
         setIsSubmitted(true);
@@ -21,10 +22,12 @@ export default function Login(props) {
 
             Context.authenticate(response.token);
             Context.init();
+
+            setIsAuthenticated(true);
         })
     };
 
-    if (Context.isAuthenticated()) {
+    if (isAuthenticated) {
         return (
             <Redirect to={{pathname: `/${Context.getLocationUrl()}/dashboard`}}/>
         )

@@ -4,37 +4,97 @@ import db from "../../db";
 import Context from "../../Context";
 import {Table} from "../../Helpers";
 import ApiClient from "../../ApiClient";
+import Grade from "../../components/Grade";
+import HoldStyle from "../../components/HoldStyle";
+import Icon from "../../components/Icon";
+import moment from "moment";
 
 const AdminTable = (data) => {
 
-    const columns = [
-        {
-            Header: 'Name',
-            accessor: 'name',
-        },
-        {
-            Header: 'Color',
-            accessor: 'color.name',
-        },
-        {
-            Header: 'Grade',
-            accessor: 'grade.name',
-        },
-        {
-            Header: 'Ascents',
-            accessor: 'ascents',
-        },
-        {
-            Header: 'Start',
-            accessor: 'startWall.name',
-        },
-        {
-            Header: 'Me',
-            accessor: 'me.type',
-        }
-    ];
+    const renderRowSubComponent = React.useCallback(
+        ({row}) => (
+            <pre
+                style={{
+                    fontSize: '10px',
+                }}
+            >
+        <code>{JSON.stringify({values: row.values}, null, 2)}</code>
+      </pre>
+        ),
+        []
+    );
 
-    return <Table columns={columns} data={data.data}/>
+    const columns = React.useMemo(
+        () => [
+            {
+                Header: 'Name',
+                id: 'expander',
+                accessor: 'name',
+                Cell: ({row}) => (
+                    // Use Cell to render an expander for each row.
+                    // We can use the getExpandedToggleProps prop-getter
+                    // to build the expander.
+                    <span {...row.getExpandedToggleProps()}>
+            {row.isExpanded ? '👇' : '👉'}
+          </span>
+                ),
+            },
+            {
+                Header: 'Color',
+                accessor: 'color.name',
+                Cell: ({cell}) => {
+                    return <HoldStyle name={cell.value}/>
+                }
+            },
+            {
+                Header: 'Grade',
+                accessor: 'grade',
+                Cell: ({cell}) => {
+                    return <Grade name={cell.value.name} color={cell.value.color}/>
+                }
+            },
+            {
+                Header: 'Ascents',
+                accessor: 'ascents',
+            },
+            {
+                Header: 'Start',
+                accessor: 'startWall.name',
+            },
+            {
+                Header: 'End',
+                accessor: 'endWall.name',
+            },
+            {
+                Header: 'Setters',
+                accessor: (row) => {
+                    return row.setters.map(setter => setter.username)
+                }
+            },
+            {
+                Header: 'Tags',
+                accessor: (row) => {
+                    return row.tags.map(tag => tag.emoji)
+                }
+            },
+            {
+                Header: 'Date',
+                accessor: 'createdAt',
+                Cell: ({cell}) => {
+                    return (
+                        <span>{moment(cell.value).fromNow()}</span>
+                    )
+                }
+            },
+            {
+                Header: 'Me',
+                accessor: 'me.type',
+                Cell: ({cell}) => {
+                    return <Icon name={cell.value}/>
+                }
+            }], []);
+
+    return <Table columns={columns} data={data.data} renderRowSubComponent={renderRowSubComponent}/>
 
 };
 

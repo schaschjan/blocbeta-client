@@ -16,7 +16,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "react-select": "^3.0.8",
-    "react-table": "^7.0.0-beta.12"
+    "react-table": "^7.0.0-rc.15"
   },
   "scripts": {
     "start": "react-scripts start",

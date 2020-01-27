@@ -1,80 +1,9 @@
-import {useTable, useFilters, useSortBy, useRowSelect} from "react-table";
+import {useTable, useExpanded} from "react-table";
 import React from "react";
 import Context from "./Context";
 
 export function getPath(path) {
     return `/${Context.getLocationUrl()}${path}`;
-}
-
-export function isAdmin() {
-    return window.location.pathname.includes('/admin')
-}
-
-export function resolveGrade(id) {
-    return window.grades[id]
-}
-
-export function resolveColor(id) {
-    return window.colors[id]
-}
-
-export function resolveWall(id) {
-    return window.walls[id]
-}
-
-export function resolveTag(id) {
-    return window.tags[id]
-}
-
-export function resolveSetter(id) {
-    return window.setters[id]
-}
-
-export function resolveBoulders() {
-    return Object.values(window.boulders);
-}
-
-export function getColorOption(id) {
-    const color = resolveColor(id);
-
-    return {
-        label: color.name,
-        value: color.id
-    };
-}
-
-export function getTagOption(id) {
-    const tag = resolveTag(id);
-
-    return {
-        label: `${tag.emoji} – ${tag.name}`,
-        value: tag.id
-    };
-}
-
-export function getWallOption(id) {
-    const wall = resolveWall(id);
-
-    return {
-        label: wall.name,
-        value: wall.id
-    };
-}
-
-export function getSetterOption(id) {
-    const setter = resolveSetter(id);
-
-    return {
-        label: setter.username,
-        value: setter.id
-    };
-}
-
-export function getStatusOption(status) {
-    return {
-        label: status,
-        value: status
-    }
 }
 
 export function getOptions(resource) {
@@ -86,71 +15,7 @@ export function getOptions(resource) {
     });
 }
 
-export function getGradeOptions() {
-    return Object.values(window.grades).map(grade => {
-        return {
-            value: grade.id,
-            label: grade.name
-        }
-    });
-}
-
-export function getGradeOption(id) {
-    const grade = resolveGrade(id);
-
-    return {
-        value: grade.id,
-        label: grade.name
-    }
-}
-
-export function getBoulder(id) {
-    return fetch(`/boulder/${id}`)
-        .then(response => response.json())
-}
-
-export function getBoulders(location) {
-
-    return fetch(`/${location}/boulder/filter/active`)
-        .then(response => response.json())
-        .then(boulders => {
-            for (let boulder of boulders) {
-                const color = resolveColor(boulder.color.id);
-                const startWall = resolveWall(boulder.startWall.id);
-
-                if (!boulder.endWall) {
-                    boulder.endWall = null;
-                } else {
-                    boulder.endWall = resolveWall(boulder.endWall.id);
-                }
-
-                const tags = [];
-
-                for (let tag of boulder.tags) {
-                    tags.push(resolveTag(tag.id))
-                }
-
-                const setters = [];
-
-                for (let setter of boulder.setters) {
-                    setters.push(resolveSetter(setter.id))
-                }
-
-                boulder.color = color.name;
-                boulder.startWall = startWall;
-                boulder.tags = tags;
-                boulder.setters = setters;
-
-                for (let tag of boulder.tags) {
-                    resolveTag(tag.id);
-                }
-            }
-
-            return boulders;
-        });
-}
-
-export function Table({columns, data}) {
+export function Table({columns, data, renderRowSubComponent}) {
     // Use the state and functions returned from useTable to build your UI
     const {
         getTableProps,
@@ -158,10 +23,13 @@ export function Table({columns, data}) {
         headerGroups,
         rows,
         prepareRow,
+        flatColumns,
     } = useTable({
-        columns,
-        data,
-    });
+            columns,
+            data,
+        },
+        useExpanded
+    );
 
     // Render the UI for your table
     return (
@@ -176,18 +44,40 @@ export function Table({columns, data}) {
             ))}
             </thead>
             <tbody {...getTableBodyProps()}>
-            {rows.map(
-                (row, i) => {
-                    prepareRow(row);
-                    return (
-                        <tr {...row.getRowProps()}>
+            {rows.map((row, i) => {
+                prepareRow(row)
+
+                return (
+                    // Use a React.Fragment here so the table markup is still valid
+                    <React.Fragment>
+                        <tr>
                             {row.cells.map(cell => {
-                                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                return (
+                                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                )
                             })}
                         </tr>
-                    )
-                }
-            )}
+                        {/*
+                    If the row is in an expanded state, render a row with a
+                    column that fills the entire length of the table.
+                  */}
+                        {row.isExpanded ? (
+                            <tr>
+                                <td colSpan={flatColumns.length}>
+                                    {/*
+                          Inside it, call our renderRowSubComponent function. In reality,
+                          you could pass whatever you want as props to
+                          a component like this, including the entire
+                          table instance. But for this example, we'll just
+                          pass the row
+                        */}
+                                    {renderRowSubComponent({row})}
+                                </td>
+                            </tr>
+                        ) : null}
+                    </React.Fragment>
+                )
+            })}
             </tbody>
         </table>
     )
