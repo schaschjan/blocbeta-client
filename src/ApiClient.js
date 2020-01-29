@@ -30,7 +30,7 @@ class ApiClient {
         }
 
         if (response.status === 401) {
-            Context.clearStorage();
+            Context.logout();
 
             window.location.href = '/login';
         }

@@ -75,7 +75,11 @@ class Context {
         });
     }
 
-    static clearStorage() {
+    static destroy() {
+        db.delete();
+    }
+
+    static logout() {
         localStorage.clear();
     }
 
@@ -110,6 +114,10 @@ class Context {
 
     static getLocation() {
         return JSON.parse(localStorage.getItem('location'))
+    }
+
+    static getPath(path) {
+        return `/${Context.getLocationUrl()}${path}`;
     }
 }
 

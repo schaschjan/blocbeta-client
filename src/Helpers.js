@@ -1,10 +1,5 @@
 import {useTable, useExpanded} from "react-table";
 import React from "react";
-import Context from "./Context";
-
-export function getPath(path) {
-    return `/${Context.getLocationUrl()}${path}`;
-}
 
 export function getOptions(resource) {
     return Object.values(resource).map(element => {

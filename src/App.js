@@ -1,14 +1,20 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
-import NotFound from "./views/NotFound";
 import Context from "./Context";
 import Login from "./views/Login";
 import Dashboard from "./views/Dashboard";
 import Header from "./components/Header";
 import BoulderIndex from "./views/boulder/Index.js";
 
-const PrivateRoute = ({children, ...rest}) => {
+const LoginRedirect = () => (
+    <Redirect
+        to={{
+            pathname: "/login"
+        }}
+    />
+);
 
+const PrivateRoute = ({children, ...rest}) => {
     if (Context.isAuthenticated()) {
         return <Route {...rest}/>
     }
@@ -17,26 +23,27 @@ const PrivateRoute = ({children, ...rest}) => {
         <Route
             {...rest}
             render={({location}) =>
-                Context.isAuthenticated() ? (children) : (
-                    <Redirect
-                        to={{
-                            pathname: "/login",
-                            state: {from: location}
-                        }}
-                    />
-                )
+                Context.isAuthenticated() ? (children) : <LoginRedirect/>
             }
         />
     );
 };
 
-export default function App() {
+const App = () => {
+
+    const [authenticated, setAuthenticated] = useState(Context.isAuthenticated);
+
+    function handleSuccess(data) {
+        setAuthenticated(true);
+
+        return <Redirect to={{pathname: `/${Context.getLocationUrl()}/dashboard`}}/>;
+    }
 
     const routes = [
         {
             title: "Login",
             path: "/login",
-            render: () => <Login/>,
+            render: () => <Login onAuthenticationSuccess={handleSuccess}/>,
             public: true,
             exact: true,
         },
@@ -53,13 +60,11 @@ export default function App() {
             exact: true
         },
     ];
+
     return (
         <Router>
             <div className="app">
-
-                {Context.isAuthenticated() &&
-                <Header/>
-                }
+                <Header authenticated={authenticated}/>
 
                 <div className="content">
                     <Switch>
@@ -71,11 +76,13 @@ export default function App() {
                             return <PrivateRoute key={i} {...route} />
                         })}
 
-                        <Route render={() => <NotFound routes={routes}/>}/>
+                        <Route render={() => <LoginRedirect/>}/>
                     </Switch>
                 </div>
 
             </div>
         </Router>
     );
-}
+};
+
+export default App

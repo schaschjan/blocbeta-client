@@ -2,13 +2,12 @@ import React, {useState} from 'react';
 import useForm from 'react-hook-form';
 import ApiClient from "../ApiClient";
 import Context from "../Context";
-import {Redirect} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 
-export default function Login(props) {
+const Login = ({onAuthenticationSuccess, history}) => {
 
     const {register, handleSubmit, errors, setError} = useForm();
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const onSubmit = data => {
         setIsSubmitted(true);
@@ -18,20 +17,16 @@ export default function Login(props) {
 
             if (response.code === 401) {
                 setError("global", "global", response.message);
+                return;
             }
 
             Context.authenticate(response.token);
             Context.init();
 
-            setIsAuthenticated(true);
+            onAuthenticationSuccess(response);
+            history.push(Context.getPath('/dashboard'))
         })
     };
-
-    if (isAuthenticated) {
-        return (
-            <Redirect to={{pathname: `/${Context.getLocationUrl()}/dashboard`}}/>
-        )
-    }
 
     return (
         <div className="container">
@@ -70,4 +65,6 @@ export default function Login(props) {
             </form>
         </div>
     )
-}
+};
+
+export default withRouter(Login)
