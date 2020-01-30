@@ -5,6 +5,7 @@ import Login from "./views/Login";
 import Dashboard from "./views/Dashboard";
 import Header from "./components/Header";
 import BoulderIndex from "./views/boulder/Index.js";
+import Current from "./views/ranking/Current";
 
 const LoginRedirect = () => (
     <Redirect
@@ -22,7 +23,7 @@ const PrivateRoute = ({children, ...rest}) => {
     return (
         <Route
             {...rest}
-            render={({location}) =>
+            render={() =>
                 Context.isAuthenticated() ? (children) : <LoginRedirect/>
             }
         />
@@ -59,6 +60,12 @@ const App = () => {
             render: () => <BoulderIndex/>,
             exact: true
         },
+        {
+            title: "Current ranking",
+            path: "/:locationSlug/ranking/current",
+            render: () => <Current/>,
+            exact: true
+        }
     ];
 
     return (

@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import Context from "../Context";
 import ApiClient from "../ApiClient";
 import {Loader} from "../components/Loader";
 
@@ -9,7 +8,7 @@ export default function Dashboard(props) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        ApiClient.locationStats().then((response) => {
+        ApiClient.locationStats().then(response => {
             setStats(response);
             setLoading(false);
         })

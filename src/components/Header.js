@@ -76,7 +76,7 @@ const Header = ({authenticated, history}) => {
                     <Link to={Context.getPath('/boulder')}>Boulder</Link>
                 </li>
                 <li>
-                    <Link to={Context.getPath('/ranking')}>Ranking</Link>
+                    <Link to={Context.getPath('/ranking/current')}>Ranking</Link>
                 </li>
                 <li>
                     <Link to={Context.getPath('/me')}>[{Context.getUsername()}]</Link>

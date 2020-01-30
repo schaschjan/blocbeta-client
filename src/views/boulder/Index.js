@@ -9,7 +9,7 @@ import HoldStyle from "../../components/HoldStyle";
 import Icon from "../../components/Icon";
 import moment from "moment";
 
-const AdminTable = (data) => {
+const AdminTable = ({data}) => {
 
     const renderRowSubComponent = React.useCallback(
         ({row}) => (
@@ -94,7 +94,7 @@ const AdminTable = (data) => {
                 }
             }], []);
 
-    return <Table columns={columns} data={data.data} renderRowSubComponent={renderRowSubComponent}/>
+    return <Table columns={columns} data={data} renderRowSubComponent={renderRowSubComponent}/>
 
 };
 
@@ -153,7 +153,6 @@ export default function Index() {
     if (loading) return <Loader/>;
 
     const Table = () => {
-
         if (Context.isAdmin()) {
             return <AdminTable data={data}/>
         } else {

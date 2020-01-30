@@ -113,6 +113,18 @@ class ApiClient {
             .then(response => ApiClient.checkResponse(response))
             .then(response => response.json());
     }
+
+    static getCurrentRanking() {
+        return fetch(`/api/${Context.getLocationUrl()}/ranking/current`, this.getRequestConfig())
+            .then(response => ApiClient.checkResponse(response))
+            .then(response => response.json());
+    }
+
+    static getCurrentComparison(a, b) {
+        return fetch(`/api/${Context.getLocationUrl()}/compare/${a}/to/${b}/at/current`, this.getRequestConfig())
+            .then(response => ApiClient.checkResponse(response))
+            .then(response => response.json());
+    }
 }
 
 
