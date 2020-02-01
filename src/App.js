@@ -5,7 +5,9 @@ import Login from "./views/Login";
 import Dashboard from "./views/Dashboard";
 import Header from "./components/Header";
 import BoulderIndex from "./views/boulder/Index.js";
-import Current from "./views/ranking/Current";
+import CurrentRanking from "./views/ranking/Current";
+import CurrentComparison from "./views/compare/Current";
+import Account from "./views/Account";
 
 const LoginRedirect = () => (
     <Redirect
@@ -63,7 +65,19 @@ const App = () => {
         {
             title: "Current ranking",
             path: "/:locationSlug/ranking/current",
-            render: () => <Current/>,
+            render: () => <CurrentRanking/>,
+            exact: true
+        },
+        {
+            title: "Compare current",
+            path: "/:locationSlug/compare/:a/to/:b/at/current",
+            render: () => <CurrentComparison/>,
+            exact: true
+        },
+        {
+            title: "Account",
+            path: "/account",
+            render: () => <Account/>,
             exact: true
         }
     ];

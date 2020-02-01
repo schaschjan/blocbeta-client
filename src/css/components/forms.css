@@ -2,7 +2,7 @@
     margin: 1.25rem 0;
 }
 
-::placeholder{
+::placeholder {
     color: var(--color-midgrey);
 }
 
@@ -23,6 +23,11 @@ input:focus {
 button {
     border: 0;
     outline: none;
+}
+
+label {
+    color: var(--color-midgrey);
+    font-size: .75rem;
 }
 
 .form-error {

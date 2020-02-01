@@ -79,10 +79,10 @@ const Header = ({authenticated, history}) => {
                     <Link to={Context.getPath('/ranking/current')}>Ranking</Link>
                 </li>
                 <li>
-                    <Link to={Context.getPath('/me')}>[{Context.getUsername()}]</Link>
+                    <Link to={'/account'}>[{Context.getUsername()}]</Link>
                 </li>
                 <li>
-                    <a href='#' onClick={(event) => handleLogout(event)}>Leave!</a>
+                    <a href='#' onClick={(event) => handleLogout(event)}>-></a>
                 </li>
             </ul>
         </header>

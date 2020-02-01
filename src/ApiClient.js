@@ -3,25 +3,34 @@ import Context from "./Context";
 class ApiClient {
 
     static authorize(username, password) {
-        return fetch(`/api/login`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                'username': username,
-                'password': password
-            })
-        }).then(response => response.json());
+        const data = {
+            "username": username,
+            "password": password
+        };
+
+        return fetch(`/api/login`, this.getRequestConfig("post", data))
+            .then(response => response.json());
     }
 
-    static getRequestConfig() {
-        return {
+    static getRequestConfig(method = "get", data) {
+
+        let config = {
             headers: {
-                'Authorization': `Bearer ${Context.getToken()}`
+                "Authorization": `Bearer ${Context.getToken()}`,
+                "Accept": "application/json",
+                "Content-Type": "application/json"
             }
+        };
+
+        if (method !== "get") {
+            config.method = method
         }
+
+        if (data) {
+            config.body = JSON.stringify(data)
+        }
+
+        return config;
     }
 
     static checkResponse(response) {
@@ -32,7 +41,7 @@ class ApiClient {
         if (response.status === 401) {
             Context.logout();
 
-            window.location.href = '/login';
+            window.location.href = "/login";
         }
     }
 
@@ -122,6 +131,24 @@ class ApiClient {
 
     static getCurrentComparison(a, b) {
         return fetch(`/api/${Context.getLocationUrl()}/compare/${a}/to/${b}/at/current`, this.getRequestConfig())
+            .then(response => ApiClient.checkResponse(response))
+            .then(response => response.json());
+    }
+
+    static getUser(id) {
+        return fetch(`/api/showuser/${id}`, this.getRequestConfig())
+            .then(response => ApiClient.checkResponse(response))
+            .then(response => response.json());
+    }
+
+    static getMe() {
+        return fetch(`/api/me`, this.getRequestConfig())
+            .then(response => ApiClient.checkResponse(response))
+            .then(response => response.json());
+    }
+
+    static updateMe(data) {
+        return fetch(`/api/me`, this.getRequestConfig("put", data))
             .then(response => ApiClient.checkResponse(response))
             .then(response => response.json());
     }

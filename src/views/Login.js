@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import useForm from 'react-hook-form';
+import {useForm} from 'react-hook-form';
 import ApiClient from "../ApiClient";
 import Context from "../Context";
 import {withRouter} from "react-router-dom";
@@ -57,9 +57,9 @@ const Login = ({onAuthenticationSuccess, history}) => {
 
                 <div className="form-row">
                     {isSubmitted ? (
-                        <input type="submit" value="Submit" className="button button--disabled" disabled/>
+                        <input type="submit" value="Login" className="button button--disabled" disabled/>
                     ) : (
-                        <input type="submit" value="Submit" className="button"/>
+                        <input type="submit" value="Login" className="button"/>
                     )}
                 </div>
             </form>

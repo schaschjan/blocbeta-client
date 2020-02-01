@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Loader} from "../../components/Loader";
 import db from "../../db";
 import Context from "../../Context";
-import {Table} from "../../Helpers";
+import {concatToList, resolveBoulder, Table} from "../../Helpers";
 import ApiClient from "../../ApiClient";
 import Grade from "../../components/Grade";
 import HoldStyle from "../../components/HoldStyle";
@@ -30,12 +30,12 @@ const AdminTable = ({data}) => {
                 Header: 'Name',
                 id: 'expander',
                 accessor: 'name',
-                Cell: ({row}) => (
+                Cell: ({row, cell}) => (
                     // Use Cell to render an expander for each row.
                     // We can use the getExpandedToggleProps prop-getter
                     // to build the expander.
                     <span {...row.getExpandedToggleProps()}>
-            {row.isExpanded ? '👇' : '👉'}
+            {row.isExpanded ? '👇' : '👉'} {cell.value}
           </span>
                 ),
             },
@@ -67,9 +67,7 @@ const AdminTable = ({data}) => {
             },
             {
                 Header: 'Setters',
-                accessor: (row) => {
-                    return row.setters.map(setter => setter.username)
-                }
+                accessor: (row) => concatToList(row.setters, 'username')
             },
             {
                 Header: 'Tags',
@@ -112,22 +110,8 @@ export default function Index() {
             const boulders = await db.boulders.toArray();
 
             for (let boulder of boulders) {
-                boulder.startWall = await db.walls.get(boulder.startWall.id);
 
-                if (boulder.endWall) {
-                    boulder.endWall = await db.walls.get(boulder.endWall.id);
-                }
-
-                boulder.grade = await db.grades.get(boulder.grade.id);
-                boulder.color = await db.holdStyles.get(boulder.color.id);
-
-                for (let [key, tag] of Object.entries(boulder.tags)) {
-                    boulder.tags[key] = await db.tags.get(tag.id);
-                }
-
-                for (let [key, setter] of Object.entries(boulder.setters)) {
-                    boulder.setters[key] = await db.setters.get(setter.id);
-                }
+                await resolveBoulder(boulder);
 
                 const ascentData = ascents[boulder.id];
 

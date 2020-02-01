@@ -3,6 +3,8 @@ import moment from "moment";
 import ApiClient from "../../ApiClient";
 import {Loader} from "../../components/Loader";
 import {Table} from "../../Helpers";
+import {Link} from "react-router-dom";
+import Context from "../../Context";
 
 const Current = () => {
     const [data, setData] = useState(null);
@@ -35,6 +37,17 @@ const Current = () => {
                 accessor: 'user.lastActivity',
                 Cell: ({row}) => {
                     return moment(row.original.user.lastActivity, "YYYY-MM-DD hh:mm:ss.u").fromNow();
+                }
+            },
+            {
+                accessor: 'user.id',
+                Cell: ({cell}) => {
+                    return (
+                        <Link
+                            to={Context.getPath(`/compare/${Context.getUserId()}/to/${cell.value}/at/current`)}>
+                            Compare
+                        </Link>
+                    )
                 }
             }
         ], []

@@ -108,6 +108,10 @@ class Context {
         return localStorage.getItem('username');
     }
 
+    static getUserId() {
+        return localStorage.getItem('id');
+    }
+
     static getLocationUrl() {
         return this.getLocation().url
     }
