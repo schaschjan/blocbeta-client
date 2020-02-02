@@ -8,6 +8,7 @@ import BoulderIndex from "./views/boulder/Index.js";
 import CurrentRanking from "./views/ranking/Current";
 import CurrentComparison from "./views/compare/Current";
 import Account from "./views/Account";
+import {ToastContainer} from "react-toastify";
 
 const LoginRedirect = () => (
     <Redirect
@@ -101,6 +102,7 @@ const App = () => {
                     </Switch>
                 </div>
 
+                <ToastContainer/>
             </div>
         </Router>
     );

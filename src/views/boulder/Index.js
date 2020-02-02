@@ -9,6 +9,25 @@ import HoldStyle from "../../components/HoldStyle";
 import Icon from "../../components/Icon";
 import moment from "moment";
 
+const Ascents = ({me}) => {
+
+    console.log(me);
+
+    return (
+        <ul className="list-unstyled">
+            <li>
+                <Icon name="flash"/>
+            </li>
+            <li>
+                <Icon name="top"/>
+            </li>
+            <li>
+                <Icon name="resign"/>
+            </li>
+        </ul>
+    )
+};
+
 const AdminTable = ({data}) => {
 
     const renderRowSubComponent = React.useCallback(
@@ -86,9 +105,11 @@ const AdminTable = ({data}) => {
             },
             {
                 Header: 'Me',
-                accessor: 'me.type',
+                accessor: 'me',
                 Cell: ({cell}) => {
-                    return <Icon name={cell.value}/>
+                    const ascent = cell.value;
+
+                    return <Ascents me={ascent}/>
                 }
             }], []);
 

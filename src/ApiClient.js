@@ -149,8 +149,7 @@ class ApiClient {
 
     static updateMe(data) {
         return fetch(`/api/me`, this.getRequestConfig("put", data))
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
+            .then(response => ApiClient.checkResponse(response));
     }
 }
 

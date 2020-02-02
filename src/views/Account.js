@@ -3,6 +3,7 @@ import {Loader} from "../components/Loader";
 import ApiClient from "../ApiClient";
 import {useForm} from "react-hook-form";
 import {getError} from "../Helpers";
+import {toast} from "react-toastify";
 
 const Account = () => {
     const [data, setData] = useState(null);
@@ -16,9 +17,8 @@ const Account = () => {
         console.log(data);
 
         ApiClient.updateMe(data).then(data => {
-            console.log(data);
             setSubmitting(false);
-            // todo: trigger toast
+            toast.success("Account updated");
         });
     };
 
@@ -38,7 +38,10 @@ const Account = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-row">
                     <label>Visible</label>
-                    <input name="visible" type="checkbox" ref={register()}/>
+                    <input name="visible"
+                           type="checkbox"
+                           defaultChecked={data.visible}
+                           ref={register()}/>
                 </div>
 
                 <div className="form-row">
@@ -60,7 +63,7 @@ const Account = () => {
                 <div className="form-row">
                     <label>Arm span</label>
                     <input name="armSpan"
-                           value={data.armSpan}
+                           defaultValue={data.armSpan}
                            ref={register({
                                required: true,
                                min: {
@@ -80,7 +83,7 @@ const Account = () => {
                 <div className="form-row">
                     <label>Height</label>
                     <input name="height"
-                           value={data.height}
+                           defaultValue={data.height}
                            ref={register({
                                required: true,
                                min: {
@@ -100,7 +103,7 @@ const Account = () => {
                 <div className="form-row">
                     <label>Weight</label>
                     <input name="weight"
-                           value={data.weight}
+                           defaultValue={data.weight}
                            ref={register({
                                required: true,
                                min: {
