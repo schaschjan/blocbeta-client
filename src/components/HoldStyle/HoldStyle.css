@@ -1,0 +1,10 @@
+.holdstyle {
+    margin: 12px 6px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.holdstyle > div {
+    width: 40px;
+    height: 40px;
+}

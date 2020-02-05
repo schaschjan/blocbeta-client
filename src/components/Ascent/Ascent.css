@@ -1,0 +1,37 @@
+.ascent {
+    width: 40px;
+    height: 40px;
+    box-sizing: border-box;
+    border: 1px solid #333;
+    display: flex;
+    margin: 12px 6px;
+    overflow: hidden;
+}
+
+.ascent--flash.ascent--checked {
+    border: 1px solid blue;
+}
+
+.ascent--flash.ascent--checked svg path {
+    fill: blue;
+}
+
+.ascent--top.ascent--checked {
+    border: 1px solid green;
+}
+
+.ascent--top.ascent--checked svg path {
+    fill: green;
+}
+
+.ascent--resign.ascent--checked {
+    border: 1px solid red;
+}
+
+.ascent--resign.ascent--checked svg path {
+    fill: red;
+}
+
+.ascent:hover {
+    cursor: pointer;
+}

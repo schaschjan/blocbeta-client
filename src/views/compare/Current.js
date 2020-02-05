@@ -3,10 +3,11 @@ import {Loader} from "../../components/Loader";
 import ApiClient from "../../ApiClient";
 import {useParams} from "react-router-dom";
 import db from "../../db";
-import {concatToList, resolveBoulder, Table} from "../../Helpers";
-import Icon from "../../components/Icon";
-import HoldStyle from "../../components/HoldStyle";
-import Grade from "../../components/Grade";
+import {concatToList, resolveBoulder} from "../../Helpers";
+import Grade from "../../components/Grade/Grade";
+import HoldStyle from "../../components/HoldStyle/HoldStyle";
+import Icon from "../../components/Icon/Icon";
+import Table from "../../components/Table/Table";
 
 const Current = () => {
         const [data, setData] = useState(null);

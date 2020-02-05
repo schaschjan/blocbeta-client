@@ -1,5 +1,7 @@
 .container {
-    margin: 1.25rem;
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
 }
 
 .loader {

@@ -1,0 +1,7 @@
+.table > .table-content > .table-row {
+    border-top: 1px solid #333333;
+}
+
+.table > .table-content > .table-row:last-child {
+    border-bottom: 1px solid #333333;
+}

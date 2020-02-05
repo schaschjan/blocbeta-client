@@ -2,31 +2,15 @@ import React, {useState, useEffect} from 'react';
 import {Loader} from "../../components/Loader";
 import db from "../../db";
 import Context from "../../Context";
-import {concatToList, resolveBoulder, Table} from "../../Helpers";
+import {resolveBoulder} from "../../Helpers";
 import ApiClient from "../../ApiClient";
-import Grade from "../../components/Grade";
-import HoldStyle from "../../components/HoldStyle";
-import Icon from "../../components/Icon";
+import Grade from "../../components/Grade/Grade";
 import moment from "moment";
-
-const Ascents = ({me}) => {
-
-    console.log(me);
-
-    return (
-        <ul className="list-unstyled">
-            <li>
-                <Icon name="flash"/>
-            </li>
-            <li>
-                <Icon name="top"/>
-            </li>
-            <li>
-                <Icon name="resign"/>
-            </li>
-        </ul>
-    )
-};
+import HoldStyle from "../../components/HoldStyle/HoldStyle";
+import Paragraph from "../../components/Paragraph/Paragraph";
+import Icon from "../../components/Icon/Icon";
+import Table from "../../components/Table/Table";
+import Ascent from "../../components/Ascent/Ascent";
 
 const AdminTable = ({data}) => {
 
@@ -46,19 +30,6 @@ const AdminTable = ({data}) => {
     const columns = React.useMemo(
         () => [
             {
-                Header: 'Name',
-                id: 'expander',
-                accessor: 'name',
-                Cell: ({row, cell}) => (
-                    // Use Cell to render an expander for each row.
-                    // We can use the getExpandedToggleProps prop-getter
-                    // to build the expander.
-                    <span {...row.getExpandedToggleProps()}>
-            {row.isExpanded ? '👇' : '👉'} {cell.value}
-          </span>
-                ),
-            },
-            {
                 Header: 'Color',
                 accessor: 'color.name',
                 Cell: ({cell}) => {
@@ -73,43 +44,76 @@ const AdminTable = ({data}) => {
                 }
             },
             {
-                Header: 'Ascents',
-                accessor: 'ascents',
+                Header: 'Points',
+                accessor: 'points',
+                Cell: ({cell}) => (
+                    <Paragraph>{cell.value} pts</Paragraph>
+                )
+            },
+            {
+                Header: 'Name',
+                id: 'expander',
+                accessor: 'name',
+                grow: true,
+                Cell: ({row, cell}) => (
+                    <Paragraph>
+                        <span {...row.getExpandedToggleProps()}>
+                            {cell.value}
+                            {row.isExpanded ? <Icon name="forward"/> : <Icon name="forward"/>}
+                        </span>
+                    </Paragraph>
+                ),
             },
             {
                 Header: 'Start',
                 accessor: 'startWall.name',
+                Cell: ({cell}) => (
+                    <Paragraph>{cell.value}</Paragraph>
+                )
             },
             {
                 Header: 'End',
                 accessor: 'endWall.name',
-            },
-            {
-                Header: 'Setters',
-                accessor: (row) => concatToList(row.setters, 'username')
-            },
-            {
-                Header: 'Tags',
-                accessor: (row) => {
-                    return row.tags.map(tag => tag.emoji)
-                }
+                Cell: ({cell}) => (
+                    <Paragraph>{cell.value}</Paragraph>
+                )
             },
             {
                 Header: 'Date',
                 accessor: 'createdAt',
                 Cell: ({cell}) => {
                     return (
-                        <span>{moment(cell.value).fromNow()}</span>
+                        <Paragraph>{moment(cell.value).fromNow()}</Paragraph>
                     )
                 }
             },
             {
-                Header: 'Me',
+                Header: 'Ascent',
                 accessor: 'me',
                 Cell: ({cell}) => {
                     const ascent = cell.value;
 
-                    return <Ascents me={ascent}/>
+                    let flashed, topped, resigned = false;
+
+                    if (ascent && ascent.type === 'flash') {
+                        flashed = true
+                    }
+
+                    if (ascent && ascent.type === 'top') {
+                        topped = true
+                    }
+
+                    if (ascent && ascent.type === 'resign') {
+                        resigned = true
+                    }
+
+                    return (
+                        <React.Fragment>
+                            <Ascent type="flash" checked={flashed} handler={() => alert('flash')}/>
+                            <Ascent type="top" checked={topped} handler={() => alert('top')}/>
+                            <Ascent type="resign" checked={resigned} handler={() => alert('resign')}/>
+                        </React.Fragment>
+                    )
                 }
             }], []);
 
