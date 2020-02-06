@@ -3,10 +3,17 @@ import './Ascent.css';
 import Icon from "../Icon/Icon";
 import classnames from "classnames";
 
-const Ascent = ({type, handler, checked}) => {
+const Ascent = ({type, handler, checked, disabled}) => {
     let icon = <Icon name={type}/>;
 
-    return <div className={classnames('ascent', type ? `ascent--${type}` : null, checked ? 'ascent--checked' : null)}
+    const classNames = classnames(
+        'ascent',
+        type ? `ascent--${type}` : null,
+        checked ? 'ascent--checked' : null,
+        disabled ? 'ascent--disabled' : null
+    );
+
+    return <div className={classNames}
                 onClick={handler}>
         {icon}
     </div>

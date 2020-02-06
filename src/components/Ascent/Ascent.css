@@ -8,8 +8,13 @@
     overflow: hidden;
 }
 
+.ascent--disabled {
+    opacity: .3;
+    pointer-events: none;
+}
+
 .ascent--flash.ascent--checked {
-    border: 1px solid blue;
+    border: 2px solid blue;
 }
 
 .ascent--flash.ascent--checked svg path {
@@ -17,7 +22,7 @@
 }
 
 .ascent--top.ascent--checked {
-    border: 1px solid green;
+    border: 2px solid green;
 }
 
 .ascent--top.ascent--checked svg path {
@@ -25,7 +30,7 @@
 }
 
 .ascent--resign.ascent--checked {
-    border: 1px solid red;
+    border: 2px solid red;
 }
 
 .ascent--resign.ascent--checked svg path {

@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Loader} from "../../components/Loader";
 import db from "../../db";
-import Context from "../../Context";
 import {resolveBoulder} from "../../Helpers";
 import ApiClient from "../../ApiClient";
 import Grade from "../../components/Grade/Grade";
@@ -12,20 +11,10 @@ import Icon from "../../components/Icon/Icon";
 import Table from "../../components/Table/Table";
 import Ascent from "../../components/Ascent/Ascent";
 
-const AdminTable = ({data}) => {
+export default function Index() {
 
-    const renderRowSubComponent = React.useCallback(
-        ({row}) => (
-            <pre
-                style={{
-                    fontSize: '10px',
-                }}
-            >
-        <code>{JSON.stringify({values: row.values}, null, 2)}</code>
-      </pre>
-        ),
-        []
-    );
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const columns = React.useMemo(
         () => [
@@ -90,10 +79,12 @@ const AdminTable = ({data}) => {
             {
                 Header: 'Ascent',
                 accessor: 'me',
-                Cell: ({cell}) => {
+                Cell: ({row, cell}) => {
                     const ascent = cell.value;
 
-                    let flashed, topped, resigned = false;
+                    let flashed = false;
+                    let topped = false;
+                    let resigned = false;
 
                     if (ascent && ascent.type === 'flash') {
                         flashed = true
@@ -109,22 +100,52 @@ const AdminTable = ({data}) => {
 
                     return (
                         <React.Fragment>
-                            <Ascent type="flash" checked={flashed} handler={() => alert('flash')}/>
-                            <Ascent type="top" checked={topped} handler={() => alert('top')}/>
-                            <Ascent type="resign" checked={resigned} handler={() => alert('resign')}/>
+                            <Ascent type="flash"
+                                    disabled={!flashed && ascent}
+                                    checked={flashed}
+                                    handler={() => ascentHandler(row.original.id, "flash", ascent ? ascent.id : null)}/>
+
+                            <Ascent type="top"
+                                    disabled={!topped && ascent}
+                                    checked={topped}
+                                    handler={() => ascentHandler(row.original.id, "top", ascent ? ascent.id : null)}/>
+
+                            <Ascent type="resign"
+                                    disabled={!resigned && ascent}
+                                    checked={resigned}
+                                    handler={() => ascentHandler(row.original.id, "resign", ascent ? ascent.id : null)}/>
                         </React.Fragment>
                     )
                 }
             }], []);
 
-    return <Table columns={columns} data={data} renderRowSubComponent={renderRowSubComponent}/>
+    const renderRowSubComponent = React.useCallback(
+        ({row}) => (
+            <pre
+                style={{
+                    fontSize: '10px',
+                }}
+            >
+        <code>{JSON.stringify({values: row.values}, null, 2)}</code>
+      </pre>
+        ),
+        []
+    );
 
-};
+    const ascentHandler = (boulderId, type, ascentId = null) => {
+        if (!ascentId) {
+            ApiClient.createAscent({
+                'boulder': boulderId,
+                'type': type
+            }).then(data => {
+                alert(data);
+            });
 
-export default function Index() {
-
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
+        } else {
+            // ApiClient.deleteAscent()
+            alert('remove ' + ascentId + ' for ' + boulderId);
+        }
+    };
 
     useEffect(() => {
         async function getData() {
@@ -161,19 +182,11 @@ export default function Index() {
 
     if (loading) return <Loader/>;
 
-    const Table = () => {
-        if (Context.isAdmin()) {
-            return <AdminTable data={data}/>
-        } else {
-            return <div>User Table</div>
-        }
-    };
-
     return (
         <div className="container">
             <h1>Boulder ({data.length})</h1>
 
-            <Table/>
+            <Table columns={columns} data={data} renderRowSubComponent={renderRowSubComponent}/>
         </div>
     )
 };

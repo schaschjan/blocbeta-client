@@ -77,19 +77,16 @@ const Table = ({columns, data, renderRowSubComponent}) => {
                     {pageIndex * pageSize} - {(pageIndex + 1) * pageSize} of {pageOptions.length * pageSize}
                 </Paragraph>
 
-                <Icon name="back"/>
-                <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-                    {'<'}
-                </button>
-                {' '}
-                <button onClick={() => nextPage()} disabled={!canNextPage}>
-                    {'>'}
-                </button>
+                <span onClick={() => previousPage()} disabled={!canPreviousPage}>
+                    <Icon name="back"/>
+                </span>
 
-                <Icon name="forward"/>
+                <span onClick={() => nextPage()} disabled={!canNextPage}>
+                    <Icon name="forward"/>
+                </span>
             </div>
         </React.Fragment>
     )
-}
+};
 
 export default Table

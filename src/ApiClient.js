@@ -151,6 +151,18 @@ class ApiClient {
         return fetch(`/api/me`, this.getRequestConfig("put", data))
             .then(response => ApiClient.checkResponse(response));
     }
+
+    static createAscent(data) {
+        return fetch(`/api/${Context.getLocationUrl()}/ascent`, this.getRequestConfig("post", data))
+            .then(response => ApiClient.checkResponse(response))
+            .then(response => response.json());
+    }
+
+    static deleteAscent(id) {
+        return fetch(`/api/${Context.getLocationUrl()}/ascent/${id}`, this.getRequestConfig("delete"))
+            .then(response => ApiClient.checkResponse(response))
+            .then(response => response.json());
+    }
 }
 
 
