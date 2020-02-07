@@ -1,8 +1,0 @@
-.table-cell {
-    display: flex;
-    align-items: center;
-}
-
-.table-cell--grow {
-    flex: 1;
-}

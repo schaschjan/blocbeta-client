@@ -14,7 +14,7 @@
 }
 
 .ascent--flash.ascent--checked {
-    border: 2px solid blue;
+    border: 1px solid blue;
 }
 
 .ascent--flash.ascent--checked svg path {
@@ -22,7 +22,7 @@
 }
 
 .ascent--top.ascent--checked {
-    border: 2px solid green;
+    border: 1px solid green;
 }
 
 .ascent--top.ascent--checked svg path {
@@ -30,7 +30,7 @@
 }
 
 .ascent--resign.ascent--checked {
-    border: 2px solid red;
+    border: 1px solid red;
 }
 
 .ascent--resign.ascent--checked svg path {

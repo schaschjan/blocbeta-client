@@ -1,14 +1,14 @@
 .button {
     width: 100%;
     padding: 0;
-    height: 3.125rem;
+    height: 3.125rrem;
     background-color: var(--color-dark);
     color: var(--color-light);
     text-align: center;
-    line-height: 3.125rem;
+    line-height: 3.125rrem;
     text-transform: uppercase;
     letter-spacing: 2px;
-    font-size: 1rem;
+    font-size: 1rrem;
 }
 
 .button:hover {

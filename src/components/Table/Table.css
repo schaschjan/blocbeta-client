@@ -5,3 +5,48 @@
 .table > .table-content > .table-row:last-child {
     border-bottom: 1px solid #333333;
 }
+
+.table-cell {
+    display: flex;
+    align-items: center;
+}
+
+.table-row {
+    display: flex;
+    box-sizing: border-box;
+}
+
+.table-row > .table-cell:not(:last-child) {
+    margin-right: 2rem;
+}
+
+.table-cell--grow {
+    flex: 1;
+}
+
+.table-header {
+    margin: 20px 0 0 0;
+    display: flex;
+}
+
+.table-header-row {
+    display: flex;
+    align-items: center;
+}
+
+.table-header-row {
+    font-weight: bold;
+    font-size: 0.875rem;
+    margin: 18px 23px;
+}
+
+.toggle-previous,
+.toggle-next {
+    cursor: pointer;
+}
+
+.toggle-previous.toggle-previous--disabled,
+.toggle-next.toggle-next--disabled {
+    cursor: none;
+    opacity: .3;
+}

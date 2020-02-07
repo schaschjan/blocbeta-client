@@ -1,0 +1,11 @@
+.filter {
+    display: flex;
+}
+
+.filter .search {
+    width: fill-available;
+}
+
+.filter > .icon {
+    margin: 0 0 0 36px;
+}

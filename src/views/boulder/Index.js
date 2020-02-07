@@ -10,8 +10,20 @@ import Paragraph from "../../components/Paragraph/Paragraph";
 import Icon from "../../components/Icon/Icon";
 import Table from "../../components/Table/Table";
 import Ascent from "../../components/Ascent/Ascent";
+import Search from "../../components/Search/Search";
+import Filter from "../../components/Filter/Filter";
 
-export default function Index() {
+const Filters = () => {
+
+  return (
+      <Filter>
+          <Search placeholder="Search for boulders"/>
+          <Icon name="filtermenu"/>
+      </Filter>
+  )
+};
+
+const Index = () =>  {
 
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -45,12 +57,15 @@ export default function Index() {
                 accessor: 'name',
                 grow: true,
                 Cell: ({row, cell}) => (
-                    <Paragraph>
-                        <span {...row.getExpandedToggleProps()}>
-                            {cell.value}
-                            {row.isExpanded ? <Icon name="forward"/> : <Icon name="forward"/>}
-                        </span>
-                    </Paragraph>
+                    <React.Fragment>
+                        <Paragraph>
+                          {cell.value}
+                        </Paragraph>
+
+                      <span {...row.getExpandedToggleProps()}>
+                        {row.isExpanded ? <Icon name="downward"/> : <Icon name="forward"/>}
+                      </span>
+                    </React.Fragment>
                 ),
             },
             {
@@ -184,9 +199,10 @@ export default function Index() {
 
     return (
         <div className="container">
-            <h1>Boulder ({data.length})</h1>
-
+            <Filters/>
             <Table columns={columns} data={data} renderRowSubComponent={renderRowSubComponent}/>
         </div>
     )
 };
+
+export default Index

@@ -1,8 +1,0 @@
-.table-row {
-    display: flex;
-    box-sizing: border-box;
-}
-
-.table-row > .table-cell:not(:last-child) {
-    margin-right: 2em;
-}
