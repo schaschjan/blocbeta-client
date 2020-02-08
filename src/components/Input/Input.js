@@ -1,9 +1,8 @@
 import React from 'react';
 import './Input.css';
 
-const Input = (props) => {
-	return <input {...props}/>
+const Input = ({register, name, ...rest}) => {
+    return <input name={name} ref={register} {...rest}/>;
 };
-
 
 export default Input

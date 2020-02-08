@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import ApiClient from "../ApiClient";
-import {Loader} from "../components/Loader";
+import {Loader} from "../components/Loader/Loader";
 
 export default function Dashboard(props) {
 

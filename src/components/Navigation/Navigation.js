@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {Link, withRouter} from "react-router-dom";
-import Context from "../Context";
-import db from "../db";
+import Context from "../../Context";
+import db from "../../db";
+import "./Navigation.css";
 
 const LocationSelect = () => {
     const [locations, setLocations] = useState([]);
@@ -34,7 +35,7 @@ const LocationSelect = () => {
     )
 };
 
-const Header = ({authenticated, history}) => {
+const Navigation = ({authenticated, history}) => {
 
     const handleLogout = (event) => {
         event.preventDefault();
@@ -52,8 +53,8 @@ const Header = ({authenticated, history}) => {
             <header className="header">
                 <ul>
                     <li>
-                        <Link to={'/login'}>
-                            <strong>BlocBeta</strong>
+                        <Link to={'/login'} className="logo">
+                            BlocBeta
                         </Link>
                     </li>
                 </ul>
@@ -63,15 +64,15 @@ const Header = ({authenticated, history}) => {
 
     return (
         <header className="header">
-            <ul>
+            <ul className="location-switch">
                 <li>
-                    <Link to={Context.getPath('/dashboard')}>
-                        <strong>BlocBeta</strong> @ <LocationSelect/>
+                    <Link to={Context.getPath('/dashboard')} className="logo">
+                        BlocBeta @ <LocationSelect/>
                     </Link>
                 </li>
             </ul>
 
-            <ul>
+            <ul className="navigation">
                 <li>
                     <Link to={Context.getPath('/boulder')}>Boulder</Link>
                 </li>
@@ -82,11 +83,11 @@ const Header = ({authenticated, history}) => {
                     <Link to={'/account'}>[{Context.getUsername()}]</Link>
                 </li>
                 <li>
-                    <a href='#' onClick={(event) => handleLogout(event)}>-></a>
+                    <a href="#" onClick={(event) => handleLogout(event)}>Out!</a>
                 </li>
             </ul>
         </header>
     )
 };
 
-export default withRouter(Header)
+export default withRouter(Navigation)

@@ -1,9 +1,17 @@
 .search {
-    border-bottom: 1px solid #333;
     box-sizing: border-box;
     display: flex;
+    box-shadow: inset 0 -1px 0 0 var(--color-dark);
 }
 
 .search > input {
     width: fill-available;
+}
+
+.search > .icon {
+    padding: 8px;
+}
+
+.search:focus-within {
+    box-shadow: inset 0 -2px 0 0 var(--color-dark);
 }

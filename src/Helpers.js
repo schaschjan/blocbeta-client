@@ -9,15 +9,6 @@ export const getError = (error) => {
     return error.message;
 };
 
-export function getOptions(resource) {
-    return Object.values(resource).map(element => {
-        return {
-            value: element.id,
-            label: element.name
-        }
-    });
-}
-
 export async function resolveBoulder(boulder) {
     boulder.startWall = await db.walls.get(boulder.startWall.id);
 

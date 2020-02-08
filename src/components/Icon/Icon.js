@@ -9,10 +9,14 @@ const Icon = ({name}) => {
 
     if (name === 'search') {
         size = 'small';
-        icon =(
+        icon = (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18.1136 17.4064C18.3088 17.6017 18.3088 17.9183 18.1136 18.1136C17.9183 18.3088 17.6017 18.3088 17.4065 18.1136L18.1136 17.4064ZM17.4065 18.1136L12.8965 13.6036L13.6036 12.8964L18.1136 17.4064L17.4065 18.1136Z" fill="black"/>
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M10.4 14.8C12.8301 14.8 14.8 12.8301 14.8 10.4C14.8 7.96995 12.8301 6 10.4 6C7.96995 6 6 7.96995 6 10.4C6 12.8301 7.96995 14.8 10.4 14.8Z" stroke="black"/>
+                <path
+                    d="M18.1136 17.4064C18.3088 17.6017 18.3088 17.9183 18.1136 18.1136C17.9183 18.3088 17.6017 18.3088 17.4065 18.1136L18.1136 17.4064ZM17.4065 18.1136L12.8965 13.6036L13.6036 12.8964L18.1136 17.4064L17.4065 18.1136Z"
+                    fill="black"/>
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M10.4 14.8C12.8301 14.8 14.8 12.8301 14.8 10.4C14.8 7.96995 12.8301 6 10.4 6C7.96995 6 6 7.96995 6 10.4C6 12.8301 7.96995 14.8 10.4 14.8Z"
+                      stroke="black"/>
             </svg>
         )
     }
@@ -65,13 +69,13 @@ const Icon = ({name}) => {
     }
 
     if (name === 'downward') {
-      size = 'small';
-      icon = (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="24" height="24" fill="white" fill-opacity="0.01"/>
-          <path d="M7 9L12.1025 15L17 9" stroke="#333333" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      )
+        size = 'small';
+        icon = (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="24" height="24" fill="white" fill-opacity="0.01"/>
+                <path d="M7 9L12.1025 15L17 9" stroke="#333333" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        )
     }
 
     if (name === 'back') {
@@ -97,13 +101,28 @@ const Icon = ({name}) => {
     if (name === 'filtermenu') {
         size = 'large';
         icon = (
-          <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 0H50V50H0V0Z" fill="white"/>
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0H50V50H0V0Z" fill="white" fill-opacity="0.01"/>
-            <circle cx="25" cy="17" r="2" fill="#333333"/>
-            <circle cx="25" cy="25" r="2" fill="#333333"/>
-            <circle cx="25" cy="33" r="2" fill="#333333"/>
-          </svg>
+            <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0H50V50H0V0Z" fill="white"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0H50V50H0V0Z" fill="white" fill-opacity="0.01"/>
+                <circle cx="25" cy="17" r="2" fill="#333333"/>
+                <circle cx="25" cy="25" r="2" fill="#333333"/>
+                <circle cx="25" cy="33" r="2" fill="#333333"/>
+            </svg>
+        )
+    }
+
+    if (name === 'error') {
+        size = 'small';
+        icon = (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="24" height="24" fill="white" fill-opacity="0.01"/>
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                      stroke="#FF0000"/>
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M11.27 7H13.19L12.98 13.675H11.465L11.27 7ZM11.345 16.765C11.115 16.545 11 16.265 11 15.925C11 15.585 11.115 15.3 11.345 15.07C11.575 14.84 11.87 14.725 12.23 14.725C12.59 14.725 12.89 14.84 13.13 15.07C13.37 15.3 13.49 15.585 13.49 15.925C13.49 16.265 13.37 16.545 13.13 16.765C12.89 16.985 12.59 17.095 12.23 17.095C11.87 17.095 11.575 16.985 11.345 16.765Z"
+                      fill="#FF0000"/>
+            </svg>
         )
     }
 

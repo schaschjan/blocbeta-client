@@ -8,6 +8,7 @@
     "dexie": "^2.0.4",
     "idb": "^5.0.0",
     "jwt-decode": "^2.2.0",
+    "match-sorter": "^4.0.2",
     "moment": "^2.24.0",
     "normalize.css": "^8.0.1",
     "react": "^16.11.0",

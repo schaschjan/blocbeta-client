@@ -1,14 +1,16 @@
 import React, {useState} from 'react';
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import Context from "./Context";
-import Login from "./views/Login";
+import Login from "./views/Login/Login";
 import Dashboard from "./views/Dashboard";
-import Header from "./components/Header";
-import BoulderIndex from "./views/boulder/Index.js";
+import BoulderIndex from "./views/boulder/Index/Index.js";
 import CurrentRanking from "./views/ranking/Current";
 import CurrentComparison from "./views/compare/Current";
 import Account from "./views/Account";
 import {ToastContainer} from "react-toastify";
+import Register from "./views/Register";
+import PasswordReset from "./views/PasswordReset";
+import Navigation from "./components/Navigation/Navigation";
 
 const LoginRedirect = () => (
     <Redirect
@@ -37,7 +39,7 @@ const App = () => {
 
     const [authenticated, setAuthenticated] = useState(Context.isAuthenticated);
 
-    function handleSuccess(data) {
+    function handleSuccess() {
         setAuthenticated(true);
 
         return <Redirect to={{pathname: `/${Context.getLocationUrl()}/dashboard`}}/>;
@@ -48,6 +50,20 @@ const App = () => {
             title: "Login",
             path: "/login",
             render: () => <Login onAuthenticationSuccess={handleSuccess}/>,
+            public: true,
+            exact: true,
+        },
+        {
+            title: "Register",
+            path: "/register",
+            render: () => <Register onRegistrationSuccess={handleSuccess}/>,
+            public: true,
+            exact: true,
+        },
+        {
+            title: "Reset Password",
+            path: "/reset-password",
+            render: () => <PasswordReset/>,
             public: true,
             exact: true,
         },
@@ -86,7 +102,7 @@ const App = () => {
     return (
         <Router>
             <div className="app">
-                <Header authenticated={authenticated}/>
+                <Navigation authenticated={authenticated}/>
 
                 <div className="content">
                     <Switch>

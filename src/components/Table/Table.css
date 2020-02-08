@@ -40,13 +40,47 @@
     margin: 18px 23px;
 }
 
+.table-footer {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+}
+
+.table-footer .pager {
+    margin-left: auto;
+    display: flex;
+}
+
 .toggle-previous,
 .toggle-next {
+    height: min-content;
     cursor: pointer;
+}
+
+.toggle-previous {
+    border-right: 1px solid #333;
+    padding: 0 24px 0 0;
+}
+
+.toggle-next {
+    padding: 0 0 0 24px;
 }
 
 .toggle-previous.toggle-previous--disabled,
 .toggle-next.toggle-next--disabled {
-    cursor: none;
+    pointer-events: none;
+}
+
+.toggle-previous.toggle-previous--disabled .icon,
+.toggle-next.toggle-next--disabled .icon {
     opacity: .3;
+}
+
+.filter {
+    display: flex;
+}
+
+.filter .search {
+    width: fill-available;
 }
