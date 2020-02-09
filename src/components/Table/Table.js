@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import './Table.css';
 import {useExpanded, usePagination, useTable, useFilters, useGlobalFilter} from "react-table";
 import Paragraph from "../Paragraph/Paragraph";
@@ -100,7 +100,8 @@ function GlobalFilter({preGlobalFilteredRows, globalFilter, setGlobalFilter}) {
     )
 }
 
-const Table = ({columns, data, renderRowSubComponent}) => {
+const Table = ({columns, data, renderRowSubComponent, createChecksum}) => {
+
     const defaultColumn = React.useMemo(
         () => ({
             Filter: DefaultColumnFilter,
@@ -132,7 +133,6 @@ const Table = ({columns, data, renderRowSubComponent}) => {
         headerGroups,
         page,
         prepareRow,
-        flatColumns,
         canPreviousPage,
         canNextPage,
         pageOptions,
@@ -154,8 +154,12 @@ const Table = ({columns, data, renderRowSubComponent}) => {
         usePagination,
     );
 
-    return (
-        <React.Fragment>
+    const checksum = createChecksum(data);
+
+    return useMemo(() => {
+        console.log('render');
+
+        return <React.Fragment>
             <div className="filter">
                 <Icon name="search"/>
 
@@ -217,7 +221,7 @@ const Table = ({columns, data, renderRowSubComponent}) => {
                 nextPage={nextPage}
             />
         </React.Fragment>
-    )
+    }, [checksum, globalFilter]);
 };
 
 export default Table

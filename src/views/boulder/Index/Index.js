@@ -13,7 +13,7 @@ import Ascent from "../../../components/Ascent/Ascent";
 import "./Index.css";
 
 const Index = () => {
-    const [boulders, setBoulders] = useState([]);
+    const [boulders, setBoulders] = useState(null);
     const [loading, setLoading] = useState(true);
 
     const columns = [
@@ -43,15 +43,13 @@ const Index = () => {
             id: 'expander',
             accessor: 'name',
             grow: true,
-            Cell: ({row, cell}) => (
+            Cell: ({cell}) => (
                 <React.Fragment>
                     <Paragraph>
                         {cell.value}
                     </Paragraph>
 
-                    <span {...row.getExpandedToggleProps()}>
-                        {row.isExpanded ? <Icon name="downward"/> : <Icon name="forward"/>}
-                      </span>
+                    <Icon name="forward"/>
                 </React.Fragment>
             ),
         },
@@ -131,7 +129,6 @@ const Index = () => {
             const boulders = await db.boulders.toArray();
 
             for (let boulder of boulders) {
-
                 await resolveBoulder(boulder);
 
                 const ascentData = ascents[boulder.id];
@@ -146,7 +143,7 @@ const Index = () => {
                 boulder.me = ascentData.me;
             }
 
-            return boulders;
+            return boulders.slice(0, 10);
         }
 
         getData().then(data => {
@@ -155,50 +152,34 @@ const Index = () => {
         });
     }, []);
 
-    const renderRowSubComponent = React.useCallback(
-        ({row}) => (
-            <pre
-                style={{
-                    fontSize: '10px',
-                }}
-            >
-        <code>{JSON.stringify({values: row.values}, null, 2)}</code>
-      </pre>
-        ),
-        []
-    );
-
     const ascentHandler = (boulderId, type, ascentId = null) => {
+        const boulder = boulders.find(boulder => boulder.id === boulderId);
 
-        boulders[0].name = 'pooop';
-        console.log(boulders);
+        if (!ascentId) {
+            ApiClient.createAscent({
+                'boulder': boulderId,
+                'type': type
+            }).then(data => {
+                boulder.me = data.me;
+                setBoulders([...boulders]);
+            });
 
-        setBoulders(boulders);
+        } else {
+            ApiClient.deleteAscent(ascentId).then(() => {
+                boulder.me = null;
+                setBoulders([...boulders]);
+            });
+        }
+    };
 
-        // if (!ascentId) {
-        //     ApiClient.createAscent({
-        //         'boulder': boulderId,
-        //         'type': type
-        //     }).then(data => {
-        //         alert(data);
-        //     });
-        //
-        // } else {
-        //     boulders.filter(boulder => {
-        //         if (!boulder.me) {
-        //             return null
-        //         }
-        //
-        //         boulder.me = null;
-        //     });
-        //     console.log(boulders);
-        //     setBoulders(boulders);
-        //     console.log(boulders);
-        //
-        //     // ApiClient.deleteAscent(ascentId).then(() => {
-        //     //
-        //     // });
-        // }
+    const createTableChecksum = (data) => {
+        return data.map(object => {
+            if (object.me) {
+                return object.me.id;
+            }
+
+            return null;
+        }).filter(value => value !== null).length;
     };
 
     if (loading) return <Loader/>;
@@ -207,9 +188,7 @@ const Index = () => {
         <div className="container">
             <h1>Boulder ({boulders.length})</h1>
 
-            <Table columns={columns}
-                   data={boulders}
-                   renderRowSubComponent={renderRowSubComponent}/>
+            <Table columns={columns} data={boulders} createChecksum={createTableChecksum}/>
         </div>
     )
 };

@@ -22,7 +22,7 @@ const Login = ({onAuthenticationSuccess, history}) => {
             setIsSubmitted(false);
 
             if (response.code === 401) {
-                toast.error(response.message, {position: toast.POSITION.BOTTOM_LEFT});
+                toast.error(response.message, {position: toast.POSITION.BOTTOM_RIGHT});
                 return;
             }
 

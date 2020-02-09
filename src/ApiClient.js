@@ -160,8 +160,7 @@ class ApiClient {
 
     static deleteAscent(id) {
         return fetch(`/api/${Context.getLocationUrl()}/ascent/${id}`, this.getRequestConfig("delete"))
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
+            .then(response => ApiClient.checkResponse(response));
     }
 }
 
