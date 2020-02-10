@@ -11,10 +11,16 @@ import Icon from "../../../components/Icon/Icon";
 import Table from "../../../components/Table/Table";
 import Ascent from "../../../components/Ascent/Ascent";
 import "./Index.css";
+import Button from "../../../components/Button/Button";
+import Drawer from "../../../components/Drawer/Drawer";
 
 const Index = () => {
     const [boulders, setBoulders] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const [details, setDetails] = useState(null);
+    const [drawerOpen, setDrawerOpen] = useState(null);
+    const [detailsLoading, setDetailsLoading] = useState(false);
 
     const columns = [
         {
@@ -40,14 +46,13 @@ const Index = () => {
         },
         {
             Header: 'Name',
-            id: 'expander',
             accessor: 'name',
             grow: true,
-            Cell: ({cell}) => (
+            Cell: ({cell, row}) => (
                 <React.Fragment>
-                    <Paragraph>
+                    <Button onClick={() => triggerDetail(row.original.id)}>
                         {cell.value}
-                    </Paragraph>
+                    </Button>
 
                     <Icon name="forward"/>
                 </React.Fragment>
@@ -172,6 +177,16 @@ const Index = () => {
         }
     };
 
+    const triggerDetail = (boulderId) => {
+        setDrawerOpen(true);
+        setDetailsLoading(true);
+
+        ApiClient.getBoulder(boulderId).then((data) => {
+            setDetails(data);
+            setDetailsLoading(false);
+        });
+    };
+
     const createTableChecksum = (data) => {
         return data.map(object => {
             if (object.me) {
@@ -182,6 +197,19 @@ const Index = () => {
         }).filter(value => value !== null).length;
     };
 
+    const DrawerContent = ({data}) => {
+        if (!data || detailsLoading) return <Loader/>;
+
+        return <div>
+            <h2>{data.name}</h2>
+            <ul>
+                {data.ascents.map(ascent => {
+                    return <li>{ascent.user.username}</li>
+                })}
+            </ul>
+        </div>
+    };
+
     if (loading) return <Loader/>;
 
     return (
@@ -189,6 +217,10 @@ const Index = () => {
             <h1>Boulder ({boulders.length})</h1>
 
             <Table columns={columns} data={boulders} createChecksum={createTableChecksum}/>
+
+            <Drawer open={drawerOpen}>
+                <DrawerContent data={details}/>
+            </Drawer>
         </div>
     )
 };

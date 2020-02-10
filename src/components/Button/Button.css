@@ -34,7 +34,6 @@
     display: flex;
     color: var(--color-dark);
     padding: 5px 0;
-    margin-top: 36px;
 }
 
 .button.button--text.button--secondary {

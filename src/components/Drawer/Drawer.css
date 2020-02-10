@@ -1,0 +1,14 @@
+.drawer {
+    padding: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--color-light);
+    box-shadow: inset 0 1px 0 0 var(--color-dark);
+    display: none;
+}
+
+.drawer.drawer--open {
+    display: flex;
+}

@@ -2,7 +2,7 @@ import React from "react";
 import "./Button.css";
 import classnames from "classnames";
 
-const Button = ({type, disabled, text, primary, secondary, children}) => {
+const Button = ({type, disabled, text, primary, secondary, children, ...rest}) => {
 
     const classes = classnames(
         "button",
@@ -12,7 +12,7 @@ const Button = ({type, disabled, text, primary, secondary, children}) => {
         secondary ? "button--secondary" : null
     );
 
-    return <button type={type} className={classes}>
+    return <button type={type} className={classes} {...rest}>
         {children}
     </button>
 };

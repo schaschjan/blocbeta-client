@@ -1,9 +1,9 @@
 import React from 'react';
 import './Paragraph.css';
 
-const Paragraph = ({children}) => {
+const Paragraph = ({children, ...rest}) => {
 
-    return <p>{children}</p>
+    return <p {...rest}>{children}</p>
 };
 
 
