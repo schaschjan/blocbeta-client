@@ -148,7 +148,7 @@ const Index = () => {
                 boulder.me = ascentData.me;
             }
 
-            return boulders.slice(0, 10);
+            return boulders
         }
 
         getData().then(data => {
