@@ -12,8 +12,9 @@
 }
 
 .table-row {
-    display: flex;
     box-sizing: border-box;
+    display: grid;
+    grid-template-columns: .5fr .5fr .5fr 1.5fr .5fr .5fr 1fr .5fr;
 }
 
 .table-row > .table-cell:not(:last-child) {
@@ -21,7 +22,7 @@
 }
 
 .table-cell--grow {
-    flex: 1;
+    width: fill-available;
 }
 
 .table-header {

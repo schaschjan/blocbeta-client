@@ -177,8 +177,12 @@ const Index = () => {
         }
     };
 
+    const toggleDrawer = () => {
+        setDrawerOpen(!drawerOpen);
+    };
+
     const triggerDetail = (boulderId) => {
-        setDrawerOpen(true);
+        toggleDrawer();
         setDetailsLoading(true);
 
         ApiClient.getBoulder(boulderId).then((data) => {
@@ -202,9 +206,11 @@ const Index = () => {
 
         return <div>
             <h2>{data.name}</h2>
-            <ul>
+            <ul className="ascents">
                 {data.ascents.map(ascent => {
-                    return <li>{ascent.user.username}</li>
+                    return <li>
+                        {ascent.user.username} <Icon name={ascent.type}/>
+                    </li>
                 })}
             </ul>
         </div>
@@ -218,7 +224,7 @@ const Index = () => {
 
             <Table columns={columns} data={boulders} createChecksum={createTableChecksum}/>
 
-            <Drawer open={drawerOpen}>
+            <Drawer open={drawerOpen} closeHandler={toggleDrawer}>
                 <DrawerContent data={details}/>
             </Drawer>
         </div>

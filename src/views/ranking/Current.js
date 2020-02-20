@@ -5,6 +5,8 @@ import {Loader} from "../../components/Loader/Loader";
 import {Link} from "react-router-dom";
 import Context from "../../Context";
 import Table from "../../components/Table/Table";
+import HoldStyle from "../../components/HoldStyle/HoldStyle";
+import Avatar from "../../components/Avatar/Avatar";
 
 const Current = () => {
     const [data, setData] = useState(null);
@@ -15,6 +17,12 @@ const Current = () => {
             {
                 Header: 'User',
                 accessor: 'user.username',
+                Cell: ({cell}) => {
+                    return <div>
+                        <Avatar image=""/>
+                        {cell.value}
+                    </div>
+                }
             },
             {
                 Header: 'Score',

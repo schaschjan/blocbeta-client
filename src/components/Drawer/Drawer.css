@@ -7,8 +7,16 @@
     background: var(--color-light);
     box-shadow: inset 0 1px 0 0 var(--color-dark);
     display: none;
+    max-height: 50vh;
+    overflow-y: scroll;
+    box-sizing: border-box;
 }
 
 .drawer.drawer--open {
     display: flex;
+}
+
+.drawer .button.close-drawer {
+    display: flex;
+    margin-left: auto;
 }
