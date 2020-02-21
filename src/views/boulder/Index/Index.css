@@ -3,3 +3,14 @@
     padding: 0;
     margin: 0;
 }
+
+.table-cell__name button {
+    width: fill-available;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+
+.table-cell__name button .icon {
+    margin-left: auto;
+}

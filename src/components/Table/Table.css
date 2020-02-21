@@ -1,45 +1,71 @@
-.table > .table-content > .table-row {
-    border-top: 1px solid #333333;
+.table {
+    display: grid;
+    grid-template-columns: 85px .25fr .5fr 1.5fr .75fr .75fr .75fr 156px;
+    margin-bottom: 8px;
 }
 
-.table > .table-content > .table-row:last-child {
-    border-bottom: 1px solid #333333;
+.table-header,
+.table-content,
+.table-row {
+    display: contents;
 }
 
 .table-cell {
     display: flex;
     align-items: center;
-}
-
-.table-row {
-    box-sizing: border-box;
-    display: grid;
-    grid-template-columns: .5fr .5fr .5fr 1.5fr .5fr .5fr 1fr .5fr;
-}
-
-.table-row > .table-cell:not(:last-child) {
-    margin-right: 2rem;
-}
-
-.table-cell--grow {
-    width: fill-available;
+    border-bottom: 1px solid #333333;
 }
 
 .table-header {
-    margin: 20px 0 0 0;
-    display: flex;
+    font-weight: bold;
+    font-size: 0.875rem;
 }
 
-.table-header-row {
+.table-header .sort-indicator {
+    margin-left: auto;
+    height: 40px;
+    padding: 6px;
+}
+
+.table-header-cell {
     display: flex;
     align-items: center;
 }
 
-.table-header-row {
-    font-weight: bold;
-    font-size: 0.875rem;
-    margin: 18px 23px;
-}
+/*.table > .table-content > .table-row:last-child {*/
+/*    border-bottom: 1px solid #333333;*/
+/*}*/
+
+/*.table-cell {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*}*/
+
+/*.table-row {*/
+/*    box-sizing: border-box;*/
+/*    display: grid;*/
+/*    grid-template-columns: 85px .25fr .5fr 1.5fr .75fr .75fr .75fr 156px;*/
+/*}*/
+
+/*.table-row > .table-cell:not(:last-child) {*/
+/*    margin-right: 2rem;*/
+/*}*/
+
+/*.table-header {*/
+/*    margin: 20px 0 0 0;*/
+/*    display: grid;*/
+/*}*/
+
+/*.table-header-row {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*}*/
+
+/*.table-header-row {*/
+/*    font-weight: bold;*/
+/*    font-size: 0.875rem;*/
+/*    margin: 18px 23px;*/
+/*}*/
 
 .table-footer {
     height: 40px;
@@ -80,6 +106,12 @@
 
 .filter {
     display: flex;
+    box-shadow: inset 0 -1px 0 0 var(--color-dark);
+    margin-bottom: 16px;
+}
+
+.filter:focus-within {
+    box-shadow: inset 0 -2px 0 0 var(--color-dark);
 }
 
 .filter .search {
