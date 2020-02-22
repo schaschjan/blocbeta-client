@@ -73,7 +73,7 @@ const Index = () => {
 			accessor: 'createdAt',
 			Cell: ({cell}) => {
 				return (
-					<Paragraph>{moment(cell.value).fromNow()}</Paragraph>
+					<Paragraph>{moment(cell.value).format('D MMM')}</Paragraph>
 				)
 			}
 		},

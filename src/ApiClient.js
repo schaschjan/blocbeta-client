@@ -93,8 +93,14 @@ class ApiClient {
             .then(response => response.json());
     }
 
-    static locationStats() {
-        return fetch(`/api/${Context.getLocationUrl()}/stat/location`, this.getRequestConfig())
+    static boulderStats() {
+        return fetch(`/api/${Context.getLocationUrl()}/stat/boulder`, this.getRequestConfig())
+            .then(response => ApiClient.checkResponse(response))
+            .then(response => response.json());
+    }
+
+    static wallStats() {
+        return fetch(`/api/${Context.getLocationUrl()}/stat/wall`, this.getRequestConfig())
             .then(response => ApiClient.checkResponse(response))
             .then(response => response.json());
     }
