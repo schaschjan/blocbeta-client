@@ -6,6 +6,12 @@
     display: flex;
     margin: 12px 6px;
     overflow: hidden;
+    align-items: center;
+}
+
+.ascent .icon {
+    margin: 0 auto;
+    align-items: center;
 }
 
 .ascent--disabled {
@@ -13,28 +19,16 @@
     pointer-events: none;
 }
 
-.ascent--flash.ascent--checked {
-    border: 1px solid blue;
+.ascent--flash {
+    border: 1px solid var(--color-flash);
 }
 
-.ascent--flash.ascent--checked svg path {
-    fill: blue;
+.ascent--top {
+    border: 1px solid var(--color-top);
 }
 
-.ascent--top.ascent--checked {
-    border: 1px solid green;
-}
-
-.ascent--top.ascent--checked svg path {
-    fill: green;
-}
-
-.ascent--resign.ascent--checked {
-    border: 1px solid red;
-}
-
-.ascent--resign.ascent--checked svg path {
-    fill: red;
+.ascent--resign {
+    border: 1px solid var(--color-resign);
 }
 
 .ascent:hover {

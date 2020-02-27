@@ -23,6 +23,11 @@
     margin: 0;
 }
 
+.detail__list ul li {
+    padding: 8px;
+    margin: 0;
+}
+
 .detail__list h4 {
     padding: 0 16px;
 }
@@ -34,4 +39,19 @@
 
 .detail__list li .button {
     margin-left: auto;
+}
+
+.detail__list li .icon {
+    padding-right: 8px;
+}
+
+.drawer .holdstyle {
+    padding: 0;
+    margin: 0 8px 0 0;
+    width: 24px;
+    height: 24px;
+}
+
+.drawer .report-error {
+    margin: 16px auto;
 }

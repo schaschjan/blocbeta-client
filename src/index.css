@@ -9,6 +9,10 @@
     --color-grey: #A2A2A2;
     --color-blue: #5759FB;
     --color-lightblue: #CDCEFE;
+
+    --color-flash: #1687FF;
+    --color-top: #02DEAF;
+    --color-resign: #FF5D5F;
 }
 
 body, p, a, input {

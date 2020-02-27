@@ -30,11 +30,12 @@
 }
 
 .button.button--text {
-    font-size: .75em;
+    font-size: .875em;
     display: flex;
     color: var(--color-blue);
     padding: 7px 16px;
     border-radius: 8px;
+
 }
 
 .button.button--text:hover {

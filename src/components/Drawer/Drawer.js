@@ -21,7 +21,7 @@ const Drawer = ({open, loading, closeHandler, header, content}) => {
             <div className="drawer__header">
                 {open && !loading && header}
                 <Button type="text" onClick={() => closeHandler()} className="close-drawer">
-                    <Icon name="resign"/>
+                    <Icon name="close"/>
                 </Button>
             </div>
 

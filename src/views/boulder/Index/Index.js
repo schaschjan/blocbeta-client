@@ -189,7 +189,9 @@ const Index = () => {
     };
 
     const DrawerHeader = ({data}) => {
+        console.log(data);
         return <React.Fragment>
+            <HoldStyle name={data.color.name}/>
             <h3>{data.name}</h3>
         </React.Fragment>
     };
@@ -198,6 +200,8 @@ const Index = () => {
     const DrawerContent = ({data}) => {
 
         return <React.Fragment>
+
+            {data.tags.length > 0 &&
             <div className="detail__list">
                 <h4>Tags ({data.tags.length})</h4>
 
@@ -209,9 +213,12 @@ const Index = () => {
                     })}
                 </ul>
             </div>
+            }
 
             <div className="detail__list">
-                <h4>Ascents ({data.ascents.length})</h4>
+                <h4>Ascents ({data.ascents.length ? data.ascents.length : 0})</h4>
+
+                {data.ascents.length > 0 &&
                 <ul>
                     {data.ascents.map(ascent => {
                         return <li>
@@ -221,6 +228,7 @@ const Index = () => {
                         </li>
                     })}
                 </ul>
+                }
             </div>
 
             <div className="detail__list">
@@ -233,6 +241,8 @@ const Index = () => {
                     })}
                 </ul>
             </div>
+
+            <Button text={true} className="report-error">Report error</Button>
         </React.Fragment>
     };
 
