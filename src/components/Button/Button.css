@@ -32,8 +32,13 @@
 .button.button--text {
     font-size: .75em;
     display: flex;
-    color: var(--color-dark);
-    padding: 5px 0;
+    color: var(--color-blue);
+    padding: 7px 16px;
+    border-radius: 8px;
+}
+
+.button.button--text:hover {
+    background: var(--color-lightblue);
 }
 
 .button.button--text.button--secondary {

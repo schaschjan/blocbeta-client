@@ -7,6 +7,8 @@
     --color-lightgrey: #D9D9D9;
     --color-error: #FF0000;
     --color-grey: #A2A2A2;
+    --color-blue: #5759FB;
+    --color-lightblue: #CDCEFE;
 }
 
 body, p, a, input {
@@ -19,6 +21,18 @@ h1 {
     font-weight: bold;
     padding-top: 50px;
     padding-bottom: 80px;
+}
+
+h3 {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+h4 {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+
 }
 
 a {
