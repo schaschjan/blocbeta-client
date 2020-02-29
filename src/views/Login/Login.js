@@ -27,6 +27,7 @@ const Login = ({onAuthenticationSuccess, history}) => {
             }
 
             Context.authenticate(response.token);
+            Context.destroy();
             Context.init();
 
             onAuthenticationSuccess(response);
