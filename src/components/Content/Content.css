@@ -1,0 +1,9 @@
+.content {
+    transition: opacity 0.3s;
+    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.content.content--disabled {
+    opacity: .2;
+    overflow-y: hidden;
+}

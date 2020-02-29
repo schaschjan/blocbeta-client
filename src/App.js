@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {Fragment, useState} from 'react';
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import Context from "./Context";
 import Login from "./views/Login/Login";
@@ -7,10 +7,11 @@ import BoulderIndex from "./views/boulder/Index/Index.js";
 import CurrentRanking from "./views/ranking/Current";
 import CurrentComparison from "./views/compare/Current";
 import Account from "./views/Account";
-import {ToastContainer} from "react-toastify";
 import Register from "./views/Register";
 import PasswordReset from "./views/PasswordReset";
 import Navigation from "./components/Navigation/Navigation";
+import {GlobalStateProvider, useGlobalState} from "./helpers/useGlobalState";
+import {Content} from "./components/Content/Content";
 
 const LoginRedirect = () => (
     <Redirect
@@ -36,27 +37,34 @@ const PrivateRoute = ({children, ...rest}) => {
 };
 
 const App = () => {
-
     const [authenticated, setAuthenticated] = useState(Context.isAuthenticated);
 
-    function handleSuccess() {
+    function handleAuthenticationSuccess() {
         setAuthenticated(true);
 
         return <Redirect to={{pathname: `/${Context.getLocationUrl()}/dashboard`}}/>;
     }
 
+    const initialState = {
+        drawer: {
+            open: false,
+            header: null,
+            content: null
+        }
+    };
+
     const routes = [
         {
             title: "Login",
             path: "/login",
-            render: () => <Login onAuthenticationSuccess={handleSuccess}/>,
+            render: () => <Login onAuthenticationSuccess={handleAuthenticationSuccess}/>,
             public: true,
             exact: true,
         },
         {
             title: "Register",
             path: "/register",
-            render: () => <Register onRegistrationSuccess={handleSuccess}/>,
+            render: () => <Register onRegistrationSuccess={handleAuthenticationSuccess}/>,
             public: true,
             exact: true,
         },
@@ -100,27 +108,27 @@ const App = () => {
     ];
 
     return (
-        <Router>
-            <div className="app">
-                <Navigation authenticated={authenticated}/>
+        <GlobalStateProvider initialState={initialState}>
+            <Router>
+                <Content>
+                    <div className="app">
+                        <Navigation authenticated={authenticated}/>
 
-                <div className="content">
-                    <Switch>
-                        {routes.map((route, i) => {
-                            if (route.public) {
-                                return <Route key={i} {...route} />
-                            }
+                        <Switch>
+                            {routes.map((route, i) => {
+                                if (route.public) {
+                                    return <Route key={i} {...route} />
+                                }
 
-                            return <PrivateRoute key={i} {...route} />
-                        })}
+                                return <PrivateRoute key={i} {...route} />
+                            })}
 
-                        <Route render={() => <LoginRedirect/>}/>
-                    </Switch>
-                </div>
-
-                <ToastContainer/>
-            </div>
-        </Router>
+                            <Route render={() => <LoginRedirect/>}/>
+                        </Switch>
+                    </div>
+                </Content>
+            </Router>
+        </GlobalStateProvider>
     );
 };
 

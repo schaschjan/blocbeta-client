@@ -42,7 +42,7 @@ const TableFooter = ({pageIndex, pageSize, pageOptions, canPreviousPage, canNext
 	return (
 		<div className="table-footer">
 			<div className="pager">
-				<Paragraph>
+				<Paragraph className="pager-info">
 					{pageIndex * pageSize} - {(pageIndex + 1) * pageSize} of {pageOptions.length * pageSize}
 				</Paragraph>
 

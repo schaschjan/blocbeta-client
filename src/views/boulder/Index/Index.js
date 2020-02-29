@@ -12,15 +12,12 @@ import Table from "../../../components/Table/Table";
 import Ascent from "../../../components/Ascent/Ascent";
 import "./Index.css";
 import Button from "../../../components/Button/Button";
-import Drawer from "../../../components/Drawer/Drawer";
+import {useDrawerState} from "../../../helpers/drawer.state";
 
 const Index = () => {
     const [boulders, setBoulders] = useState(null);
     const [loading, setLoading] = useState(true);
-
-    const [details, setDetails] = useState(null);
-    const [drawerOpen, setDrawerOpen] = useState(null);
-    const [detailsLoading, setDetailsLoading] = useState(false);
+    const {toggle, setHeader, setContent} = useDrawerState();
 
     const columns = [
         {
@@ -173,34 +170,15 @@ const Index = () => {
         }
     };
 
-    const toggleDrawer = () => {
-        setDrawerOpen(!drawerOpen);
-    };
-
-    const triggerDetail = async (boulderId) => {
-        toggleDrawer();
-        setDetailsLoading(true);
-
-        const boulder = await ApiClient.getBoulder(boulderId);
-        await resolveBoulder(boulder);
-
-        setDetails(boulder);
-        setDetailsLoading(false);
-    };
-
-    const DrawerHeader = ({data}) => {
-        console.log(data);
+    const renderDrawerHeader = (data) => {
         return <React.Fragment>
             <HoldStyle name={data.color.name}/>
             <h3>{data.name}</h3>
         </React.Fragment>
     };
 
-
-    const DrawerContent = ({data}) => {
-
+    const renderDrawerContent = (data) => {
         return <React.Fragment>
-
             {data.tags.length > 0 &&
             <div className="detail__list">
                 <h4>Tags ({data.tags.length})</h4>
@@ -246,6 +224,15 @@ const Index = () => {
         </React.Fragment>
     };
 
+    const triggerDetail = async (boulderId) => {
+        const boulder = await ApiClient.getBoulder(boulderId);
+        await resolveBoulder(boulder);
+
+        toggle();
+        setHeader(renderDrawerHeader(boulder));
+        setContent(renderDrawerContent(boulder));
+    };
+
     if (loading) return <Loader/>;
 
     return (
@@ -253,13 +240,6 @@ const Index = () => {
             <h1>Boulder ({boulders.length})</h1>
 
             <Table columns={columns} data={boulders}/>
-
-            <Drawer open={drawerOpen}
-                    loading={detailsLoading}
-                    closeHandler={toggleDrawer}
-                    header={<DrawerHeader data={details}/>}
-                    content={<DrawerContent data={details}/>}
-            />
         </div>
     )
 };
