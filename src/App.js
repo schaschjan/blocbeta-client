@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react';
+import React, {useState} from 'react';
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import Context from "./Context";
 import Login from "./views/Login/Login";
@@ -10,7 +10,7 @@ import Account from "./views/Account";
 import Register from "./views/Register";
 import PasswordReset from "./views/PasswordReset";
 import Navigation from "./components/Navigation/Navigation";
-import {GlobalStateProvider, useGlobalState} from "./helpers/useGlobalState";
+import {GlobalStateProvider} from "./helpers/useGlobalState";
 import {Content} from "./components/Content/Content";
 
 const LoginRedirect = () => (

@@ -6,5 +6,8 @@
 .content.content--disabled {
     opacity: .2;
     overflow-y: hidden;
+}
+
+.content.content--disabled * {
     pointer-events: none;
 }

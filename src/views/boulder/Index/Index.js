@@ -53,17 +53,21 @@ const Index = () => {
         },
         {
             Header: 'Start',
-            accessor: 'startWall.name',
-            Cell: ({cell}) => (
-                <Paragraph>{cell.value}</Paragraph>
-            )
+            accessor: 'startWall',
+            Cell: ({cell}) => {
+                return   <Paragraph>{cell.value.name}</Paragraph>
+            }
         },
         {
             Header: 'End',
-            accessor: 'endWall.name',
-            Cell: ({cell}) => (
-                <Paragraph>{cell.value}</Paragraph>
-            )
+            accessor: 'endWall',
+            Cell: ({cell}) => {
+                if (!cell.value) {
+                    return null;
+                }
+
+                return <Paragraph>{cell.value.name}</Paragraph>;
+            }
         },
         {
             Header: 'Date',
@@ -128,7 +132,7 @@ const Index = () => {
 
             for (let boulder of boulders) {
                 await resolveBoulder(boulder);
-
+console.log(boulder);
                 const ascentData = ascents[boulder.id];
 
                 if (!ascentData) {
