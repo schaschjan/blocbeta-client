@@ -109,6 +109,8 @@ const Table = ({columns, data, renderRowSubComponent}) => {
 		() => ({
 			fuzzyText: fuzzyTextFilterFn,
 			text: (rows, id, filterValue) => {
+			    console.log(rows, id, filterValue);
+
 				return rows.filter(row => {
 					const rowValue = row.values[id];
 

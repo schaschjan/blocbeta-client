@@ -13,6 +13,7 @@
     --color-flash: #1687FF;
     --color-top: #02DEAF;
     --color-resign: #FF5D5F;
+    --color-warning: #FCF6A4;
 }
 
 body, p, a, input {

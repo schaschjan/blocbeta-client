@@ -14,7 +14,6 @@ const Account = () => {
 
     const onSubmit = (data) => {
         setSubmitting(true);
-        console.log(data);
 
         ApiClient.updateMe(data).then(data => {
             setSubmitting(false);

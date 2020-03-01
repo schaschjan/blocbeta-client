@@ -31,8 +31,7 @@ const Dashboard = () => {
     };
 
     if (loading) return <Loader/>;
-    console.log(stats)
-    ;
+
     return (
         <div className="container">
             <h1>Dashboard</h1>

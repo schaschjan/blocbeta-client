@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Fragment} from 'react';
 import {Loader} from "../../../components/Loader/Loader";
 import db from "../../../db";
 import {resolveBoulder} from "../../../Helpers";
@@ -13,11 +13,17 @@ import Ascent from "../../../components/Ascent/Ascent";
 import "./Index.css";
 import Button from "../../../components/Button/Button";
 import {useDrawerState} from "../../../helpers/drawer.state";
+import Banner from "../../../components/Banner/Banner";
 
 const Index = () => {
     const [boulders, setBoulders] = useState(null);
     const [loading, setLoading] = useState(true);
     const {toggle, setHeader, setContent} = useDrawerState();
+
+    const ColorFilter = ({column: {filterValue, setFilter, preFilteredRows, id}}) => {
+        setFilter('poop');
+    };
+
 
     const columns = [
         {
@@ -25,6 +31,10 @@ const Index = () => {
             accessor: 'color.name',
             Cell: ({cell}) => {
                 return <HoldStyle name={cell.value}/>
+            },
+            Filter: ColorFilter,
+            filter: () => {
+                return 'poop'
             }
         },
         {
@@ -53,20 +63,17 @@ const Index = () => {
         },
         {
             Header: 'Start',
-            accessor: 'startWall',
+            accessor: 'startWall.name',
+            filter: "text",
             Cell: ({cell}) => {
-                return   <Paragraph>{cell.value.name}</Paragraph>
+                return <Paragraph>{cell.value}</Paragraph>
             }
         },
         {
             Header: 'End',
-            accessor: 'endWall',
+            accessor: 'endWall.name',
             Cell: ({cell}) => {
-                if (!cell.value) {
-                    return null;
-                }
-
-                return <Paragraph>{cell.value.name}</Paragraph>;
+                return <Paragraph>{cell.value}</Paragraph>
             }
         },
         {
@@ -132,7 +139,6 @@ const Index = () => {
 
             for (let boulder of boulders) {
                 await resolveBoulder(boulder);
-console.log(boulder);
                 const ascentData = ascents[boulder.id];
 
                 if (!ascentData) {
@@ -240,11 +246,19 @@ console.log(boulder);
     if (loading) return <Loader/>;
 
     return (
-        <div className="container">
-            <h1>Boulder ({boulders.length})</h1>
+        <Fragment>
+            <Banner>
+                <Paragraph>
+                    Logowand <strong>・NEW NEW NEW・</strong>
+                </Paragraph>
+            </Banner>
 
-            <Table columns={columns} data={boulders}/>
-        </div>
+            <div className="container">
+                <h1>Boulder ({boulders.length})</h1>
+
+                <Table columns={columns} data={boulders}/>
+            </div>
+        </Fragment>
     )
 };
 

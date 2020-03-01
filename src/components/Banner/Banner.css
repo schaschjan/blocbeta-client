@@ -1,0 +1,20 @@
+.banner {
+    background: var(--color-warning);
+    height: 50px;
+    align-items: center;
+    display: flex;
+    padding: 0 20px;
+}
+
+.banner .message {
+    animation: marquee 10s linear infinite;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}

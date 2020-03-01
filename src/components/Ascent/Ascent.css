@@ -14,20 +14,28 @@
     align-items: center;
 }
 
+.ascent .icon svg {
+    filter: grayscale(100);
+}
+
+ascent--checked {
+    filter: grayscale(0);
+}
+
 .ascent--disabled {
     opacity: .3;
     pointer-events: none;
 }
 
-.ascent--flash {
+.ascent--flash.ascent--checked {
     border: 1px solid var(--color-flash);
 }
 
-.ascent--top {
+.ascent--top.ascent--checked {
     border: 1px solid var(--color-top);
 }
 
-.ascent--resign {
+.ascent--resign.ascent--checked {
     border: 1px solid var(--color-resign);
 }
 
