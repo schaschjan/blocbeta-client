@@ -5,8 +5,9 @@ import {Loader} from "../../components/Loader/Loader";
 import {Link} from "react-router-dom";
 import Context from "../../Context";
 import Table from "../../components/Table/Table";
-import HoldStyle from "../../components/HoldStyle/HoldStyle";
 import Avatar from "../../components/Avatar/Avatar";
+import "./Current.css"
+import Paragraph from "../../components/Paragraph/Paragraph";
 
 const Current = () => {
     const [data, setData] = useState(null);
@@ -17,9 +18,10 @@ const Current = () => {
             {
                 Header: 'User',
                 accessor: 'user.username',
-                Cell: ({cell}) => {
-                    return <div>
-                        <Avatar image=""/>
+                Cell: ({cell, row}) => {
+
+                    return <div className="user-cell">
+                        <Avatar image={row.original.user.media}/>
                         {cell.value}
                     </div>
                 }
@@ -43,8 +45,10 @@ const Current = () => {
             {
                 Header: 'Last activity',
                 accessor: 'user.lastActivity',
-                Cell: ({row}) => {
-                    return moment(row.original.user.lastActivity, "YYYY-MM-DD hh:mm:ss.u").fromNow();
+                Cell: ({cell}) => {
+                    return (
+                        <Paragraph>{moment(cell.value).format('D MMM')}</Paragraph>
+                    )
                 }
             },
             {
@@ -74,7 +78,10 @@ const Current = () => {
         <div className="container">
             <h1>Current Ranking</h1>
 
-            <Table columns={columns} data={data}/>
+            <Table columns={columns}
+                   data={data}
+                   className="table--ranking"
+                   pager={false}/>
         </div>
     )
 };

@@ -256,7 +256,7 @@ const Index = () => {
             <div className="container">
                 <h1>Boulder ({boulders.length})</h1>
 
-                <Table columns={columns} data={boulders}/>
+                <Table columns={columns} data={boulders} className="table--boulder"/>
             </div>
         </Fragment>
     )

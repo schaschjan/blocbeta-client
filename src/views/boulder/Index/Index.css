@@ -55,3 +55,7 @@
 .drawer .report-error {
     margin: 16px auto;
 }
+
+.table--boulder {
+    grid-template-columns: 85px .25fr .5fr 1.5fr .75fr .75fr .5fr 156px;
+}

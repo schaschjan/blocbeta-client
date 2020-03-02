@@ -1,0 +1,8 @@
+.table--ranking {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.user-cell {
+    display: flex;
+    align-items: center;
+}

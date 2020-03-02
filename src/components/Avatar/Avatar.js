@@ -1,14 +1,14 @@
 import React from 'react';
 import "./Avatar.css";
+import {resolveMedia} from "../../helpers/helpers";
 
 const Avatar = ({image}) => {
-
     if (!image) {
-        // todo: resolve image url
+        return null;
     }
 
     return <div className="avatar" style={
-        {backgroundImage: image}}>
+        {backgroundImage: `url(${resolveMedia(image)})`}}>
     </div>
 };
 
