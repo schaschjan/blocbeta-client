@@ -6,3 +6,7 @@
     display: flex;
     align-items: center;
 }
+
+.actions-cell {
+    margin-left: auto;
+}

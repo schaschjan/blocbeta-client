@@ -5,7 +5,6 @@
 }
 
 .table-cell__name button {
-    width: fill-available;
     text-align: left;
     display: flex;
     align-items: center;
@@ -58,4 +57,37 @@
 
 .table--boulder {
     grid-template-columns: 85px .25fr .5fr 1.5fr .75fr .75fr .5fr 156px;
+}
+
+.detail {
+    display: flex;
+    width: calc(2 * var(--drawer-width));
+}
+
+.detail-page-header {
+    display: flex;
+    border-bottom: 1px solid var(--color-dark);
+    padding: 20px 16px;
+    align-items: center;
+}
+
+.detail-page-header span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.detail-page-header h3 {
+    padding: 0;
+    margin: 0;
+}
+
+.detail-page-header .close-drawer {
+    margin-left: auto;
+    display: inline-flex;
+}
+
+.detail-page {
+    display: block;
+    width: 320px;
 }

@@ -8,6 +8,7 @@ import Table from "../../components/Table/Table";
 import Avatar from "../../components/Avatar/Avatar";
 import "./Current.css"
 import Paragraph from "../../components/Paragraph/Paragraph";
+import Button from "../../components/Button/Button";
 
 const Current = () => {
     const [data, setData] = useState(null);
@@ -55,10 +56,12 @@ const Current = () => {
                 accessor: 'user.id',
                 Cell: ({cell}) => {
                     return (
-                        <Link
-                            to={Context.getPath(`/compare/${Context.getUserId()}/to/${cell.value}/at/current`)}>
-                            Compare
-                        </Link>
+                        <div className="actions-cell">
+                            <Button text={true}
+                                    to={Context.getPath(`/compare/${Context.getUserId()}/to/${cell.value}/at/current`)}>
+                                Compare
+                            </Button>
+                        </div>
                     )
                 }
             }

@@ -89,7 +89,7 @@ const GlobalFilter = ({preGlobalFilteredRows, globalFilter, setGlobalFilter}) =>
     )
 };
 
-const Table = ({columns, data, renderRowSubComponent, className}) => {
+const Table = ({columns, data, renderRowSubComponent, className, pager = true, pageSize = 20}) => {
 
     const defaultColumn = React.useMemo(
         () => ({
@@ -133,7 +133,6 @@ const Table = ({columns, data, renderRowSubComponent, className}) => {
 
         state: {
             pageIndex,
-            pageSize,
             globalFilter
         },
 
@@ -142,7 +141,7 @@ const Table = ({columns, data, renderRowSubComponent, className}) => {
             data,
             defaultColumn,
             filterTypes,
-            initialState: {pageIndex: 0},
+            initialState: {pageIndex: 0, pageSize: pager ? pageSize : data.length},
             autoResetFilters: false,
             autoResetSortBy: false,
             autoResetPage: false
@@ -210,17 +209,19 @@ const Table = ({columns, data, renderRowSubComponent, className}) => {
             </div>
         </div>
 
-        <TableFooter
-            pageIndex={pageIndex}
-            pageSize={pageSize}
-            pageOptions={pageOptions}
+        {pager && (
+            <TableFooter
+                pageIndex={pageIndex}
+                pageSize={pageSize}
+                pageOptions={pageOptions}
 
-            canPreviousPage={canPreviousPage}
-            canNextPage={canNextPage}
+                canPreviousPage={canPreviousPage}
+                canNextPage={canNextPage}
 
-            previousPage={previousPage}
-            nextPage={nextPage}
-        />
+                previousPage={previousPage}
+                nextPage={nextPage}
+            />)
+        }
     </React.Fragment>
 };
 

@@ -15,15 +15,130 @@ import Button from "../../../components/Button/Button";
 import {useDrawerState} from "../../../helpers/drawer.state";
 import Banner from "../../../components/Banner/Banner";
 
+const DrawerContent = ({data}) => {
+    const {close} = useDrawerState();
+    const [currentPage, setCurrentPage] = useState("overview");
+    const [pageData, setPageData] = useState(data);
+
+    const switchPage = (id, data) => {
+        setCurrentPage(id);
+        setPageData(data);
+    };
+
+    const pages = [
+        {
+            id: "overview",
+            render: (data) => {
+                return (
+                    <div className={`detail-page detail-page--overview`}>
+                        <div className="detail-page-header">
+                            <HoldStyle name="red"/>
+                            <h3>{data.name}</h3>
+
+                            <Button type="text" onClick={() => close()} className="close-drawer">
+                                <Icon name="close"/>
+                            </Button>
+                        </div>
+
+                        {data.tags.length > 0 && (
+                            <div className="detail__list">
+                                <h4>Tags ({data.tags.length})</h4>
+
+                                <ul>
+                                    {data.tags.map(tag => {
+                                        return <li>
+                                            {tag.emoji} {tag.name}
+                                        </li>
+                                    })}
+                                </ul>
+                            </div>
+                        )}
+
+                        <div className="detail__list">
+                            <h4>Ascents ({data.ascents.length ? data.ascents.length : 0})</h4>
+
+                            {data.ascents.length > 0 && (
+                                <ul>
+                                    {data.ascents.map(ascent => {
+                                        const pageData = {
+                                            user: {
+                                                username: ascent.user.username,
+                                                id: ascent.user.id
+                                            },
+                                            boulder: {
+                                                name: data.name,
+                                                id: data.id
+                                            }
+                                        };
+
+                                        return <li>
+                                            <Icon name={ascent.type}/>
+                                            {ascent.user.username}
+
+                                            <Button text={true}
+                                                    onClick={() => switchPage("doubt", pageData)}>Doubt it</Button>
+                                        </li>
+                                    })}
+                                </ul>
+                            )}
+                        </div>
+
+                        <div className="detail__list">
+                            <h4>Setters ({data.setters.length})</h4>
+                            <ul>
+                                {data.setters.map(setter => {
+                                    return <li>
+                                        {setter.username}
+                                    </li>
+                                })}
+                            </ul>
+                        </div>
+
+                        <Button text={true} className="report-error">Report error</Button>
+                    </div>
+                );
+            }
+        },
+        {
+            id: "error",
+            render: (data) => {
+                return (
+                    <div className={`detail-page detail-page--error`}>
+                        error
+                    </div>
+                )
+            }
+        },
+        {
+            id: "doubt",
+            render: (data) => {
+                return (
+                    <div className={`detail-page detail-page--error`}>
+                        <div className="detail-page-header">
+                            <Icon name="back" onClick={() => switchPage("overview")}/>
+                            <span>
+                                <strong>Doubt {data.user.username} on: </strong>{data.boulder.name}
+                            </span>
+                        </div>
+                    </div>
+                )
+            }
+        }
+    ];
+
+    return <div className="detail">
+        {pages.find(page => page.id === currentPage).render(pageData)}
+    </div>
+};
+
 const Index = () => {
     const [boulders, setBoulders] = useState(null);
     const [loading, setLoading] = useState(true);
-    const {toggle, setHeader, setContent} = useDrawerState();
+    const {toggle, setContent} = useDrawerState();
 
     const ColorFilter = ({column: {filterValue, setFilter, preFilteredRows, id}}) => {
         setFilter('poop');
     };
-
 
     const columns = [
         {
@@ -180,67 +295,12 @@ const Index = () => {
         }
     };
 
-    const renderDrawerHeader = (data) => {
-        return <React.Fragment>
-            <HoldStyle name={data.color.name}/>
-            <h3>{data.name}</h3>
-        </React.Fragment>
-    };
-
-    const renderDrawerContent = (data) => {
-        return <React.Fragment>
-            {data.tags.length > 0 &&
-            <div className="detail__list">
-                <h4>Tags ({data.tags.length})</h4>
-
-                <ul>
-                    {data.tags.map(tag => {
-                        return <li>
-                            {tag.emoji} {tag.name}
-                        </li>
-                    })}
-                </ul>
-            </div>
-            }
-
-            <div className="detail__list">
-                <h4>Ascents ({data.ascents.length ? data.ascents.length : 0})</h4>
-
-                {data.ascents.length > 0 &&
-                <ul>
-                    {data.ascents.map(ascent => {
-                        return <li>
-                            <Icon name={ascent.type}/>
-                            {ascent.user.username}
-                            <Button text={true}>Doubt it</Button>
-                        </li>
-                    })}
-                </ul>
-                }
-            </div>
-
-            <div className="detail__list">
-                <h4>Setters ({data.setters.length})</h4>
-                <ul>
-                    {data.setters.map(setter => {
-                        return <li>
-                            {setter.username}
-                        </li>
-                    })}
-                </ul>
-            </div>
-
-            <Button text={true} className="report-error">Report error</Button>
-        </React.Fragment>
-    };
-
     const triggerDetail = async (boulderId) => {
         const boulder = await ApiClient.getBoulder(boulderId);
         await resolveBoulder(boulder);
 
         toggle();
-        setHeader(renderDrawerHeader(boulder));
-        setContent(renderDrawerContent(boulder));
+        setContent(<DrawerContent data={boulder}/>);
     };
 
     if (loading) return <Loader/>;
