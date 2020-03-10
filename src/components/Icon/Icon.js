@@ -2,7 +2,7 @@ import React from 'react';
 import './Icon.css';
 import classnames from "classnames";
 
-const Icon = ({name, onClick}) => {
+const Icon = ({name, onClick, fill}) => {
 
     let icon;
     let size;
@@ -28,7 +28,7 @@ const Icon = ({name, onClick}) => {
                 <path d="M0 0H24V24H0V0Z" fill="white"/>
                 <path
                     d="M12 5.29291L7.64648 9.64646L8.35359 10.3536L11.5 7.20712V18H12.5V7.20712L15.6465 10.3536L16.3536 9.64646L12 5.29291Z"
-                    fill="#1687FF"/>
+                    fill={fill ? fill : "#1687FF"}/>
             </svg>
 
         )
@@ -41,7 +41,7 @@ const Icon = ({name, onClick}) => {
                 <path d="M0 0H24V24H0V0Z" fill="white"/>
                 <path
                     d="M9.23503 17.4628L8.99348 17.7044L4 12.7109L4.70711 12.0038L8.99628 16.2929L19.2892 6L19.9963 6.70711L9.23782 17.4656L9.23503 17.4628Z"
-                    fill="#02DEAF"/>
+                    fill={fill ? fill : "#02DEAF"}/>
             </svg>
         )
     }
@@ -50,20 +50,13 @@ const Icon = ({name, onClick}) => {
         size = 'small';
         icon = (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0)">
-                    <path d="M0 0.541626H24V23.5416H0V0.541626Z" fill="white"/>
-                    <path d="M11.295 12.5437L6 17.8388L6.70711 18.5459L12.0021 13.2508L17.2972 18.5459L18.0043 17.8388L12.7092 12.5437L18.0042 7.24873L17.2971 6.54163L12.0021 11.8366L6.70715 6.54163L6.00005 7.24874L11.295 12.5437Z"
-                          fill="#FF5D5F"/>
-                </g>
-                <defs>
-                    <clipPath id="clip0">
-                        <path d="M0 0.541626H24V23.5416H0V0.541626Z" fill="white"/>
-                    </clipPath>
-                </defs>
+                <path d="M0 0H24V24H0V0Z" fill="white"/>
+                <path
+                    d="M11.295 12.0021L6 17.2971L6.70711 18.0042L12.0021 12.7092L17.2972 18.0042L18.0043 17.2971L12.7092 12.0021L18.0042 6.70711L17.2971 6L12.0021 11.295L6.70715 6.00001L6.00005 6.70711L11.295 12.0021Z"
+                    fill={fill ? fill : "#FF5D5F"}/>
             </svg>
         )
     }
-
 
     if (name === 'close') {
         size = 'small';
@@ -168,7 +161,8 @@ const Icon = ({name, onClick}) => {
         )
     }
 
-    return <span className={classnames("icon", `icon--${size}`, onClick ? 'icon--clickable': null)} onClick={onClick}>{icon}</span>
+    return <span className={classnames("icon", `icon--${size}`, onClick ? 'icon--clickable' : null)}
+                 onClick={onClick}>{icon}</span>
 };
 
 export default Icon;

@@ -14,14 +14,6 @@
     align-items: center;
 }
 
-.ascent .icon svg {
-    filter: grayscale(100);
-}
-
-ascent--checked {
-    filter: grayscale(0);
-}
-
 .ascent--disabled {
     opacity: .3;
     pointer-events: none;

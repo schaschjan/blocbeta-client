@@ -4,7 +4,6 @@ import Icon from "../Icon/Icon";
 import classnames from "classnames";
 
 const Ascent = ({type, handler, checked, disabled}) => {
-    let icon = <Icon name={type}/>;
 
     const classNames = classnames(
         'ascent',
@@ -13,8 +12,9 @@ const Ascent = ({type, handler, checked, disabled}) => {
         disabled ? 'ascent--disabled' : null
     );
 
-    return <div className={classNames}
-                onClick={handler}>
+    const icon = <Icon name={type} fill={checked ? null : "#333"}/>;
+
+    return <div className={classNames} onClick={handler}>
         {icon}
     </div>
 };

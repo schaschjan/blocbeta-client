@@ -25,3 +25,7 @@ input.input--error {
 input.input--error:after {
 
 }
+
+input[type="checkbox"] {
+    box-shadow: none;
+}

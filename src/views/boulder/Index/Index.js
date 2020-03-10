@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Fragment} from 'react';
+import React, {useState, useEffect, Fragment, useRef} from 'react';
 import {Loader} from "../../../components/Loader/Loader";
 import db from "../../../db";
 import {resolveBoulder} from "../../../Helpers";
@@ -8,12 +8,32 @@ import moment from "moment";
 import HoldStyle from "../../../components/HoldStyle/HoldStyle";
 import Paragraph from "../../../components/Paragraph/Paragraph";
 import Icon from "../../../components/Icon/Icon";
-import Table from "../../../components/Table/Table";
 import Ascent from "../../../components/Ascent/Ascent";
 import "./Index.css";
 import Button from "../../../components/Button/Button";
 import {useDrawerState} from "../../../helpers/drawer.state";
 import Banner from "../../../components/Banner/Banner";
+import classnames from "classnames";
+
+import {
+    IndeterminateCheckbox,
+    TableHeader,
+    TableHeaderCell,
+    TableRow,
+    TableCell,
+    TableFooter
+} from "../../../components/Table/Table";
+
+import {
+    useExpanded,
+    usePagination,
+    useTable,
+    useFilters,
+    useGlobalFilter,
+    useSortBy,
+    useRowSelect
+} from "react-table";
+import Context from "../../../Context";
 
 const DrawerContent = ({data}) => {
     const {close} = useDrawerState();
@@ -131,13 +151,133 @@ const DrawerContent = ({data}) => {
     </div>
 };
 
+const Bar = ({data, children}) => {
+    return <div className="bar">
+        {children}
+    </div>
+};
+
+const Table = ({columns, data, editable = false}) => {
+
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        page,
+        prepareRow,
+        canPreviousPage,
+        canNextPage,
+        pageOptions,
+        nextPage,
+        previousPage,
+        selectedFlatRows,
+
+        state: {
+            pageIndex,
+            pageSize,
+        },
+
+    } = useTable({
+            columns,
+            data,
+            initialState: {pageIndex: 0, pageSize: 20},
+            autoResetFilters: false,
+            autoResetSortBy: false,
+            autoResetPage: false
+        },
+        useFilters,
+        useGlobalFilter,
+        useExpanded,
+        useSortBy,
+        usePagination,
+        useRowSelect
+    );
+
+    console.log(selectedFlatRows);
+
+    return <Fragment>
+        <div className="filter">
+            <Icon name="search"/>
+            <Icon name="filtermenu"/>
+        </div>
+
+        <div
+            className={classnames('table', 'table--boulder', editable ? 'table--editable' : null)} {...getTableProps()}>
+            <TableHeader>
+                {headerGroups.map(headerGroup => (
+                    <React.Fragment>
+                        {headerGroup.headers.map(column => (
+                            <TableHeaderCell {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                {column.render('Header')}
+
+                                <span className="sort-indicator">
+                                {column.isSorted ? column.isSortedDesc ? <Icon name="down"/> : <Icon name="up"/> : ''}
+                            </span>
+                            </TableHeaderCell>
+                        ))}
+                    </React.Fragment>
+                ))}
+            </TableHeader>
+
+            <div className="table-content" {...getTableBodyProps()}>
+                {page.map((row) => {
+                    prepareRow(row);
+
+                    return (
+                        <TableRow>
+                            {row.cells.map(cell => {
+                                return <TableCell {...cell.getCellProps({className: cell.column.className})}>{cell.render('Cell')}</TableCell>
+                            })}
+                        </TableRow>
+                    )
+                })}
+            </div>
+        </div>
+
+        <TableFooter
+            pageIndex={pageIndex}
+            pageSize={pageSize}
+            pageOptions={pageOptions}
+
+            canPreviousPage={canPreviousPage}
+            canNextPage={canNextPage}
+
+            previousPage={previousPage}
+            nextPage={nextPage}
+        />
+
+        {selectedFlatRows.length > 0 && (
+            <Bar data={selectedFlatRows}>
+                <div className="bar__summary">
+                    <h2>Selected {selectedFlatRows.length} boulders:</h2>
+                </div>
+
+                <div className="bar__actions">
+                    <Button text={true}>Deactivate</Button>
+                    <Button text={true}>Prune Ascents</Button>
+                </div>
+            </Bar>
+        )}
+    </Fragment>
+};
+
 const Index = () => {
     const [boulders, setBoulders] = useState(null);
     const [loading, setLoading] = useState(true);
     const {toggle, setContent} = useDrawerState();
 
-    const ColorFilter = ({column: {filterValue, setFilter, preFilteredRows, id}}) => {
-        setFilter('poop');
+    const selectionColumn = {
+        Header: ({getToggleAllRowsSelectedProps}) => (
+            <div>
+                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+            </div>
+        ),
+        id: 'selection',
+        Cell: ({row}) => (
+            <div>
+                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </div>
+        ),
     };
 
     const columns = [
@@ -146,10 +286,6 @@ const Index = () => {
             accessor: 'color.name',
             Cell: ({cell}) => {
                 return <HoldStyle name={cell.value}/>
-            },
-            Filter: ColorFilter,
-            filter: () => {
-                return 'poop'
             }
         },
         {
@@ -171,9 +307,17 @@ const Index = () => {
             accessor: 'name',
             className: 'table-cell__name',
             Cell: ({cell, row}) => (
-                <Button onClick={() => triggerDetail(row.original.id)}>
-                    {cell.value} <Icon name="forward"/>
-                </Button>
+                <Fragment>
+                    {Context.isAdmin() && (
+                        <Button onClick={() => alert()}>
+                            ✏️
+                        </Button>
+                    )}
+
+                    <Button onClick={() => triggerDetail(row.original.id)}>
+                        {cell.value} <Icon name="forward"/>
+                    </Button>
+                </Fragment>
             ),
         },
         {
@@ -218,7 +362,7 @@ const Index = () => {
                     topped = true
                 }
 
-                if (ascent && ascent.type === 'resign') {
+                if (ascent && ascent.type === 'resignation') {
                     resigned = true
                 }
 
@@ -237,12 +381,16 @@ const Index = () => {
                         <Ascent type="resign"
                                 disabled={!resigned && ascent}
                                 checked={resigned}
-                                handler={() => ascentHandler(row.original.id, "resign", ascent ? ascent.id : null)}/>
+                                handler={() => ascentHandler(row.original.id, "resignation", ascent ? ascent.id : null)}/>
                     </React.Fragment>
                 )
             }
         }
     ];
+
+    if (Context.isAdmin()) {
+        columns.unshift(selectionColumn)
+    }
 
     useEffect(() => {
         async function getData() {
@@ -316,7 +464,7 @@ const Index = () => {
             <div className="container">
                 <h1>Boulder ({boulders.length})</h1>
 
-                <Table columns={columns} data={boulders} className="table--boulder"/>
+                <Table columns={columns} data={boulders} editable={Context.isAdmin()}/>
             </div>
         </Fragment>
     )
