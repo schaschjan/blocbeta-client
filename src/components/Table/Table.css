@@ -79,16 +79,8 @@
 
 .filter {
     display: flex;
-    box-shadow: inset 0 -1px 0 0 var(--color-dark);
     margin-bottom: 30px;
-}
-
-.filter:focus-within {
-    box-shadow: inset 0 -2px 0 0 var(--color-dark);
-}
-
-.filter .search {
-    width: fill-available;
+    align-items: center;
 }
 
 @media screen and (max-width: 768px) {

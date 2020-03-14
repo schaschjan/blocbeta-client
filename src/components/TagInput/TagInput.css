@@ -1,0 +1,12 @@
+.tags {
+    display: flex;
+}
+
+.tags .tag {
+    border: 1px solid var(--color-dark);
+    padding: 2px 2px 2px 6px;
+    text-transform: lowercase;
+    align-items: center;
+    display: flex;
+    margin-right: 8px;
+}

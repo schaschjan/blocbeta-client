@@ -121,3 +121,12 @@
 .bar__actions {
     margin-left: auto;
 }
+
+/* filter */
+.filter {
+    width: 100%;
+}
+
+.filter .input {
+    width: 100%;
+}

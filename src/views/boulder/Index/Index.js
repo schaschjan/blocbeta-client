@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Fragment, useRef} from 'react';
+import React, {useState, useEffect, Fragment} from 'react';
 import {Loader} from "../../../components/Loader/Loader";
 import db from "../../../db";
 import {resolveBoulder} from "../../../Helpers";
@@ -24,16 +24,10 @@ import {
     TableFooter
 } from "../../../components/Table/Table";
 
-import {
-    useExpanded,
-    usePagination,
-    useTable,
-    useFilters,
-    useGlobalFilter,
-    useSortBy,
-    useRowSelect
-} from "react-table";
+import {usePagination, useTable, useGlobalFilter, useSortBy, useRowSelect, useFilters} from "react-table";
 import Context from "../../../Context";
+import Input from "../../../components/Input/Input";
+import {Tag, TagInput} from "../../../components/TagInput/TagInput";
 
 const DrawerContent = ({data}) => {
     const {close} = useDrawerState();
@@ -157,7 +151,35 @@ const Bar = ({data, children}) => {
     </div>
 };
 
+const GlobalFilter = ({preGlobalFilteredRows, globalFilter, setGlobalFilter}) => {
+    const count = preGlobalFilteredRows.length;
+
+    return (
+        <div className="filter">
+            <Input
+                value={globalFilter || ''}
+                icon="search"
+                onChange={e => {
+                    setGlobalFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
+                }}
+                placeholder={`${count} records...`}
+            />
+        </div>
+    )
+};
+
 const Table = ({columns, data, editable = false}) => {
+
+    const [tags, setTags] = useState([
+        {
+            id: 'ascent',
+            value: 'todo'
+        }
+    ]);
+
+    const removeTag = (id) => {
+        setTags(tags.filter(tag => tag.id !== id));
+    };
 
     const {
         getTableProps,
@@ -171,8 +193,10 @@ const Table = ({columns, data, editable = false}) => {
         nextPage,
         previousPage,
         selectedFlatRows,
-
+        setFilter,
+        setAllFilters,
         state: {
+            filters,
             pageIndex,
             pageSize,
         },
@@ -181,23 +205,33 @@ const Table = ({columns, data, editable = false}) => {
             columns,
             data,
             initialState: {pageIndex: 0, pageSize: 20},
-            autoResetFilters: false,
+            autoResetFilters: true,
             autoResetSortBy: false,
             autoResetPage: false
         },
         useFilters,
         useGlobalFilter,
-        useExpanded,
         useSortBy,
         usePagination,
         useRowSelect
     );
 
-    console.log(selectedFlatRows);
+    useEffect(() => {
+        if (!tags) {
+            setAllFilters({});
+        }
+
+        tags.map(tag => setFilter(tag.id, tag.value));
+        console.log(tags,filters);
+
+        setAllFilters(tags);
+
+
+    }, [tags]);
 
     return <Fragment>
         <div className="filter">
-            <Icon name="search"/>
+            <TagInput tags={tags} onAdd={() => alert()} onRemove={(id) => removeTag(id)}/>
             <Icon name="filtermenu"/>
         </div>
 
@@ -282,6 +316,7 @@ const Index = () => {
 
     const columns = [
         {
+            id: 'color',
             Header: 'Color',
             accessor: 'color.name',
             Cell: ({cell}) => {
@@ -289,13 +324,15 @@ const Index = () => {
             }
         },
         {
+            id: 'grade',
             Header: 'Grade',
-            accessor: 'grade',
-            Cell: ({cell}) => {
-                return <Grade name={cell.value.name} color={cell.value.color}/>
+            accessor: 'grade.name',
+            Cell: ({row}) => {
+                return <Grade name={row.original.grade.name} color={row.original.grade.color}/>
             }
         },
         {
+            id: 'points',
             Header: 'Points',
             accessor: 'points',
             Cell: ({cell}) => (
@@ -303,6 +340,7 @@ const Index = () => {
             )
         },
         {
+            id: 'name',
             Header: 'Name',
             accessor: 'name',
             className: 'table-cell__name',
@@ -321,14 +359,15 @@ const Index = () => {
             ),
         },
         {
+            id: 'start',
             Header: 'Start',
             accessor: 'startWall.name',
-            filter: "text",
             Cell: ({cell}) => {
                 return <Paragraph>{cell.value}</Paragraph>
             }
         },
         {
+            id: 'end',
             Header: 'End',
             accessor: 'endWall.name',
             Cell: ({cell}) => {
@@ -336,6 +375,7 @@ const Index = () => {
             }
         },
         {
+            id: 'date',
             Header: 'Date',
             accessor: 'createdAt',
             Cell: ({cell}) => {
@@ -345,10 +385,17 @@ const Index = () => {
             }
         },
         {
+            id: 'ascent',
             Header: 'Ascent',
-            accessor: 'me',
-            Cell: ({row, cell}) => {
-                const ascent = cell.value;
+            accessor: (row) => {
+                if (row.me) {
+                    return row.me.type;
+                }
+
+                return "todo";
+            },
+            Cell: ({row}) => {
+                const ascent = row.original.me;
 
                 let flashed = false;
                 let topped = false;
@@ -464,7 +511,9 @@ const Index = () => {
             <div className="container">
                 <h1>Boulder ({boulders.length})</h1>
 
-                <Table columns={columns} data={boulders} editable={Context.isAdmin()}/>
+                <Table columns={columns}
+                       data={boulders}
+                       editable={Context.isAdmin()}/>
             </div>
         </Fragment>
     )
