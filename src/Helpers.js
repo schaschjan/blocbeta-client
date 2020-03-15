@@ -1,4 +1,3 @@
-import React from "react";
 import db from "./db";
 
 export const getError = (error) => {

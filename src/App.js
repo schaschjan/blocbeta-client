@@ -3,7 +3,6 @@ import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom
 import Context from "./Context";
 import Login from "./views/Login/Login";
 import Dashboard from "./views/Dashboard";
-import BoulderIndex from "./views/boulder/Index/Index.js";
 import CurrentRanking from "./views/ranking/Current";
 import CurrentComparison from "./views/compare/Current";
 import Account from "./views/Account";
@@ -12,6 +11,9 @@ import PasswordReset from "./views/PasswordReset";
 import Navigation from "./components/Navigation/Navigation";
 import {GlobalStateProvider} from "./helpers/useGlobalState";
 import {Content} from "./components/Content/Content";
+
+import BoulderIndex from "./views/boulder/Index/Index.js";
+import BoulderEdit from "./views/boulder/Edit/Edit.js";
 
 const LoginRedirect = () => (
     <Redirect
@@ -85,6 +87,12 @@ const App = () => {
             title: "Boulder index",
             path: "/:locationSlug/boulder",
             render: () => <BoulderIndex/>,
+            exact: true
+        },
+        {
+            title: "Edit boulder",
+            path: "/:locationSlug/boulder/:boulderId",
+            render: () => <BoulderEdit/>,
             exact: true
         },
         {

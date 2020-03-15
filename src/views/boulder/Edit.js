@@ -2,15 +2,6 @@ import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import BoulderForm from "./Form";
 import ApiClient from "../../../ApiClient";
-import {
-    getColorOption,
-    getGradeOption,
-    getSetterOption,
-    getStatusOption,
-    getTagOption,
-    getWallOption
-} from "../../../Helpers";
-
 export default function Edit() {
     const {boulderId} = useParams();
 

@@ -14,6 +14,10 @@
     align-items: center;
 }
 
+.table-cell__name a {
+    margin-right: 8px;
+}
+
 .detail__list {
     padding: 16px 0;
     display: block;
@@ -60,6 +64,10 @@
 }
 
 .table--boulder {
+    grid-template-columns: 85px .25fr .5fr 1.5fr .75fr .75fr .5fr 156px;
+}
+
+.table--boulder.table--editable {
     grid-template-columns: 40px 85px .25fr .5fr 1.5fr .75fr .75fr .5fr 156px;
 }
 

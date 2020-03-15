@@ -21,6 +21,7 @@ class Context {
                 if (count === 0) {
                     ApiClient.getLocations().then(response => {
                         db.locations.bulkAdd(response);
+                        Context.storage.locations.init(response);
                     });
                 }
             });
@@ -29,6 +30,7 @@ class Context {
                 if (count === 0) {
                     ApiClient.getGrades().then(response => {
                         db.grades.bulkAdd(response);
+                        Context.storage.grades.init(response);
                     });
                 }
             });
@@ -37,6 +39,7 @@ class Context {
                 if (count === 0) {
                     ApiClient.getHoldStyles().then(response => {
                         db.holdStyles.bulkAdd(response);
+                        Context.storage.holdStyles.init(response);
                     });
                 }
             });
@@ -45,6 +48,7 @@ class Context {
                 if (count === 0) {
                     ApiClient.getWalls().then(response => {
                         db.walls.bulkAdd(response);
+                        Context.storage.walls.init(response);
                     });
                 }
             });
@@ -53,6 +57,7 @@ class Context {
                 if (count === 0) {
                     ApiClient.getTags().then(response => {
                         db.tags.bulkAdd(response);
+                        Context.storage.tags.init(response);
                     });
                 }
             });
@@ -61,6 +66,7 @@ class Context {
                 if (count === 0) {
                     ApiClient.getSetters().then(response => {
                         db.setters.bulkAdd(response);
+                        Context.storage.setters.init(response);
                     });
                 }
             });
@@ -73,6 +79,8 @@ class Context {
                 }
             });
         });
+
+
     }
 
     static destroy() {
@@ -123,6 +131,61 @@ class Context {
     static getPath(path) {
         return `/${Context.getLocationUrl()}${path}`;
     }
+
+    static getOptions = (collection, labelProperty) => {
+
+        const options = [];
+
+        db[collection].toArray().then((item) => {
+            options.push({
+                label: item[labelProperty],
+                value: item.id
+            })
+        });
+
+        return options
+    };
+
+    static createStorageApi = (name) => {
+        return {
+            init: (data) => {
+                localStorage.setItem(name, JSON.stringify(data))
+            },
+            all: () => {
+                return JSON.parse(localStorage.getItem(name));
+            },
+            options: (labelProperty = 'name', valueProperty = 'id') => {
+                return Context.storage[name].all().map(item => {
+                    return {
+                        label: item[labelProperty],
+                        value: item[valueProperty]
+                    }
+                }).sort((a, b) => a.label > b.label ? 1 : -1);
+            }
+        }
+    };
+
+    static storage = {
+        grades: Context.createStorageApi('grades'),
+        walls: Context.createStorageApi('walls'),
+        holdStyles: Context.createStorageApi('holdStyles'),
+        locations: Context.createStorageApi('locations'),
+        tags: Context.createStorageApi('tags'),
+        setters: Context.createStorageApi('setters'),
+        states: {
+            options: () => [
+                {
+                    label: 'active',
+                    value: 'active'
+                },
+                {
+                    label: 'inactive',
+                    value: 'inactive'
+                }
+            ]
+        }
+    };
 }
+
 
 export default Context;

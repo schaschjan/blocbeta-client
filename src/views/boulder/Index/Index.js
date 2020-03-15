@@ -28,6 +28,7 @@ import {usePagination, useTable, useGlobalFilter, useSortBy, useRowSelect, useFi
 import Context from "../../../Context";
 import Input from "../../../components/Input/Input";
 import {Tag, TagInput} from "../../../components/TagInput/TagInput";
+import {Link} from "react-router-dom";
 
 const DrawerContent = ({data}) => {
     const {close} = useDrawerState();
@@ -347,9 +348,7 @@ const Index = () => {
             Cell: ({cell, row}) => (
                 <Fragment>
                     {Context.isAdmin() && (
-                        <Button onClick={() => alert()}>
-                            ✏️
-                        </Button>
+                        <Link to={Context.getPath(`/boulder/${row.original.id}`)}>  ✏</Link>
                     )}
 
                     <Button onClick={() => triggerDetail(row.original.id)}>

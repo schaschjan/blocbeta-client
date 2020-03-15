@@ -8,12 +8,11 @@ const Error = ({message}) => {
 };
 
 const Form = ({defaultValues, children, onSubmit}) => {
-
+    console.log(defaultValues);
     const {register, errors, handleSubmit} = useForm({defaultValues});
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-
             {Array.isArray(children) ? children.map(child => {
                 const classes = classnames(errors[child.props.name] ? 'input--error' : null);
 
@@ -25,15 +24,15 @@ const Form = ({defaultValues, children, onSubmit}) => {
                                         ...child.props,
                                         register: register(child.props.validate),
                                         key: child.props.name,
-                                        className: classes
+                                        className: classes,
                                     }
                                 })
                                 : child
                         }
 
-                        {errors[child.props.name] &&
-                        <Error message={errors[child.props.name].message}/>
-                        }
+                        {errors[child.props.name] && (
+                            <Error message={errors[child.props.name].message}/>
+                        )}
 
                     </React.Fragment>
                 );
