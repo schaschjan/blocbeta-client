@@ -8,7 +8,6 @@ const Error = ({message}) => {
 };
 
 const Form = ({defaultValues, children, onSubmit}) => {
-    console.log(defaultValues);
     const {register, errors, handleSubmit} = useForm({defaultValues});
 
     return (

@@ -1,8 +1,7 @@
-import React, {useState, useEffect, useRef, Fragment} from 'react';
+import React, {useState, useEffect, Fragment} from 'react';
 import {Loader} from "../../../components/Loader/Loader";
 import ApiClient from "../../../ApiClient";
 import {useParams} from "react-router-dom";
-import {resolveBoulder} from "../../../Helpers";
 import "./Edit.css";
 import Form from "../../../components/Form/Form";
 import Label from "../../../components/Label/Label";
@@ -16,10 +15,11 @@ const Edit = () => {
     const {boulderId} = useParams();
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isSubmitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         const loadBoulder = async (boulderId) => {
-            const boulder = await ApiClient.getBoulder(boulderId);
+            const boulder = await ApiClient.boulder.get(boulderId);
 
             boulder.grade = boulder.grade.id;
             boulder.holdStyle = boulder.holdStyle.id;
@@ -35,7 +35,11 @@ const Edit = () => {
     }, [boulderId]);
 
     const onSubmit = (data) => {
-        console.log(data);
+        setSubmitting(true);
+
+        ApiClient.boulder.update(boulderId, data).then(() => {
+            setSubmitting(false);
+        });
     };
 
     if (loading) return <Loader/>;
@@ -43,7 +47,7 @@ const Edit = () => {
     return (
         <Fragment>
             <div className="container">
-                <h1>Edit ({data.name})</h1>
+                <h1>Edit {data.name}</h1>
 
                 <Form onSubmit={onSubmit} defaultValues={data}>
                     <Label>Name</Label>
@@ -62,7 +66,7 @@ const Edit = () => {
                     <Select name="endWall" options={Context.storage.walls.options()}/>
 
                     <Label>Status</Label>
-                    <Select name="status" options={Context.storage.states.options()}/>
+                    <Select name="status" options={Context.storage.system.states.options()}/>
 
                     <Label>Points</Label>
                     <Input type="text" name="points" validate={{required: Messages["form.error.points.required"]}}/>
@@ -77,7 +81,7 @@ const Edit = () => {
                             multiple={true}
                             options={Context.storage.tags.options('name', 'id')}/>
 
-                    <Button type="submit" primary="true">Update</Button>
+                    <Button type="submit" primary="true" disabled={isSubmitting}>Update</Button>
                 </Form>
             </div>
         </Fragment>

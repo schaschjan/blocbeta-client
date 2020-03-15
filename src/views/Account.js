@@ -1,16 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import {Loader} from "../components/Loader/Loader";
 import ApiClient from "../ApiClient";
-import {useForm} from "react-hook-form";
-import {getError} from "../Helpers";
 import {toast} from "react-toastify";
+import Form from "../components/Form/Form";
+import Label from "../components/Label/Label";
+import Input from "../components/Input/Input";
+import {Messages} from "../Messages";
+import Button from "../components/Button/Button";
 
 const Account = () => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isSubmitting, setSubmitting] = useState(false);
-
-    const {register, handleSubmit, errors} = useForm();
 
     const onSubmit = (data) => {
         setSubmitting(true);
@@ -34,99 +35,70 @@ const Account = () => {
         <div className="container">
             <h1>Account</h1>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="form-row">
-                    <label>Visible</label>
-                    <input name="visible"
-                           type="checkbox"
-                           defaultChecked={data.visible}
-                           ref={register()}/>
-                </div>
+            <Form onSubmit={onSubmit} defaultValues={data}>
+                <Label>Visible</Label>
+                <Input name="visible" type="checkbox"/>
 
-                <div className="form-row">
-                    <label>Username</label>
-                    <input name="username" value={data.username} ref={register({required: true})} disabled/>
-                </div>
+                <Label>Username</Label>
+                <Input name="username" disabled/>
 
-                <div className="form-row">
-                    <label>Email</label>
-                    <input name="email"
-                           defaultValue={data.email}
-                           ref={register({
-                               required: true
-                           })}/>
+                <Label>Email</Label>
+                <Input name="email"
+                       validate={{
+                           required: Messages.required,
+                           pattern: {
+                               value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                               message: Messages.email.invalid
+                           }
+                       }}/>
 
-                    <span className="form-error">{errors.email && getError(errors.email)}</span>
-                </div>
+                <Label>Arm span</Label>
+                <Input name="armSpan"
+                       validate={{
+                           required: Messages.required,
+                           min: {
+                               value: 120,
+                               message: Messages.range.min(120, "arm span")
+                           },
+                           max: {
+                               value: 220,
+                               message: Messages.range.max(220, "arm span")
+                           }
+                       }}
+                       type="number"/>
 
-                <div className="form-row">
-                    <label>Arm span</label>
-                    <input name="armSpan"
-                           defaultValue={data.armSpan}
-                           ref={register({
-                               required: true,
-                               min: {
-                                   value: 120,
-                                   message: "Minimal arm span is 120"
-                               },
-                               max: {
-                                   value: 220,
-                                   message: "Maximal arm span is 220"
-                               }
-                           })}
-                           type="number"/>
+                <Label>Height</Label>
+                <Input name="height"
+                       validate={{
+                           required: Messages.required,
+                           min: {
+                               value: 120,
+                               message: "Minimal height is 120"
+                           },
+                           max: {
+                               value: 220,
+                               message: "Maximal height is 220"
+                           }
+                       }}
+                       type="number"/>
 
-                    <span className="form-error">{errors.armSpan && getError(errors.armSpan)}</span>
-                </div>
+                <Label>Weight</Label>
+                <Input name="weight"
+                       validate={{
+                           required: Messages.required,
+                           min: {
+                               value: 40,
+                               message: "Minimal weight is 40"
+                           },
+                           max: {
+                               value: 120,
+                               message: "Maximal weight is 120"
+                           }
+                       }}
+                       type="number"/>
 
-                <div className="form-row">
-                    <label>Height</label>
-                    <input name="height"
-                           defaultValue={data.height}
-                           ref={register({
-                               required: true,
-                               min: {
-                                   value: 120,
-                                   message: "Minimal height is 120"
-                               },
-                               max: {
-                                   value: 220,
-                                   message: "Maximal height is 220"
-                               }
-                           })}
-                           type="number"/>
-
-                    <span className="form-error">{errors.height && getError(errors.height)}</span>
-                </div>
-
-                <div className="form-row">
-                    <label>Weight</label>
-                    <input name="weight"
-                           defaultValue={data.weight}
-                           ref={register({
-                               required: true,
-                               min: {
-                                   value: 40,
-                                   message: "Minimal weight is 40"
-                               },
-                               max: {
-                                   value: 120,
-                                   message: "Maximal weight is 120"
-                               }
-                           })}
-                           type="number"/>
-
-                    <span className="form-error">{errors.weight && getError(errors.weight)}</span>
-                </div>
-
-                <div className="form-row">
-                    {isSubmitting ? (
-                        <input type="submit" className="button button--disabled" value="Update"/>
-                    ) : (
-                        <input type="submit" className="button" value="Update"/>
-                    )}
-                </div>
-            </form>
+                <Button type="submit" primary="true" disabled={isSubmitting}>Update</Button>
+            </Form>
         </div>
     )
 };

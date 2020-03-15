@@ -27,8 +27,9 @@ const Login = ({onAuthenticationSuccess, history}) => {
             }
 
             Context.authenticate(response.token);
-            Context.destroy();
-            Context.init();
+            Context.storage.init();
+
+            console.log(Context.location);
 
             onAuthenticationSuccess(response);
             history.push(Context.getPath('/dashboard'))

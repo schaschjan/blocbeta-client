@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import {useDrawerState, close} from "../../helpers/drawer.state";
+import {useDrawerState} from "../../helpers/drawer.state";
 import classnames from "classnames";
 import Drawer from "../Drawer/Drawer";
 import {ToastContainer} from "react-toastify";
@@ -9,8 +9,7 @@ export const Content = ({children}) => {
     const {open, toggle, close, header, content} = useDrawerState();
 
     return <Fragment>
-        <div
-            onClick={() => close()}
+        <div onClick={() => close()}
             className={classnames("content", open ? "content--disabled" : null)}>
             {children}
         </div>

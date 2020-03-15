@@ -44,7 +44,7 @@ const App = () => {
     function handleAuthenticationSuccess() {
         setAuthenticated(true);
 
-        return <Redirect to={{pathname: `/${Context.getLocationUrl()}/dashboard`}}/>;
+        return <Redirect to={{pathname: `/${Context.location.current().url}/dashboard`}}/>;
     }
 
     const initialState = {

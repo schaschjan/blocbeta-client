@@ -1,35 +1,35 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {Link, withRouter} from "react-router-dom";
 import Context from "../../Context";
-import db from "../../db";
 import "./Navigation.css";
 
-const LocationSelect = () => {
-    const [locations, setLocations] = useState([]);
-
-    useEffect(() => {
-        db.locations.toArray().then(locations => {
-            setLocations(locations)
-        });
-    }, []);
+const LocationSwitch = () => {
+    const locations = Context.storage.locations.all();
 
     if (!locations) {
         return null;
     }
 
-    return (
-        <select>
-            {locations.map(location => {
+    const handleChange = (event) => {
+        const selectedLocationId = parseInt(event.target.value);
 
+        if (selectedLocationId !== Context.location.current().id) {
+         Context.location.switchTo(selectedLocationId);
+        }
+    };
+
+    return (
+        <select onChange={handleChange} className="location-switch">
+            {locations.map(location => {
                 if (!location.public) {
                     return null
                 }
 
-                if (location.url === Context.getLocationUrl()) {
-                    return <option selected value={location.url}>{location.name}</option>
-                } else {
-                    return <option value={location.url}>{location.name}</option>
+                if (location.id === Context.location.current().id) {
+                    return <option selected value={location.id}>{location.name}</option>
                 }
+
+                return <option value={location.id}>{location.name}</option>
             })}
         </select>
     )
@@ -66,9 +66,8 @@ const Navigation = ({authenticated, history}) => {
         <header className="header">
             <ul className="location-switch">
                 <li>
-                    <Link to={Context.getPath('/dashboard')} className="logo">
-                        BlocBeta @ <LocationSelect/>
-                    </Link>
+                    <Link to={Context.getPath('/dashboard')} className="logo">BlocBeta @</Link>
+                    <LocationSwitch/>
                 </li>
             </ul>
 
@@ -80,7 +79,7 @@ const Navigation = ({authenticated, history}) => {
                     <Link to={Context.getPath('/ranking/current')}>Ranking</Link>
                 </li>
                 <li>
-                    <Link to={'/account'}>[{Context.getUsername()}]</Link>
+                    <Link to={'/account'}>[{Context.user.username}]</Link>
                 </li>
                 <li>
                     <a href="#" onClick={(event) => handleLogout(event)}>Out!</a>

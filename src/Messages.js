@@ -1,4 +1,14 @@
 export const Messages = {
-    "form.error.name.required": "Please provide a name",
-    "form.error.points.required": "Please provide a value"
+    range: {
+        min: (value, property) => {
+            return `Minimal ${property} is ${value}`
+        },
+        max: (value, property) => {
+            return `Maximal ${property} is ${value}`
+        },
+    },
+    required: "Please provide a value",
+    email: {
+        invalid: "Please provide a valid E-Mail address"
+    }
 };

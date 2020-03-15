@@ -1,6 +1,5 @@
 import React, {useState, useEffect, Fragment} from 'react';
 import {Loader} from "../../../components/Loader/Loader";
-import db from "../../../db";
 import {resolveBoulder} from "../../../Helpers";
 import ApiClient from "../../../ApiClient";
 import Grade from "../../../components/Grade/Grade";
@@ -152,23 +151,6 @@ const Bar = ({data, children}) => {
     </div>
 };
 
-const GlobalFilter = ({preGlobalFilteredRows, globalFilter, setGlobalFilter}) => {
-    const count = preGlobalFilteredRows.length;
-
-    return (
-        <div className="filter">
-            <Input
-                value={globalFilter || ''}
-                icon="search"
-                onChange={e => {
-                    setGlobalFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
-                }}
-                placeholder={`${count} records...`}
-            />
-        </div>
-    )
-};
-
 const Table = ({columns, data, editable = false}) => {
 
     const [tags, setTags] = useState([
@@ -223,11 +205,7 @@ const Table = ({columns, data, editable = false}) => {
         }
 
         tags.map(tag => setFilter(tag.id, tag.value));
-        console.log(tags,filters);
-
         setAllFilters(tags);
-
-
     }, [tags]);
 
     return <Fragment>
@@ -317,9 +295,9 @@ const Index = () => {
 
     const columns = [
         {
-            id: 'color',
-            Header: 'Color',
-            accessor: 'color.name',
+            id: 'holdStyle',
+            Header: 'holdStyle',
+            accessor: 'holdStyle.name',
             Cell: ({cell}) => {
                 return <HoldStyle name={cell.value}/>
             }
@@ -347,8 +325,8 @@ const Index = () => {
             className: 'table-cell__name',
             Cell: ({cell, row}) => (
                 <Fragment>
-                    {Context.isAdmin() && (
-                        <Link to={Context.getPath(`/boulder/${row.original.id}`)}>  ✏</Link>
+                    {Context.user.isAdmin() && (
+                        <Link to={Context.getPath(`/boulder/${row.original.id}`)}> ✏</Link>
                     )}
 
                     <Button onClick={() => triggerDetail(row.original.id)}>
@@ -434,7 +412,7 @@ const Index = () => {
         }
     ];
 
-    if (Context.isAdmin()) {
+    if (Context.user.isAdmin()) {
         columns.unshift(selectionColumn)
     }
 
@@ -444,10 +422,11 @@ const Index = () => {
                 return ascents.reduce((obj, item) => Object.assign(obj, {[item.boulderId]: item}), {});
             });
 
-            const boulders = await db.boulders.toArray();
+            const boulders = Context.storage.boulders.all();
 
             for (let boulder of boulders) {
-                await resolveBoulder(boulder);
+                resolveBoulder(boulder);
+
                 const ascentData = ascents[boulder.id];
 
                 if (!ascentData) {
@@ -490,10 +469,9 @@ const Index = () => {
     };
 
     const triggerDetail = async (boulderId) => {
-        const boulder = await ApiClient.getBoulder(boulderId);
+        const boulder = await ApiClient.boulder.get(boulderId);
         await resolveBoulder(boulder);
 
-        toggle();
         setContent(<DrawerContent data={boulder}/>);
     };
 
@@ -512,7 +490,7 @@ const Index = () => {
 
                 <Table columns={columns}
                        data={boulders}
-                       editable={Context.isAdmin()}/>
+                       editable={Context.user.isAdmin()}/>
             </div>
         </Fragment>
     )

@@ -1,8 +1,8 @@
 import jwt_decode from 'jwt-decode';
 import ApiClient from "./ApiClient";
-import db from './db.js';
 
 class Context {
+
     static isAuthenticated() {
         const token = localStorage.getItem('token');
 
@@ -11,80 +11,6 @@ class Context {
         }
 
         return true
-    }
-
-    static init() {
-
-        db.open();
-        db.on('ready', () => {
-            db.locations.count(count => {
-                if (count === 0) {
-                    ApiClient.getLocations().then(response => {
-                        db.locations.bulkAdd(response);
-                        Context.storage.locations.init(response);
-                    });
-                }
-            });
-
-            db.grades.count(count => {
-                if (count === 0) {
-                    ApiClient.getGrades().then(response => {
-                        db.grades.bulkAdd(response);
-                        Context.storage.grades.init(response);
-                    });
-                }
-            });
-
-            db.holdStyles.count(count => {
-                if (count === 0) {
-                    ApiClient.getHoldStyles().then(response => {
-                        db.holdStyles.bulkAdd(response);
-                        Context.storage.holdStyles.init(response);
-                    });
-                }
-            });
-
-            db.walls.count(count => {
-                if (count === 0) {
-                    ApiClient.getWalls().then(response => {
-                        db.walls.bulkAdd(response);
-                        Context.storage.walls.init(response);
-                    });
-                }
-            });
-
-            db.tags.count(count => {
-                if (count === 0) {
-                    ApiClient.getTags().then(response => {
-                        db.tags.bulkAdd(response);
-                        Context.storage.tags.init(response);
-                    });
-                }
-            });
-
-            db.setters.count(count => {
-                if (count === 0) {
-                    ApiClient.getSetters().then(response => {
-                        db.setters.bulkAdd(response);
-                        Context.storage.setters.init(response);
-                    });
-                }
-            });
-
-            db.boulders.count(count => {
-                if (count === 0) {
-                    ApiClient.getActiveBoulders().then(response => {
-                        db.boulders.bulkAdd(response);
-                    });
-                }
-            });
-        });
-
-
-    }
-
-    static destroy() {
-        db.delete();
     }
 
     static logout() {
@@ -108,51 +34,24 @@ class Context {
         return localStorage.getItem('token');
     }
 
-    static isAdmin() {
-        return localStorage.getItem('roles').includes('ROLE_ADMIN')
-    }
-
-    static getUsername() {
-        return localStorage.getItem('username');
-    }
-
-    static getUserId() {
-        return localStorage.getItem('id');
-    }
-
     static getLocationUrl() {
-        return this.getLocation().url
-    }
-
-    static getLocation() {
-        return JSON.parse(localStorage.getItem('location'))
+        return this.location.url
     }
 
     static getPath(path) {
-        return `/${Context.getLocationUrl()}${path}`;
+        return `/${Context.location.current().url}${path}`;
     }
-
-    static getOptions = (collection, labelProperty) => {
-
-        const options = [];
-
-        db[collection].toArray().then((item) => {
-            options.push({
-                label: item[labelProperty],
-                value: item.id
-            })
-        });
-
-        return options
-    };
 
     static createStorageApi = (name) => {
         return {
-            init: (data) => {
+            set: (data) => {
                 localStorage.setItem(name, JSON.stringify(data))
             },
             all: () => {
                 return JSON.parse(localStorage.getItem(name));
+            },
+            get: (id) => {
+                return Context.storage[name].all().find(item => item.id === id);
             },
             options: (labelProperty = 'name', valueProperty = 'id') => {
                 return Context.storage[name].all().map(item => {
@@ -166,24 +65,59 @@ class Context {
     };
 
     static storage = {
+        clear: () => {
+            localStorage.removeItem('grades');
+            localStorage.removeItem('walls');
+            localStorage.removeItem('holdStyles');
+            localStorage.removeItem('locations');
+            localStorage.removeItem('tags');
+            localStorage.removeItem('setters');
+            localStorage.removeItem('boulders');
+        },
+        init: () => {
+            ApiClient.getLocations().then(response => Context.storage.locations.set(response));
+            ApiClient.getGrades().then(response => Context.storage.grades.set(response));
+            ApiClient.getHoldStyles().then(response => Context.storage.holdStyles.set(response));
+            ApiClient.getWalls().then(response => Context.storage.walls.set(response));
+            ApiClient.getTags().then(response => Context.storage.tags.set(response));
+            ApiClient.getSetters().then(response => Context.storage.setters.set(response));
+            ApiClient.getActiveBoulders().then(response => Context.storage.boulders.set(response));
+        },
         grades: Context.createStorageApi('grades'),
         walls: Context.createStorageApi('walls'),
         holdStyles: Context.createStorageApi('holdStyles'),
         locations: Context.createStorageApi('locations'),
         tags: Context.createStorageApi('tags'),
         setters: Context.createStorageApi('setters'),
-        states: {
-            options: () => [
-                {
-                    label: 'active',
-                    value: 'active'
-                },
-                {
-                    label: 'inactive',
-                    value: 'inactive'
-                }
-            ]
+        boulders: Context.createStorageApi('boulders'),
+        system: {
+            states: {
+                options: () => [
+                    {
+                        label: 'active',
+                        value: 'active'
+                    },
+                    {
+                        label: 'inactive',
+                        value: 'inactive'
+                    }
+                ]
+            },
         }
+    };
+
+    static location = {
+        current: () => JSON.parse(localStorage.getItem('location')),
+        switchTo: (id) => {
+            const location = Context.storage.locations.get(id);
+            localStorage.setItem('location', JSON.stringify(location));
+        }
+    };
+
+    static user = {
+        isAdmin: () => localStorage.getItem('roles').includes('ROLE_ADMIN'),
+        id: localStorage.getItem('id'),
+        username: localStorage.getItem('username'),
     };
 }
 

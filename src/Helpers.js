@@ -1,4 +1,4 @@
-import db from "./db";
+import Context from "./Context";
 
 export const getError = (error) => {
     if (error.type === "required") {
@@ -8,24 +8,24 @@ export const getError = (error) => {
     return error.message;
 };
 
-export async function resolveBoulder(boulder) {
-    boulder.startWall = await db.walls.get(boulder.startWall.id);
+export const resolveBoulder = (boulder) => {
+    boulder.startWall = Context.storage.walls.get(boulder.startWall.id);
 
     if (boulder.endWall) {
-        boulder.endWall = await db.walls.get(boulder.endWall.id);
+        boulder.endWall = Context.storage.walls.get(boulder.endWall.id);
     }
 
-    boulder.grade = await db.grades.get(boulder.grade.id);
-    boulder.color = await db.holdStyles.get(boulder.color.id);
+    boulder.grade = Context.storage.grades.get(boulder.grade.id);
+    boulder.holdStyle = Context.storage.holdStyles.get(boulder.holdStyle.id);
 
     for (let [key, tag] of Object.entries(boulder.tags)) {
-        boulder.tags[key] = await db.tags.get(tag.id);
+        boulder.tags[key] = Context.storage.tags.get(tag.id);
     }
 
     for (let [key, setter] of Object.entries(boulder.setters)) {
-        boulder.setters[key] = await db.setters.get(setter.id);
+        boulder.setters[key] = Context.storage.setters.get(setter.id);
     }
-}
+};
 
 export const concatToList = (items, property) => {
     const count = items.length;

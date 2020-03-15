@@ -24,6 +24,10 @@
     margin-left: auto;
 }
 
-.header .navigation li{
+.header .navigation li {
     margin-left: 10px;
+}
+
+.location-switch {
+    margin-left: 8px;
 }
