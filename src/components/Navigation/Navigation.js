@@ -2,6 +2,7 @@ import React from 'react';
 import {Link, withRouter} from "react-router-dom";
 import Context from "../../Context";
 import "./Navigation.css";
+import Button from "../Button/Button";
 
 const LocationSwitch = () => {
     const locations = Context.storage.locations.all();
@@ -14,7 +15,7 @@ const LocationSwitch = () => {
         const selectedLocationId = parseInt(event.target.value);
 
         if (selectedLocationId !== Context.location.current().id) {
-         Context.location.switchTo(selectedLocationId);
+            Context.location.switchTo(selectedLocationId);
         }
     };
 
@@ -35,20 +36,18 @@ const LocationSwitch = () => {
     )
 };
 
-const Navigation = ({authenticated, history}) => {
+const Navigation = ({history}) => {
 
     const handleLogout = (event) => {
         event.preventDefault();
 
-        Context.logout();
-        Context.destroy();
+        Context.storage.clear();
 
         history.push('/login');
-        authenticated = false;
     };
 
 
-    if (!authenticated) {
+    if (!Context.isAuthenticated()) {
         return (
             <header className="header">
                 <ul>
@@ -82,7 +81,7 @@ const Navigation = ({authenticated, history}) => {
                     <Link to={'/account'}>[{Context.user.username}]</Link>
                 </li>
                 <li>
-                    <a href="#" onClick={(event) => handleLogout(event)}>Out!</a>
+                    <Button onClick={(event) => handleLogout(event)}>Out!</Button>
                 </li>
             </ul>
         </header>

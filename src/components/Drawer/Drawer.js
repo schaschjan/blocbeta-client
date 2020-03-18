@@ -1,54 +1,81 @@
-import React from 'react';
+import React, {createContext, useEffect,
+    Fragment} from 'react';
 import './Drawer.css';
 import classnames from "classnames";
 import {Loader} from "../Loader/Loader";
+import Button from "../Button/Button";
+import Icon from "../Icon/Icon";
 
-const Drawer = ({open, loading, closeHandler, content}) => {
-        const classes = classnames("drawer", open ? "drawer--open" : "drawer--closed", loading ? "drawer--loading" : null);
+export const DrawerContext = createContext({
+    drawerOpen: false,
+    drawerLoading: false,
+    setDrawerPages:[],
+    drawerData: null,
+    drawerActivePage: null
+});
 
-        const onKeyDown = [
-            "keydown",
-            (event) => {
-                if (open && event.key === "Escape") {
-                    closeHandler();
-                }
-            }
-        ];
+export const Drawer = ({open, data, closeHandler, activePage, pages, loading = true}) => {
+    const classes = classnames("drawer", open ? "drawer--open" : "drawer--closed", loading ? "drawer--loading" : null);
 
-        const onScroll = [
-            "scroll",
-            () => {
+    useEffect(() => {
+        console.log(pages);
+        const page = pages.find(page => page.name === activePage);
+        console.log(page, activePage)
+    }, [pages]);
+
+    if (!pages) {
+        return new Error("No pages passed to drawer");
+    }
+
+    const page = pages.find(page => page.name === activePage);
+
+    const onKeyDown = [
+        "keydown",
+        (event) => {
+            if (open && event.key === "Escape") {
                 closeHandler();
-            },
-            {
-                passive: true
             }
-        ];
-
-        if (open) {
-            window.addEventListener(...onScroll);
-            window.addEventListener(...onKeyDown);
-        } else {
-            window.removeEventListener(...onScroll);
-            window.removeEventListener(...onKeyDown);
         }
-
-        if (loading) {
-            return (
-                <div className={classes}>
-                    <Loader/>
-                </div>
-            )
+    ];
+    const onScroll = [
+        "scroll",
+        () => {
+            closeHandler();
+        },
+        {
+            passive: true
         }
+    ];
 
+    if (open) {
+        window.addEventListener(...onScroll);
+        window.addEventListener(...onKeyDown);
+    } else {
+        window.removeEventListener(...onScroll);
+        window.removeEventListener(...onKeyDown);
+    }
+
+    if (loading || !data) {
         return (
             <div className={classes}>
-                <div className="drawer__content">
-                    {open && !loading && content}
-                </div>
+                <Loader/>
             </div>
         )
     }
-;
 
-export default Drawer;
+    return (
+        <div className={classes}>
+            <Fragment>
+                <div className="detail-page-header">
+                    {page.header(data)}
+
+                    <Button type="text" onClick={() => closeHandler()} className="close-drawer">
+                        <Icon name="close"/>
+                    </Button>
+                </div>
+
+                {page.content(data)}
+            </Fragment>
+        </div>
+    )
+};

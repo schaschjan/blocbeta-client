@@ -13,10 +13,6 @@ class Context {
         return true
     }
 
-    static logout() {
-        localStorage.clear();
-    }
-
     static authenticate(token) {
         localStorage.setItem('token', token);
         const decoded = jwt_decode(token);
@@ -31,6 +27,10 @@ class Context {
     }
 
     static getToken() {
+        if (!this.isAuthenticated()) {
+            return false;
+        }
+
         return localStorage.getItem('token');
     }
 
@@ -115,7 +115,13 @@ class Context {
     };
 
     static user = {
-        isAdmin: () => localStorage.getItem('roles').includes('ROLE_ADMIN'),
+        isAdmin: () => {
+            if (!this.isAuthenticated()) {
+                return false;
+            }
+
+            return localStorage.getItem('roles').includes('ROLE_ADMIN')
+        },
         id: localStorage.getItem('id'),
         username: localStorage.getItem('username'),
     };

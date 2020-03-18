@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {Fragment, useState} from 'react';
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import Context from "./Context";
 import Login from "./views/Login/Login";
@@ -9,11 +9,10 @@ import Account from "./views/Account";
 import Register from "./views/Register";
 import PasswordReset from "./views/PasswordReset";
 import Navigation from "./components/Navigation/Navigation";
-import {GlobalStateProvider} from "./helpers/useGlobalState";
 import {Content} from "./components/Content/Content";
-
 import BoulderIndex from "./views/boulder/Index/Index.js";
 import BoulderEdit from "./views/boulder/Edit/Edit.js";
+import {Drawer, DrawerContext} from "./components/Drawer/Drawer";
 
 const LoginRedirect = () => (
     <Redirect
@@ -23,36 +22,15 @@ const LoginRedirect = () => (
     />
 );
 
-const PrivateRoute = ({children, ...rest}) => {
-    if (Context.isAuthenticated()) {
-        return <Route {...rest}/>
-    }
-
-    return (
-        <Route
-            {...rest}
-            render={() =>
-                Context.isAuthenticated() ? (children) : <LoginRedirect/>
-            }
-        />
-    );
-};
-
 const App = () => {
-    const [authenticated, setAuthenticated] = useState(Context.isAuthenticated);
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [drawerLoading, setDrawerLoading] = useState(false);
+    const [drawerPages, setDrawerPages] = useState([]);
+    const [drawerActivePage, setDrawerActivePage] = useState(null);
+    const [drawerData, setDrawerData] = useState(null);
 
-    function handleAuthenticationSuccess() {
-        setAuthenticated(true);
-
+    const handleAuthenticationSuccess = () => {
         return <Redirect to={{pathname: `/${Context.location.current().url}/dashboard`}}/>;
-    }
-
-    const initialState = {
-        drawer: {
-            open: false,
-            header: null,
-            content: null
-        }
     };
 
     const routes = [
@@ -116,27 +94,36 @@ const App = () => {
     ];
 
     return (
-        <GlobalStateProvider initialState={initialState}>
-            <Router>
-                <Content>
-                    <div className="app">
-                        <Navigation authenticated={authenticated}/>
+        <Router>
+            <DrawerContext.Provider value={{
+                drawerData, setDrawerData,
+                drawerOpen, setDrawerOpen,
+                drawerLoading, setDrawerLoading,
+                drawerPages, setDrawerPages,
+                drawerActivePage, setDrawerActivePage
+            }}>
+                <Content disabled={drawerOpen} onClick={() => drawerOpen ? setDrawerOpen(false) : null}>
+                    <div className="app" id="app">
+                        <Navigation/>
 
                         <Switch>
                             {routes.map((route, i) => {
-                                if (route.public) {
-                                    return <Route key={i} {...route} />
-                                }
-
-                                return <PrivateRoute key={i} {...route} />
+                                return <Route key={i} {...route} />
                             })}
 
                             <Route render={() => <LoginRedirect/>}/>
                         </Switch>
                     </div>
                 </Content>
-            </Router>
-        </GlobalStateProvider>
+            </DrawerContext.Provider>
+
+            <Drawer open={drawerOpen}
+                    data={drawerData}
+                    loading={drawerLoading}
+                    closeHandler={() => setDrawerOpen(false)}
+                    activePage={drawerActivePage}
+                    pages={drawerPages}/>
+        </Router>
     );
 };
 

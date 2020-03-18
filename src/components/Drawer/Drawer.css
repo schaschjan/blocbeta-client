@@ -11,10 +11,7 @@
     border-left: 1px solid var(--color-dark);
     transition: right 0.3s;
     transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
-}
 
-.drawer .loader {
-    align-items: center;
 }
 
 .drawer.drawer--open {
@@ -23,4 +20,12 @@
 
 .drawer.drawer--loading {
     display: flex;
+}
+
+.drawer .loader {
+    align-items: center;
+}
+
+.drawer .drawer__page {
+    height: 100%;
 }

@@ -8,6 +8,6 @@
     overflow-y: hidden;
 }
 
-.content.content--disabled * {
+.content.content--disabled > * {
     pointer-events: none;
 }

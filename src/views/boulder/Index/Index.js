@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Fragment} from 'react';
+import React, {useState, useEffect, useContext, Fragment} from 'react';
 import {Loader} from "../../../components/Loader/Loader";
 import {resolveBoulder} from "../../../Helpers";
 import ApiClient from "../../../ApiClient";
@@ -10,7 +10,6 @@ import Icon from "../../../components/Icon/Icon";
 import Ascent from "../../../components/Ascent/Ascent";
 import "./Index.css";
 import Button from "../../../components/Button/Button";
-import {useDrawerState} from "../../../helpers/drawer.state";
 import Banner from "../../../components/Banner/Banner";
 import classnames from "classnames";
 
@@ -25,138 +24,25 @@ import {
 
 import {usePagination, useTable, useGlobalFilter, useSortBy, useRowSelect, useFilters} from "react-table";
 import Context from "../../../Context";
-import Input from "../../../components/Input/Input";
-import {Tag, TagInput} from "../../../components/TagInput/TagInput";
+import {TagInput} from "../../../components/TagInput/TagInput";
 import {Link} from "react-router-dom";
+import {Drawer, DrawerContext} from "../../../components/Drawer/Drawer";
 
-const DrawerContent = ({data}) => {
-    const {close} = useDrawerState();
-    const [currentPage, setCurrentPage] = useState("overview");
-    const [pageData, setPageData] = useState(data);
-
-    const switchPage = (id, data) => {
-        setCurrentPage(id);
-        setPageData(data);
-    };
-
-    const pages = [
-        {
-            id: "overview",
-            render: (data) => {
-                return (
-                    <div className={`detail-page detail-page--overview`}>
-                        <div className="detail-page-header">
-                            <HoldStyle name="red"/>
-                            <h3>{data.name}</h3>
-
-                            <Button type="text" onClick={() => close()} className="close-drawer">
-                                <Icon name="close"/>
-                            </Button>
-                        </div>
-
-                        {data.tags.length > 0 && (
-                            <div className="detail__list">
-                                <h4>Tags ({data.tags.length})</h4>
-
-                                <ul>
-                                    {data.tags.map(tag => {
-                                        return <li>
-                                            {tag.emoji} {tag.name}
-                                        </li>
-                                    })}
-                                </ul>
-                            </div>
-                        )}
-
-                        <div className="detail__list">
-                            <h4>Ascents ({data.ascents.length ? data.ascents.length : 0})</h4>
-
-                            {data.ascents.length > 0 && (
-                                <ul>
-                                    {data.ascents.map(ascent => {
-                                        const pageData = {
-                                            user: {
-                                                username: ascent.user.username,
-                                                id: ascent.user.id
-                                            },
-                                            boulder: {
-                                                name: data.name,
-                                                id: data.id
-                                            }
-                                        };
-
-                                        return <li>
-                                            <Icon name={ascent.type}/>
-                                            {ascent.user.username}
-
-                                            <Button text={true}
-                                                    onClick={() => switchPage("doubt", pageData)}>Doubt it</Button>
-                                        </li>
-                                    })}
-                                </ul>
-                            )}
-                        </div>
-
-                        <div className="detail__list">
-                            <h4>Setters ({data.setters.length})</h4>
-                            <ul>
-                                {data.setters.map(setter => {
-                                    return <li>
-                                        {setter.username}
-                                    </li>
-                                })}
-                            </ul>
-                        </div>
-
-                        <Button text={true} className="report-error">Report error</Button>
-                    </div>
-                );
-            }
-        },
-        {
-            id: "error",
-            render: (data) => {
-                return (
-                    <div className={`detail-page detail-page--error`}>
-                        error
-                    </div>
-                )
-            }
-        },
-        {
-            id: "doubt",
-            render: (data) => {
-                return (
-                    <div className={`detail-page detail-page--error`}>
-                        <div className="detail-page-header">
-                            <Icon name="back" onClick={() => switchPage("overview")}/>
-                            <span>
-                                <strong>Doubt {data.user.username} on: </strong>{data.boulder.name}
-                            </span>
-                        </div>
-                    </div>
-                )
-            }
-        }
-    ];
-
-    return <div className="detail">
-        {pages.find(page => page.id === currentPage).render(pageData)}
-    </div>
-};
-
-const Bar = ({data, children}) => {
+const Bar = ({children}) => {
     return <div className="bar">
         {children}
     </div>
 };
 
 const Table = ({columns, data, editable = false}) => {
-
     const [tags, setTags] = useState([
         {
             id: 'ascent',
             value: 'todo'
+        },
+        {
+            id: 'start',
+            value: 'logowand'
         }
     ]);
 
@@ -179,7 +65,6 @@ const Table = ({columns, data, editable = false}) => {
         setFilter,
         setAllFilters,
         state: {
-            filters,
             pageIndex,
             pageSize,
         },
@@ -188,7 +73,7 @@ const Table = ({columns, data, editable = false}) => {
             columns,
             data,
             initialState: {pageIndex: 0, pageSize: 20},
-            autoResetFilters: true,
+            autoResetFilters: false,
             autoResetSortBy: false,
             autoResetPage: false
         },
@@ -210,8 +95,9 @@ const Table = ({columns, data, editable = false}) => {
 
     return <Fragment>
         <div className="filter">
-            <TagInput tags={tags} onAdd={() => alert()} onRemove={(id) => removeTag(id)}/>
-            <Icon name="filtermenu"/>
+            <Icon name="search" onClick={() => alert()}/>
+            <TagInput tags={tags} onAdd={() => console.log('add')} onRemove={(id) => removeTag(id)}/>
+            {/*<Icon name="filtermenu"/>*/}
         </div>
 
         <div
@@ -275,9 +161,27 @@ const Table = ({columns, data, editable = false}) => {
 };
 
 const Index = () => {
+    const {
+        setDrawerOpen,
+        setDrawerLoading,
+        setDrawerPages,
+        setDrawerActivePage,
+        setDrawerData
+    } = useContext(DrawerContext);
+
     const [boulders, setBoulders] = useState(null);
     const [loading, setLoading] = useState(true);
-    const {toggle, setContent} = useDrawerState();
+
+    const showDetails = (boulderId) => {
+        setDrawerOpen(true);
+        setDrawerLoading(true);
+
+        ApiClient.boulder.get(boulderId).then(data => {
+            resolveBoulder(data);
+            setDrawerData(data);
+            setDrawerLoading(false);
+        });
+    };
 
     const selectionColumn = {
         Header: ({getToggleAllRowsSelectedProps}) => (
@@ -292,7 +196,6 @@ const Index = () => {
             </div>
         ),
     };
-
     const columns = [
         {
             id: 'holdStyle',
@@ -329,7 +232,7 @@ const Index = () => {
                         <Link to={Context.getPath(`/boulder/${row.original.id}`)}> ✏</Link>
                     )}
 
-                    <Button onClick={() => triggerDetail(row.original.id)}>
+                    <Button onClick={() => showDetails(row.original.id)}>
                         {cell.value} <Icon name="forward"/>
                     </Button>
                 </Fragment>
@@ -416,6 +319,109 @@ const Index = () => {
         columns.unshift(selectionColumn)
     }
 
+    const drawerPages = [
+        {
+            name: "details",
+            header: (data) => {
+                return (
+                    <Fragment>
+                        <HoldStyle name={data.holdStyle.name}/>
+                        <h3>{data.name}</h3>
+                    </Fragment>
+                )
+            },
+            content: (data) => {
+                return (
+                    <Fragment>
+                        {data.tags.length > 0 && (
+                            <div className="detail__list">
+                                <h4>Tags ({data.tags.length})</h4>
+
+                                <ul>
+                                    {data.tags.map(tag => {
+                                        return <li>
+                                            {tag.emoji} {tag.name}
+                                        </li>
+                                    })}
+                                </ul>
+                            </div>
+                        )}
+
+                        <div className="detail__list">
+                            <h4>Ascents ({data.ascents.length ? data.ascents.length : 0})</h4>
+
+                            {data.ascents.length > 0 && (
+                                <ul>
+                                    {data.ascents.map(ascent => {
+                                        return <li>
+                                            <Icon name={ascent.type}/>
+                                            {ascent.user.username}
+
+                                            <Button text={true} onClick={() => setDrawerActivePage('doubt')}>
+                                                Doubt it
+                                            </Button>
+                                        </li>
+                                    })}
+                                </ul>
+                            )}
+                        </div>
+
+                        <div className="detail__list">
+                            <h4>Setters ({data.setters.length})</h4>
+                            <ul>
+                                {data.setters.map(setter => {
+                                    return <li>
+                                        {setter.username}
+                                    </li>
+                                })}
+                            </ul>
+                        </div>
+
+                        <Button text={true}
+                                onClick={() => setDrawerActivePage("error")}
+                                className="report-error">
+                            Report error
+                        </Button>
+                    </Fragment>
+                )
+            }
+        },
+        {
+            name: "error",
+            header: (data) => {
+                return (
+                    <Fragment>
+                        <h3>
+                            <strong>Report errror:</strong> {data.name}
+                        </h3>
+                    </Fragment>
+                )
+            },
+            content: (data) => {
+                return <Fragment>
+                    error
+                </Fragment>
+            }
+        },
+        {
+            name: "doubt",
+            header: (data) => {
+                return (
+                    <Fragment>
+                        <h3>
+                            <strong>Doubt:</strong>
+                        </h3>
+                    </Fragment>
+                )
+            },
+            content: (data) => {
+                return <Fragment>
+                    doubt
+                </Fragment>
+            }
+        }
+    ];
+
     useEffect(() => {
         async function getData() {
             const ascents = await ApiClient.getAscents().then(ascents => {
@@ -446,6 +452,9 @@ const Index = () => {
             setBoulders(data);
             setLoading(false);
         });
+
+        setDrawerPages(drawerPages);
+        setDrawerActivePage("details");
     }, []);
 
     const ascentHandler = (boulderId, type, ascentId = null) => {
@@ -468,32 +477,20 @@ const Index = () => {
         }
     };
 
-    const triggerDetail = async (boulderId) => {
-        const boulder = await ApiClient.boulder.get(boulderId);
-        await resolveBoulder(boulder);
-
-        setContent(<DrawerContent data={boulder}/>);
-    };
-
     if (loading) return <Loader/>;
 
     return (
         <Fragment>
             <Banner>
-                <Paragraph>
-                    Logowand <strong>・NEW NEW NEW・</strong>
-                </Paragraph>
+                <Paragraph>Logowand <strong>・NEW NEW NEW・</strong></Paragraph>
             </Banner>
 
             <div className="container">
                 <h1>Boulder ({boulders.length})</h1>
-
-                <Table columns={columns}
-                       data={boulders}
-                       editable={Context.user.isAdmin()}/>
+                <Table columns={columns} data={boulders} editable={Context.user.isAdmin()}/>
             </div>
         </Fragment>
     )
 };
 
-export default Index
+export default Index;
