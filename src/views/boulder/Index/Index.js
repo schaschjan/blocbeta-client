@@ -357,7 +357,16 @@ const Index = () => {
                                             <Icon name={ascent.type}/>
                                             {ascent.user.username}
 
-                                            <Button text={true} onClick={() => setDrawerActivePage('doubt')}>
+                                            <Button text={true} onClick={() => {
+                                                setDrawerActivePage("doubt");
+                                                setDrawerData({
+                                                    user: ascent.user,
+                                                    boulder: {
+                                                        id: data.id,
+                                                        name: data.name
+                                                    }
+                                                });
+                                            }}>
                                                 Doubt it
                                             </Button>
                                         </li>
@@ -432,9 +441,7 @@ const Index = () => {
                 return (
                     <div className="header-doubt">
                         <Icon name="backward" onClick={() => setDrawerActivePage("details")}/>
-                        <h3>
-                            <strong>Doubt:</strong>
-                        </h3>
+                        <strong>Doubt {data.user.username}</strong> on {data.boulder.name}
                     </div>
                 )
             },
