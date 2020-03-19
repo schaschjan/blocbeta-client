@@ -35,7 +35,7 @@
     color: var(--color-blue);
     padding: 7px 16px;
     border-radius: 8px;
-
+    font-weight: bolder;
 }
 
 .button.button--text:hover {

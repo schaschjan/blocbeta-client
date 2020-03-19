@@ -51,7 +51,7 @@ const Edit = () => {
 
                 <Form onSubmit={onSubmit} defaultValues={data}>
                     <Label>Name</Label>
-                    <Input type="text" name="name" validate={{required: Messages["form.error.name.required"]}}/>
+                    <Input type="text" name="name" validate={{required: Messages.required}}/>
 
                     <Label>Grade</Label>
                     <Select name="grade" options={Context.storage.grades.options()}/>
@@ -69,7 +69,7 @@ const Edit = () => {
                     <Select name="status" options={Context.storage.system.states.options()}/>
 
                     <Label>Points</Label>
-                    <Input type="text" name="points" validate={{required: Messages["form.error.points.required"]}}/>
+                    <Input type="text" name="points" validate={{required: Messages.required}}/>
 
                     <Label>Setters</Label>
                     <Select name="setters"

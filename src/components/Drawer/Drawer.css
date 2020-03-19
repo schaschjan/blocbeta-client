@@ -29,3 +29,18 @@
 .drawer .drawer__page {
     height: 100%;
 }
+
+.drawer .drawer__header {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    box-shadow: inset 0 -1px 0 0 var(--color-dark);
+}
+
+.drawer .drawer__header .close-drawer {
+    margin-left: auto;
+}
+
+.drawer .drawer__content {
+    padding: 16px;
+}

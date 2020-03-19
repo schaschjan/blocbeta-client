@@ -66,15 +66,18 @@ export const Drawer = ({open, data, closeHandler, activePage, pages, loading = t
     return (
         <div className={classes}>
             <Fragment>
-                <div className="detail-page-header">
+                <div className="drawer__header">
                     {page.header(data)}
 
-                    <Button type="text" onClick={() => closeHandler()} className="close-drawer">
+                    <Button type="text" onClick={() => closeHandler()} className="close-drawer
+                    ">
                         <Icon name="close"/>
                     </Button>
                 </div>
 
-                {page.content(data)}
+               <div className="drawer__content">
+                   {page.content(data)}
+               </div>
             </Fragment>
         </div>
     )

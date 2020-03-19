@@ -47,7 +47,7 @@ export const TableFooter = ({pageIndex, pageSize, pageOptions, canPreviousPage, 
                 <span onClick={() => previousPage()}
                       className={classnames('toggle-previous', !canPreviousPage ? 'toggle-previous--disabled' : null)}>
 
-                <Icon name="back"/>
+                <Icon name="backward"/>
             </span>
 
                 <span onClick={() => nextPage()}

@@ -27,6 +27,9 @@ import Context from "../../../Context";
 import {TagInput} from "../../../components/TagInput/TagInput";
 import {Link} from "react-router-dom";
 import {Drawer, DrawerContext} from "../../../components/Drawer/Drawer";
+import {Textarea} from "../../../components/Textarea/Textarea";
+import Form from "../../../components/Form/Form";
+import {Messages} from "../../../Messages";
 
 const Bar = ({children}) => {
     return <div className="bar">
@@ -40,10 +43,10 @@ const Table = ({columns, data, editable = false}) => {
             id: 'ascent',
             value: 'todo'
         },
-        {
-            id: 'start',
-            value: 'logowand'
-        }
+        // {
+        //     id: 'start',
+        //     value: 'logowand'
+        // }
     ]);
 
     const removeTag = (id) => {
@@ -97,7 +100,7 @@ const Table = ({columns, data, editable = false}) => {
         <div className="filter">
             <Icon name="search" onClick={() => alert()}/>
             <TagInput tags={tags} onAdd={() => console.log('add')} onRemove={(id) => removeTag(id)}/>
-            {/*<Icon name="filtermenu"/>*/}
+            <Icon name="filtermenu"/>
         </div>
 
         <div
@@ -178,8 +181,10 @@ const Index = () => {
 
         ApiClient.boulder.get(boulderId).then(data => {
             resolveBoulder(data);
+
             setDrawerData(data);
             setDrawerLoading(false);
+            setDrawerActivePage("details");
         });
     };
 
@@ -196,6 +201,7 @@ const Index = () => {
             </div>
         ),
     };
+
     const columns = [
         {
             id: 'holdStyle',
@@ -319,34 +325,28 @@ const Index = () => {
         columns.unshift(selectionColumn)
     }
 
+    const onErrorSubmit = data => {
+        console.log(data);
+    };
+
+    const onDoubtSubmit = data => {
+        console.log(data);
+    };
+
     const drawerPages = [
         {
             name: "details",
             header: (data) => {
                 return (
-                    <Fragment>
+                    <div className="header-detail">
                         <HoldStyle name={data.holdStyle.name}/>
                         <h3>{data.name}</h3>
-                    </Fragment>
+                    </div>
                 )
             },
             content: (data) => {
                 return (
-                    <Fragment>
-                        {data.tags.length > 0 && (
-                            <div className="detail__list">
-                                <h4>Tags ({data.tags.length})</h4>
-
-                                <ul>
-                                    {data.tags.map(tag => {
-                                        return <li>
-                                            {tag.emoji} {tag.name}
-                                        </li>
-                                    })}
-                                </ul>
-                            </div>
-                        )}
-
+                    <div className="page-detail">
                         <div className="detail__list">
                             <h4>Ascents ({data.ascents.length ? data.ascents.length : 0})</h4>
 
@@ -377,12 +377,26 @@ const Index = () => {
                             </ul>
                         </div>
 
+                        {data.tags.length > 0 && (
+                            <div className="detail__list">
+                                <h4>Tags ({data.tags.length})</h4>
+
+                                <ul>
+                                    {data.tags.map(tag => {
+                                        return <li>
+                                            {tag.emoji} {tag.name}
+                                        </li>
+                                    })}
+                                </ul>
+                            </div>
+                        )}
+
                         <Button text={true}
                                 onClick={() => setDrawerActivePage("error")}
                                 className="report-error">
                             Report error
                         </Button>
-                    </Fragment>
+                    </div>
                 )
             }
         },
@@ -390,34 +404,52 @@ const Index = () => {
             name: "error",
             header: (data) => {
                 return (
-                    <Fragment>
+                    <div className="header-error">
+                        <Icon name="backward" onClick={() => setDrawerActivePage("details")}/>
                         <h3>
-                            <strong>Report errror:</strong> {data.name}
+                            <strong>Report error:</strong> {data.name}
                         </h3>
-                    </Fragment>
+                    </div>
                 )
             },
             content: (data) => {
-                return <Fragment>
-                    error
-                </Fragment>
+                return <div className="page-error">
+                    <h3>Message</h3>
+
+                    <Form onSubmit={onErrorSubmit}>
+                        <Textarea
+                            name="message"
+                            validate={{required: Messages.required}}
+                            placeholder="Write something…"/>
+                        <Button text={true}>Send Message</Button>
+                    </Form>
+                </div>
             }
         },
         {
             name: "doubt",
             header: (data) => {
                 return (
-                    <Fragment>
+                    <div className="header-doubt">
+                        <Icon name="backward" onClick={() => setDrawerActivePage("details")}/>
                         <h3>
                             <strong>Doubt:</strong>
                         </h3>
-                    </Fragment>
+                    </div>
                 )
             },
             content: (data) => {
-                return <Fragment>
-                    doubt
-                </Fragment>
+                return <div className="page-doubt">
+                    <h3>Message</h3>
+
+                    <Form onSubmit={onDoubtSubmit}>
+                        <Textarea
+                            name="message"
+                            validate={{required: Messages.required}}
+                            placeholder="Describe whats is wrong…"/>
+                        <Button text={true} type="submit">Send Message</Button>
+                    </Form>
+                </div>
             }
         }
     ];

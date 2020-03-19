@@ -3,7 +3,7 @@ import './Input.css';
 import Icon from "../Icon/Icon";
 import classnames from "classnames";
 
-const Input = ({register, name, icon, type, ...rest}) => {
+const Input = ({register, icon, type, ...rest}) => {
 
     return (
         <div className={classnames("input", type == "checkbox" ? "input--checkbox" : null)}>
@@ -11,7 +11,7 @@ const Input = ({register, name, icon, type, ...rest}) => {
                 <Icon name={icon}/>
             )}
 
-            <input name={name} ref={register} type={type} {...rest}/>
+            <input ref={register} type={type} {...rest}/>
         </div>
     );
 };
