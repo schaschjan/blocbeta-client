@@ -1,7 +1,8 @@
 import React from 'react';
 import './HoldStyle.css';
+import classnames from "classnames";
 
-const HoldStyle = ({name}) => {
+const HoldStyle = ({name, small}) => {
     let icon = <div style={{background: "#28C6FF"}}></div>;
 
     if (name === 'blue' || name === 'blau') {
@@ -36,7 +37,7 @@ const HoldStyle = ({name}) => {
         icon = <div style={{background: "#eeeeee"}}></div>
     }
 
-    return <div className={`holdstyle holdstyle--${name}`}>
+    return <div className={ classnames("holdstyle", `holdstyle--${name}`, small ? "holdstyle--small": null)}>
         {icon}
     </div>
 };

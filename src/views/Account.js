@@ -16,14 +16,14 @@ const Account = () => {
     const onSubmit = (data) => {
         setSubmitting(true);
 
-        ApiClient.updateMe(data).then(data => {
+        ApiClient.me.update(data).then(data => {
             setSubmitting(false);
             toast.success("Account updated");
         });
     };
 
     useEffect(() => {
-        ApiClient.getMe().then(data => {
+        ApiClient.me.get().then(data => {
             setData(data);
             setLoading(false);
         });

@@ -10,5 +10,8 @@ export const Messages = {
     required: "Please provide a value",
     email: {
         invalid: "Please provide a valid E-Mail address"
+    },
+    errors: {
+        general: "Oops, looks like a slip!"
     }
 };

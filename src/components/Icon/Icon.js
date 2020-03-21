@@ -2,7 +2,7 @@ import React from 'react';
 import './Icon.css';
 import classnames from "classnames";
 
-const Icon = ({name, onClick, fill}) => {
+const Icon = ({name, onClick, fill, ...rest}) => {
 
     let icon;
     let size;
@@ -162,7 +162,8 @@ const Icon = ({name, onClick, fill}) => {
     }
 
     return <span className={classnames("icon", `icon--${size}`, onClick ? 'icon--clickable' : null)}
-                 onClick={onClick}>{icon}</span>
+                 onClick={onClick}
+                 {...rest}>{icon}</span>
 };
 
 export default Icon;

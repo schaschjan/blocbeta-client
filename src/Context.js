@@ -75,13 +75,13 @@ class Context {
             localStorage.removeItem('boulders');
         },
         init: () => {
-            ApiClient.getLocations().then(response => Context.storage.locations.set(response));
-            ApiClient.getGrades().then(response => Context.storage.grades.set(response));
-            ApiClient.getHoldStyles().then(response => Context.storage.holdStyles.set(response));
-            ApiClient.getWalls().then(response => Context.storage.walls.set(response));
-            ApiClient.getTags().then(response => Context.storage.tags.set(response));
-            ApiClient.getSetters().then(response => Context.storage.setters.set(response));
-            ApiClient.getActiveBoulders().then(response => Context.storage.boulders.set(response));
+            ApiClient.locations.all().then(response => Context.storage.locations.set(response));
+            ApiClient.location.grades.all().then(response => Context.storage.grades.set(response));
+            ApiClient.location.holdStyles.all().then(response => Context.storage.holdStyles.set(response));
+            ApiClient.location.walls.all().then(response => Context.storage.walls.set(response));
+            ApiClient.location.tags.all().then(response => Context.storage.tags.set(response));
+            ApiClient.location.setters.all().then(response => Context.storage.setters.set(response));
+            ApiClient.boulder.active().then(response => Context.storage.boulders.set(response));
         },
         grades: Context.createStorageApi('grades'),
         walls: Context.createStorageApi('walls'),

@@ -9,11 +9,11 @@ const Dashboard = () => {
 
     useEffect(() => {
         Promise.all([
-            ApiClient.wallStats().then(response => {
+            ApiClient.stats.walls.allocation().then(response => {
                 stats.walls = response;
                 setStats(stats);
             }),
-            ApiClient.boulderStats().then(response => {
+            ApiClient.stats.boulder.active().then(response => {
                 stats.boulder = response;
                 setStats(stats);
             })

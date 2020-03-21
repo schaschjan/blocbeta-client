@@ -1,0 +1,60 @@
+.filter-dropdown {
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.08);
+    width: 100vw;
+    position: absolute;
+    background-color: var(--color-light);
+    left: 0;
+}
+
+.filter-dropdown ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    display: flex;
+    flex-flow: column wrap;
+    max-height: 100%;
+    overflow: auto;
+    align-content: flex-start;
+}
+
+.filter-tabs {
+    display: flex;
+}
+
+.filter-tabs li {
+    margin-bottom: 8px;
+}
+
+/**
+ * Filter Tab
+ */
+.filter-tab {
+    display: flex;
+    width: 100%;
+}
+
+.filter-tab .tab-title {
+    padding: 8px 4px;
+    color: var(--color-grey);
+}
+
+.filter-tab.filter-tab--active .tab-title {
+    font-weight: bold;
+    color: var(--color-dark);
+}
+
+.tab-content {
+    max-height: 400px;
+    display: flex;
+    width: 100%;
+}
+
+.filter-values {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column wrap;
+    align-content: center;
+}

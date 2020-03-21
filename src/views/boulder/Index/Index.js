@@ -30,6 +30,9 @@ import {Drawer, DrawerContext} from "../../../components/Drawer/Drawer";
 import {Textarea} from "../../../components/Textarea/Textarea";
 import Form from "../../../components/Form/Form";
 import {Messages} from "../../../Messages";
+import {toast} from "react-toastify";
+import Input from "../../../components/Input/Input";
+import {FilterDropdown} from "./components/FilterDropdown";
 
 const Bar = ({children}) => {
     return <div className="bar">
@@ -48,6 +51,8 @@ const Table = ({columns, data, editable = false}) => {
         //     value: 'logowand'
         // }
     ]);
+
+    const [filtersDropped, setFiltersDropped] = useState(false);
 
     const removeTag = (id) => {
         setTags(tags.filter(tag => tag.id !== id));
@@ -98,9 +103,13 @@ const Table = ({columns, data, editable = false}) => {
 
     return <Fragment>
         <div className="filter">
-            <Icon name="search" onClick={() => alert()}/>
+            <Icon name="search" onClick={() => setFiltersDropped(true)}/>
             <TagInput tags={tags} onAdd={() => console.log('add')} onRemove={(id) => removeTag(id)}/>
-            <Icon name="filtermenu"/>
+            <Icon name="filtermenu" className="toggle-filter-dropdown"/>
+        </div>
+
+        <div>
+            {filtersDropped && <FilterDropdown/>}
         </div>
 
         <div
@@ -326,11 +335,23 @@ const Index = () => {
     }
 
     const onErrorSubmit = data => {
-        console.log(data);
+        ApiClient.boulder.reportError(data)
+            .then(response => {
+                toast.success("Doubt submitted!");
+            })
+            .catch(error => {
+                toast.error(Messages.errors.general);
+            });
     };
 
-    const onDoubtSubmit = data => {
-        console.log(data);
+    const onDoubtSubmit = (data) => {
+        ApiClient.ascent.doubt(data)
+            .then(response => {
+                toast.success("Doubt submitted!");
+            })
+            .catch(error => {
+                toast.error("Oops, look like a slip.");
+            });
     };
 
     const drawerPages = [
@@ -454,6 +475,10 @@ const Index = () => {
                             name="message"
                             validate={{required: Messages.required}}
                             placeholder="Describe whats is wrong…"/>
+
+                        <Input type="hidden" name="recipient" value={data.user.id}/>
+                        <Input type="hidden" name="boulder" value={data.boulder.id}/>
+
                         <Button text={true} type="submit">Send Message</Button>
                     </Form>
                 </div>
@@ -463,7 +488,7 @@ const Index = () => {
 
     useEffect(() => {
         async function getData() {
-            const ascents = await ApiClient.getAscents().then(ascents => {
+            const ascents = await ApiClient.location.ascents.activeBoulders().then(ascents => {
                 return ascents.reduce((obj, item) => Object.assign(obj, {[item.boulderId]: item}), {});
             });
 
@@ -500,7 +525,7 @@ const Index = () => {
         const boulder = boulders.find(boulder => boulder.id === boulderId);
 
         if (!ascentId) {
-            ApiClient.createAscent({
+            ApiClient.ascent.create({
                 'boulder': boulderId,
                 'type': type
             }).then(data => {
@@ -509,7 +534,7 @@ const Index = () => {
             });
 
         } else {
-            ApiClient.deleteAscent(ascentId).then(() => {
+            ApiClient.ascent.delete(ascentId).then(() => {
                 boulder.me = null;
                 setBoulders([...boulders]);
             });

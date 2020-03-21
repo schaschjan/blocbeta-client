@@ -1,6 +1,32 @@
 import Context from "./Context";
+import ApiError from "./api/ApiError";
 
 class ApiClient {
+
+    static getUrl(path, location = null) {
+        if (location) {
+            return `/api/${location}${path}`
+        }
+
+        return `/api${path}`
+    }
+
+    static fetch(url, request) {
+
+        return fetch(url, request)
+            .then(response => {
+                if (!response.ok) {
+                    throw new ApiError(response.message, response.status);
+                }
+
+                if (response.status === 401) {
+                    Context.storage.clear();
+                    window.location.href = "/login";
+                }
+
+                return response.json();
+            });
+    }
 
     static authorize(username, password) {
         const data = {
@@ -8,17 +34,16 @@ class ApiClient {
             "password": password
         };
 
-        return fetch(`/api/login`, this.getRequestConfig("post", data))
-            .then(response => response.json());
+        return ApiClient.fetch(ApiClient.getUrl(`/login`), this.getRequestConfig("post", data));
     }
 
     static getRequestConfig(method = "get", data) {
 
         let config = {
             headers: {
-                "Authorization": `Bearer ${Context.getToken()}`,
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${Context.getToken()}`
             }
         };
 
@@ -45,137 +70,156 @@ class ApiClient {
         }
     }
 
-    static getAscents() {
-        return fetch(`/api/${Context.location.current().url}/ascent/active-boulders`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
-
-    static getHoldStyles() {
-        return fetch(`/api/${Context.location.current().url}/holdstyle`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
-
-    static getGrades() {
-        return fetch(`/api/${Context.location.current().url}/grade`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
-
-    static getTags() {
-        return fetch(`/api/${Context.location.current().url}/tag`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
-
-    static getWalls() {
-        return fetch(`/api/${Context.location.current().url}/wall`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
-
-    static getSetters() {
-        return fetch(`/api/${Context.location.current().url}/user/setters`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
-
-    static getAdmins() {
-        return fetch(`/api/${Context.location.current().url}/user/admins`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
-
-    static getLocations() {
-        return fetch(`/api/location`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
-
-    static boulderStats() {
-        return fetch(`/api/${Context.location.current().url}/stat/boulder`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
-
-    static wallStats() {
-        return fetch(`/api/${Context.location.current().url}/stat/wall`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
-
     static boulder = {
         get: (id) => {
-            return fetch(`/api/${Context.location.current().url}/boulder/${id}`, this.getRequestConfig())
-                .then(response => ApiClient.checkResponse(response))
-                .then(response => response.json());
+            const url = ApiClient.getUrl(`/boulder/${id}`, Context.location.current().url);
+            const request = this.getRequestConfig();
+
+            return ApiClient.fetch(url, request);
         },
         update: (id, data) => {
-            return fetch(`/api/${Context.location.current().url}/boulder/${id}`, this.getRequestConfig("put", data))
-                .then(response => ApiClient.checkResponse(response))
-                .then(response => response.status !== 204 ? response.json() : null);
+            const url = ApiClient.getUrl(`/boulder/${id}`, Context.location.current().url);
+            const request = this.getRequestConfig("put", data);
+
+            return ApiClient.fetch(url, request);
+        },
+        active: () => {
+            const url = ApiClient.getUrl(`/boulder/filter/active`, Context.location.current().url);
+            const request = this.getRequestConfig();
+
+            return ApiClient.fetch(url, request);
+        },
+        reportError: (data) => {
+            const url = ApiClient.getUrl(`/boulder/error`, Context.location.current().url);
+            const request = this.getRequestConfig("post", data);
+
+            return ApiClient.fetch(url, request);
         }
     };
 
-    static getActiveBoulders() {
-        return fetch(`/api/${Context.location.current().url}/boulder/filter/active`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
+    static ascent = {
+        create: (data) => {
+            const url = ApiClient.getUrl("/ascent", Context.location.current().url);
+            const request = this.getRequestConfig("post", data);
 
-    static getErrors() {
-        return fetch(`/api/${Context.location.current().url}/error`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
+            return ApiClient.fetch(url, request)
+        },
+        delete: (id) => {
+            const url = ApiClient.getUrl(`/ascent/${id}`, Context.location.current().url);
+            const request = this.getRequestConfig("delete");
 
-    static getErrorsCount() {
-        return fetch(`/api/${Context.location.current().url}/error/count`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
+            return ApiClient.fetch(url, request)
+        },
+        doubt: (data) => {
+            const url = ApiClient.getUrl("/ascent/doubt", Context.location.current().url);
+            const request = this.getRequestConfig("post", data);
 
-    static getCurrentRanking() {
-        return fetch(`/api/${Context.location.current().url}/ranking/current`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
+            return ApiClient.fetch(url, request)
+        }
+    };
 
-    static getCurrentComparison(a, b) {
-        return fetch(`/api/${Context.location.current().url}/compare/${a}/to/${b}/at/current`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
+    static me = {
+        get: () => {
+            const url = ApiClient.getUrl(`/me`);
+            const request = this.getRequestConfig();
 
-    static getUser(id) {
-        return fetch(`/api/showuser/${id}`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
+            return ApiClient.fetch(url, request)
+        },
+        update: (data) => {
+            const url = ApiClient.getUrl(`/me`);
+            const request = this.getRequestConfig("put", data);
 
-    static getMe() {
-        return fetch(`/api/me`, this.getRequestConfig())
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
+            return ApiClient.fetch(url, request)
+        }
+    };
 
-    static updateMe(data) {
-        return fetch(`/api/me`, this.getRequestConfig("put", data))
-            .then(response => ApiClient.checkResponse(response));
-    }
+    static ascents = {
+        active: () => {
+            const url = ApiClient.getUrl("/ascent/active-boulders", Context.location.current().url);
+            const request = this.getRequestConfig();
 
-    static createAscent(data) {
-        return fetch(`/api/${Context.location.current().url}/ascent`, this.getRequestConfig("post", data))
-            .then(response => ApiClient.checkResponse(response))
-            .then(response => response.json());
-    }
+            return ApiClient.fetch(url, request)
+        }
+    };
 
-    static deleteAscent(id) {
-        return fetch(`/api/${Context.location.current().url}/ascent/${id}`, this.getRequestConfig("delete"))
-            .then(response => ApiClient.checkResponse(response));
-    }
+    static location = {
+        walls: {
+            all: () => {
+                const url = ApiClient.getUrl("/wall", Context.location.current().url);
+                const request = this.getRequestConfig();
+
+                return ApiClient.fetch(url, request)
+            }
+        },
+        setters: {
+            all: () => {
+                const url = ApiClient.getUrl("/setter", Context.location.current().url);
+                const request = this.getRequestConfig();
+
+                return ApiClient.fetch(url, request)
+            }
+        },
+        tags: {
+            all: () => {
+                const url = ApiClient.getUrl("/tag", Context.location.current().url);
+                const request = this.getRequestConfig();
+
+                return ApiClient.fetch(url, request)
+            }
+        },
+        grades: {
+            all: () => {
+                const url = ApiClient.getUrl("/grade", Context.location.current().url);
+                const request = this.getRequestConfig();
+
+                return ApiClient.fetch(url, request)
+            }
+        },
+        holdStyles: {
+            all: () => {
+                const url = ApiClient.getUrl("/holdstyle", Context.location.current().url);
+                const request = this.getRequestConfig();
+
+                return ApiClient.fetch(url, request)
+            }
+        },
+        ascents: {
+            activeBoulders: () => {
+                const url = ApiClient.getUrl("/ascent/active-boulders", Context.location.current().url);
+                const request = this.getRequestConfig();
+
+                return ApiClient.fetch(url, request)
+            }
+        }
+    };
+
+    static locations = {
+        all: () => {
+            const url = ApiClient.getUrl("/location");
+            const request = this.getRequestConfig();
+
+            return ApiClient.fetch(url, request)
+        }
+    };
+
+    static stats = {
+        boulder: {
+            active: () => {
+                const url = ApiClient.getUrl(`/stat/boulder`, Context.location.current().url);
+                const request = this.getRequestConfig();
+
+                return ApiClient.fetch(url, request);
+            }
+        },
+        walls: {
+            allocation: () => {
+                const url = ApiClient.getUrl(`/stat/wall`, Context.location.current().url);
+                const request = this.getRequestConfig();
+
+                return ApiClient.fetch(url, request);
+            }
+        }
+    };
 }
-
 
 export default ApiClient;

@@ -22,6 +22,21 @@ const LoginRedirect = () => (
     />
 );
 
+const PrivateRoute = ({children, ...rest}) => {
+    if (Context.isAuthenticated()) {
+        return <Route {...rest}/>
+    }
+
+    return (
+        <Route
+            {...rest}
+            render={() =>
+                Context.isAuthenticated() ? (children) : <LoginRedirect/>
+            }
+        />
+    );
+};
+
 const App = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [drawerLoading, setDrawerLoading] = useState(false);
@@ -108,7 +123,11 @@ const App = () => {
 
                         <Switch>
                             {routes.map((route, i) => {
-                                return <Route key={i} {...route} />
+                                if (route.public) {
+                                    return <Route key={i} {...route} />
+                                }
+
+                                return <PrivateRoute key={i} {...route} />
                             })}
 
                             <Route render={() => <LoginRedirect/>}/>

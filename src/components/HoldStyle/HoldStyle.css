@@ -8,3 +8,7 @@
     width: 40px;
     height: 40px;
 }
+.holdstyle.holdstyle--small > div{
+    width: 16px;
+    height: 16px;
+}

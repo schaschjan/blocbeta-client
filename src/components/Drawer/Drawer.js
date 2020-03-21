@@ -18,9 +18,7 @@ export const Drawer = ({open, data, closeHandler, activePage, pages, loading = t
     const classes = classnames("drawer", open ? "drawer--open" : "drawer--closed", loading ? "drawer--loading" : null);
 
     useEffect(() => {
-        console.log(pages);
         const page = pages.find(page => page.name === activePage);
-        console.log(page, activePage)
     }, [pages]);
 
     if (!pages) {

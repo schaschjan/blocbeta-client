@@ -1,6 +1,7 @@
 import React from 'react';
 import './TagInput.css';
 import Icon from "../Icon/Icon";
+import Input from "../Input/Input";
 
 export const TagInput = ({tags, onAdd, onRemove}) => {
     return (
@@ -10,6 +11,8 @@ export const TagInput = ({tags, onAdd, onRemove}) => {
                     <Tag id={tag.id} value={tag.value} onRemove={onRemove}/>
                 )
             })}
+
+            <Input name="search"/>
         </div>
     )
 };
