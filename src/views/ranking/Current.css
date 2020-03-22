@@ -1,12 +1,37 @@
 .table--ranking {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
-.user-cell {
+.table--ranking .user-cell {
     display: flex;
     align-items: center;
 }
 
-.actions-cell {
+.table--ranking .actions-cell {
     margin-left: auto;
+}
+
+.progress {
+    height: 10px;
+    width: 100%;
+    border-radius: 2px;
+    background-color: #E8E8E8;
+}
+
+.progress > div {
+    height: 100%;
+    border-radius:  2px 0 0 2px;
+    transition: 'all .2s ease-out';
+}
+
+.progress--success > div {
+    background: #02DEAF;
+}
+
+.progress--danger > div {
+    background: #FF625F;
+}
+
+.progress--warning > div {
+    background: #FFCB41;
 }

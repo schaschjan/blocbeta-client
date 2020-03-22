@@ -16,6 +16,7 @@
     "react-hook-form": "^5.1.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
+    "react-select": "^3.1.0",
     "react-table": "7.0.0",
     "react-toastify": "^5.5.0",
     "use-select": "0.0.4"

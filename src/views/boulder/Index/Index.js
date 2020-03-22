@@ -26,7 +26,7 @@ import {usePagination, useTable, useGlobalFilter, useSortBy, useRowSelect, useFi
 import Context from "../../../Context";
 import {TagInput} from "../../../components/TagInput/TagInput";
 import {Link} from "react-router-dom";
-import {Drawer, DrawerContext} from "../../../components/Drawer/Drawer";
+import {DrawerContext} from "../../../components/Drawer/Drawer";
 import {Textarea} from "../../../components/Textarea/Textarea";
 import Form from "../../../components/Form/Form";
 import {Messages} from "../../../Messages";
@@ -112,23 +112,8 @@ const Table = ({columns, data, editable = false}) => {
             {filtersDropped && <FilterDropdown/>}
         </div>
 
-        <div
-            className={classnames('table', 'table--boulder', editable ? 'table--editable' : null)} {...getTableProps()}>
-            <TableHeader>
-                {headerGroups.map(headerGroup => (
-                    <React.Fragment>
-                        {headerGroup.headers.map(column => (
-                            <TableHeaderCell {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                {column.render('Header')}
-
-                                <span className="sort-indicator">
-                                {column.isSorted ? column.isSortedDesc ? <Icon name="down"/> : <Icon name="up"/> : ''}
-                            </span>
-                            </TableHeaderCell>
-                        ))}
-                    </React.Fragment>
-                ))}
-            </TableHeader>
+        <div className={classnames('table', 'table--boulder', editable ? 'table--editable' : null)} {...getTableProps()}>
+            <TableHeader headerGroups={headerGroups}/>
 
             <div className="table-content" {...getTableBodyProps()}>
                 {page.map((row) => {

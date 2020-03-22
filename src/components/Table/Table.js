@@ -20,10 +20,22 @@ export const TableCell = ({children, className}) => {
     )
 };
 
-export const TableHeader = ({children}) => {
+export const TableHeader = ({headerGroups}) => {
     return (
         <div className="table-header">
-            {children}
+            {headerGroups.map(headerGroup => (
+                <React.Fragment>
+                    {headerGroup.headers.map(column => (
+                        <TableHeaderCell {...column.getHeaderProps(column.getSortByToggleProps())}>
+                            {column.render('Header')}
+
+                            <span className="sort-indicator">
+                                {column.isSorted ? column.isSortedDesc ? <Icon name="down"/> : <Icon name="up"/> : ''}
+                            </span>
+                        </TableHeaderCell>
+                    ))}
+                </React.Fragment>
+            ))}
         </div>
     )
 };

@@ -1,6 +1,15 @@
 import jwt_decode from 'jwt-decode';
 import ApiClient from "./ApiClient";
 
+export const GRADES_STORE_NAME = "grades";
+export const WALLS_STORE_NAME = "walls";
+export const HOLD_STYLE_STORE_NAME = "holdStyles";
+export const LOCATIONS_STORE_NAME = "locations";
+export const TAGS_STORE_NAME = "tags";
+export const SETTER_STORE_NAME = "setters";
+export const BOULDER_STORE_NAME = "boulders";
+export const STATES_STORE_NAME = "states";
+
 class Context {
 
     static isAuthenticated() {
@@ -60,19 +69,20 @@ class Context {
                         value: item[valueProperty]
                     }
                 }).sort((a, b) => a.label > b.label ? 1 : -1);
+            },
+            getOption: function (value, labelProperty = 'name') {
+
+                return {
+                    label: this.get(value)[labelProperty],
+                    value: value
+                }
             }
         }
     };
 
     static storage = {
         clear: () => {
-            localStorage.removeItem('grades');
-            localStorage.removeItem('walls');
-            localStorage.removeItem('holdStyles');
-            localStorage.removeItem('locations');
-            localStorage.removeItem('tags');
-            localStorage.removeItem('setters');
-            localStorage.removeItem('boulders');
+            localStorage.clear();
         },
         init: () => {
             ApiClient.locations.all().then(response => Context.storage.locations.set(response));
@@ -82,28 +92,26 @@ class Context {
             ApiClient.location.tags.all().then(response => Context.storage.tags.set(response));
             ApiClient.location.setters.all().then(response => Context.storage.setters.set(response));
             ApiClient.boulder.active().then(response => Context.storage.boulders.set(response));
+
+            Context.storage.states.set([
+                {
+                    id: "active",
+                    name: "active"
+                },
+                {
+                    id: "inactive",
+                    name: "inactive"
+                }
+            ])
         },
-        grades: Context.createStorageApi('grades'),
-        walls: Context.createStorageApi('walls'),
-        holdStyles: Context.createStorageApi('holdStyles'),
-        locations: Context.createStorageApi('locations'),
-        tags: Context.createStorageApi('tags'),
-        setters: Context.createStorageApi('setters'),
-        boulders: Context.createStorageApi('boulders'),
-        system: {
-            states: {
-                options: () => [
-                    {
-                        label: 'active',
-                        value: 'active'
-                    },
-                    {
-                        label: 'inactive',
-                        value: 'inactive'
-                    }
-                ]
-            },
-        }
+        grades: Context.createStorageApi(GRADES_STORE_NAME),
+        walls: Context.createStorageApi(WALLS_STORE_NAME),
+        holdStyles: Context.createStorageApi(HOLD_STYLE_STORE_NAME),
+        locations: Context.createStorageApi(LOCATIONS_STORE_NAME),
+        tags: Context.createStorageApi(TAGS_STORE_NAME),
+        setters: Context.createStorageApi(SETTER_STORE_NAME),
+        boulders: Context.createStorageApi(BOULDER_STORE_NAME),
+        states: Context.createStorageApi(STATES_STORE_NAME),
     };
 
     static location = {
@@ -111,6 +119,8 @@ class Context {
         switchTo: (id) => {
             const location = Context.storage.locations.get(id);
             localStorage.setItem('location', JSON.stringify(location));
+
+            Context.storage.init();
         }
     };
 

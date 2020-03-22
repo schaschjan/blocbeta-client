@@ -1,16 +1,16 @@
-import React, {Fragment, useEffect, useRef} from 'react';
+import React from 'react';
+import ReactSelect from "react-select";
+import {Controller} from "react-hook-form";
 import './Select.css';
 
-const Select = ({register, options, name, multiple, ...rest}) => {
-
+const Select = ({options, multiple = false, ...rest}) => {
     return (
-        <div className="select">
-            <select name={name} ref={register} multiple={multiple} {...rest}>
-                {options.map(option => (
-                    <option value={option.value}>{option.label}</option>
-                ))}
-            </select>
-        </div>
+        <Controller
+            isMulti={multiple}
+            as={ReactSelect}
+            options={options}
+            {...rest}
+        />
     );
 };
 

@@ -1,5 +1,7 @@
-import React, {createContext, useEffect,
-    Fragment} from 'react';
+import React, {
+    createContext, useEffect,
+    Fragment
+} from 'react';
 import './Drawer.css';
 import classnames from "classnames";
 import {Loader} from "../Loader/Loader";
@@ -9,23 +11,18 @@ import Icon from "../Icon/Icon";
 export const DrawerContext = createContext({
     drawerOpen: false,
     drawerLoading: false,
-    setDrawerPages:[],
+    setDrawerPages: [],
     drawerData: null,
     drawerActivePage: null
 });
 
 export const Drawer = ({open, data, closeHandler, activePage, pages, loading = true}) => {
     const classes = classnames("drawer", open ? "drawer--open" : "drawer--closed", loading ? "drawer--loading" : null);
-
-    useEffect(() => {
-        const page = pages.find(page => page.name === activePage);
-    }, [pages]);
+    const page = pages.find(page => page.name === activePage);
 
     if (!pages) {
         return new Error("No pages passed to drawer");
     }
-
-    const page = pages.find(page => page.name === activePage);
 
     const onKeyDown = [
         "keydown",
@@ -73,9 +70,9 @@ export const Drawer = ({open, data, closeHandler, activePage, pages, loading = t
                     </Button>
                 </div>
 
-               <div className="drawer__content">
-                   {page.content(data)}
-               </div>
+                <div className="drawer__content">
+                    {page.content(data)}
+                </div>
             </Fragment>
         </div>
     )

@@ -5,4 +5,14 @@
     background-size: 40px 40px;
     background-color: #eee;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+}
+
+.avatar.avatar--fallback {
+    background: #4B58A4;
+}
+
+.avatar.avatar--fallback .icon {
+    margin: 0 auto;
 }

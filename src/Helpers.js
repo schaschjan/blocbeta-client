@@ -1,11 +1,7 @@
 import Context from "./Context";
 
-export const getError = (error) => {
-    if (error.type === "required") {
-        return "Required"
-    }
-
-    return error.message;
+export const alphabeticalSort = (a, b) => {
+    return a > b ? 1 : -1;
 };
 
 export const resolveBoulder = (boulder) => {

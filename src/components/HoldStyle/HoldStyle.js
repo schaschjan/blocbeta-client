@@ -3,22 +3,30 @@ import './HoldStyle.css';
 import classnames from "classnames";
 
 const HoldStyle = ({name, small}) => {
-    let icon = <div style={{background: "#28C6FF"}}></div>;
+    let icon = <div style={{background: "#FFF"}}></div>;
 
-    if (name === 'blue' || name === 'blau') {
-        icon = <div style={{background: "#28C6FF"}}></div>
+    if (name === 'blau') {
+        icon = <div style={{background: "#44A9FF"}}></div>
     }
 
-    if (name === 'red' || name === 'rot') {
+    if (name === 'rot') {
         icon = <div style={{background: "#FF625F"}}></div>
     }
 
-    if (name === 'green' || name === 'grün') {
+    if (name === 'grün') {
         icon = <div style={{background: "#129C07"}}></div>
     }
 
-    if (name === 'yellow' || name === 'gelb') {
+    if (name === 'gelb') {
         icon = <div style={{background: "#FFF695"}}></div>
+    }
+
+    if (name === 'gelb neon') {
+        icon = <div style={{background: "#FFFF00"}}></div>
+    }
+
+    if (name === 'lila') {
+        icon = <div style={{background: "#BE78FC"}}></div>
     }
 
     if (name === 'pink') {
@@ -29,15 +37,19 @@ const HoldStyle = ({name, small}) => {
         icon = <div style={{background: "#FFB741"}}></div>
     }
 
-    if (name === 'black' || name === 'schwarz') {
+    if (name === 'schwarz') {
         icon = <div style={{background: "#000000"}}></div>
     }
 
-    if (name === 'white' || name === 'weiß') {
+    if (name === 'weiß') {
         icon = <div style={{background: "#eeeeee"}}></div>
     }
 
-    return <div className={ classnames("holdstyle", `holdstyle--${name}`, small ? "holdstyle--small": null)}>
+    if (name === 'braun') {
+        icon = <div style={{background: "#8B572A"}}></div>
+    }
+
+    return <div className={classnames("holdstyle", ``, small ? "holdstyle--small" : null)}>
         {icon}
     </div>
 };

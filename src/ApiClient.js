@@ -15,13 +15,17 @@ class ApiClient {
 
         return fetch(url, request)
             .then(response => {
-                if (!response.ok) {
-                    throw new ApiError(response.message, response.status);
-                }
-
                 if (response.status === 401) {
                     Context.storage.clear();
                     window.location.href = "/login";
+                }
+
+                if (response.status === 204) {
+                    return null
+                }
+
+                if (!response.ok) {
+                    throw new ApiError(response.message, response.status);
                 }
 
                 return response.json();
@@ -218,6 +222,21 @@ class ApiClient {
 
                 return ApiClient.fetch(url, request);
             }
+        },
+        resetRotation: () => {
+            const url = ApiClient.getUrl(`/stat/reset-rotation`, Context.location.current().url);
+            const request = this.getRequestConfig();
+
+            return ApiClient.fetch(url, request);
+        }
+    };
+
+    static rankings = {
+        current: () => {
+            const url = ApiClient.getUrl(`/ranking/current`, Context.location.current().url);
+            const request = this.getRequestConfig();
+
+            return ApiClient.fetch(url, request);
         }
     };
 }

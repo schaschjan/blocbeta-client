@@ -19,7 +19,7 @@
     --drawer-width: 320px;
 }
 
-body, p, a, input {
+* {
     font-family: 'Karla', sans-serif;
     font-size: 0.875rem;
 }
@@ -53,4 +53,19 @@ a {
 
 a.secondary {
     color: var(--color-grey);
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    margin: 0;
+}
+
+span {
+    display: flex;
+    align-items: center;
 }
