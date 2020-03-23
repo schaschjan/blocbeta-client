@@ -13,5 +13,6 @@ export const Messages = {
     },
     errors: {
         general: "Oops, looks like a slip!"
-    }
+    },
+    reset: "Resetting probably right now!"
 };

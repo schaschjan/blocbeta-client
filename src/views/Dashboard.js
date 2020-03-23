@@ -3,6 +3,7 @@ import ApiClient from "../ApiClient";
 import {Loader} from "../components/Loader/Loader";
 import Context from "../Context";
 import moment from "moment";
+import {Messages} from "../Messages";
 
 const Dashboard = () => {
 
@@ -13,10 +14,10 @@ const Dashboard = () => {
         Promise.all([
             ApiClient.stats.resetRotation().then(response => {
 
-                stats.resetRotation = response.map(wall => {
+                stats.resetRotation = Context.storage.walls.all().map(wall => {
                     return {
-                        wall: Context.storage.walls.get(wall.id),
-                        averageSetDate: wall.averageSetDate
+                        wall: wall,
+                        averageSetDate: response.find(reset => reset.id === wall.id)
                     }
                 });
 
@@ -29,7 +30,7 @@ const Dashboard = () => {
         ]).then(() => {
             setLoading(false)
         });
-    });
+    }, []);
 
     const Walls = () => {
         return (
@@ -52,9 +53,17 @@ const Dashboard = () => {
 
             <h2>Reset Rotation</h2>
             <ul className="list-unstyled">
-                {stats.resetRotation.map(wallResetRotation => {
+                {stats.resetRotation.map(reset => {
+                    let date = null;
+
+                    if (reset.averageSetDate) {
+                        date = `Last set: ${date = moment(reset.averageSetDate).format('D MMM')}`
+                    } else {
+                        date = Messages.reset
+                    }
+
                     return <li>
-                        {wallResetRotation.wall.name} {moment(wallResetRotation.averageSetDate).format('D MMM')}
+                        {reset.wall.name} {date}
                     </li>
                 })}
             </ul>
