@@ -2,6 +2,7 @@
     box-sizing: border-box;
     display: flex;
     box-shadow: inset 0 -1px 0 0 var(--color-dark);
+    margin: 0 0 8px 0;
 }
 
 .search > input {

@@ -1,5 +1,5 @@
 .table--ranking {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 80px 1fr 80px 80px .75fr 120px 120px 120px 100px;
 }
 
 .table--ranking .user-cell {
@@ -7,7 +7,7 @@
     align-items: center;
 }
 
-.table--ranking .actions-cell {
+.table--ranking .actions-cell > .button {
     margin-left: auto;
 }
 
@@ -16,12 +16,12 @@
     width: 100%;
     border-radius: 2px;
     background-color: #E8E8E8;
+    margin-right: 40px;
 }
 
 .progress > div {
     height: 100%;
     border-radius:  2px 0 0 2px;
-    transition: 'all .2s ease-out';
 }
 
 .progress--success > div {

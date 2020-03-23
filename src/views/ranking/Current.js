@@ -1,7 +1,7 @@
-import React, {useMemo, useState, useEffect} from 'react';
+import React, {useMemo, useState, useEffect, Fragment} from 'react';
 import ApiClient from "../../ApiClient";
 import {Loader} from "../../components/Loader/Loader";
-import {useTable, useSortBy} from "react-table";
+import {useTable, useSortBy, useGlobalFilter} from "react-table";
 import {TableCell, TableHeader, TableRow} from "../../components/Table/Table";
 import Avatar from "../../components/Avatar/Avatar";
 import Paragraph from "../../components/Paragraph/Paragraph";
@@ -11,9 +11,9 @@ import Icon from "../../components/Icon/Icon";
 import Button from "../../components/Button/Button";
 import classnames from "classnames";
 import Context from "../../Context";
+import Search from "../../components/Search/Search";
 
 const Progress = ({percentage}) => {
-
     return (
         <div
             className={classnames("progress", percentage > 66 ? "progress--success" : percentage > 33 ? "progress--warning" : "progress--danger")}>
@@ -23,45 +23,72 @@ const Progress = ({percentage}) => {
 };
 
 const Table = ({columns, data}) => {
-
     const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
         rows,
         prepareRow,
+        setGlobalFilter,
     } = useTable({
             columns,
             data
         },
+        useGlobalFilter,
         useSortBy
     );
 
     return (
-        <div className={classnames('table', 'table--ranking')} {...getTableProps()}>
-            <TableHeader headerGroups={headerGroups}/>
+        <Fragment>
+            <Search placeholder="Search for member"
+                    onClear={() => setGlobalFilter(null)}
+                    onInputChange={e => {
+                        setGlobalFilter(e.target.value || undefined)
+                    }}/>
 
-            <div className="table-content" {...getTableBodyProps()}>
-                {rows.map((row) => {
-                    prepareRow(row);
+            <div className={classnames('table', 'table--ranking')} {...getTableProps()}>
+                <TableHeader headerGroups={headerGroups}/>
 
-                    return (
-                        <TableRow>
-                            {row.cells.map(cell => {
-                                return <TableCell {...cell.getCellProps({className: cell.column.className})}>{cell.render('Cell')}</TableCell>
-                            })}
-                        </TableRow>
-                    )
-                })}
+                <div className="table-content" {...getTableBodyProps()}>
+                    {rows.map((row) => {
+                        prepareRow(row);
+
+                        return (
+                            <TableRow>
+                                {row.cells.map(cell => {
+                                    return <TableCell {...cell.getCellProps({className: cell.column.className})}>{cell.render('Cell')}</TableCell>
+                                })}
+                            </TableRow>
+                        )
+                    })}
+                </div>
             </div>
-        </div>
+        </Fragment>
     )
 };
-
 
 const Current = () => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const percentageOfBoulders = (value) => {
+        let percentage = 0;
+
+        if (value > 0) {
+            percentage = (value / Context.storage.boulders.all().length) * 100;
+        }
+
+        if (percentage === 0) {
+            return `${value} (0%)`;
+        }
+
+
+        if (percentage < 1) {
+            return `${value} (<1%)`;
+        }
+
+        return `${value} (${Math.floor(percentage)}%)`;
+    };
 
     const columns = useMemo(
         () => [
@@ -105,12 +132,14 @@ const Current = () => {
                 }
             },
             {
-                Header: 'Flashes',
+                Header: 'Flashed',
                 accessor: 'flashes',
+                Cell: ({cell}) => percentageOfBoulders(cell.value)
             },
             {
-                Header: 'Tops',
+                Header: 'Topped',
                 accessor: 'tops',
+                Cell: ({cell}) => percentageOfBoulders(cell.value)
             },
             {
                 Header: 'Last activity',
@@ -124,6 +153,7 @@ const Current = () => {
             {
                 Header: '',
                 id: 'user.id',
+                className: 'actions-cell',
                 Cell: ({cell}) => {
                     return <Button text={true}>Compare</Button>
                 }
@@ -145,7 +175,6 @@ const Current = () => {
             });
 
             setData(data);
-            console.log(data);
             setLoading(false);
         });
     }, []);
@@ -155,6 +184,7 @@ const Current = () => {
     return (
         <div className="container">
             <h1>Current Ranking</h1>
+
             <Table data={data} columns={columns}/>
         </div>
     )
