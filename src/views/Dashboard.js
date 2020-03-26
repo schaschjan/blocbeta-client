@@ -13,12 +13,17 @@ const Dashboard = () => {
     useEffect(() => {
         Promise.all([
             ApiClient.stats.resetRotation().then(response => {
-
                 stats.resetRotation = Context.storage.walls.all().map(wall => {
+                    const reset = response.find(reset => reset.id === wall.id);
+
                     return {
                         wall: wall,
-                        averageSetDate: response.find(reset => reset.id === wall.id)
+                        averageSetDate: reset ? moment(reset.averageSetDate) : null
                     }
+                });
+
+                stats.resetRotation.sort((a, b) => {
+                    return a.averageSetDate < b.averageSetDate ? -1 : 1
                 });
 
                 setStats(stats);
@@ -30,7 +35,7 @@ const Dashboard = () => {
         ]).then(() => {
             setLoading(false)
         });
-    }, []);
+    }, [stats]);
 
     const Walls = () => {
         return (
@@ -57,7 +62,7 @@ const Dashboard = () => {
                     let date = null;
 
                     if (reset.averageSetDate) {
-                        date = `Last set: ${date = moment(reset.averageSetDate).format('D MMM')}`
+                        date = `Last set: ${moment(reset.averageSetDate).fromNow()}`
                     } else {
                         date = Messages.reset
                     }
