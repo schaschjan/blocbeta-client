@@ -32,7 +32,7 @@ const Form = ({defaultValues, children, onSubmit}) => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             {Array.isArray(children) ? children.map(child => {
-                const classes = classnames(errors[child.props.name] ? 'input--error' : null);
+                const classes = classnames(errors[child.props.name] ? 'has-error' : null);
 
                 return (
                     <React.Fragment>

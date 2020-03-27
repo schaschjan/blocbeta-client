@@ -1,8 +1,10 @@
-import React from 'react';
-import {Link, withRouter} from "react-router-dom";
+import React, {useContext} from 'react';
+import {Link} from "react-router-dom";
 import Context from "../../Context";
 import "./Navigation.css";
 import Button from "../Button/Button";
+import {UserContext} from "../../App";
+import {handleLogout} from "../../services/Authentication";
 
 const LocationSwitch = () => {
     const locations = Context.storage.locations.all();
@@ -36,18 +38,10 @@ const LocationSwitch = () => {
     )
 };
 
-const Navigation = ({history}) => {
+const Navigation = () => {
+    const {user, authenticated} = useContext(UserContext);
 
-    const handleLogout = (event) => {
-        event.preventDefault();
-
-        Context.storage.clear();
-
-        history.push('/login');
-    };
-
-
-    if (!Context.isAuthenticated()) {
+    if (!authenticated) {
         return (
             <header className="header">
                 <ul>
@@ -78,7 +72,7 @@ const Navigation = ({history}) => {
                     <Link to={Context.getPath('/ranking/current')}>Ranking</Link>
                 </li>
                 <li>
-                    <Link to={'/account'}>[{Context.user.username}]</Link>
+                    <Link to={'/account'}>[{user.username}]</Link>
                 </li>
                 <li>
                     <Button onClick={(event) => handleLogout(event)}>Out!</Button>
@@ -88,4 +82,4 @@ const Navigation = ({history}) => {
     )
 };
 
-export default withRouter(Navigation)
+export default Navigation

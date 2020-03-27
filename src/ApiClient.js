@@ -81,6 +81,12 @@ class ApiClient {
 
             return ApiClient.fetch(url, request);
         },
+        create: data => {
+            const url = ApiClient.getUrl(`/boulder`, Context.location.current().url);
+            const request = this.getRequestConfig("post", data);
+
+            return ApiClient.fetch(url, request);
+        },
         update: (id, data) => {
             const url = ApiClient.getUrl(`/boulder/${id}`, Context.location.current().url);
             const request = this.getRequestConfig("put", data);

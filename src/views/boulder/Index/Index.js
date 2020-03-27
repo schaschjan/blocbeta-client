@@ -33,6 +33,8 @@ import {Messages} from "../../../Messages";
 import {toast} from "react-toastify";
 import Input from "../../../components/Input/Input";
 import {FilterDropdown} from "./components/FilterDropdown";
+import {PageHeader} from "../../../components/PageHeader/PageHeader";
+import Container from "../../../components/Container/Container";
 
 const Bar = ({children}) => {
     return <div className="bar">
@@ -112,7 +114,8 @@ const Table = ({columns, data, editable = false}) => {
             {filtersDropped && <FilterDropdown/>}
         </div>
 
-        <div className={classnames('table', 'table--boulder', editable ? 'table--editable' : null)} {...getTableProps()}>
+        <div
+            className={classnames('table', 'table--boulder', editable ? 'table--editable' : null)} {...getTableProps()}>
             <TableHeader headerGroups={headerGroups}/>
 
             <div className="table-content" {...getTableBodyProps()}>
@@ -534,10 +537,17 @@ const Index = () => {
                 <Paragraph>Logowand <strong>・NEW NEW NEW・</strong></Paragraph>
             </Banner>
 
-            <div className="container">
-                <h1>Boulder ({boulders.length})</h1>
+            <Container>
+                <PageHeader title={`Boulder (${boulders.length})`}>
+                    {Context.user.isAdmin() && (
+                        <Link to={Context.getPath(`/boulder/add`)}>
+                            <Button text={true}>Add</Button>
+                        </Link>
+                    )}
+                </PageHeader>
+
                 <Table columns={columns} data={boulders} editable={Context.user.isAdmin()}/>
-            </div>
+            </Container>
         </Fragment>
     )
 };

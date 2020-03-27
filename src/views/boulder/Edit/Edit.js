@@ -12,39 +12,9 @@ import Context from "../../../Context";
 import {Messages} from "../../../Messages";
 import {toast} from "react-toastify";
 import "./Edit.css";
-
-const resolveFormData = (boulder) => {
-    boulder.grade = Context.storage.grades.getOption(boulder.grade.id);
-    boulder.holdStyle = Context.storage.holdStyles.getOption(boulder.holdStyle.id);
-    boulder.startWall = Context.storage.walls.getOption(boulder.startWall.id);
-    boulder.status = Context.storage.states.getOption(boulder.status);
-
-    if (boulder.endWall) {
-        boulder.endWall = Context.storage.walls.getOption(boulder.endWall.id);
-    }
-
-    boulder.tags = boulder.tags.map(tag => {
-        return Context.storage.tags.getOption(tag.id)
-    });
-
-    boulder.setters = boulder.setters.map(setter => {
-        return Context.storage.setters.getOption(setter.id, 'username')
-    });
-};
-
-const resolveApiData = (boulder) => {
-    boulder.grade = boulder.grade.value;
-    boulder.holdStyle = boulder.holdStyle.value;
-    boulder.startWall = boulder.startWall.value;
-    boulder.status = boulder.status.value;
-
-    if (boulder.endWall) {
-        boulder.endWall = boulder.endWall.value;
-    }
-
-    boulder.tags = boulder.tags.map(tag => tag.value);
-    boulder.setters = boulder.setters.map(setter => setter.value);
-};
+import Container from "../../../components/Container/Container";
+import {PageHeader} from "../../../components/PageHeader/PageHeader";
+import Crud from "../../../services/Crud";
 
 const Edit = ({history}) => {
     const {boulderId} = useParams();
@@ -53,32 +23,34 @@ const Edit = ({history}) => {
     const [isSubmitting, setSubmitting] = useState(false);
 
     useEffect(() => {
-        const loadBoulder = async (boulderId) => {
-            const boulder = await ApiClient.boulder.get(boulderId);
-            resolveFormData(boulder);
-            setData(boulder);
-        };
+        ApiClient.boulder.get(boulderId)
+            .then(boulder => {
+                return Crud.boulder.resolveFormData(boulder);
+            })
+            .then(boulder => {
+                setData(boulder);
+                setLoading(false);
+            });
 
-        loadBoulder(boulderId).then(() => setLoading(false));
     }, [boulderId]);
 
     const onSubmit = (data) => {
         setSubmitting(true);
-        resolveApiData(data);
 
-        ApiClient.boulder.update(boulderId, data).then(() => {
-            setSubmitting(false);
-            history.push(Context.getPath('/boulder'));
-            toast.success("Boulder updated");
-        });
+        ApiClient.boulder.update(boulderId, Crud.boulder.resolveApiData(data))
+            .then(() => {
+                setSubmitting(false);
+                history.push(Context.getPath('/boulder'));
+                toast.success("Boulder updated");
+            });
     };
 
     if (loading) return <Loader/>;
 
     return (
         <Fragment>
-            <div className="container">
-                <h1>Edit {data.name}</h1>
+            <Container>
+                <PageHeader title={`Edit ${data.name}`}/>
 
                 <Form onSubmit={onSubmit} defaultValues={data}>
                     <Label>Name</Label>
@@ -90,7 +62,7 @@ const Edit = ({history}) => {
                     <Select name="grade"
                             options={Context.storage.grades.options()}/>
 
-                    <Label>Holdstyle</Label>
+                    <Label>Hold Style</Label>
                     <Select name="holdStyle"
                             options={Context.storage.holdStyles.options()}/>
 
@@ -124,7 +96,7 @@ const Edit = ({history}) => {
 
                     <Button type="submit" primary="true" disabled={isSubmitting}>Update</Button>
                 </Form>
-            </div>
+            </Container>
         </Fragment>
     )
 };

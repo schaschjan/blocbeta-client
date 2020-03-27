@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
-import {withRouter} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import Form from "../../components/Form/Form";
@@ -11,9 +11,9 @@ import {Link} from "react-router-dom";
 import "./Login.css";
 import {toast} from 'react-toastify';
 
-const Login = ({onAuthenticationSuccess, history}) => {
-
+const Login = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
+    let history = useHistory();
 
     const onSubmit = data => {
         setIsSubmitted(true);
@@ -29,7 +29,6 @@ const Login = ({onAuthenticationSuccess, history}) => {
             Context.authenticate(response.token);
             Context.storage.init();
 
-            onAuthenticationSuccess(response);
             history.push(Context.getPath('/dashboard'))
         })
     };
@@ -66,4 +65,4 @@ const Login = ({onAuthenticationSuccess, history}) => {
     )
 };
 
-export default withRouter(Login)
+export default Login

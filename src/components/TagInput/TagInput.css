@@ -3,6 +3,7 @@
 }
 
 .tag {
+    height: 32px;
     border: 1px solid var(--color-dark);
     padding: 3px 2px 3px 8px;
     text-transform: lowercase;

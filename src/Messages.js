@@ -8,6 +8,7 @@ export const Messages = {
         },
     },
     required: "Please provide a value",
+    requiredOption: "Please select a value",
     email: {
         invalid: "Please provide a valid E-Mail address"
     },

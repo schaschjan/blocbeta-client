@@ -19,6 +19,10 @@ class Context {
             return false
         }
 
+        if (Date.now() >= localStorage.getItem('exp') * 1000) {
+            return false;
+        }
+
         return true
     }
 
@@ -84,6 +88,9 @@ class Context {
         clear: () => {
             localStorage.clear();
         },
+        isInitialized: () => {
+            return this.isAuthenticated()
+        },
         init: () => {
             ApiClient.locations.all().then(response => Context.storage.locations.set(response));
             ApiClient.location.grades.all().then(response => Context.storage.grades.set(response));
@@ -119,7 +126,6 @@ class Context {
         switchTo: (id) => {
             const location = Context.storage.locations.get(id);
             localStorage.setItem('location', JSON.stringify(location));
-
             Context.storage.init();
         }
     };
