@@ -1,17 +1,8 @@
 import React, {createContext, useState} from 'react';
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import Context from "./Context";
-import Login from "./views/Login/Login";
-import Dashboard from "./views/Dashboard";
-import CurrentRanking from "./views/ranking/Current";
-import CurrentComparison from "./views/compare/Current";
-import Account from "./views/Account";
-import Register from "./views/Register";
-import PasswordReset from "./views/PasswordReset";
 import Navigation from "./components/Navigation/Navigation";
 import {Content} from "./components/Content/Content";
-import BoulderIndex from "./views/boulder/Index/Index.js";
-import BoulderEdit from "./views/boulder/Edit/Edit.js";
 import {Drawer, DrawerContext} from "./components/Drawer/Drawer";
 import {router} from "./services/router";
 
@@ -38,10 +29,7 @@ const PrivateRoute = ({children, ...rest}) => {
     );
 };
 
-export const UserContext = createContext({
-    user: null,
-    authenticated: false
-});
+export const UserContext = createContext();
 
 const App = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -50,20 +38,36 @@ const App = () => {
     const [drawerActivePage, setDrawerActivePage] = useState(null);
     const [drawerData, setDrawerData] = useState(null);
 
-    const user = Context.user || null;
-    const authenticated = Context.isAuthenticated() || false;
+    const [user, setUser] = useState(Context.user);
+    const [authenticated, setAuthenticated] = useState(Context.isAuthenticated());
+
+    console.log(user, authenticated);
+
+    const drawerContextValues = {
+        drawerData,
+        setDrawerData,
+        drawerOpen,
+        setDrawerOpen,
+        drawerLoading,
+        setDrawerLoading,
+        drawerPages,
+        setDrawerPages,
+        drawerActivePage,
+        setDrawerActivePage
+    };
+
+    const userContextValues = {
+        user,
+        setUser,
+        authenticated,
+        setAuthenticated
+    };
 
     return (
         <Router>
-            <DrawerContext.Provider value={{
-                drawerData, setDrawerData,
-                drawerOpen, setDrawerOpen,
-                drawerLoading, setDrawerLoading,
-                drawerPages, setDrawerPages,
-                drawerActivePage, setDrawerActivePage
-            }}>
+            <DrawerContext.Provider value={drawerContextValues}>
                 <Content disabled={drawerOpen} onClick={() => drawerOpen ? setDrawerOpen(false) : null}>
-                    <UserContext.Provider value={{user, authenticated}}>
+                    <UserContext.Provider value={userContextValues}>
                         <div className="app" id="app">
                             <Navigation/>
                             <Switch>
@@ -73,7 +77,7 @@ const App = () => {
                                     }
 
                                     if (route.admin && !Context.user.isAdmin()) {
-                                       return null
+                                        return null
                                     }
 
                                     return <Route key={i} {...route} />

@@ -1,19 +1,19 @@
-.holdstyle {
+.emoji {
     margin: 12px 6px;
-    border-radius: 50%;
     overflow: hidden;
+    font-size: 1.25em;
 }
 
-.holdstyle > div {
+.emoji > div {
     width: 40px;
     height: 40px;
 }
 
-.holdstyle.holdstyle--small {
+.emoji.emoji--small {
     margin: 8px;
 }
 
-.holdstyle.holdstyle--small > div {
+.emoji.emoji--small > div {
     width: 16px;
     height: 16px;
 }

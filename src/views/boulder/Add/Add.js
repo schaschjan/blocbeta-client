@@ -10,9 +10,9 @@ import Button from "../../../components/Button/Button";
 import Form from "../../../components/Form/Form";
 import ApiClient from "../../../ApiClient";
 import {toast} from "react-toastify";
+import Crud from "../../../services/Crud";
 
-// const defaultStatus =  Context.storage.states.getOption('active');
-const defaultStatus = {};
+const defaultStatus =  Context.storage.states.getOption('active');
 const defaultPoints = 1000;
 
 const Add = () => {
@@ -21,12 +21,12 @@ const Add = () => {
     const onSubmit = (data) => {
         setSubmitting(true);
 
-        ApiClient.boulder.create(data, data).then(() => {
-            setSubmitting(false);
-            toast.success(`Created ${data.name}`);
-
-            // history.push(Context.getPath('/boulder'));
-        });
+        ApiClient.boulder.create(Crud.boulder.resolveApiData(data))
+            .then(() => {
+                setSubmitting(false);
+                toast.success(`Created ${data.name}`);
+                // reset form
+            });
     };
 
     return (

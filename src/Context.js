@@ -9,6 +9,7 @@ export const TAGS_STORE_NAME = "tags";
 export const SETTER_STORE_NAME = "setters";
 export const BOULDER_STORE_NAME = "boulders";
 export const STATES_STORE_NAME = "states";
+export const ASCENTS_STORE_NAME = "ascents";
 
 class Context {
 
@@ -19,11 +20,7 @@ class Context {
             return false
         }
 
-        if (Date.now() >= localStorage.getItem('exp') * 1000) {
-            return false;
-        }
-
-        return true
+        return Date.now() < localStorage.getItem('exp') * 1000;
     }
 
     static authenticate(token) {
@@ -64,10 +61,22 @@ class Context {
                 return JSON.parse(localStorage.getItem(name));
             },
             get: (id) => {
-                return Context.storage[name].all().find(item => item.id === id);
+                const storage = Context.storage[name].all();
+
+                if (!storage) {
+                    return null;
+                }
+
+                return storage.find(item => item.id === id);
             },
             options: (labelProperty = 'name', valueProperty = 'id') => {
-                return Context.storage[name].all().map(item => {
+                const storage = Context.storage[name].all();
+
+                if (!storage) {
+                    return null;
+                }
+
+                return storage.map(item => {
                     return {
                         label: item[labelProperty],
                         value: item[valueProperty]
@@ -75,41 +84,62 @@ class Context {
                 }).sort((a, b) => a.label > b.label ? 1 : -1);
             },
             getOption: function (value, labelProperty = 'name') {
+                const storageValue = this.get(value);
 
                 return {
-                    label: this.get(value)[labelProperty],
+                    label: storageValue ? storageValue[labelProperty] : null,
                     value: value
                 }
             }
         }
     };
 
+    static core = {
+        ascents: [
+            {
+                id: "todo",
+                name: "Todo"
+            },
+            {
+                id: "flash",
+                name: "Flash"
+            },
+            {
+                id: "top",
+                name: "Top"
+            },
+            {
+                id: "resignation",
+                name: "Resignation"
+            }
+        ],
+        states: [
+            {
+                id: "active",
+                name: "active"
+            },
+            {
+                id: "inactive",
+                name: "inactive"
+            }
+        ]
+    };
+
     static storage = {
         clear: () => {
             localStorage.clear();
         },
-        isInitialized: () => {
-            return this.isAuthenticated()
-        },
         init: () => {
-            ApiClient.locations.all().then(response => Context.storage.locations.set(response));
-            ApiClient.location.grades.all().then(response => Context.storage.grades.set(response));
-            ApiClient.location.holdStyles.all().then(response => Context.storage.holdStyles.set(response));
-            ApiClient.location.walls.all().then(response => Context.storage.walls.set(response));
-            ApiClient.location.tags.all().then(response => Context.storage.tags.set(response));
-            ApiClient.location.setters.all().then(response => Context.storage.setters.set(response));
-            ApiClient.boulder.active().then(response => Context.storage.boulders.set(response));
 
-            Context.storage.states.set([
-                {
-                    id: "active",
-                    name: "active"
-                },
-                {
-                    id: "inactive",
-                    name: "inactive"
-                }
-            ])
+            return Promise.all([
+                ApiClient.locations.all().then(response => Context.storage.locations.set(response)),
+                ApiClient.location.grades.all().then(response => Context.storage.grades.set(response)),
+                ApiClient.location.holdStyles.all().then(response => Context.storage.holdStyles.set(response)),
+                ApiClient.location.walls.all().then(response => Context.storage.walls.set(response)),
+                ApiClient.location.tags.all().then(response => Context.storage.tags.set(response)),
+                ApiClient.location.setters.all().then(response => Context.storage.setters.set(response)),
+                ApiClient.boulder.active().then(response => Context.storage.boulders.set(response))
+            ]);
         },
         grades: Context.createStorageApi(GRADES_STORE_NAME),
         walls: Context.createStorageApi(WALLS_STORE_NAME),
@@ -118,7 +148,9 @@ class Context {
         tags: Context.createStorageApi(TAGS_STORE_NAME),
         setters: Context.createStorageApi(SETTER_STORE_NAME),
         boulders: Context.createStorageApi(BOULDER_STORE_NAME),
+
         states: Context.createStorageApi(STATES_STORE_NAME),
+        ascents: Context.createStorageApi(ASCENTS_STORE_NAME)
     };
 
     static location = {

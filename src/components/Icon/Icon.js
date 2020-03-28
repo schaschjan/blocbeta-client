@@ -2,7 +2,7 @@ import React from 'react';
 import './Icon.css';
 import classnames from "classnames";
 
-const Icon = ({name, onClick, fill, ...rest}) => {
+const Icon = ({name, onClick, className, fill, ...rest}) => {
 
     let icon;
     let size;
@@ -46,7 +46,7 @@ const Icon = ({name, onClick, fill, ...rest}) => {
         )
     }
 
-    if (name === 'resign') {
+    if (name === 'resignation') {
         size = 'small';
         icon = (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -54,6 +54,16 @@ const Icon = ({name, onClick, fill, ...rest}) => {
                 <path
                     d="M11.295 12.0021L6 17.2971L6.70711 18.0042L12.0021 12.7092L17.2972 18.0042L18.0043 17.2971L12.7092 12.0021L18.0042 6.70711L17.2971 6L12.0021 11.295L6.70715 6.00001L6.00005 6.70711L11.295 12.0021Z"
                     fill={fill ? fill : "#FF5D5F"}/>
+            </svg>
+        )
+    }
+
+    if (name === 'todo') {
+        size = 'small';
+        icon = (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0H24V24H0V0Z" fill="white"/>
+                <circle cx="12" cy="12" r="5.5" stroke="#FFCB41"/>
             </svg>
         )
     }
@@ -101,7 +111,7 @@ const Icon = ({name, onClick, fill, ...rest}) => {
         )
     }
 
-    if (name === 'filtermenu') {
+    if (name === 'open-filters') {
         size = 'large';
         icon = (
             <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -110,6 +120,17 @@ const Icon = ({name, onClick, fill, ...rest}) => {
                 <circle cx="25" cy="17" r="2" fill="#333333"/>
                 <circle cx="25" cy="25" r="2" fill="#333333"/>
                 <circle cx="25" cy="33" r="2" fill="#333333"/>
+            </svg>
+        )
+    }
+
+    if (name === 'close-filters') {
+        size = 'large';
+        icon = (
+            <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0H50V50H0V0Z" fill="white" fill-opacity="0.01"/>
+                <path d="M13.48 36.52L36.52 13.48" stroke="black" stroke-linecap="round"/>
+                <path d="M36.52 36.52L13.48 13.48" stroke="black" stroke-linecap="round"/>
             </svg>
         )
     }
@@ -202,9 +223,11 @@ const Icon = ({name, onClick, fill, ...rest}) => {
         )
     }
 
-    return <span className={classnames("icon", `icon--${size}`, onClick ? 'icon--clickable' : null)}
+    return <span className={classnames("icon", `icon--${size}`, onClick ? 'icon--clickable' : null, className)}
                  onClick={onClick}
-                 {...rest}>{icon}</span>
+                 {...rest}>
+        {icon}
+    </span>
 };
 
 export default Icon;

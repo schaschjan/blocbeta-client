@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Fragment} from 'react';
+import React, {useState, useEffect, reset, Fragment} from 'react';
 import {Loader} from "../../../components/Loader/Loader";
 import ApiClient from "../../../ApiClient";
 import {useParams} from "react-router-dom";
@@ -42,6 +42,7 @@ const Edit = ({history}) => {
                 setSubmitting(false);
                 history.push(Context.getPath('/boulder'));
                 toast.success("Boulder updated");
+                reset();
             });
     };
 

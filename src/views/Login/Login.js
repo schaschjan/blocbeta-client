@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import {useHistory} from "react-router-dom";
@@ -10,9 +10,14 @@ import Label from "../../components/Label/Label";
 import {Link} from "react-router-dom";
 import "./Login.css";
 import {toast} from 'react-toastify';
+import {UserContext} from "../../App";
+import jwt_decode from "jwt-decode";
 
 const Login = () => {
+    const [loading, setLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const {setUser, setAuthenticated} = useContext(UserContext);
+
     let history = useHistory();
 
     const onSubmit = data => {
@@ -26,16 +31,25 @@ const Login = () => {
                 return;
             }
 
+            setLoading(true);
+            const payload = jwt_decode(response.token);
             Context.authenticate(response.token);
-            Context.storage.init();
 
-            history.push(Context.getPath('/dashboard'))
+            Context.storage.init().then(success => {
+                setUser(payload.user);
+                setAuthenticated(true);
+                setLoading(false);
+
+                history.push(Context.getPath('/dashboard'))
+            });
         })
     };
 
     return (
         <Container>
             <h1>Sign in</h1>
+
+            {loading && <em>Loading storage…</em>}
 
             <Form onSubmit={onSubmit}>
                 <Label>Username</Label>

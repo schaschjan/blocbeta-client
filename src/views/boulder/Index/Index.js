@@ -48,10 +48,10 @@ const Table = ({columns, data, editable = false}) => {
             id: 'ascent',
             value: 'todo'
         },
-        // {
-        //     id: 'start',
-        //     value: 'logowand'
-        // }
+        {
+            id: 'start',
+            value: 'logowand'
+        }
     ]);
 
     const [filtersDropped, setFiltersDropped] = useState(false);
@@ -105,9 +105,12 @@ const Table = ({columns, data, editable = false}) => {
 
     return <Fragment>
         <div className="filter">
-            <Icon name="search" onClick={() => setFiltersDropped(true)}/>
             <TagInput tags={tags} onAdd={() => console.log('add')} onRemove={(id) => removeTag(id)}/>
-            <Icon name="filtermenu" className="toggle-filter-dropdown"/>
+            {filtersDropped ? (
+                <Icon name="close-filters" className="toggle-filter-dropdown" onClick={() => setFiltersDropped(false)}/>
+            ) : (
+                <Icon name="open-filters" className="toggle-filter-dropdown" onClick={() => setFiltersDropped(true)}/>
+            )}
         </div>
 
         <div>
@@ -308,7 +311,7 @@ const Index = () => {
                                 checked={topped}
                                 handler={() => ascentHandler(row.original.id, "top", ascent ? ascent.id : null)}/>
 
-                        <Ascent type="resign"
+                        <Ascent type="resignation"
                                 disabled={!resigned && ascent}
                                 checked={resigned}
                                 handler={() => ascentHandler(row.original.id, "resignation", ascent ? ascent.id : null)}/>

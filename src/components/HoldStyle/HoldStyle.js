@@ -3,7 +3,7 @@ import './HoldStyle.css';
 import classnames from "classnames";
 
 const HoldStyle = ({name, small}) => {
-    let icon = <div style={{background: "#FFF"}}></div>;
+    let icon = <div style={{background: "#fea4e1"}}></div>;
 
     if (name === 'blau') {
         icon = <div style={{background: "#44A9FF"}}></div>

@@ -9,10 +9,6 @@ import {handleLogout} from "../../services/Authentication";
 const LocationSwitch = () => {
     const locations = Context.storage.locations.all();
 
-    if (!locations) {
-        return null;
-    }
-
     const handleChange = (event) => {
         const selectedLocationId = parseInt(event.target.value);
 
