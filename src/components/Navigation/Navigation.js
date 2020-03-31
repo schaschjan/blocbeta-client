@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import Context from "../../Context";
 import "./Navigation.css";
 import Button from "../Button/Button";
-import {UserContext} from "../../App";
+import {AppContext} from "../../App";
 import {handleLogout} from "../../services/Authentication";
 
 const LocationSwitch = () => {
@@ -35,7 +35,7 @@ const LocationSwitch = () => {
 };
 
 const Navigation = () => {
-    const {user, authenticated} = useContext(UserContext);
+    const {user, authenticated} = useContext(AppContext);
 
     if (!authenticated) {
         return (

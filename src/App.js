@@ -5,6 +5,7 @@ import Navigation from "./components/Navigation/Navigation";
 import {Content} from "./components/Content/Content";
 import {Drawer, DrawerContext} from "./components/Drawer/Drawer";
 import {router} from "./services/router";
+import {ToastContainer} from "react-toastify";
 
 const LoginRedirect = () => (
     <Redirect
@@ -29,7 +30,7 @@ const PrivateRoute = ({children, ...rest}) => {
     );
 };
 
-export const UserContext = createContext();
+export const AppContext = createContext();
 
 const App = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -40,8 +41,6 @@ const App = () => {
 
     const [user, setUser] = useState(Context.user);
     const [authenticated, setAuthenticated] = useState(Context.isAuthenticated());
-
-    console.log(user, authenticated);
 
     const drawerContextValues = {
         drawerData,
@@ -56,7 +55,7 @@ const App = () => {
         setDrawerActivePage
     };
 
-    const userContextValues = {
+    const appContextValues = {
         user,
         setUser,
         authenticated,
@@ -65,9 +64,9 @@ const App = () => {
 
     return (
         <Router>
-            <DrawerContext.Provider value={drawerContextValues}>
-                <Content disabled={drawerOpen} onClick={() => drawerOpen ? setDrawerOpen(false) : null}>
-                    <UserContext.Provider value={userContextValues}>
+            <AppContext.Provider value={appContextValues}>
+                <DrawerContext.Provider value={drawerContextValues}>
+                    <Content disabled={drawerOpen} onClick={() => drawerOpen ? setDrawerOpen(false) : null}>
                         <div className="app" id="app">
                             <Navigation/>
                             <Switch>
@@ -86,9 +85,9 @@ const App = () => {
                                 <Route render={() => <LoginRedirect/>}/>
                             </Switch>
                         </div>
-                    </UserContext.Provider>
-                </Content>
-            </DrawerContext.Provider>
+                    </Content>
+                </DrawerContext.Provider>
+            </AppContext.Provider>
 
             <Drawer open={drawerOpen}
                     data={drawerData}
@@ -96,6 +95,8 @@ const App = () => {
                     closeHandler={() => setDrawerOpen(false)}
                     activePage={drawerActivePage}
                     pages={drawerPages}/>
+
+            <ToastContainer/>
         </Router>
     );
 };

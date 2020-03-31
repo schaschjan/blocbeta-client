@@ -16,7 +16,6 @@ import classnames from "classnames";
 import {
     IndeterminateCheckbox,
     TableHeader,
-    TableHeaderCell,
     TableRow,
     TableCell,
     TableFooter
@@ -24,7 +23,7 @@ import {
 
 import {usePagination, useTable, useGlobalFilter, useSortBy, useRowSelect, useFilters} from "react-table";
 import Context from "../../../Context";
-import {TagInput} from "../../../components/TagInput/TagInput";
+import {Tag, TagInput} from "../../../components/TagInput/TagInput";
 import {Link} from "react-router-dom";
 import {DrawerContext} from "../../../components/Drawer/Drawer";
 import {Textarea} from "../../../components/Textarea/Textarea";
@@ -43,21 +42,28 @@ const Bar = ({children}) => {
 };
 
 const Table = ({columns, data, editable = false}) => {
-    const [tags, setTags] = useState([
-        {
-            id: 'ascent',
-            value: 'todo'
-        },
-        {
-            id: 'start',
-            value: 'logowand'
-        }
-    ]);
 
+    const url = new URL(window.location);
+    const parameters = new URLSearchParams(url.search);
+    let defaultFilters = [];
+
+    for (let parameter of parameters) {
+        defaultFilters.push({
+            id: parameter[0],
+            value: parameter[1]
+        })
+    }
+
+    const [filters, setFilters] = useState(defaultFilters);
     const [filtersDropped, setFiltersDropped] = useState(false);
 
-    const removeTag = (id) => {
-        setTags(tags.filter(tag => tag.id !== id));
+    const removeFilter = (id) => {
+        setFilters(filters.filter(tag => tag.id !== id));
+    };
+
+    const addFilter = (id, value) => {
+        const filter = {id, value};
+        setFilters([...filters, filter]);
     };
 
     const {
@@ -95,17 +101,18 @@ const Table = ({columns, data, editable = false}) => {
     );
 
     useEffect(() => {
-        if (!tags) {
-            setAllFilters({});
-        }
+        filters.map(filter => setFilter(filter.id, filter.value));
+        setAllFilters(filters);
+    }, [filters]);
 
-        tags.map(tag => setFilter(tag.id, tag.value));
-        setAllFilters(tags);
-    }, [tags]);
+    console.log(filters);
 
     return <Fragment>
         <div className="filter">
-            <TagInput tags={tags} onAdd={() => console.log('add')} onRemove={(id) => removeTag(id)}/>
+            <TagInput>
+                {filters.map(tag => <Tag id={tag.id} value={tag.value} onRemove={() => removeFilter(tag.id)}/>)}
+            </TagInput>
+
             {filtersDropped ? (
                 <Icon name="close-filters" className="toggle-filter-dropdown" onClick={() => setFiltersDropped(false)}/>
             ) : (
@@ -113,9 +120,7 @@ const Table = ({columns, data, editable = false}) => {
             )}
         </div>
 
-        <div>
-            {filtersDropped && <FilterDropdown/>}
-        </div>
+        <FilterDropdown onAddFilter={addFilter} dropped={filtersDropped}/>
 
         <div
             className={classnames('table', 'table--boulder', editable ? 'table--editable' : null)} {...getTableProps()}>
@@ -202,6 +207,8 @@ const Index = () => {
         ),
     };
 
+    const newBoulderTimeOffset = moment().subtract(14, 'days');
+
     const columns = [
         {
             id: 'holdStyle',
@@ -264,6 +271,26 @@ const Index = () => {
             id: 'date',
             Header: 'Date',
             accessor: 'createdAt',
+            filter: (rows, id, filterValue) => {
+                if (filterValue === "new") {
+                    return rows.filter(row => {
+                        const rowValue = row.values[id];
+                        return moment(rowValue).isSameOrAfter(newBoulderTimeOffset);
+                    })
+                }
+
+                return true
+            },
+            // accessor: (row) => {
+            //     if (moment(cell.value)) {
+            //         const twoWeeksAgo = moment().subtract(14, 'days');
+            //         const setDate = moment(row.createdAt);
+            //
+            //         return setDate.isSameOrAfter(twoWeeksAgo);
+            //     }
+            //
+            //     return "todo";
+            // },
             Cell: ({cell}) => {
                 return (
                     <Paragraph>{moment(cell.value).format('l')}</Paragraph>

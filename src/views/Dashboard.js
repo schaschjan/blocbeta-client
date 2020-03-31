@@ -4,6 +4,7 @@ import {Loader} from "../components/Loader/Loader";
 import Context from "../Context";
 import moment from "moment";
 import {Messages} from "../Messages";
+import {Link} from "react-router-dom";
 
 const Dashboard = () => {
 
@@ -74,6 +75,30 @@ const Dashboard = () => {
             </ul>
 
             <Walls/>
+
+            <h2>Boulders</h2>
+
+            <ul>
+                <li>
+                    <Link to={{
+                        pathname: Context.getPath('/boulder'),
+                        search: "?ascent=todo",
+                        state: { fromDashboard: true }
+                    }}>
+                        Todo
+                    </Link>
+                </li>
+
+                <li>
+                    <Link to={{
+                        pathname: Context.getPath('/boulder'),
+                        search: "?ascent=todo&date=new",
+                        state: { fromDashboard: true }
+                    }}>
+                        New Todos
+                    </Link>
+                </li>
+            </ul>
         </div>
     )
 };

@@ -1,10 +1,12 @@
 .filter-dropdown {
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.08);
-    width: 100vw;
-    position: absolute;
     background-color: var(--color-light);
     left: 0;
     z-index: 9;
+    display: none;
+}
+
+.filter-dropdown--dropped {
+    display: flex;
 }
 
 .filter-tabs {

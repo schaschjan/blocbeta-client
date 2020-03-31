@@ -10,13 +10,13 @@ import Label from "../../components/Label/Label";
 import {Link} from "react-router-dom";
 import "./Login.css";
 import {toast} from 'react-toastify';
-import {UserContext} from "../../App";
+import {AppContext} from "../../App";
 import jwt_decode from "jwt-decode";
 
 const Login = () => {
     const [loading, setLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const {setUser, setAuthenticated} = useContext(UserContext);
+    const {setUser, setAuthenticated} = useContext(AppContext);
 
     let history = useHistory();
 
