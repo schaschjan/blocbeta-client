@@ -10,7 +10,6 @@ import Icon from "../../../components/Icon/Icon";
 import Ascent from "../../../components/Ascent/Ascent";
 import "./Index.css";
 import Button from "../../../components/Button/Button";
-import Banner from "../../../components/Banner/Banner";
 import classnames from "classnames";
 
 import {
@@ -31,15 +30,10 @@ import Form from "../../../components/Form/Form";
 import {Messages} from "../../../Messages";
 import {toast} from "react-toastify";
 import Input from "../../../components/Input/Input";
-import {FilterDropdown} from "./components/FilterDropdown";
+import {FilterDropdown} from "./FilterDropdown/FilterDropdown";
 import {PageHeader} from "../../../components/PageHeader/PageHeader";
 import Container from "../../../components/Container/Container";
-
-const Bar = ({children}) => {
-    return <div className="bar">
-        {children}
-    </div>
-};
+import Bar from "./Bar/Bar";
 
 const Table = ({columns, data, editable = false}) => {
 
@@ -59,6 +53,10 @@ const Table = ({columns, data, editable = false}) => {
 
     const removeFilter = (id) => {
         setFilters(filters.filter(tag => tag.id !== id));
+    };
+
+    const removeFilters = () => {
+        setFilters([]);
     };
 
     const addFilter = (id, value) => {
@@ -105,11 +103,9 @@ const Table = ({columns, data, editable = false}) => {
         setAllFilters(filters);
     }, [filters]);
 
-    console.log(filters);
-
     return <Fragment>
         <div className="filter">
-            <TagInput>
+            <TagInput onClear={() => removeFilters()}>
                 {filters.map(tag => <Tag id={tag.id} value={tag.value} onRemove={() => removeFilter(tag.id)}/>)}
             </TagInput>
 
@@ -120,7 +116,7 @@ const Table = ({columns, data, editable = false}) => {
             )}
         </div>
 
-        <FilterDropdown onAddFilter={addFilter} dropped={filtersDropped}/>
+        <FilterDropdown addFilter={addFilter} dropped={filtersDropped}/>
 
         <div
             className={classnames('table', 'table--boulder', editable ? 'table--editable' : null)} {...getTableProps()}>
@@ -186,7 +182,6 @@ const Index = () => {
 
         ApiClient.boulder.get(boulderId).then(data => {
             resolveBoulder(data);
-
             setDrawerData(data);
             setDrawerLoading(false);
             setDrawerActivePage("details");
@@ -281,16 +276,6 @@ const Index = () => {
 
                 return true
             },
-            // accessor: (row) => {
-            //     if (moment(cell.value)) {
-            //         const twoWeeksAgo = moment().subtract(14, 'days');
-            //         const setDate = moment(row.createdAt);
-            //
-            //         return setDate.isSameOrAfter(twoWeeksAgo);
-            //     }
-            //
-            //     return "todo";
-            // },
             Cell: ({cell}) => {
                 return (
                     <Paragraph>{moment(cell.value).format('l')}</Paragraph>
@@ -403,7 +388,8 @@ const Index = () => {
                                                     boulder: {
                                                         id: data.id,
                                                         name: data.name
-                                                    }
+                                                    },
+                                                    ...data
                                                 });
                                             }}>
                                                 Doubt it
@@ -563,9 +549,9 @@ const Index = () => {
 
     return (
         <Fragment>
-            <Banner>
-                <Paragraph>Logowand <strong>・NEW NEW NEW・</strong></Paragraph>
-            </Banner>
+            {/*<Banner>*/}
+            {/*    <Paragraph>Logowand <strong>・NEW NEW NEW・</strong></Paragraph>*/}
+            {/*</Banner>*/}
 
             <Container>
                 <PageHeader title={`Boulder (${boulders.length})`}>

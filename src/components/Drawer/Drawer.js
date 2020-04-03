@@ -1,12 +1,10 @@
-import React, {
-    createContext, useEffect,
-    Fragment
-} from 'react';
+import React, {createContext, Fragment} from 'react';
 import './Drawer.css';
 import classnames from "classnames";
 import {Loader} from "../Loader/Loader";
 import Button from "../Button/Button";
 import Icon from "../Icon/Icon";
+import useClickOutside from "../../hooks/useClickOutside";
 
 export const DrawerContext = createContext({
     drawerOpen: false,
@@ -19,6 +17,9 @@ export const DrawerContext = createContext({
 export const Drawer = ({open, data, closeHandler, activePage, pages, loading = true}) => {
     const classes = classnames("drawer", open ? "drawer--open" : "drawer--closed", loading ? "drawer--loading" : null);
     const page = pages.find(page => page.name === activePage);
+    const drawerRef = React.useRef();
+
+    useClickOutside(drawerRef, () => closeHandler());
 
     if (!pages) {
         return new Error("No pages passed to drawer");
@@ -59,7 +60,7 @@ export const Drawer = ({open, data, closeHandler, activePage, pages, loading = t
     }
 
     return (
-        <div className={classes}>
+        <div className={classes} ref={drawerRef}>
             <Fragment>
                 <div className="drawer__header">
                     {page.header(data)}

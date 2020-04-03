@@ -1,0 +1,28 @@
+.footer {
+    box-shadow: inset 0 1px 0 0 var(--color-dark);
+    flex-shrink: 0;
+
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+.footer > .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.footer ul {
+    display: flex;
+}
+
+.footer ul:last-child {
+    margin-left: auto;
+}
+
+.footer ul li {
+    margin-right: 16px;
+}
+
+.footer ul li:last-child {
+    margin-right: 0;
+}

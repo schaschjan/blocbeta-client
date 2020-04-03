@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import "./FilterDropdown.css";
 import Context from "../../../../Context";
-import Container from "../../../../components/Container/Container";
 import HoldStyle from "../../../../components/HoldStyle/HoldStyle";
 import {alphabeticalSort} from "../../../../Helpers";
 import HyperLink from "../../../../components/HyperLink/HyperLink";
@@ -10,7 +9,7 @@ import Grade from "../../../../components/Grade/Grade";
 import Icon from "../../../../components/Icon/Icon";
 import classnames from "classnames";
 
-export const FilterDropdown = ({onAddFilter, dropped}) => {
+export const FilterDropdown = ({addFilter, dropped}) => {
     const [activeTab, setActiveTab] = useState("holdStyle");
 
     const isActive = (tabName) => {
@@ -27,7 +26,7 @@ export const FilterDropdown = ({onAddFilter, dropped}) => {
                         {Context.storage.holdStyles.all().sort((a, b) => alphabeticalSort(a.name, b.name)).map(holdStyle => {
                             return (
                                 <li className="filter-option">
-                                    <span onClick={() => onAddFilter('holdStyle', holdStyle.name)}>
+                                    <span onClick={() => addFilter('holdStyle', holdStyle.name)}>
                                         <HoldStyle name={holdStyle.name} small={true}/>
                                         <span>{holdStyle.name}</span>
                                     </span>
@@ -47,7 +46,7 @@ export const FilterDropdown = ({onAddFilter, dropped}) => {
                         {Context.storage.walls.all().sort((a, b) => alphabeticalSort(a.name, b.name)).map(wall => {
                             return (
                                 <li className="filter-option">
-                                    <span onClick={() => onAddFilter('start', wall.name)}>
+                                    <span onClick={() => addFilter('start', wall.name)}>
                                         <span>{wall.name}</span>
                                     </span>
                                 </li>
@@ -66,7 +65,7 @@ export const FilterDropdown = ({onAddFilter, dropped}) => {
                         {Context.storage.walls.all().sort((a, b) => alphabeticalSort(a.name, b.name)).map(wall => {
                             return (
                                 <li className="filter-option">
-                                    <span onClick={() => onAddFilter('end', wall.name)}>
+                                    <span onClick={() => addFilter('end', wall.name)}>
                                         <span>{wall.name}</span>
                                     </span>
                                 </li>
@@ -85,7 +84,7 @@ export const FilterDropdown = ({onAddFilter, dropped}) => {
                         {Context.storage.grades.all().sort((a, b) => alphabeticalSort(a.name, b.name)).map(grade => {
                             return (
                                 <li className="filter-option">
-                                    <span onClick={() => onAddFilter('grade', grade.name)}>
+                                    <span onClick={() => addFilter('grade', grade.name)}>
                                         <Grade name={grade.name} color={grade.color}/>
                                     </span>
                                 </li>
@@ -104,7 +103,7 @@ export const FilterDropdown = ({onAddFilter, dropped}) => {
                         {Context.storage.tags.all().sort((a, b) => alphabeticalSort(a.name, b.name)).map(tag => {
                             return (
                                 <li className="filter-option">
-                                    <span onClick={() => alert('add filter')}>
+                                    <span onClick={() => addFilter('tag', tag.emoji)}>
                                         <Emoji>{tag.emoji}</Emoji> {tag.name}
                                     </span>
                                 </li>
@@ -123,7 +122,7 @@ export const FilterDropdown = ({onAddFilter, dropped}) => {
                         {Context.core.ascents.sort((a, b) => alphabeticalSort(a.name, b.name)).map(ascent => {
                             return (
                                 <li className="filter-option">
-                                    <span onClick={() => alert('add filter')}>
+                                    <span onClick={() => addFilter('ascent', ascent.name)}>
                                         <Icon name={ascent.id}/> {ascent.name}
                                     </span>
                                 </li>

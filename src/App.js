@@ -1,4 +1,4 @@
-import React, {createContext, useState} from 'react';
+import React, {createContext, Fragment, useState} from 'react';
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import Context from "./Context";
 import Navigation from "./components/Navigation/Navigation";
@@ -6,6 +6,7 @@ import {Content} from "./components/Content/Content";
 import {Drawer, DrawerContext} from "./components/Drawer/Drawer";
 import {router} from "./services/router";
 import {ToastContainer} from "react-toastify";
+import {Footer} from "./components/Footer/Footer";
 
 const LoginRedirect = () => (
     <Redirect
@@ -63,12 +64,13 @@ const App = () => {
     };
 
     return (
-        <Router>
-            <AppContext.Provider value={appContextValues}>
-                <DrawerContext.Provider value={drawerContextValues}>
-                    <Content disabled={drawerOpen} onClick={() => drawerOpen ? setDrawerOpen(false) : null}>
-                        <div className="app" id="app">
-                            <Navigation/>
+        <Fragment>
+            <Router>
+                <AppContext.Provider value={appContextValues}>
+                    <DrawerContext.Provider value={drawerContextValues}>
+                        <Navigation/>
+
+                        <Content disabled={drawerOpen} onClick={() => drawerOpen ? setDrawerOpen(false) : null}>
                             <Switch>
                                 {router.map((route, i) => {
                                     if (!route.public) {
@@ -84,10 +86,10 @@ const App = () => {
 
                                 <Route render={() => <LoginRedirect/>}/>
                             </Switch>
-                        </div>
-                    </Content>
-                </DrawerContext.Provider>
-            </AppContext.Provider>
+                        </Content>
+                    </DrawerContext.Provider>
+                </AppContext.Provider>
+            </Router>
 
             <Drawer open={drawerOpen}
                     data={drawerData}
@@ -97,7 +99,8 @@ const App = () => {
                     pages={drawerPages}/>
 
             <ToastContainer/>
-        </Router>
+            <Footer/>
+        </Fragment>
     );
 };
 

@@ -12,6 +12,7 @@ import Button from "../../components/Button/Button";
 import classnames from "classnames";
 import Context from "../../Context";
 import Search from "../../components/Search/Search";
+import Container from "../../components/Container/Container";
 
 const Progress = ({percentage}) => {
     return (
@@ -167,7 +168,7 @@ const Current = () => {
             data.map((result, rank) => {
                 rank++;
 
-                if (rank <= 10) {
+                if (rank <= 9) {
                     return result.rank = `0${rank}`;
                 }
 
@@ -182,11 +183,10 @@ const Current = () => {
     if (loading) return <Loader/>;
 
     return (
-        <div className="container">
+        <Container>
             <h1>Current Ranking</h1>
-
             <Table data={data} columns={columns}/>
-        </div>
+        </Container>
     )
 };
 

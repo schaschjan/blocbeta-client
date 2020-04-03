@@ -39,7 +39,7 @@
     height: 40px;
     display: flex;
     align-items: center;
-    padding: 12px;
+    padding: 12px 12px 0;
 }
 
 .table-footer .pager {

@@ -1,5 +1,10 @@
 .tags {
     display: flex;
+    width: 100%;
+}
+
+.tags .clear-tags {
+    margin-left: auto;
 }
 
 .tag {

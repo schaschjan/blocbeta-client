@@ -5,14 +5,14 @@ import Label from "../../../components/Label/Label";
 import Input from "../../../components/Input/Input";
 import {Messages} from "../../../Messages";
 import Select from "../../../components/Select/Select";
-import Context from "../../../Context";
+import Context, {getOption, getOptions} from "../../../Context";
 import Button from "../../../components/Button/Button";
 import Form from "../../../components/Form/Form";
 import ApiClient from "../../../ApiClient";
 import {toast} from "react-toastify";
 import Crud from "../../../services/Crud";
 
-const defaultStatus =  Context.storage.states.getOption('active');
+const defaultStatus = getOption(Context.core.states.find(state => state.id === 'active'));
 const defaultPoints = 1000;
 
 const Add = () => {
@@ -75,7 +75,7 @@ const Add = () => {
                 <Select name="status"
                         defaultValue={defaultStatus}
                         validate={{required: Messages.requiredOption}}
-                        options={Context.storage.states.options()}/>
+                        options={getOptions(Context.core.states)}/>
 
                 <Label>Points</Label>
                 <Input type="number"

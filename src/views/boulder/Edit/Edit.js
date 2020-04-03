@@ -8,7 +8,7 @@ import Label from "../../../components/Label/Label";
 import Input from "../../../components/Input/Input";
 import Select from "../../../components/Select/Select";
 import Button from "../../../components/Button/Button";
-import Context from "../../../Context";
+import Context, {getOptions} from "../../../Context";
 import {Messages} from "../../../Messages";
 import {toast} from "react-toastify";
 import "./Edit.css";
@@ -88,7 +88,7 @@ const Edit = ({history}) => {
 
                     <Label>Status</Label>
                     <Select name="status"
-                            options={Context.storage.states.options()}/>
+                            options={getOptions(Context.core.states)}/>
 
                     <Label>Points</Label>
                     <Input type="text"

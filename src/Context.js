@@ -11,8 +11,20 @@ export const BOULDER_STORE_NAME = "boulders";
 export const STATES_STORE_NAME = "states";
 export const ASCENTS_STORE_NAME = "ascents";
 
-class Context {
+export const getOptions = (items, labelProperty = 'name', valueProperty = 'id') => {
+    return items.map(item => {
+        return getOption(item, labelProperty, valueProperty)
+    }).sort((a, b) => a.label > b.label ? 1 : -1);
+};
 
+export const getOption = (item, labelProperty = 'name', valueProperty = 'id') => {
+    return {
+        label: item[labelProperty],
+        value: item[valueProperty]
+    }
+};
+
+class Context {
     static isAuthenticated() {
         const token = localStorage.getItem('token');
 

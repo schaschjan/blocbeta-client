@@ -30,3 +30,8 @@
 .react-select .react-select__indicator-separator {
     display: none;
 }
+
+.react-select .react-select__multi-value {
+    background: none;
+    border: 1px solid var(--color-dark);
+}
