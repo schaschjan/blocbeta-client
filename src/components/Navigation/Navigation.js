@@ -4,10 +4,13 @@ import Context from "../../Context";
 import "./Navigation.css";
 import Button from "../Button/Button";
 import {AppContext} from "../../App";
-import {handleLogout} from "../../services/Authentication";
+import useApi, {api} from "../../hooks/useApi";
+import Select, {getSelectOption} from "../Select/Select";
+import {useHistory} from "react-router-dom";
 
 const LocationSwitch = () => {
-    const locations = Context.storage.locations.all();
+    const {status, data} = useApi('locations', api.locations.public);
+    const {location} = useContext(AppContext);
 
     const handleChange = (event) => {
         const selectedLocationId = parseInt(event.target.value);
@@ -17,32 +20,36 @@ const LocationSwitch = () => {
         }
     };
 
-    return (
-        <select onChange={handleChange} className="location-switch">
-            {locations.map(location => {
-                if (!location.public) {
-                    return null
-                }
+    if (status === 'loading') return null;
 
-                if (location.id === Context.location.current().id) {
-                    return <option selected value={location.id}>{location.name}</option>
-                }
+    const locations = data.map(location => {
+        return {
+            label: location.name,
+            value: location.id
+        }
+    });
 
-                return <option value={location.id}>{location.name}</option>
-            })}
-        </select>
-    )
+    return <Select name="locations"
+                   value={getSelectOption(location.id, location.name)}
+                   options={locations} formChild={false}/>
 };
 
 const Navigation = () => {
-    const {user, authenticated} = useContext(AppContext);
+    const {user, location, reset, locationPath} = useContext(AppContext);
+    let history = useHistory();
 
-    if (!authenticated) {
+    const logout = (event) => {
+        event.preventDefault();
+        reset();
+        history.push('/login');
+    };
+
+    if (user === null || location === null) {
         return (
             <header className="header">
                 <ul>
                     <li>
-                        <Link to={'/login'} className="logo">
+                        <Link to={locationPath('/login')} className="logo">
                             BlocBeta
                         </Link>
                     </li>
@@ -55,23 +62,23 @@ const Navigation = () => {
         <header className="header">
             <ul className="location-switch">
                 <li>
-                    <Link to={Context.getPath('/dashboard')} className="logo">BlocBeta @</Link>
+                    <Link to={locationPath('/dashboard')} className="logo">BlocBeta @</Link>
                     <LocationSwitch/>
                 </li>
             </ul>
 
             <ul className="navigation">
                 <li>
-                    <Link to={Context.getPath('/boulder')}>Boulder</Link>
+                    <Link to={locationPath('/boulder')}>Boulder</Link>
                 </li>
                 <li>
-                    <Link to={Context.getPath('/ranking/current')}>Ranking</Link>
+                    <Link to={locationPath('/ranking/current')}>Ranking</Link>
                 </li>
                 <li>
                     <Link to={'/account'}>[{user.username}]</Link>
                 </li>
                 <li>
-                    <Button onClick={(event) => handleLogout(event)}>Out!</Button>
+                    <Button onClick={(event) => logout(event)}>Logout</Button>
                 </li>
             </ul>
         </header>

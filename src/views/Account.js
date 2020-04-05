@@ -1,35 +1,30 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {Loader} from "../components/Loader/Loader";
-import ApiClient from "../ApiClient";
 import {toast} from "react-toastify";
 import Form from "../components/Form/Form";
 import Label from "../components/Label/Label";
 import Input from "../components/Input/Input";
-import {Messages} from "../Messages";
 import Button from "../components/Button/Button";
+import useApi, {api} from "../hooks/useApi";
+import {Messages} from "../Messages";
+import {useMutation} from "react-query";
 
 const Account = () => {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [isSubmitting, setSubmitting] = useState(false);
+    const {status, data} = useApi('me', api.me.get, false);
+    const [mutate, {status: updateStatus, error: updateError}] = useMutation(api.me.update);
 
-    const onSubmit = (data) => {
-        setSubmitting(true);
+    const onSubmit = async (data) => {
+        try {
+            await mutate(data);
+        } catch {
+            toast.error("Something went wrong");
+            console.error(updateError);
+        }
 
-        ApiClient.me.update(data).then(data => {
-            setSubmitting(false);
-            toast.success("Account updated");
-        });
+        toast.success("Account updated");
     };
 
-    useEffect(() => {
-        ApiClient.me.get().then(data => {
-            setData(data);
-            setLoading(false);
-        });
-    }, []);
-
-    if (loading) return <Loader/>;
+    if (status === 'loading') return <Loader/>;
 
     return (
         <div className="container">
@@ -97,7 +92,7 @@ const Account = () => {
                        }}
                        type="number"/>
 
-                <Button type="submit" primary="true" disabled={isSubmitting}>Update</Button>
+                <Button type="submit" primary="true" disabled={updateStatus === "loading"}>Update</Button>
             </Form>
         </div>
     )

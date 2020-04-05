@@ -4,7 +4,14 @@ import {Controller} from "react-hook-form";
 import './Select.css';
 import Icon from "../Icon/Icon";
 
-const Select = ({options, multiple = false, clearable = false, validate, ...rest}) => {
+export const getSelectOption = (label, value) => {
+    return {
+        label: label,
+        value: value
+    }
+};
+
+const Select = ({options, multiple = false, clearable = false, formChild = true, validate, ...rest}) => {
 
     const DropdownIndicator = (props) => {
         return (
@@ -14,6 +21,14 @@ const Select = ({options, multiple = false, clearable = false, validate, ...rest
         );
     };
 
+    if (!formChild) {
+        return <ReactSelect components={{DropdownIndicator}}
+                            clearable={clearable}
+                            options={options}
+                            className="react-select react-select--formless"
+                            classNamePrefix="react-select"/>
+    }
+
     return (
         <Controller
             isMulti={multiple}
@@ -21,6 +36,7 @@ const Select = ({options, multiple = false, clearable = false, validate, ...rest
                 <ReactSelect components={{DropdownIndicator}}
                              clearable={clearable}
                              className="react-select"
+                             {...rest}
                              classNamePrefix="react-select"/>
             }
             options={options}

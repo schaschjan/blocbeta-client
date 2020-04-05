@@ -2,11 +2,11 @@ import Login from "../views/Login/Login";
 import Register from "../views/Register";
 import PasswordReset from "../views/PasswordReset";
 import Dashboard from "../views/Dashboard";
-import BoulderIndex from "../views/boulder/Index/Index";
-import BoulderAdd from "../views/boulder/Add/Add";
-import BoulderEdit from "../views/boulder/Edit/Edit";
-import CurrentRanking from "../views/ranking/Current";
-import CurrentComparison from "../views/compare/Current";
+import BoulderIndex from "../views/Boulder/Index/Index";
+import BoulderAdd from "../views/Boulder/Add/Add";
+import BoulderEdit from "../views/Boulder/Edit/Edit";
+import CurrentRanking from "../views/Ranking/Current";
+import CurrentComparison from "../views/Compare/Current";
 import Account from "../views/Account";
 import React from "react";
 
@@ -45,21 +45,21 @@ export const router = [
         exact: true
     },
     {
-        title: "Add boulder",
+        title: "Add Boulder",
         path: "/:locationSlug/boulder/add",
         render: () => <BoulderAdd/>,
         exact: true,
         admin: true
     },
     {
-        title: "Edit boulder",
+        title: "Edit Boulder",
         path: "/:locationSlug/boulder/:boulderId",
         render: () => <BoulderEdit/>,
         exact: true,
         admin: true
     },
     {
-        title: "Current ranking",
+        title: "Current Ranking",
         path: "/:locationSlug/ranking/current",
         render: () => <CurrentRanking/>,
         exact: true

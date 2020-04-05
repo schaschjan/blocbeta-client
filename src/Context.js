@@ -36,7 +36,6 @@ class Context {
     }
 
     static authenticate(token) {
-        localStorage.setItem('token', token);
         const decoded = jwt_decode(token);
 
         Object.entries(decoded).forEach(([key, value]) => {
@@ -45,14 +44,12 @@ class Context {
             } else {
                 localStorage.setItem(key, value);
             }
-        })
+        });
+
+        localStorage.setItem('token', token);
     }
 
     static getToken() {
-        if (!this.isAuthenticated()) {
-            return false;
-        }
-
         return localStorage.getItem('token');
     }
 

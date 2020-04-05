@@ -7,29 +7,8 @@ import {Drawer, DrawerContext} from "./components/Drawer/Drawer";
 import {router} from "./services/router";
 import {ToastContainer} from "react-toastify";
 import {Footer} from "./components/Footer/Footer";
-
-const LoginRedirect = () => (
-    <Redirect
-        to={{
-            pathname: "/login"
-        }}
-    />
-);
-
-const PrivateRoute = ({children, ...rest}) => {
-    if (Context.isAuthenticated()) {
-        return <Route {...rest}/>
-    }
-
-    return (
-        <Route
-            {...rest}
-            render={() =>
-                Context.isAuthenticated() ? (children) : <LoginRedirect/>
-            }
-        />
-    );
-};
+import {ReactQueryDevtools} from 'react-query-devtools'
+import usePersistentState from "./hooks/usePersistentState";
 
 export const AppContext = createContext();
 
@@ -40,8 +19,10 @@ const App = () => {
     const [drawerActivePage, setDrawerActivePage] = useState(null);
     const [drawerData, setDrawerData] = useState(null);
 
-    const [user, setUser] = useState(Context.user);
-    const [authenticated, setAuthenticated] = useState(Context.isAuthenticated());
+    const [user, setUser] = usePersistentState('user', null);
+    const [token, setToken] = usePersistentState('token', null);
+    const [location, setLocation] = usePersistentState('location', null);
+    const [expiration, setExpiration] = usePersistentState('expiration', null);
 
     const drawerContextValues = {
         drawerData,
@@ -56,12 +37,63 @@ const App = () => {
         setDrawerActivePage
     };
 
+    const reset = () => {
+        setUser(null);
+        setToken(null);
+        setLocation(null);
+        setExpiration(null);
+
+        localStorage.clear();
+    };
+
+    const locationPath = (path) => {
+
+        if (!location) {
+            return null;
+        }
+
+        return location.url + path
+    };
+
     const appContextValues = {
+        token,
+        setToken,
         user,
         setUser,
-        authenticated,
-        setAuthenticated
+        location,
+        setLocation,
+        expiration,
+        setExpiration,
+        reset,
+        locationPath
     };
+
+    const authenticated = () => {
+        return user !== null;
+    };
+
+    const PrivateRoute = ({children, ...rest}) => {
+        if (authenticated()) {
+            return <Route {...rest}/>
+        }
+
+        return (
+            <Route
+                {...rest}
+                render={() =>
+                    authenticated() ? (children) : <LoginRedirect/>
+                }
+            />
+        );
+    };
+
+    const LoginRedirect = () => (
+        <Redirect
+            to={{
+                pathname: "/login"
+            }}
+        />
+    );
 
     return (
         <Fragment>
@@ -100,6 +132,8 @@ const App = () => {
 
             <ToastContainer/>
             <Footer/>
+
+            <ReactQueryDevtools initialIsOpen={process.env.REACT_APP_ENV === 'dev'}/>
         </Fragment>
     );
 };

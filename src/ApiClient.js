@@ -17,7 +17,6 @@ class ApiClient {
             .then(response => {
                 if (response.status === 401) {
                     Context.storage.clear();
-                    window.location.href = "/login";
                 }
 
                 if (response.status === 204) {
@@ -69,8 +68,6 @@ class ApiClient {
 
         if (response.status === 401) {
             Context.storage.clear();
-
-            window.location.href = "/login";
         }
     }
 
@@ -101,6 +98,12 @@ class ApiClient {
         },
         reportError: (data) => {
             const url = ApiClient.getUrl(`/boulder/error`, Context.location.current().url);
+            const request = this.getRequestConfig("post", data);
+
+            return ApiClient.fetch(url, request);
+        },
+        mass: (data) => {
+            const url = ApiClient.getUrl(`/boulder/mass`, Context.location.current().url);
             const request = this.getRequestConfig("post", data);
 
             return ApiClient.fetch(url, request);
@@ -145,7 +148,7 @@ class ApiClient {
 
     static ascents = {
         active: () => {
-            const url = ApiClient.getUrl("/ascent/active-boulders", Context.location.current().url);
+            const url = ApiClient.getUrl("/ascent/filter/active", Context.location.current().url);
             const request = this.getRequestConfig();
 
             return ApiClient.fetch(url, request)
@@ -229,12 +232,6 @@ class ApiClient {
                 return ApiClient.fetch(url, request);
             }
         },
-        resetRotation: () => {
-            const url = ApiClient.getUrl(`/stat/reset-rotation`, Context.location.current().url);
-            const request = this.getRequestConfig();
-
-            return ApiClient.fetch(url, request);
-        }
     };
 
     static rankings = {

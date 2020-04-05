@@ -22,10 +22,10 @@
 //
 //                 for (let comparison of comparisons) {
 //
-//                     const boulder = await db.boulders.get(comparison.subject);
-//                     await resolveBoulder(boulder);
+//                     const Boulder = await db.boulders.get(comparison.subject);
+//                     await resolveBoulder(Boulder);
 //
-//                     comparison.subject = boulder;
+//                     comparison.subject = Boulder;
 //                 }
 //
 //                 return comparisons;

@@ -1,65 +1,44 @@
-import React, {useState, useEffect} from 'react';
-import ApiClient from "../ApiClient";
+import React from 'react';
 import {Loader} from "../components/Loader/Loader";
 import Context from "../Context";
 import moment from "moment";
 import {Messages} from "../Messages";
 import {Link} from "react-router-dom";
+import useApi, {api} from "../hooks/useApi";
 
 const Dashboard = () => {
+    const {status: resetStatus, data: rotation} = useApi('resetRotation', api.stats.resetRotation);
+    const {status: wallStatus, data: walls} = useApi('walls', api.walls.all);
 
-    const [stats, setStats] = useState({});
-    const [loading, setLoading] = useState(true);
+    const loading = [
+        resetStatus,
+        wallStatus,
+    ].includes('loading');
 
-    useEffect(() => {
-        Promise.all([
-            ApiClient.stats.resetRotation().then(response => {
-                stats.resetRotation = Context.storage.walls.all().map(wall => {
-                    const reset = response.find(reset => reset.id === wall.id);
-
-                    return {
-                        wall: wall,
-                        averageSetDate: reset ? moment(reset.averageSetDate) : null
-                    }
-                });
-
-                stats.resetRotation.sort((a, b) => {
-                    return a.averageSetDate < b.averageSetDate ? -1 : 1
-                });
-
-                setStats(stats);
-            }),
-            ApiClient.stats.boulder.active().then(response => {
-                stats.boulder = response;
-                setStats(stats);
-            })
-        ]).then(() => {
-            setLoading(false)
-        });
-    }, [stats]);
-
-    const Walls = () => {
-        return (
-            <ul className="list-unstyled">
-
-            </ul>
-        )
-    };
+    console.log(walls, wallStatus, rotation, resetStatus);
 
     if (loading) return <Loader/>;
+
+    const rotationStats = walls.map(wall => {
+        const reset = rotation.find(reset => reset.id === wall.id);
+
+        return {
+            wall: wall,
+            averageSetDate: reset ? moment(reset.averageSetDate) : null
+        }
+    });
+
+    rotationStats.sort((a, b) => {
+        return a.averageSetDate < b.averageSetDate ? -1 : 1
+    });
 
     return (
         <div className="container">
             <h1>Dashboard</h1>
 
-            <ul className="list-unstyled">
-                <li>{stats.boulder.activeBoulders} active boulders</li>
-                <li>{stats.boulder.newBoulders} new boulders</li>
-            </ul>
-
             <h2>Reset Rotation</h2>
             <ul className="list-unstyled">
-                {stats.resetRotation.map(reset => {
+                {rotationStats.map(reset => {
                     let date = null;
 
                     if (reset.averageSetDate) {
@@ -74,8 +53,6 @@ const Dashboard = () => {
                 })}
             </ul>
 
-            <Walls/>
-
             <h2>Boulders</h2>
 
             <ul>
@@ -83,7 +60,7 @@ const Dashboard = () => {
                     <Link to={{
                         pathname: Context.getPath('/boulder'),
                         search: "?ascent=todo",
-                        state: { fromDashboard: true }
+                        state: {fromDashboard: true}
                     }}>
                         Todo
                     </Link>
@@ -93,7 +70,7 @@ const Dashboard = () => {
                     <Link to={{
                         pathname: Context.getPath('/boulder'),
                         search: "?ascent=todo&date=new",
-                        state: { fromDashboard: true }
+                        state: {fromDashboard: true}
                     }}>
                         New Todos
                     </Link>

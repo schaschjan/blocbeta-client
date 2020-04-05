@@ -40,7 +40,7 @@ const Edit = ({history}) => {
         ApiClient.boulder.update(boulderId, Crud.boulder.resolveApiData(data))
             .then(() => {
                 setSubmitting(false);
-                history.push(Context.getPath('/boulder'));
+                history.push(Context.getPath('/Boulder'));
                 toast.success("Boulder updated");
                 reset();
             });

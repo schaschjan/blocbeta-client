@@ -1,5 +1,4 @@
-import React, {useMemo, useState, useEffect, Fragment} from 'react';
-import ApiClient from "../../ApiClient";
+import React, {useMemo, Fragment} from 'react';
 import {Loader} from "../../components/Loader/Loader";
 import {useTable, useSortBy, useGlobalFilter} from "react-table";
 import {TableCell, TableHeader, TableRow} from "../../components/Table/Table";
@@ -13,6 +12,7 @@ import classnames from "classnames";
 import Context from "../../Context";
 import Search from "../../components/Search/Search";
 import Container from "../../components/Container/Container";
+import useApi, {api} from "../../hooks/useApi";
 
 const Progress = ({percentage}) => {
     return (
@@ -68,28 +68,27 @@ const Table = ({columns, data}) => {
     )
 };
 
+const percentageOfBoulders = (value) => {
+    let percentage = 0;
+
+    if (value > 0) {
+        percentage = (value / Context.storage.boulders.all().length) * 100;
+    }
+
+    if (percentage === 0) {
+        return `${value} (0%)`;
+    }
+
+
+    if (percentage < 1) {
+        return `${value} (<1%)`;
+    }
+
+    return `${value} (${Math.floor(percentage)}%)`;
+};
+
 const Current = () => {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    const percentageOfBoulders = (value) => {
-        let percentage = 0;
-
-        if (value > 0) {
-            percentage = (value / Context.storage.boulders.all().length) * 100;
-        }
-
-        if (percentage === 0) {
-            return `${value} (0%)`;
-        }
-
-
-        if (percentage < 1) {
-            return `${value} (<1%)`;
-        }
-
-        return `${value} (${Math.floor(percentage)}%)`;
-    };
+    const {status, data} = useApi('ranking-current', api.ranking.current);
 
     const columns = useMemo(
         () => [
@@ -155,7 +154,7 @@ const Current = () => {
                 Header: '',
                 id: 'user.id',
                 className: 'actions-cell',
-                Cell: ({cell}) => {
+                Cell: () => {
                     return <Button text={true}>Compare</Button>
                 }
             }
@@ -163,24 +162,7 @@ const Current = () => {
         []
     );
 
-    useEffect(() => {
-        ApiClient.rankings.current().then(data => {
-            data.map((result, rank) => {
-                rank++;
-
-                if (rank <= 9) {
-                    return result.rank = `0${rank}`;
-                }
-
-                return result.rank = rank.toString();
-            });
-
-            setData(data);
-            setLoading(false);
-        });
-    }, []);
-
-    if (loading) return <Loader/>;
+    if (status === 'loading') return <Loader/>;
 
     return (
         <Container>

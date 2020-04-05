@@ -1,6 +1,4 @@
 import React, {useContext, useState} from 'react';
-import ApiClient from "../../ApiClient";
-import Context from "../../Context";
 import {useHistory} from "react-router-dom";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
@@ -12,44 +10,70 @@ import "./Login.css";
 import {toast} from 'react-toastify';
 import {AppContext} from "../../App";
 import jwt_decode from "jwt-decode";
+import {api, getUri} from "../../hooks/useApi";
+import axios from "axios";
+import {useIsFetching, queryCache} from 'react-query'
+import {Loader} from "../../components/Loader/Loader";
 
 const Login = () => {
-    const [loading, setLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const {setUser, setAuthenticated} = useContext(AppContext);
+    const {setUser, setToken, setLocation, setExpiration} = useContext(AppContext);
 
-    let history = useHistory();
+    const history = useHistory();
+    const isFetching = useIsFetching();
 
-    const onSubmit = data => {
+    const getToken = async (username, password) => {
+        try {
+            const {data} = await axios.post(getUri('/login'), {
+                "username": username,
+                "password": password,
+            });
+
+            return {token: data.token, success: true}
+        } catch (error) {
+            return {error: error, success: false}
+        }
+    };
+
+    const onSubmit = async (data) => {
         setIsSubmitted(true);
+        const {token, error, success} = await getToken(data.username, data.password);
 
-        ApiClient.authorize(data.username, data.password).then(response => {
+        if (!success) {
+            toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
             setIsSubmitted(false);
 
-            if (response.code === 401) {
-                toast.error(response.message, {position: toast.POSITION.BOTTOM_RIGHT});
-                return;
-            }
+            return
+        }
 
-            setLoading(true);
-            const payload = jwt_decode(response.token);
-            Context.authenticate(response.token);
+        const payload = jwt_decode(token);
 
-            Context.storage.init().then(success => {
-                setUser(payload.user);
-                setAuthenticated(true);
-                setLoading(false);
+        setExpiration(payload.exp);
+        setUser(payload.user);
+        setLocation(payload.location);
+        setToken(token);
 
-                history.push(Context.getPath('/dashboard'))
-            });
-        })
+        setIsSubmitted(false);
+
+        // const prefetch = async () => {
+        //     await queryCache.prefetchQuery('locations', () => api.locations.public);
+        //     await queryCache.prefetchQuery('holdStyles', () => api.holdStyles.all);
+        //     await queryCache.prefetchQuery('grades', () => api.grades.all);
+        //     await queryCache.prefetchQuery('walls', () => api.walls.all);
+        //
+        //     return true;
+        // };
+
+        // await prefetch();
+
+        history.push(`/${payload.location.url}/dashboard`);
     };
 
     return (
         <Container>
-            <h1>Sign in</h1>
+            {isFetching ? <Loader/> : null}
 
-            {loading && <em>Loading storage…</em>}
+            <h1>Sign in</h1>
 
             <Form onSubmit={onSubmit}>
                 <Label>Username</Label>

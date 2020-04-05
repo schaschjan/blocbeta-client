@@ -30,15 +30,17 @@ import Form from "../../../components/Form/Form";
 import {Messages} from "../../../Messages";
 import {toast} from "react-toastify";
 import Input from "../../../components/Input/Input";
-import {FilterDropdown} from "./FilterDropdown/FilterDropdown";
-import {PageHeader} from "../../../components/PageHeader/PageHeader";
-import Container from "../../../components/Container/Container";
-import Bar from "./Bar/Bar";
+import {FilterDropdown} from "./FilterDropdown/FilterDropdown"
+import {PageHeader} from "../../../components/PageHeader/PageHeader"
+import Container from "../../../components/Container/Container"
+import Bar from "./Bar/Bar"
+import useApi, {api} from "../../../hooks/useApi";
+import {useMutation} from "react-query";
 
 const Table = ({columns, data, editable = false}) => {
-
     const url = new URL(window.location);
     const parameters = new URLSearchParams(url.search);
+
     let defaultFilters = [];
 
     for (let parameter of parameters) {
@@ -98,6 +100,23 @@ const Table = ({columns, data, editable = false}) => {
         useRowSelect
     );
 
+    const deactivateData = {
+        items: selectedFlatRows.map(row => row.original.id),
+        operation: 'deactivate'
+    };
+
+    const [mutate, {status, data: mutationData, error}] = useMutation(() => api.boulder.mass(deactivateData));
+
+    const massDeactivate = async () => {
+        try {
+            const data = await mutate();
+
+            toast.success(`Deactivated boulders`)
+        } catch {
+            // Uh oh, something went wrong
+        }
+    };
+
     useEffect(() => {
         filters.map(filter => setFilter(filter.id, filter.value));
         setAllFilters(filters);
@@ -156,8 +175,8 @@ const Table = ({columns, data, editable = false}) => {
                 </div>
 
                 <div className="bar__actions">
-                    <Button text={true}>Deactivate</Button>
-                    <Button text={true}>Prune Ascents</Button>
+                    <Button text={true} onClick={() => massDeactivate()}>Deactivate</Button>
+                    <Button text={true} onClick={() => alert()}>Prune Ascents</Button>
                 </div>
             </Bar>
         )}
@@ -173,12 +192,47 @@ const Index = () => {
         setDrawerData
     } = useContext(DrawerContext);
 
-    const [boulders, setBoulders] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [boulders2, setBoulders] = useState(null);
+
+    const {status: bouldersStatus, data: boulders} = useApi('boulder', api.boulder.active);
+    const {status: ascentsStatus, data: ascents} = useApi('ascents', api.ascents.active);
+    const {status: wallsStatus, data: walls} = useApi('walls', api.walls.all);
+    const {status: gradesStatus, data: grades} = useApi('grades', api.grades.all);
+    const {status: holdStylesStatus, data: holdStyles} = useApi('holdStyles', api.holdStyles.all);
+
+    const loading = [
+        bouldersStatus,
+        ascentsStatus,
+        wallsStatus,
+        gradesStatus,
+        holdStylesStatus
+    ].includes('loading');
+
+    if (loading) return <Loader/>;
+
+    // map ascent data to boulder array
+    for (let boulder of boulders) {
+        const ascentData = ascents.find(ascent => ascent.boulderId === boulder.id);
+
+        boulder.points = ascentData.points;
+        boulder.ascents = ascentData.ascents;
+        boulder.me = ascentData.me;
+
+        boulder.startWall = walls.find(wall => wall.id === boulder.startWall.id);
+
+        if (boulder.endWall) {
+            boulder.endWall = walls.find(wall => wall.id === boulder.endWall.id);
+        }
+
+        boulder.grade = grades.find(grade => grade.id === boulder.grade.id);
+        boulder.holdStyle = holdStyles.find(holdStyle => holdStyle.id === boulder.holdStyle.id);
+    }
 
     const showDetails = (boulderId) => {
         setDrawerOpen(true);
         setDrawerLoading(true);
+
+        //useApi(['boulder', boulderId], api.boulder.get(boulderId));
 
         ApiClient.boulder.get(boulderId).then(data => {
             resolveBoulder(data);
@@ -489,41 +543,41 @@ const Index = () => {
             }
         }
     ];
-
-    useEffect(() => {
-        async function getData() {
-            const ascents = await ApiClient.location.ascents.activeBoulders().then(ascents => {
-                return ascents.reduce((obj, item) => Object.assign(obj, {[item.boulderId]: item}), {});
-            });
-
-            const boulders = Context.storage.boulders.all();
-
-            for (let boulder of boulders) {
-                resolveBoulder(boulder);
-
-                const ascentData = ascents[boulder.id];
-
-                if (!ascentData) {
-                    console.error(boulder.id + ' not found');
-                    continue
-                }
-
-                boulder.points = ascentData.points;
-                boulder.ascents = ascentData.ascents;
-                boulder.me = ascentData.me;
-            }
-
-            return boulders
-        }
-
-        getData().then(data => {
-            setBoulders(data);
-            setLoading(false);
-        });
-
-        setDrawerPages(drawerPages);
-        setDrawerActivePage("details");
-    }, []);
+    //
+    // useEffect(() => {
+    //     async function getData() {
+    //         const ascents = await ApiClient.location.ascents.activeBoulders().then(ascents => {
+    //             return ascents.reduce((obj, item) => Object.assign(obj, {[item.boulderId]: item}), {});
+    //         });
+    //
+    //         const boulders = Context.storage.boulders.all();
+    //
+    //         for (let boulder of boulders) {
+    //             resolveBoulder(boulder);
+    //
+    //             const ascentData = ascents[boulder.id];
+    //
+    //             if (!ascentData) {
+    //                 console.error(boulder.id + ' not found');
+    //                 continue
+    //             }
+    //
+    //             boulder.points = ascentData.points;
+    //             boulder.ascents = ascentData.ascents;
+    //             boulder.me = ascentData.me;
+    //         }
+    //
+    //         return boulders
+    //     }
+    //
+    //     getData().then(data => {
+    //         setBoulders(data);
+    //         setLoading(false);
+    //     });
+    //
+    //     setDrawerPages(drawerPages);
+    //     setDrawerActivePage("details");
+    // }, []);
 
     const ascentHandler = (boulderId, type, ascentId = null) => {
         const boulder = boulders.find(boulder => boulder.id === boulderId);
@@ -544,8 +598,6 @@ const Index = () => {
             });
         }
     };
-
-    if (loading) return <Loader/>;
 
     return (
         <Fragment>
