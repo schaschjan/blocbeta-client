@@ -11,12 +11,22 @@ import Form from "../../../components/Form/Form";
 import ApiClient from "../../../ApiClient";
 import {toast} from "react-toastify";
 import Crud from "../../../services/Crud";
+import useApi, {api} from "../../../hooks/useApi";
+import {Loader} from "../../../components/Loader/Loader";
 
 const defaultStatus = getOption(Context.core.states.find(state => state.id === 'active'));
 const defaultPoints = 1000;
 
 const Add = () => {
-    const [isSubmitting, setSubmitting] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+
+    const {status: wallsStatus, data: walls} = useApi('walls', api.walls.all);
+    const {status: gradesStatus, data: grades} = useApi('grades', api.grades.all);
+    const {status: holdStylesStatus, data: holdStyles} = useApi('holdStyles', api.holdStyles.all);
+    const {status: tagsStatus, data: tags} = useApi('tags', api.tags.all);
+    const {status: settersStatus, data: setters} = useApi('setters', api.setters.all);
+
+    const loading = [wallsStatus, gradesStatus, holdStylesStatus, tagsStatus, settersStatus].includes('loading');
 
     const onSubmit = (data) => {
         setSubmitting(true);
@@ -28,6 +38,8 @@ const Add = () => {
                 // reset form
             });
     };
+
+    if (loading) return <Loader/>;
 
     return (
         <Container>
@@ -42,34 +54,34 @@ const Add = () => {
                 <Label>Grade</Label>
                 <Select name="grade"
                         validate={{required: Messages.requiredOption}}
-                        options={Context.storage.grades.options()}/>
+                        options={getOptions(grades)}/>
 
                 <Label>Hold Style</Label>
                 <Select name="holdStyle"
                         validate={{required: Messages.requiredOption}}
-                        options={Context.storage.holdStyles.options()}/>
+                        options={getOptions(holdStyles)}/>
 
                 <Label>Start</Label>
                 <Select name="startWall"
                         validate={{required: Messages.requiredOption}}
-                        options={Context.storage.walls.options()}/>
+                        options={getOptions(walls)}/>
 
                 <Label>End</Label>
                 <Select name="endWall"
                         validate={{required: Messages.requiredOption}}
-                        options={Context.storage.walls.options()}/>
+                        options={getOptions(walls)}/>
 
                 <Label>Setters</Label>
                 <Select name="setters"
                         multiple={true}
                         validate={{required: Messages.requiredOption}}
                         labelProperty="username"
-                        options={Context.storage.setters.options('username', 'id')}/>
+                        options={getOptions(setters, 'username')}/>
 
                 <Label>Tags</Label>
                 <Select name="tags"
                         multiple={true}
-                        options={Context.storage.tags.options()}/>
+                        options={getOptions(tags)}/>
 
                 <Label>Status</Label>
                 <Select name="status"
@@ -83,7 +95,7 @@ const Add = () => {
                        defaultValue={defaultPoints}
                        validate={{required: Messages.required}}/>
 
-                <Button type="submit" primary="true" disabled={isSubmitting}>Create & New</Button>
+                <Button type="submit" primary="true" disabled={submitting}>Create & New</Button>
             </Form>
         </Container>
     )

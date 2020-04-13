@@ -14,7 +14,10 @@ export default class Crud {
                 boulder.endWall = boulder.endWall.value;
             }
 
-            boulder.tags = boulder.tags.map(tag => tag.value);
+            if (boulder.tags) {
+                boulder.tags = boulder.tags.map(tag => tag.value);
+            }
+
             boulder.setters = boulder.setters.map(setter => setter.value);
 
             return boulder;

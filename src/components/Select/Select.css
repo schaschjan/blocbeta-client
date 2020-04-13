@@ -2,7 +2,7 @@
 
 }
 
-.react-select.react-select--formless .react-select__control{
+.react-select.react-select--formless .react-select__control {
     box-shadow: none;
 }
 
@@ -19,6 +19,7 @@
 .react-select .react-select__value-container {
     padding: 0;
     margin: 0;
+    height: 24px;
 }
 
 .react-select .react-select__value-container > * {
@@ -28,7 +29,11 @@
 }
 
 .react-select .react-select__indicators {
+    height: 24px;
+}
 
+.react-select .react-select__dropdown-indicator {
+    padding: 0;
 }
 
 .react-select .react-select__indicator-separator {

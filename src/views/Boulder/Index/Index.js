@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useContext, Fragment} from 'react';
 import {Loader} from "../../../components/Loader/Loader";
-import {resolveBoulder} from "../../../Helpers";
 import ApiClient from "../../../ApiClient";
 import Grade from "../../../components/Grade/Grade";
 import moment from "moment";
@@ -21,21 +20,22 @@ import {
 } from "../../../components/Table/Table";
 
 import {usePagination, useTable, useGlobalFilter, useSortBy, useRowSelect, useFilters} from "react-table";
-import Context from "../../../Context";
 import {Tag, TagInput} from "../../../components/TagInput/TagInput";
 import {Link} from "react-router-dom";
-import {DrawerContext} from "../../../components/Drawer/Drawer";
-import {Textarea} from "../../../components/Textarea/Textarea";
-import Form from "../../../components/Form/Form";
 import {Messages} from "../../../Messages";
 import {toast} from "react-toastify";
-import Input from "../../../components/Input/Input";
 import {FilterDropdown} from "./FilterDropdown/FilterDropdown"
 import {PageHeader} from "../../../components/PageHeader/PageHeader"
 import Container from "../../../components/Container/Container"
 import Bar from "./Bar/Bar"
-import useApi, {api} from "../../../hooks/useApi";
-import {useMutation} from "react-query";
+import useApi, {api, cacheKeys} from "../../../hooks/useApi";
+import {useMutation, queryCache} from "react-query";
+import {AppContext} from "../../../App";
+import {Drawer} from "../../../components/Drawer/Drawer";
+import Form from "../../../components/Form/Form";
+import {Textarea} from "../../../components/Textarea/Textarea";
+import Input from "../../../components/Input/Input";
+import useDrawer from "../../../hooks/useDrawer";
 
 const Table = ({columns, data, editable = false}) => {
     const url = new URL(window.location);
@@ -100,20 +100,23 @@ const Table = ({columns, data, editable = false}) => {
         useRowSelect
     );
 
-    const deactivateData = {
-        items: selectedFlatRows.map(row => row.original.id),
-        operation: 'deactivate'
-    };
-
-    const [mutate, {status, data: mutationData, error}] = useMutation(() => api.boulder.mass(deactivateData));
+    const [mutateOnMassDeactivation] = useMutation(api.boulder.mass, {
+        onSuccess: () => {
+            queryCache.refetchQueries('boulders');
+        }
+    });
 
     const massDeactivate = async () => {
         try {
-            const data = await mutate();
+            await mutateOnMassDeactivation({
+                items: selectedFlatRows.map(row => row.original.id),
+                operation: 'deactivate'
+            });
 
-            toast.success(`Deactivated boulders`)
-        } catch {
-            // Uh oh, something went wrong
+            toast.success(`Deactivated ${selectedFlatRows.length} boulders`)
+
+        } catch (error) {
+            toast.error(Messages.errors.general)
         }
     };
 
@@ -184,33 +187,72 @@ const Table = ({columns, data, editable = false}) => {
 };
 
 const Index = () => {
+    const {isAdmin, locationPath} = useContext(AppContext);
+
     const {
-        setDrawerOpen,
-        setDrawerLoading,
-        setDrawerPages,
-        setDrawerActivePage,
-        setDrawerData
-    } = useContext(DrawerContext);
+        open,
+        close,
+        isOpen,
+        isLoading,
+        setLoading,
+        data: drawerData,
+        setData: setDrawerData,
+    } = useDrawer();
 
-    const [boulders2, setBoulders] = useState(null);
-
-    const {status: bouldersStatus, data: boulders} = useApi('boulder', api.boulder.active);
-    const {status: ascentsStatus, data: ascents} = useApi('ascents', api.ascents.active);
-    const {status: wallsStatus, data: walls} = useApi('walls', api.walls.all);
-    const {status: gradesStatus, data: grades} = useApi('grades', api.grades.all);
-    const {status: holdStylesStatus, data: holdStyles} = useApi('holdStyles', api.holdStyles.all);
+    const {status: bouldersStatus, data: boulders} = useApi(cacheKeys.boulders, api.boulder.active);
+    const {status: ascentsStatus, data: ascents} = useApi(cacheKeys.ascents, api.ascents.active);
+    const {status: wallsStatus, data: walls} = useApi(cacheKeys.walls, api.walls.all);
+    const {status: gradesStatus, data: grades} = useApi(cacheKeys.grades, api.grades.all);
+    const {status: holdStylesStatus, data: holdStyles} = useApi(cacheKeys.holdStyles, api.holdStyles.all);
+    const {status: tagsStatus, data: tags} = useApi(cacheKeys.tags, api.tags.all);
+    const {status: settersStatus, data: setters} = useApi(cacheKeys.setters, api.setters.all);
 
     const loading = [
         bouldersStatus,
         ascentsStatus,
         wallsStatus,
         gradesStatus,
-        holdStylesStatus
+        holdStylesStatus,
+        tagsStatus,
+        settersStatus
     ].includes('loading');
+
+    const [mutateOnAddAscent] = useMutation(api.ascents.add, {
+        onSuccess: () => {
+            queryCache.refetchQueries(cacheKeys.ascents);
+        },
+    });
+
+    const [mutateOnRemoveAscent] = useMutation(api.ascents.remove, {
+        onSuccess: () => {
+            queryCache.refetchQueries(cacheKeys.ascents);
+        },
+    });
+
+    const addAscent = async (id, type) => {
+        try {
+            await mutateOnAddAscent({
+                'boulder': id,
+                'type': type
+            })
+
+        } catch (error) {
+            toast.error(Messages.errors.general);
+        }
+    };
+
+    const removeAscent = async (id) => {
+        try {
+            await mutateOnRemoveAscent(id)
+
+        } catch (error) {
+            toast.error(Messages.errors.generals);
+        }
+    };
 
     if (loading) return <Loader/>;
 
-    // map ascent data to boulder array
+    // map ascent data to boulder array, resolve linked ids
     for (let boulder of boulders) {
         const ascentData = ascents.find(ascent => ascent.boulderId === boulder.id);
 
@@ -228,18 +270,21 @@ const Index = () => {
         boulder.holdStyle = holdStyles.find(holdStyle => holdStyle.id === boulder.holdStyle.id);
     }
 
-    const showDetails = (boulderId) => {
-        setDrawerOpen(true);
-        setDrawerLoading(true);
+    const showDetails = async (boulderId) => {
+        open(true);
 
-        //useApi(['boulder', boulderId], api.boulder.get(boulderId));
+        const boulder = await api.boulder.get(boulderId);
 
-        ApiClient.boulder.get(boulderId).then(data => {
-            resolveBoulder(data);
-            setDrawerData(data);
-            setDrawerLoading(false);
-            setDrawerActivePage("details");
+        boulder.setters = boulder.setters.map(boulderSetter => {
+            return setters.find(setter => boulderSetter.id === setter.id)
         });
+
+        boulder.tags = boulder.tags.map(boulderTag => {
+            return tags.find(tag => boulderTag.id === tag.id)
+        });
+
+        setDrawerData(boulder);
+        setLoading(false);
     };
 
     const selectionColumn = {
@@ -290,8 +335,8 @@ const Index = () => {
             className: 'table-cell__name',
             Cell: ({cell, row}) => (
                 <Fragment>
-                    {Context.user.isAdmin() && (
-                        <Link to={Context.getPath(`/boulder/${row.original.id}`)}> ✏</Link>
+                    {isAdmin() && (
+                        <Link to={locationPath(`/boulder/${row.original.id}`)}> ✏</Link>
                     )}
 
                     <Button onClick={() => showDetails(row.original.id)}>
@@ -370,24 +415,24 @@ const Index = () => {
                         <Ascent type="flash"
                                 disabled={!flashed && ascent}
                                 checked={flashed}
-                                handler={() => ascentHandler(row.original.id, "flash", ascent ? ascent.id : null)}/>
+                                onClick={() => ascent ? removeAscent(row.original.me.id) : addAscent(row.original.id, "flash")}/>
 
                         <Ascent type="top"
                                 disabled={!topped && ascent}
                                 checked={topped}
-                                handler={() => ascentHandler(row.original.id, "top", ascent ? ascent.id : null)}/>
+                                onClick={() => ascent ? removeAscent(row.original.me.id) : addAscent(row.original.id, "top")}/>
 
                         <Ascent type="resignation"
                                 disabled={!resigned && ascent}
                                 checked={resigned}
-                                handler={() => ascentHandler(row.original.id, "resignation", ascent ? ascent.id : null)}/>
+                                onClick={() => ascent ? removeAscent(row.original.me.id) : addAscent(row.original.id, "resignation")}/>
                     </React.Fragment>
                 )
             }
         }
     ];
 
-    if (Context.user.isAdmin()) {
+    if (isAdmin()) {
         columns.unshift(selectionColumn)
     }
 
@@ -413,7 +458,7 @@ const Index = () => {
 
     const drawerPages = [
         {
-            name: "details",
+            id: "details",
             header: (data) => {
                 return (
                     <div className="header-detail">
@@ -436,15 +481,15 @@ const Index = () => {
                                             {ascent.user.username}
 
                                             <Button text={true} onClick={() => {
-                                                setDrawerActivePage("doubt");
-                                                setDrawerData({
-                                                    user: ascent.user,
-                                                    boulder: {
-                                                        id: data.id,
-                                                        name: data.name
-                                                    },
-                                                    ...data
-                                                });
+                                                // setDrawerActivePage("doubt");
+                                                // setDrawerData({
+                                                //     user: ascent.user,
+                                                //     boulder: {
+                                                //         id: data.id,
+                                                //         name: data.name
+                                                //     },
+                                                //     ...data
+                                                // });
                                             }}>
                                                 Doubt it
                                             </Button>
@@ -480,7 +525,7 @@ const Index = () => {
                         )}
 
                         <Button text={true}
-                                onClick={() => setDrawerActivePage("error")}
+                            // onClick={() => setDrawerActivePage("error")}
                                 className="report-error">
                             Report error
                         </Button>
@@ -489,11 +534,11 @@ const Index = () => {
             }
         },
         {
-            name: "error",
+            id: "error",
             header: (data) => {
                 return (
                     <div className="header-error">
-                        <Icon name="backward" onClick={() => setDrawerActivePage("details")}/>
+                        {/*<Icon name="backward" onClick={() => setDrawerActivePage("details")}/>*/}
                         <h3>
                             <strong>Report error:</strong> {data.name}
                         </h3>
@@ -515,11 +560,11 @@ const Index = () => {
             }
         },
         {
-            name: "doubt",
+            id: "doubt",
             header: (data) => {
                 return (
                     <div className="header-doubt">
-                        <Icon name="backward" onClick={() => setDrawerActivePage("details")}/>
+                        {/*<Icon name="backward" onClick={() => setDrawerActivePage("details")}/>*/}
                         <strong>Doubt {data.user.username}</strong> on {data.boulder.name}
                     </div>
                 )
@@ -543,79 +588,26 @@ const Index = () => {
             }
         }
     ];
-    //
-    // useEffect(() => {
-    //     async function getData() {
-    //         const ascents = await ApiClient.location.ascents.activeBoulders().then(ascents => {
-    //             return ascents.reduce((obj, item) => Object.assign(obj, {[item.boulderId]: item}), {});
-    //         });
-    //
-    //         const boulders = Context.storage.boulders.all();
-    //
-    //         for (let boulder of boulders) {
-    //             resolveBoulder(boulder);
-    //
-    //             const ascentData = ascents[boulder.id];
-    //
-    //             if (!ascentData) {
-    //                 console.error(boulder.id + ' not found');
-    //                 continue
-    //             }
-    //
-    //             boulder.points = ascentData.points;
-    //             boulder.ascents = ascentData.ascents;
-    //             boulder.me = ascentData.me;
-    //         }
-    //
-    //         return boulders
-    //     }
-    //
-    //     getData().then(data => {
-    //         setBoulders(data);
-    //         setLoading(false);
-    //     });
-    //
-    //     setDrawerPages(drawerPages);
-    //     setDrawerActivePage("details");
-    // }, []);
-
-    const ascentHandler = (boulderId, type, ascentId = null) => {
-        const boulder = boulders.find(boulder => boulder.id === boulderId);
-
-        if (!ascentId) {
-            ApiClient.ascent.create({
-                'boulder': boulderId,
-                'type': type
-            }).then(data => {
-                boulder.me = data.me;
-                setBoulders([...boulders]);
-            });
-
-        } else {
-            ApiClient.ascent.delete(ascentId).then(() => {
-                boulder.me = null;
-                setBoulders([...boulders]);
-            });
-        }
-    };
 
     return (
         <Fragment>
-            {/*<Banner>*/}
-            {/*    <Paragraph>Logowand <strong>・NEW NEW NEW・</strong></Paragraph>*/}
-            {/*</Banner>*/}
-
             <Container>
                 <PageHeader title={`Boulder (${boulders.length})`}>
-                    {Context.user.isAdmin() && (
-                        <Link to={Context.getPath(`/boulder/add`)}>
+                    {isAdmin() && (
+                        <Link to={locationPath(`/boulder/add`)}>
                             <Button text={true}>Add</Button>
                         </Link>
                     )}
                 </PageHeader>
 
-                <Table columns={columns} data={boulders} editable={Context.user.isAdmin()}/>
+                <Table columns={columns} data={boulders} editable={isAdmin}/>
             </Container>
+
+            <Drawer open={isOpen}
+                    closeHandler={close}
+                    loading={isLoading}
+                    data={drawerData}
+                    pages={drawerPages}/>
         </Fragment>
     )
 };

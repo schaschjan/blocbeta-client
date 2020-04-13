@@ -3,56 +3,55 @@ import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom
 import Context from "./Context";
 import Navigation from "./components/Navigation/Navigation";
 import {Content} from "./components/Content/Content";
-import {Drawer, DrawerContext} from "./components/Drawer/Drawer";
 import {router} from "./services/router";
 import {ToastContainer} from "react-toastify";
 import {Footer} from "./components/Footer/Footer";
 import {ReactQueryDevtools} from 'react-query-devtools'
 import usePersistentState from "./hooks/usePersistentState";
+import jwt_decode from "jwt-decode";
 
 export const AppContext = createContext();
 
 const App = () => {
-    const [drawerOpen, setDrawerOpen] = useState(false);
-    const [drawerLoading, setDrawerLoading] = useState(false);
-    const [drawerPages, setDrawerPages] = useState([]);
-    const [drawerActivePage, setDrawerActivePage] = useState(null);
-    const [drawerData, setDrawerData] = useState(null);
-
     const [user, setUser] = usePersistentState('user', null);
     const [token, setToken] = usePersistentState('token', null);
-    const [location, setLocation] = usePersistentState('location', null);
+    const [currentLocation, setCurrentLocation] = usePersistentState('location', null);
     const [expiration, setExpiration] = usePersistentState('expiration', null);
-
-    const drawerContextValues = {
-        drawerData,
-        setDrawerData,
-        drawerOpen,
-        setDrawerOpen,
-        drawerLoading,
-        setDrawerLoading,
-        drawerPages,
-        setDrawerPages,
-        drawerActivePage,
-        setDrawerActivePage
-    };
+    const [contentDisabled, disableContent] = useState(false);
 
     const reset = () => {
         setUser(null);
         setToken(null);
-        setLocation(null);
+        setCurrentLocation(null);
         setExpiration(null);
 
         localStorage.clear();
     };
 
     const locationPath = (path) => {
-
-        if (!location) {
-            return null;
+        if (!currentLocation) {
+            throw new Error("No location");
         }
 
-        return location.url + path
+        return `/${currentLocation.url}${path}`
+    };
+
+    const authenticated = () => {
+        if (token === null) {
+            return false
+        }
+
+        if (new Date().getTime() / 1000 > expiration) {
+            return false
+        }
+
+        return true;
+    };
+
+    const isAdmin = () => {
+        const payload = jwt_decode(token);
+
+        return payload.roles.includes('ROLE_ADMIN');
     };
 
     const appContextValues = {
@@ -60,17 +59,19 @@ const App = () => {
         setToken,
         user,
         setUser,
-        location,
-        setLocation,
+        currentLocation,
+        setCurrentLocation,
         expiration,
         setExpiration,
+        contentDisabled,
+
+        disableContent,
+        isAdmin,
+        authenticated,
         reset,
         locationPath
     };
 
-    const authenticated = () => {
-        return user !== null;
-    };
 
     const PrivateRoute = ({children, ...rest}) => {
         if (authenticated()) {
@@ -99,36 +100,27 @@ const App = () => {
         <Fragment>
             <Router>
                 <AppContext.Provider value={appContextValues}>
-                    <DrawerContext.Provider value={drawerContextValues}>
-                        <Navigation/>
+                    <Navigation/>
 
-                        <Content disabled={drawerOpen} onClick={() => drawerOpen ? setDrawerOpen(false) : null}>
-                            <Switch>
-                                {router.map((route, i) => {
-                                    if (!route.public) {
-                                        return <PrivateRoute key={i} {...route} />
-                                    }
+                    <Content disabled={contentDisabled}>
+                        <Switch>
+                            {router.map((route, i) => {
+                                if (!route.public) {
+                                    return <PrivateRoute key={i} {...route} />
+                                }
 
-                                    if (route.admin && !Context.user.isAdmin()) {
-                                        return null
-                                    }
+                                if (route.admin && !Context.user.isAdmin()) {
+                                    return null
+                                }
 
-                                    return <Route key={i} {...route} />
-                                })}
+                                return <Route key={i} {...route} />
+                            })}
 
-                                <Route render={() => <LoginRedirect/>}/>
-                            </Switch>
-                        </Content>
-                    </DrawerContext.Provider>
+                            <Route render={() => <LoginRedirect/>}/>
+                        </Switch>
+                    </Content>
                 </AppContext.Provider>
             </Router>
-
-            <Drawer open={drawerOpen}
-                    data={drawerData}
-                    loading={drawerLoading}
-                    closeHandler={() => setDrawerOpen(false)}
-                    activePage={drawerActivePage}
-                    pages={drawerPages}/>
 
             <ToastContainer/>
             <Footer/>

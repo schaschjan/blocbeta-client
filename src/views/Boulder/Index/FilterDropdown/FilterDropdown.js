@@ -8,9 +8,15 @@ import Emoji from "../../../../components/Emoji/Emoji";
 import Grade from "../../../../components/Grade/Grade";
 import Icon from "../../../../components/Icon/Icon";
 import classnames from "classnames";
+import useApi, {api} from "../../../../hooks/useApi";
 
 export const FilterDropdown = ({addFilter, dropped}) => {
     const [activeTab, setActiveTab] = useState("holdStyle");
+
+    const {status: wallsStatus, data: walls} = useApi('walls', api.walls.all);
+    const {status: gradesStatus, data: grades} = useApi('grades', api.grades.all);
+    const {status: holdStylesStatus, data: holdStyles} = useApi('holdStyles', api.holdStyles.all);
+    const {status: tagsStatus, data: tags} = useApi('tags', api.tags.all);
 
     const isActive = (tabName) => {
         return tabName === activeTab
@@ -23,7 +29,7 @@ export const FilterDropdown = ({addFilter, dropped}) => {
             render: () => {
                 return (
                     <ul className="filter-values">
-                        {Context.storage.holdStyles.all().sort((a, b) => alphabeticalSort(a.name, b.name)).map(holdStyle => {
+                        {holdStyles.sort((a, b) => alphabeticalSort(a.name, b.name)).map(holdStyle => {
                             return (
                                 <li className="filter-option">
                                     <span onClick={() => addFilter('holdStyle', holdStyle.name)}>
@@ -43,7 +49,7 @@ export const FilterDropdown = ({addFilter, dropped}) => {
             render: () => {
                 return (
                     <ul className="filter-values">
-                        {Context.storage.walls.all().sort((a, b) => alphabeticalSort(a.name, b.name)).map(wall => {
+                        {walls.sort((a, b) => alphabeticalSort(a.name, b.name)).map(wall => {
                             return (
                                 <li className="filter-option">
                                     <span onClick={() => addFilter('start', wall.name)}>
@@ -62,7 +68,7 @@ export const FilterDropdown = ({addFilter, dropped}) => {
             render: () => {
                 return (
                     <ul className="filter-values">
-                        {Context.storage.walls.all().sort((a, b) => alphabeticalSort(a.name, b.name)).map(wall => {
+                        {walls.sort((a, b) => alphabeticalSort(a.name, b.name)).map(wall => {
                             return (
                                 <li className="filter-option">
                                     <span onClick={() => addFilter('end', wall.name)}>
@@ -81,7 +87,7 @@ export const FilterDropdown = ({addFilter, dropped}) => {
             render: () => {
                 return (
                     <ul className="filter-values">
-                        {Context.storage.grades.all().sort((a, b) => alphabeticalSort(a.name, b.name)).map(grade => {
+                        {grades.sort((a, b) => alphabeticalSort(a.name, b.name)).map(grade => {
                             return (
                                 <li className="filter-option">
                                     <span onClick={() => addFilter('grade', grade.name)}>
@@ -100,7 +106,7 @@ export const FilterDropdown = ({addFilter, dropped}) => {
             render: () => {
                 return (
                     <ul className="filter-values">
-                        {Context.storage.tags.all().sort((a, b) => alphabeticalSort(a.name, b.name)).map(tag => {
+                        {tags.sort((a, b) => alphabeticalSort(a.name, b.name)).map(tag => {
                             return (
                                 <li className="filter-option">
                                     <span onClick={() => addFilter('tag', tag.emoji)}>

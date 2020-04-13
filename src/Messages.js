@@ -13,7 +13,7 @@ export const Messages = {
         invalid: "Please provide a valid E-Mail address"
     },
     errors: {
-        general: "Oops, looks like a slip!"
+        general: "Uh, oh oh. That was a slip…"
     },
     reset: "Resetting probably right now!"
 };

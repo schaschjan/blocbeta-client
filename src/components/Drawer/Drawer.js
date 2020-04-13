@@ -1,4 +1,4 @@
-import React, {createContext, Fragment} from 'react';
+import React, {Fragment} from 'react';
 import './Drawer.css';
 import classnames from "classnames";
 import {Loader} from "../Loader/Loader";
@@ -6,23 +6,20 @@ import Button from "../Button/Button";
 import Icon from "../Icon/Icon";
 import useClickOutside from "../../hooks/useClickOutside";
 
-export const DrawerContext = createContext({
-    drawerOpen: false,
-    drawerLoading: false,
-    setDrawerPages: [],
-    drawerData: null,
-    drawerActivePage: null
-});
-
-export const Drawer = ({open, data, closeHandler, activePage, pages, loading = true}) => {
+export const Drawer = ({open, closeHandler, data, pages, activePage = null, loading = true}) => {
     const classes = classnames("drawer", open ? "drawer--open" : "drawer--closed", loading ? "drawer--loading" : null);
-    const page = pages.find(page => page.name === activePage);
-    const drawerRef = React.useRef();
 
+    const drawerRef = React.useRef();
     useClickOutside(drawerRef, () => closeHandler());
 
     if (!pages) {
         return new Error("No pages passed to drawer");
+    }
+
+    let page = pages[0];
+
+    if (activePage) {
+        page = pages.find(page => page.id === activePage);
     }
 
     const onKeyDown = [
@@ -33,25 +30,14 @@ export const Drawer = ({open, data, closeHandler, activePage, pages, loading = t
             }
         }
     ];
-    const onScroll = [
-        "scroll",
-        () => {
-            closeHandler();
-        },
-        {
-            passive: true
-        }
-    ];
 
     if (open) {
-        window.addEventListener(...onScroll);
         window.addEventListener(...onKeyDown);
     } else {
-        window.removeEventListener(...onScroll);
         window.removeEventListener(...onKeyDown);
     }
 
-    if (loading || !data) {
+    if (loading) {
         return (
             <div className={classes}>
                 <Loader/>
@@ -65,8 +51,7 @@ export const Drawer = ({open, data, closeHandler, activePage, pages, loading = t
                 <div className="drawer__header">
                     {page.header(data)}
 
-                    <Button type="text" onClick={() => closeHandler()} className="close-drawer
-                    ">
+                    <Button type="text" onClick={() => closeHandler()} className="close-drawer">
                         <Icon name="close"/>
                     </Button>
                 </div>

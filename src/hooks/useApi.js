@@ -2,7 +2,6 @@ import axios from "axios";
 import Context from "../Context";
 import {useQuery} from "react-query";
 import React, {useContext} from "react";
-import {useHistory} from "react-router-dom";
 import {AppContext} from "../App";
 
 export const getUri = (path, contextualize) => {
@@ -11,18 +10,31 @@ export const getUri = (path, contextualize) => {
     return `/api/${Context.location.current().url}${path}`
 };
 
-const config = {
-    headers: {Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`}
+const getConfig = () => {
+    return {
+        headers: {Authorization: `Bearer ${api.token}`}
+    }
+};
+
+export const cacheKeys = {
+    boulders: 'boulders',
+    ascents: 'ascents',
+    walls: 'walls',
+    grades: 'grades',
+    holdStyles: 'holdStyles',
+    setters: 'setters',
+    tags: 'tags'
 };
 
 export const api = {
+    token: null,
     me: {
-        get: async () => await get('/me', false),
-        update: async (data) => await put('/me', data, false)
+        get: async () => await httpGet('/me', false),
+        update: async (data) => await httpPut('/me', data, false)
     },
     ranking: {
         current: async () => {
-            const data = await get('/ranking/current');
+            const data = await httpGet('/ranking/current');
 
             // assign ranks
             data.map((result, rank) => {
@@ -39,65 +51,88 @@ export const api = {
         }
     },
     stats: {
-        resetRotation: () => get('/stat/reset-rotation'),
+        resetRotation: () => httpGet('/stat/reset-rotation'),
     },
     walls: {
-        all: () => get('/wall')
+        all: () => httpGet('/wall')
+    },
+    setters: {
+        all: () => httpGet('/setter')
     },
     boulder: {
-        get: async (id) => await get(`/boulder/${id}`),
-        active: async () => await get(`/boulder/filter/active`),
-        mass: async (data) => await post(`/boulder/mass`, data)
+        get: async (id) => await httpGet(`/boulder/${id}`),
+        active: async () => await httpGet(`/boulder/filter/active`),
+        mass: async (data) => await httpPost(`/boulder/mass`, data)
     },
     ascents: {
-        active: async () => await get(`/ascent/filter/active`)
+        active: async () => await httpGet(`/ascent/filter/active`),
+        add: (data) => httpPost(`/ascent`, data),
+        remove: (id) => httpDelete(`/ascent/${id}`),
     },
     grades: {
-        all: () => get('/grade')
+        all: () => httpGet('/grade')
     },
     holdStyles: {
-        all: async () => await get('/holdstyle')
+        all: async () => await httpGet('/holdstyle')
+    },
+    tags: {
+        all: () => httpGet('/tag')
     },
     locations: {
-        public: async () => await get('/location', false)
+        public: async () => await httpGet('/location', false)
     }
 };
 
-const post = async (path, data, contextualize = true) => {
+const httpDelete = async (path, contextualize = true) => {
+
+    const response = await axios.delete(
+        getUri(path, contextualize),
+        getConfig()
+    );
+
+    return response.data;
+};
+
+const httpPost = async (path, data, contextualize = true) => {
 
     const response = await axios.post(
         getUri(path, contextualize),
         data,
-        config
+        getConfig()
     );
 
     return response.data;
 };
 
-const put = async (path, data, contextualize = true) => {
+const httpPut = async (path, data, contextualize = true) => {
 
     const response = await axios.put(
         getUri(path, contextualize),
         data,
-        config
+        getConfig()
     );
 
     return response.data;
 };
 
-const get = async (path, contextualize = true) => {
+const httpGet = async (path, contextualize = true) => {
 
     const response = await axios.get(
         getUri(path, contextualize),
-        config
+        getConfig()
     );
 
     return response.data;
 };
 
 export default function useApi(identifier, method, queryOptions) {
-    const history = useHistory();
-    const {reset, token} = useContext(AppContext);
+    const {token} = useContext(AppContext);
+
+    if (!token) {
+        throw new Error(`No token provided for call ${identifier}`)
+    }
+
+    api.token = token;
 
     const query = useQuery(identifier, method, {
         refetchOnWindowFocus: false,
@@ -105,10 +140,12 @@ export default function useApi(identifier, method, queryOptions) {
         ...queryOptions
     });
 
-    // if (query.error && query.error.response.data.code === 401) {
-    //     reset();
-    //     history.push('/login');
-    // }
+
+    if (query.error) {
+        console.error(query.error);
+        // reset();
+        // history.push('/login');
+    }
 
     return query;
 }

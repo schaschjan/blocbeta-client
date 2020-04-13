@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Loader} from "../components/Loader/Loader";
 import Context from "../Context";
 import moment from "moment";
 import {Messages} from "../Messages";
 import {Link} from "react-router-dom";
 import useApi, {api} from "../hooks/useApi";
+import {AppContext} from "../App";
 
 const Dashboard = () => {
+    const {user} = useContext(AppContext);
     const {status: resetStatus, data: rotation} = useApi('resetRotation', api.stats.resetRotation);
     const {status: wallStatus, data: walls} = useApi('walls', api.walls.all);
 
@@ -14,8 +16,6 @@ const Dashboard = () => {
         resetStatus,
         wallStatus,
     ].includes('loading');
-
-    console.log(walls, wallStatus, rotation, resetStatus);
 
     if (loading) return <Loader/>;
 
@@ -34,7 +34,7 @@ const Dashboard = () => {
 
     return (
         <div className="container">
-            <h1>Dashboard</h1>
+            <h1>Hello {user.username}!</h1>
 
             <h2>Reset Rotation</h2>
             <ul className="list-unstyled">

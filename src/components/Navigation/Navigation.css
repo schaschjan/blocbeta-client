@@ -1,6 +1,6 @@
 .header {
     display: flex;
-    padding: 20px;
+    padding: 20px 30px;
 }
 
 .header ul {
@@ -8,7 +8,6 @@
     padding: 0;
     margin: 0;
     display: flex;
-    align-items: center;
 }
 
 .header ul li {
@@ -18,6 +17,7 @@
 .header .logo {
     font-weight: bold;
     font-size: 1em;
+    margin-right: 8px;
 }
 
 .header .navigation {
@@ -29,5 +29,9 @@
 }
 
 .location-switch {
-    margin-left: 8px;
+    display: flex;
+}
+
+.location-switch .react-select {
+    font-size: 1em;
 }

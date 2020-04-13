@@ -7,10 +7,11 @@ import {AppContext} from "../../App";
 import useApi, {api} from "../../hooks/useApi";
 import Select, {getSelectOption} from "../Select/Select";
 import {useHistory} from "react-router-dom";
+import HyperLink from "../HyperLink/HyperLink";
 
 const LocationSwitch = () => {
     const {status, data} = useApi('locations', api.locations.public);
-    const {location} = useContext(AppContext);
+    const {currentLocation} = useContext(AppContext);
 
     const handleChange = (event) => {
         const selectedLocationId = parseInt(event.target.value);
@@ -22,20 +23,18 @@ const LocationSwitch = () => {
 
     if (status === 'loading') return null;
 
-    const locations = data.map(location => {
+    const options = data.map(location => {
         return {
             label: location.name,
             value: location.id
         }
     });
 
-    return <Select name="locations"
-                   value={getSelectOption(location.id, location.name)}
-                   options={locations} formChild={false}/>
+    return <HyperLink>{currentLocation.name}</HyperLink>
 };
 
 const Navigation = () => {
-    const {user, location, reset, locationPath} = useContext(AppContext);
+    const {user, authenticated, reset, locationPath} = useContext(AppContext);
     let history = useHistory();
 
     const logout = (event) => {
@@ -44,12 +43,12 @@ const Navigation = () => {
         history.push('/login');
     };
 
-    if (user === null || location === null) {
+    if (!authenticated()) {
         return (
             <header className="header">
                 <ul>
                     <li>
-                        <Link to={locationPath('/login')} className="logo">
+                        <Link to='/login' className="logo">
                             BlocBeta
                         </Link>
                     </li>
@@ -60,12 +59,10 @@ const Navigation = () => {
 
     return (
         <header className="header">
-            <ul className="location-switch">
-                <li>
-                    <Link to={locationPath('/dashboard')} className="logo">BlocBeta @</Link>
-                    <LocationSwitch/>
-                </li>
-            </ul>
+            <div className="location-switch">
+                <Link to={locationPath('/dashboard')} className="logo">BlocBeta @</Link>
+                <LocationSwitch/>
+            </div>
 
             <ul className="navigation">
                 <li>

@@ -10,14 +10,14 @@ import "./Login.css";
 import {toast} from 'react-toastify';
 import {AppContext} from "../../App";
 import jwt_decode from "jwt-decode";
-import {api, getUri} from "../../hooks/useApi";
+import {getUri} from "../../hooks/useApi";
 import axios from "axios";
-import {useIsFetching, queryCache} from 'react-query'
+import {useIsFetching} from 'react-query'
 import {Loader} from "../../components/Loader/Loader";
 
 const Login = () => {
-    const [isSubmitted, setIsSubmitted] = useState(false);
-    const {setUser, setToken, setLocation, setExpiration} = useContext(AppContext);
+    const [submitting, setSubmitting] = useState(false);
+    const {setUser, setToken, setCurrentLocation, setExpiration} = useContext(AppContext);
 
     const history = useHistory();
     const isFetching = useIsFetching();
@@ -36,12 +36,12 @@ const Login = () => {
     };
 
     const onSubmit = async (data) => {
-        setIsSubmitted(true);
+        setSubmitting(true);
         const {token, error, success} = await getToken(data.username, data.password);
 
         if (!success) {
             toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
-            setIsSubmitted(false);
+            setSubmitting(false);
 
             return
         }
@@ -50,10 +50,10 @@ const Login = () => {
 
         setExpiration(payload.exp);
         setUser(payload.user);
-        setLocation(payload.location);
+        setCurrentLocation(payload.location);
         setToken(token);
 
-        setIsSubmitted(false);
+        setSubmitting(false);
 
         // const prefetch = async () => {
         //     await queryCache.prefetchQuery('locations', () => api.locations.public);
@@ -88,7 +88,7 @@ const Login = () => {
                        placeholder="…"
                        name="password"/>
 
-                {isSubmitted ? (
+                {submitting ? (
                     <Button primary="true" type="submit" disabled="true">Login</Button>
                 ) : (
                     <Button primary="true" type="submit">Login</Button>

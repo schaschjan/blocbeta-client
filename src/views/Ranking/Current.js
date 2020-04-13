@@ -1,4 +1,4 @@
-import React, {useMemo, Fragment} from 'react';
+import React, {Fragment} from 'react';
 import {Loader} from "../../components/Loader/Loader";
 import {useTable, useSortBy, useGlobalFilter} from "react-table";
 import {TableCell, TableHeader, TableRow} from "../../components/Table/Table";
@@ -9,21 +9,23 @@ import "./Current.css"
 import Icon from "../../components/Icon/Icon";
 import Button from "../../components/Button/Button";
 import classnames from "classnames";
-import Context from "../../Context";
 import Search from "../../components/Search/Search";
 import Container from "../../components/Container/Container";
 import useApi, {api} from "../../hooks/useApi";
 
 const Progress = ({percentage}) => {
+    const classes = classnames("progress", percentage > 66 ? "progress--success" : percentage > 33 ? "progress--warning" : "progress--danger");
+
     return (
         <div
-            className={classnames("progress", percentage > 66 ? "progress--success" : percentage > 33 ? "progress--warning" : "progress--danger")}>
+            className={classes}>
             <div style={{width: `${percentage}%`}}/>
         </div>
     )
 };
 
 const Table = ({columns, data}) => {
+
     const {
         getTableProps,
         getTableBodyProps,
@@ -68,106 +70,104 @@ const Table = ({columns, data}) => {
     )
 };
 
-const percentageOfBoulders = (value) => {
-    let percentage = 0;
-
-    if (value > 0) {
-        percentage = (value / Context.storage.boulders.all().length) * 100;
-    }
-
-    if (percentage === 0) {
-        return `${value} (0%)`;
-    }
-
-
-    if (percentage < 1) {
-        return `${value} (<1%)`;
-    }
-
-    return `${value} (${Math.floor(percentage)}%)`;
-};
-
 const Current = () => {
-    const {status, data} = useApi('ranking-current', api.ranking.current);
+    const {status: rankingStatus, data: ranking} = useApi('ranking-current', api.ranking.current);
+    const {status: bouldersStatus, data: boulders} = useApi('boulder', api.boulder.active);
 
-    const columns = useMemo(
-        () => [
-            {
-                Header: 'Rank',
-                accessor: 'rank',
-                Cell: ({cell}) => {
-                    return <strong>{cell.value}</strong>
-                }
-            },
-            {
-                Header: 'User',
-                accessor: 'user.username',
-                Cell: ({cell, row}) => {
-                    return <div className="user-cell">
-                        <Avatar image={row.original.user.media}/>
-                        {cell.value}
-                    </div>
-                }
-            },
-            {
-                Header: 'Gender',
-                accessor: 'user.gender',
-                Cell: ({cell}) => {
-                    return <Icon name={cell.value}/>
-                }
-            },
-            {
-                Header: 'Score',
-                accessor: 'score',
-            },
-            {
-                Header: 'Boulders',
-                accessor: 'boulders',
-                Cell: ({cell}) => {
-                    const percentage = (cell.value / Context.storage.boulders.all().length) * 100;
+    if ([rankingStatus, bouldersStatus].includes('loading')) return <Loader/>;
 
-                    return (
-                        <Progress percentage={percentage}/>
-                    )
-                }
-            },
-            {
-                Header: 'Flashed',
-                accessor: 'flashes',
-                Cell: ({cell}) => percentageOfBoulders(cell.value)
-            },
-            {
-                Header: 'Topped',
-                accessor: 'tops',
-                Cell: ({cell}) => percentageOfBoulders(cell.value)
-            },
-            {
-                Header: 'Last activity',
-                accessor: 'user.lastActivity',
-                Cell: ({cell}) => {
-                    return (
-                        <Paragraph>{moment(cell.value).fromNow()}</Paragraph>
-                    )
-                }
-            },
-            {
-                Header: '',
-                id: 'user.id',
-                className: 'actions-cell',
-                Cell: () => {
-                    return <Button text={true}>Compare</Button>
-                }
+    const percentageOfBoulders = (value) => {
+        let percentage = 0;
+
+        if (value > 0) {
+            percentage = (value / boulders.length) * 100;
+        }
+
+        if (percentage === 0) {
+            return `${value} (0%)`;
+        }
+
+
+        if (percentage < 1) {
+            return `${value} (<1%)`;
+        }
+
+        return `${value} (${Math.floor(percentage)}%)`;
+    };
+
+    const columns = [
+        {
+            Header: 'Rank',
+            accessor: 'rank',
+            Cell: ({cell}) => {
+                return <strong>{cell.value}</strong>
             }
-        ],
-        []
-    );
+        },
+        {
+            Header: 'User',
+            accessor: 'user.username',
+            Cell: ({cell, row}) => {
+                return <div className="user-cell">
+                    <Avatar image={row.original.user.media}/>
+                    {cell.value}
+                </div>
+            }
+        },
+        {
+            Header: 'Gender',
+            accessor: 'user.gender',
+            Cell: ({cell}) => {
+                return <Icon name={cell.value}/>
+            }
+        },
+        {
+            Header: 'Score',
+            accessor: 'score',
+        },
+        {
+            Header: 'Boulders',
+            accessor: 'boulders',
+            Cell: ({cell}) => {
+                const percentage = (cell.value / boulders.length) * 100;
 
-    if (status === 'loading') return <Loader/>;
+                return (
+                    <Progress percentage={percentage}/>
+                )
+            }
+        },
+        {
+            Header: 'Flashed',
+            accessor: 'flashes',
+            Cell: ({cell}) => percentageOfBoulders(cell.value)
+        },
+        {
+            Header: 'Topped',
+            accessor: 'tops',
+            Cell: ({cell}) => percentageOfBoulders(cell.value)
+        },
+        {
+            Header: 'Last activity',
+            accessor: 'user.lastActivity',
+            Cell: ({cell}) => {
+                return (
+                    <Paragraph>{moment(cell.value).fromNow()}</Paragraph>
+                )
+            }
+        },
+        {
+            Header: '',
+            id: 'user.id',
+            className: 'actions-cell',
+            Cell: () => {
+                return <Button text={true}>Compare</Button>
+            }
+        }
+    ];
 
     return (
         <Container>
             <h1>Current Ranking</h1>
-            <Table data={data} columns={columns}/>
+            <Table data={ranking} columns={columns}/>
         </Container>
     )
 };

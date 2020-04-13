@@ -53,10 +53,6 @@ class Context {
         return localStorage.getItem('token');
     }
 
-    static getLocationUrl() {
-        return this.location.url
-    }
-
     static getPath(path) {
         return `/${Context.location.current().url}${path}`;
     }
