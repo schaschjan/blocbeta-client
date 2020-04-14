@@ -17,7 +17,7 @@
 .header .logo {
     font-weight: bold;
     font-size: 1em;
-    margin-right: 8px;
+    margin-right: 4px;
 }
 
 .header .navigation {
@@ -32,6 +32,7 @@
     display: flex;
 }
 
-.location-switch .react-select {
+.location-switch .hyperlink {
     font-size: 1em;
+    padding-right: 16px;
 }

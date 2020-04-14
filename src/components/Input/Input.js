@@ -6,7 +6,7 @@ import classnames from "classnames";
 const Input = ({register, ref, icon, type, ...rest}) => {
 
     return (
-        <div className={classnames("input", type === "checkbox" ? "input--checkbox" : null)}>
+        <div className={classnames('input', `input--${type}`)}>
             {icon && (
                 <Icon name={icon}/>
             )}

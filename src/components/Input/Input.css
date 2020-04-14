@@ -9,9 +9,11 @@
     box-shadow: inset 0 -1px 0 0 var(--color-dark);
 }
 
-.input.input--checkbox {
+.input.input--checkbox,
+.input.input--hidden {
     box-shadow: none;
 }
+
 
 .input.input--checkbox:focus-within {
     box-shadow: none;

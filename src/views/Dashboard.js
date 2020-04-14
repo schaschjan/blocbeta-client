@@ -75,6 +75,16 @@ const Dashboard = () => {
                         New Todos
                     </Link>
                 </li>
+
+                <li>
+                    <Link to={{
+                        pathname: Context.getPath('/boulder'),
+                        search: "?ascent=todo&date=new",
+                        state: {fromDashboard: true}
+                    }}>
+                       Projects
+                    </Link>
+                </li>
             </ul>
         </div>
     )

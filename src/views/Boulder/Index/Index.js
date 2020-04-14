@@ -197,7 +197,9 @@ const Index = () => {
         setLoading,
         data: drawerData,
         setData: setDrawerData,
-    } = useDrawer();
+        activePage: drawerActivePage,
+        setActivePage: setDrawerActivePage,
+    } = useDrawer("details");
 
     const {status: bouldersStatus, data: boulders} = useApi(cacheKeys.boulders, api.boulder.active);
     const {status: ascentsStatus, data: ascents} = useApi(cacheKeys.ascents, api.ascents.active);
@@ -481,15 +483,15 @@ const Index = () => {
                                             {ascent.user.username}
 
                                             <Button text={true} onClick={() => {
-                                                // setDrawerActivePage("doubt");
-                                                // setDrawerData({
-                                                //     user: ascent.user,
-                                                //     boulder: {
-                                                //         id: data.id,
-                                                //         name: data.name
-                                                //     },
-                                                //     ...data
-                                                // });
+                                                setDrawerActivePage("doubt");
+                                                setDrawerData({
+                                                    user: ascent.user,
+                                                    boulder: {
+                                                        id: data.id,
+                                                        name: data.name
+                                                    },
+                                                    ...data
+                                                });
                                             }}>
                                                 Doubt it
                                             </Button>
@@ -525,7 +527,7 @@ const Index = () => {
                         )}
 
                         <Button text={true}
-                            // onClick={() => setDrawerActivePage("error")}
+                                onClick={() => setDrawerActivePage("error")}
                                 className="report-error">
                             Report error
                         </Button>
@@ -538,7 +540,7 @@ const Index = () => {
             header: (data) => {
                 return (
                     <div className="header-error">
-                        {/*<Icon name="backward" onClick={() => setDrawerActivePage("details")}/>*/}
+                        <Icon name="backward" onClick={() => setDrawerActivePage("details")}/>
                         <h3>
                             <strong>Report error:</strong> {data.name}
                         </h3>
@@ -564,8 +566,8 @@ const Index = () => {
             header: (data) => {
                 return (
                     <div className="header-doubt">
-                        {/*<Icon name="backward" onClick={() => setDrawerActivePage("details")}/>*/}
-                        <strong>Doubt {data.user.username}</strong> on {data.boulder.name}
+                        <Icon name="backward" onClick={() => setDrawerActivePage("details")}/>
+                        <strong>Doubt {data.user.username}{''}</strong> on {data.boulder.name}
                     </div>
                 )
             },
@@ -605,6 +607,7 @@ const Index = () => {
 
             <Drawer open={isOpen}
                     closeHandler={close}
+                    activePage={drawerActivePage}
                     loading={isLoading}
                     data={drawerData}
                     pages={drawerPages}/>

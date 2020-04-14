@@ -51,13 +51,13 @@ export const api = {
         }
     },
     stats: {
-        resetRotation: () => httpGet('/stat/reset-rotation'),
+        resetRotation: async () => await httpGet('/stat/reset-rotation'),
     },
     walls: {
-        all: () => httpGet('/wall')
+        all: async () => await httpGet('/wall')
     },
     setters: {
-        all: () => httpGet('/setter')
+        all: async () => await httpGet('/setter')
     },
     boulder: {
         get: async (id) => await httpGet(`/boulder/${id}`),
@@ -66,20 +66,23 @@ export const api = {
     },
     ascents: {
         active: async () => await httpGet(`/ascent/filter/active`),
-        add: (data) => httpPost(`/ascent`, data),
-        remove: (id) => httpDelete(`/ascent/${id}`),
+        add: async (data) => await httpPost(`/ascent`, data),
+        remove: async (id) => await httpDelete(`/ascent/${id}`),
     },
     grades: {
-        all: () => httpGet('/grade')
+        all: async () => await httpGet('/grade')
     },
     holdStyles: {
         all: async () => await httpGet('/holdstyle')
     },
     tags: {
-        all: () => httpGet('/tag')
+        all: async () => await httpGet('/tag')
     },
     locations: {
         public: async () => await httpGet('/location', false)
+    },
+    user: {
+        find: async (username) => await httpGet(`/user?username=${username}`)
     }
 };
 

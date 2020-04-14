@@ -9,6 +9,7 @@ import CurrentRanking from "../views/Ranking/Current";
 import CurrentComparison from "../views/Compare/Current";
 import Account from "../views/Account";
 import React from "react";
+import Settings from "../views/Settings/Settings";
 
 export const router = [
     {
@@ -75,5 +76,12 @@ export const router = [
         path: "/account",
         render: () => <Account/>,
         exact: true
+    },
+    {
+        title: "Settings",
+        path: "/:locationSlug/settings",
+        render: () => <Settings/>,
+        exact: true,
+        admin: true
     }
 ];
