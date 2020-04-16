@@ -8,6 +8,8 @@ import Button from "../components/Button/Button";
 import useApi, {api} from "../hooks/useApi";
 import {Messages} from "../Messages";
 import {useMutation} from "react-query";
+import Container from "../components/Container/Container";
+import {PageHeader} from "../components/PageHeader/PageHeader";
 
 const Account = () => {
     const {status, data} = useApi('me', api.me.get, false);
@@ -27,8 +29,8 @@ const Account = () => {
     if (status === 'loading') return <Loader/>;
 
     return (
-        <div className="container">
-            <h1>Account</h1>
+        <Container>
+            <PageHeader title={`Account`}/>
 
             <Form onSubmit={onSubmit} defaultValues={data}>
                 <Label>Visible</Label>
@@ -94,7 +96,7 @@ const Account = () => {
 
                 <Button type="submit" primary="true" disabled={updateStatus === "loading"}>Update</Button>
             </Form>
-        </div>
+        </Container>
     )
 };
 
