@@ -5,7 +5,7 @@ import Dashboard from "../views/Dashboard";
 import BoulderIndex from "../views/Boulder/Index/Index";
 import BoulderAdd from "../views/Boulder/Add/Add";
 import BoulderEdit from "../views/Boulder/Edit/Edit";
-import CurrentRanking from "../views/Ranking/Current";
+import CurrentRanking from "../views/Ranking/Current/Current";
 import CurrentComparison from "../views/Compare/Current";
 import Account from "../views/Account";
 import React from "react";

@@ -5,6 +5,7 @@
     cursor: pointer;
     outline: none;
     padding: 0;
+    background: none;
 }
 
 .button.button--primary {

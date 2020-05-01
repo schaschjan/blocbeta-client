@@ -85,4 +85,25 @@
 
 @media screen and (max-width: 768px) {
 
+    .table {
+        display: block;
+    }
+
+    .table-header {
+        display: none;
+    }
+
+    .table-content {
+        flex-direction: column;
+    }
+
+    .table-header,
+    .table-content,
+    .table-row {
+        display: flex;
+    }
+
+    .table-cell {
+        border-bottom: 0;
+    }
 }

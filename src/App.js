@@ -10,6 +10,10 @@ import {ReactQueryDevtools} from 'react-query-devtools'
 import usePersistentState from "./hooks/usePersistentState";
 import jwt_decode from "jwt-decode";
 
+export const isMobile =()=>{
+    return matchMedia('(max-width: 1000px)').matches;
+};
+
 export const AppContext = createContext();
 
 const App = () => {

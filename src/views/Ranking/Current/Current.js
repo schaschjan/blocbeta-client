@@ -1,17 +1,18 @@
-import React, {Fragment} from 'react';
-import {Loader} from "../../components/Loader/Loader";
+import React from 'react';
+import {Loader} from "../../../components/Loader/Loader";
 import {useTable, useSortBy, useGlobalFilter} from "react-table";
-import {TableCell, TableHeader, TableRow} from "../../components/Table/Table";
-import Avatar from "../../components/Avatar/Avatar";
-import Paragraph from "../../components/Paragraph/Paragraph";
+import {TableCell, TableHeader, TableRow} from "../../../components/Table/Table";
+import Avatar from "../../../components/Avatar/Avatar";
+import Paragraph from "../../../components/Paragraph/Paragraph";
 import moment from "moment";
 import "./Current.css"
-import Icon from "../../components/Icon/Icon";
-import Button from "../../components/Button/Button";
+import Icon from "../../../components/Icon/Icon";
+import Button from "../../../components/Button/Button";
 import classnames from "classnames";
-import Search from "../../components/Search/Search";
-import Container from "../../components/Container/Container";
-import useApi, {api} from "../../hooks/useApi";
+import Search from "../../../components/Search/Search";
+import Container from "../../../components/Container/Container";
+import useApi, {api} from "../../../hooks/useApi";
+import SwipeOut from "../../../components/SwipeOut/SwipeOut";
 
 const Progress = ({percentage}) => {
     const classes = classnames("progress", percentage > 66 ? "progress--success" : percentage > 33 ? "progress--warning" : "progress--danger");
@@ -23,6 +24,10 @@ const Progress = ({percentage}) => {
         </div>
     )
 };
+
+const Actions = (
+    <Button text={true}>Compare</Button>
+);
 
 const Table = ({columns, data}) => {
 
@@ -42,7 +47,7 @@ const Table = ({columns, data}) => {
     );
 
     return (
-        <Fragment>
+        <div>
             <Search placeholder="Search for member"
                     onClear={() => setGlobalFilter(null)}
                     onInputChange={e => {
@@ -57,16 +62,20 @@ const Table = ({columns, data}) => {
                         prepareRow(row);
 
                         return (
-                            <TableRow>
-                                {row.cells.map(cell => {
-                                    return <TableCell {...cell.getCellProps({className: cell.column.className})}>{cell.render('Cell')}</TableCell>
-                                })}
-                            </TableRow>
+                            <SwipeOut actions={Actions}>
+                                <TableRow>
+                                    {row.cells.map(cell => {
+                                        return <TableCell {...cell.getCellProps({className: cell.column.className})}>
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    })}
+                                </TableRow>
+                            </SwipeOut>
                         )
                     })}
                 </div>
             </div>
-        </Fragment>
+        </div>
     )
 };
 
@@ -158,9 +167,7 @@ const Current = () => {
             Header: '',
             id: 'user.id',
             className: 'actions-cell',
-            Cell: () => {
-                return <Button text={true}>Compare</Button>
-            }
+            Cell: () => Actions
         }
     ];
 

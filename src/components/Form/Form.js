@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Fragment} from "react";
 import {useForm} from "react-hook-form";
 import classnames from "classnames";
 import Select from "../Select/Select";
@@ -16,6 +16,7 @@ const Form = ({defaultValues, children, onSubmit}) => {
 
             return <Select control={control}
                            options={child.options}
+                           key={child.props.name}
                            {...child.props}/>
         }
 
@@ -35,13 +36,13 @@ const Form = ({defaultValues, children, onSubmit}) => {
                 const classes = classnames(errors[child.props.name] ? 'has-error' : null);
 
                 return (
-                    <React.Fragment>
+                    <Fragment key={child.props.name}>
                         {child.props.name ? createFormElement(child, classes) : child}
 
                         {errors[child.props.name] && (
                             <Error message={errors[child.props.name].message}/>
                         )}
-                    </React.Fragment>
+                    </Fragment>
                 );
             }) : children}
         </form>

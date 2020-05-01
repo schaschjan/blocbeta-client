@@ -30,12 +30,13 @@ import Container from "../../../components/Container/Container"
 import Bar from "./Bar/Bar"
 import useApi, {api, cacheKeys} from "../../../hooks/useApi";
 import {useMutation, queryCache} from "react-query";
-import {AppContext} from "../../../App";
+import {AppContext, isMobile} from "../../../App";
 import {Drawer} from "../../../components/Drawer/Drawer";
 import Form from "../../../components/Form/Form";
 import {Textarea} from "../../../components/Textarea/Textarea";
 import Input from "../../../components/Input/Input";
 import useDrawer from "../../../hooks/useDrawer";
+import SwipeOut from "../../../components/SwipeOut/SwipeOut";
 
 const Table = ({columns, data, editable = false}) => {
     const url = new URL(window.location);
@@ -148,13 +149,53 @@ const Table = ({columns, data, editable = false}) => {
                 {page.map((row) => {
                     prepareRow(row);
 
-                    return (
-                        <TableRow>
-                            {row.cells.map(cell => {
-                                return <TableCell {...cell.getCellProps({className: cell.column.className})}>{cell.render('Cell')}</TableCell>
-                            })}
-                        </TableRow>
-                    )
+                    const findCell = (id) => {
+                        return row.cells.find(cell => cell.column.id === id)
+                    };
+
+                    const renderCell = (name) => {
+                        const cell = findCell(name);
+
+                        if (!cell) {
+                            return null
+                        }
+
+                        return (
+                            <TableCell {...cell.getCellProps({className: cell.column.className})}>
+                                {cell.render('Cell')}
+                            </TableCell>
+                        )
+                    };
+
+                    if (isMobile) {
+                        return (
+                            <SwipeOut actions={renderCell('ascent')} width={150}>
+                                <TableRow>
+                                    <div>
+                                        {renderCell('holdStyle')}
+                                    </div>
+
+                                    <div>
+                                        {renderCell('name')}
+
+                                        <span className="inline-wall-names">
+                                            {renderCell('end')} <span>></span> {renderCell('start')}
+                                        </span>
+
+                                        {renderCell('grade')}
+                                    </div>
+
+                                    <div>
+                                        {row.original.me && (
+                                            <Icon name={row.original.me.type}/>
+                                        )}
+                                    </div>
+                                </TableRow>
+                            </SwipeOut>
+                        )
+                    } else {
+                        return null
+                    }
                 })}
             </div>
         </div>
@@ -296,6 +337,7 @@ const Index = () => {
             </div>
         ),
         id: 'selection',
+        className: `table-cell--selection`,
         Cell: ({row}) => (
             <div>
                 <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
@@ -310,6 +352,7 @@ const Index = () => {
             id: 'holdStyle',
             Header: 'holdStyle',
             accessor: 'holdStyle.name',
+            className: `table-cell--holdStyle`,
             Cell: ({cell}) => {
                 return <HoldStyle name={cell.value}/>
             }
@@ -318,6 +361,7 @@ const Index = () => {
             id: 'grade',
             Header: 'Grade',
             accessor: 'grade.name',
+            className: `table-cell--grade`,
             Cell: ({row}) => {
                 return <Grade name={row.original.grade.name} color={row.original.grade.color}/>
             }
@@ -326,6 +370,7 @@ const Index = () => {
             id: 'points',
             Header: 'Points',
             accessor: 'points',
+            className: `table-cell--points`,
             Cell: ({cell}) => (
                 <Paragraph>{cell.value} pts</Paragraph>
             )
@@ -334,14 +379,14 @@ const Index = () => {
             id: 'name',
             Header: 'Name',
             accessor: 'name',
-            className: 'table-cell__name',
+            className: `table-cell--name`,
             Cell: ({cell, row}) => (
                 <Fragment>
                     {isAdmin() && (
-                        <Link to={locationPath(`/boulder/${row.original.id}`)}> ✏</Link>
+                        <Link to={locationPath(`/boulder/${row.original.id}`)} className="edit-boulder"> ✏</Link>
                     )}
 
-                    <Button onClick={() => showDetails(row.original.id)}>
+                    <Button onClick={() => showDetails(row.original.id)} className="table-cell--name__details-button">
                         {cell.value} <Icon name="forward"/>
                     </Button>
                 </Fragment>
@@ -351,22 +396,19 @@ const Index = () => {
             id: 'start',
             Header: 'Start',
             accessor: 'startWall.name',
-            Cell: ({cell}) => {
-                return <Paragraph>{cell.value}</Paragraph>
-            }
+            className: `table-cell--start`,
         },
         {
             id: 'end',
             Header: 'End',
             accessor: 'endWall.name',
-            Cell: ({cell}) => {
-                return <Paragraph>{cell.value}</Paragraph>
-            }
+            className: `table-cell--end`,
         },
         {
             id: 'date',
             Header: 'Date',
             accessor: 'createdAt',
+            className: `table-cell--date`,
             filter: (rows, id, filterValue) => {
                 if (filterValue === "new") {
                     return rows.filter(row => {
@@ -386,6 +428,7 @@ const Index = () => {
         {
             id: 'ascent',
             Header: 'Ascent',
+            className: `table-cell--ascent`,
             accessor: (row) => {
                 if (row.me) {
                     return row.me.type;
@@ -413,7 +456,7 @@ const Index = () => {
                 }
 
                 return (
-                    <React.Fragment>
+                    <div className="ascents">
                         <Ascent type="flash"
                                 disabled={!flashed && ascent}
                                 checked={flashed}
@@ -428,7 +471,7 @@ const Index = () => {
                                 disabled={!resigned && ascent}
                                 checked={resigned}
                                 onClick={() => ascent ? removeAscent(row.original.me.id) : addAscent(row.original.id, "resignation")}/>
-                    </React.Fragment>
+                    </div>
                 )
             }
         }
