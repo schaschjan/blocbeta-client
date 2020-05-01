@@ -13,17 +13,24 @@ import {PageHeader} from "../components/PageHeader/PageHeader";
 
 const Account = () => {
     const {status, data} = useApi('me', api.me.get, false);
-    const [mutate, {status: updateStatus, error: updateError}] = useMutation(api.me.update);
+    const [mutate, {status: updateStatus}] = useMutation(api.me.update, {
+        throwOnError: true
+    });
 
     const onSubmit = async (data) => {
         try {
             await mutate(data);
-        } catch {
-            toast.error("Something went wrong");
-            console.error(updateError);
+            toast.success("Account updated");
+        } catch (error) {
+            toast.error(error.response.data.message)
         }
+    };
 
-        toast.success("Account updated");
+    const scheduleAccountDeletion = async () => {
+        if (window.confirm("Confirm account deletion")) {
+            const data = await api.me.delete();
+            toast.warn(data.message)
+        }
     };
 
     if (status === 'loading') return <Loader/>;
@@ -96,6 +103,8 @@ const Account = () => {
 
                 <Button type="submit" primary="true" disabled={updateStatus === "loading"}>Update</Button>
             </Form>
+
+            <Button dangerous={true} onClick={() => scheduleAccountDeletion()}>Delete Account</Button>
         </Container>
     )
 };

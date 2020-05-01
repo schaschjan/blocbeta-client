@@ -20,6 +20,18 @@
     margin-top: 36px;
 }
 
+.button.button--dangerous {
+    font-size: 1em;
+    letter-spacing: .1em;
+    background: var(--color-error);
+    color: var(--color-light);
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 16px 128px;
+    width: fill-available;
+    margin-top: 36px;
+}
+
 .button.button--primary:active {
     box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
 }

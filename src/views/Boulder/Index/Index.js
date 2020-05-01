@@ -30,7 +30,7 @@ import Container from "../../../components/Container/Container"
 import Bar from "./Bar/Bar"
 import useApi, {api, cacheKeys} from "../../../hooks/useApi";
 import {useMutation, queryCache} from "react-query";
-import {AppContext, isMobile} from "../../../App";
+import {AppContext, isDesktop, isMobile, isTablet} from "../../../App";
 import {Drawer} from "../../../components/Drawer/Drawer";
 import Form from "../../../components/Form/Form";
 import {Textarea} from "../../../components/Textarea/Textarea";
@@ -145,6 +145,7 @@ const Table = ({columns, data, editable = false}) => {
             className={classnames('table', 'table--boulder', editable ? 'table--editable' : null)} {...getTableProps()}>
             <TableHeader headerGroups={headerGroups}/>
 
+
             <div className="table-content" {...getTableBodyProps()}>
                 {page.map((row) => {
                     prepareRow(row);
@@ -167,7 +168,7 @@ const Table = ({columns, data, editable = false}) => {
                         )
                     };
 
-                    if (isMobile) {
+                    if (isMobile()) {
                         return (
                             <SwipeOut actions={renderCell('ascent')} width={150}>
                                 <TableRow>
@@ -193,9 +194,37 @@ const Table = ({columns, data, editable = false}) => {
                                 </TableRow>
                             </SwipeOut>
                         )
-                    } else {
-                        return null
                     }
+
+                    if (isTablet()) {
+                        return (
+                            <TableRow>
+                                <div>
+                                    {renderCell('holdStyle')}
+                                </div>
+
+                                <div>
+                                    {renderCell('name')}
+
+                                    <span className="inline-wall-names">
+                                            {renderCell('end')} <span>></span> {renderCell('start')}
+                                        </span>
+
+                                    {renderCell('grade')}
+                                </div>
+
+                                {renderCell('ascent')}
+                            </TableRow>
+                        )
+                    }
+                    console.log(isTablet(), isMobile(), isDesktop());
+                    return (
+                        <TableRow>
+                            {row.cells.map(cell => {
+                                return <TableCell {...cell.getCellProps({className: cell.column.className})}>{cell.render('Cell')}</TableCell>
+                            })}
+                        </TableRow>
+                    )
                 })}
             </div>
         </div>
@@ -347,6 +376,28 @@ const Index = () => {
 
     const newBoulderTimeOffset = moment().subtract(14, 'days');
 
+    const Ascents = ({boulderId, ascent, flashed, topped, resigned}) => {
+
+        return (
+            <div className="ascents">
+                <Ascent type="flash"
+                        disabled={!flashed && ascent}
+                        checked={flashed}
+                        onClick={() => ascent ? removeAscent(ascent.id) : addAscent(boulderId, "flash")}/>
+
+                <Ascent type="top"
+                        disabled={!topped && ascent}
+                        checked={topped}
+                        onClick={() => ascent ? removeAscent(ascent.id) : addAscent(boulderId, "top")}/>
+
+                <Ascent type="resignation"
+                        disabled={!resigned && ascent}
+                        checked={resigned}
+                        onClick={() => ascent ? removeAscent(ascent.id) : addAscent(boulderId, "resignation")}/>
+            </div>
+        )
+    };
+
     const columns = [
         {
             id: 'holdStyle',
@@ -456,22 +507,8 @@ const Index = () => {
                 }
 
                 return (
-                    <div className="ascents">
-                        <Ascent type="flash"
-                                disabled={!flashed && ascent}
-                                checked={flashed}
-                                onClick={() => ascent ? removeAscent(row.original.me.id) : addAscent(row.original.id, "flash")}/>
-
-                        <Ascent type="top"
-                                disabled={!topped && ascent}
-                                checked={topped}
-                                onClick={() => ascent ? removeAscent(row.original.me.id) : addAscent(row.original.id, "top")}/>
-
-                        <Ascent type="resignation"
-                                disabled={!resigned && ascent}
-                                checked={resigned}
-                                onClick={() => ascent ? removeAscent(row.original.me.id) : addAscent(row.original.id, "resignation")}/>
-                    </div>
+                    <Ascents topped={topped} flashed={flashed} resigned={resigned} boulderId={row.original.id}
+                             ascent={row.original.me}/>
                 )
             }
         }

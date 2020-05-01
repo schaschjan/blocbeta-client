@@ -10,11 +10,23 @@ import {ReactQueryDevtools} from 'react-query-devtools'
 import usePersistentState from "./hooks/usePersistentState";
 import jwt_decode from "jwt-decode";
 
-export const isMobile =()=>{
-    return matchMedia('(max-width: 1000px)').matches;
+export const isMobile = () => {
+    return matchMedia('(max-width: 600px)').matches;
+};
+
+export const isTablet = () => {
+    return matchMedia('(min-width: 601px) and (max-width: 1139px)').matches;
+};
+
+export const isDesktop = () => {
+    return matchMedia('(min-width: 1140px)').matches;
 };
 
 export const AppContext = createContext();
+
+console.log(`Mobile ${isMobile()}`);
+console.log(`Table ${isTablet()}`);
+console.log(`Desktop ${isDesktop()}`);
 
 const App = () => {
     const [user, setUser] = usePersistentState('user', null);
