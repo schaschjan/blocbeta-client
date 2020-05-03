@@ -1,19 +1,27 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Loader} from "../components/Loader/Loader";
 import Context from "../Context";
 import moment from "moment";
 import {Messages} from "../Messages";
 import {Link} from "react-router-dom";
-import useApi, {api} from "../hooks/useApi";
+import useApi, {api, cacheKeys} from "../hooks/useApi";
 import {AppContext} from "../App";
 import {PageHeader} from "../components/PageHeader/PageHeader";
-import Container from "../components/Container/Container";
 import Wrapper from "../components/Wrapper/Wrapper";
+import {queryCache} from "react-query";
 
 const Dashboard = () => {
     const {user} = useContext(AppContext);
     const {status: resetStatus, data: rotation} = useApi('resetRotation', api.stats.resetRotation);
     const {status: wallStatus, data: walls} = useApi('walls', api.walls.all);
+
+    useEffect(() => {
+        queryCache.prefetchQuery(cacheKeys.setters, () => api.setters.all);
+        queryCache.prefetchQuery(cacheKeys.tags, () => api.tags.all);
+        queryCache.prefetchQuery(cacheKeys.holdStyles, () => api.holdStyles.all);
+        queryCache.prefetchQuery(cacheKeys.grades, () => api.grades.all);
+        queryCache.prefetchQuery(cacheKeys.boulders, () => api.boulder.active);
+    }, []);
 
     const loading = [
         resetStatus,

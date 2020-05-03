@@ -56,17 +56,6 @@ const Login = () => {
 
         setSubmitting(false);
 
-        // const prefetch = async () => {
-        //     await queryCache.prefetchQuery('locations', () => api.locations.public);
-        //     await queryCache.prefetchQuery('holdStyles', () => api.holdStyles.all);
-        //     await queryCache.prefetchQuery('grades', () => api.grades.all);
-        //     await queryCache.prefetchQuery('walls', () => api.walls.all);
-        //
-        //     return true;
-        // };
-
-        // await prefetch();
-
         history.push(`/${payload.location.url}/dashboard`);
     };
 
