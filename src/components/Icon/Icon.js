@@ -68,7 +68,7 @@ const Icon = ({name, onClick, className, fill, ...rest}) => {
         )
     }
 
-    if (name === 'close') {
+    if (name === 'close-large') {
         size = 'small';
         icon = (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -124,7 +124,18 @@ const Icon = ({name, onClick, className, fill, ...rest}) => {
         )
     }
 
-    if (name === 'close-filters') {
+    if (name === 'menu') {
+        size = 'large';
+        icon = (
+            <svg width="26" height="17" viewBox="0 0 26 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 8.71429H25" stroke="black" stroke-linecap="round"/>
+                <path d="M1 1H25" stroke="black" stroke-linecap="round"/>
+                <path d="M1 16H25" stroke="black" stroke-linecap="round"/>
+            </svg>
+        )
+    }
+
+    if (name === 'close-large') {
         size = 'large';
         icon = (
             <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">

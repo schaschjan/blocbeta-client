@@ -1,28 +1,25 @@
 .drawer {
-    display: block;
     position: fixed;
-    top: 0;
-    right: -320px;
-    width: 320px;
-    height: 100%;
+    width: 100%;
+    height: 50%;
+    bottom: -50%;
     background: var(--color-light);
     overflow-y: scroll;
     overflow-x: hidden;
-    border-left: 1px solid var(--color-dark);
-    transition: right 0.3s;
-    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+    box-shadow: inset 0 1px 0 0 var(--color-dark);
+    display: flex;
+    flex-direction: column;
 }
 
 .drawer.drawer--open {
-    right: 0;
-}
-
-.drawer.drawer--loading {
-    display: flex;
+    bottom: 0;
 }
 
 .drawer .loader {
     align-items: center;
+    top: 50%;
+    position: relative;
+    margin-top: -20px;
 }
 
 .drawer .drawer__page {
@@ -42,4 +39,22 @@
 
 .drawer .drawer__content {
     padding: 1em;
+}
+
+@media (min-width: 601px) and (max-width: 1139px) {
+
+}
+
+@media (min-width: 1140px) {
+    .drawer {
+        top: 0;
+        right: -320px;
+        width: 320px;
+        height: 100%;
+        box-shadow: inset 1px 0 0 0 var(--color-dark);
+    }
+
+    .drawer.drawer--open {
+        right: 0;
+    }
 }

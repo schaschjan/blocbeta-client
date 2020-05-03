@@ -14,6 +14,7 @@ import {getUri} from "../../hooks/useApi";
 import axios from "axios";
 import {useIsFetching} from 'react-query'
 import {Loader} from "../../components/Loader/Loader";
+import Wrapper from "../../components/Wrapper/Wrapper";
 
 const Login = () => {
     const [submitting, setSubmitting] = useState(false);
@@ -72,33 +73,34 @@ const Login = () => {
     return (
         <Container>
             {isFetching ? <Loader/> : null}
+            <Wrapper>
+                <h1>Sign in</h1>
 
-            <h1>Sign in</h1>
+                <Form onSubmit={onSubmit}>
+                    <Label>Username</Label>
+                    <Input type="text"
+                           validate={{required: 'Please provide your username'}}
+                           placeholder="…"
+                           name="username"/>
 
-            <Form onSubmit={onSubmit}>
-                <Label>Username</Label>
-                <Input type="text"
-                       validate={{required: 'Please provide your username'}}
-                       placeholder="…"
-                       name="username"/>
+                    <Label>Password</Label>
+                    <Input type="password"
+                           validate={{required: 'Please provide your password'}}
+                           placeholder="…"
+                           name="password"/>
 
-                <Label>Password</Label>
-                <Input type="password"
-                       validate={{required: 'Please provide your password'}}
-                       placeholder="…"
-                       name="password"/>
+                    {submitting ? (
+                        <Button primary="true" type="submit" disabled="true">Login</Button>
+                    ) : (
+                        <Button primary="true" type="submit">Login</Button>
+                    )}
+                </Form>
 
-                {submitting ? (
-                    <Button primary="true" type="submit" disabled="true">Login</Button>
-                ) : (
-                    <Button primary="true" type="submit">Login</Button>
-                )}
-            </Form>
-
-            <div className="support-links">
-                <Link to="/register">Create Account</Link>
-                <Link to="/reset-password" className="secondary">Forgot Password</Link>
-            </div>
+                <div className="support-links">
+                    <Link to="/register">Create Account</Link>
+                    <Link to="/reset-password" className="secondary">Forgot Password</Link>
+                </div>
+            </Wrapper>
         </Container>
     )
 };

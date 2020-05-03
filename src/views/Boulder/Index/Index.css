@@ -54,7 +54,6 @@
 }
 
 @media (min-width: 601px) and (max-width: 1139px) {
-
     .table--boulder .table-row {
         grid-template-columns: 72px auto 160px;
     }
@@ -188,7 +187,6 @@
  */
 .filter {
     width: 100%;
-    padding: 6px 0;
 }
 
 .filter .toggle-filter-dropdown {

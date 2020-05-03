@@ -18,6 +18,7 @@
     "react-hook-form": "^5.4.2",
     "react-query": "^1.2.1",
     "react-query-devtools": "^1.0.13",
+    "react-responsive": "^8.0.3",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "react-select": "^3.1.0",

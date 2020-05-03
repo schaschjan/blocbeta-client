@@ -77,12 +77,6 @@
     opacity: .3;
 }
 
-.filter {
-    display: flex;
-    margin-bottom: 30px;
-    align-items: center;
-}
-
 @media screen and (max-width: 1140px) {
 
     .table {

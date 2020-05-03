@@ -57,7 +57,8 @@ export const api = {
         all: async () => await httpGet('/wall')
     },
     setters: {
-        all: async () => await httpGet('/setter')
+        all: async () => await httpGet('/setter'),
+        revoke: async (userId) => httpPut(`/setter/${userId}/revoke`)
     },
     boulder: {
         get: async (id) => await httpGet(`/boulder/${id}`),

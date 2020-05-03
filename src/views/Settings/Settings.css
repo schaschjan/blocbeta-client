@@ -1,0 +1,8 @@
+.setter-list li {
+    display: flex;
+    margin-bottom: .5em;
+}
+
+.setter-list li .button {
+    margin-left: auto;
+}

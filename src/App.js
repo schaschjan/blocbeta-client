@@ -1,7 +1,7 @@
 import React, {createContext, Fragment, useState} from 'react';
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import Context from "./Context";
-import Navigation from "./components/Navigation/Navigation";
+import Header from "./components/Navigation/Header";
 import {Content} from "./components/Content/Content";
 import {router} from "./services/router";
 import {ToastContainer} from "react-toastify";
@@ -23,10 +23,6 @@ export const isDesktop = () => {
 };
 
 export const AppContext = createContext();
-
-console.log(`Mobile ${isMobile()}`);
-console.log(`Table ${isTablet()}`);
-console.log(`Desktop ${isDesktop()}`);
 
 const App = () => {
     const [user, setUser] = usePersistentState('user', null);
@@ -67,7 +63,8 @@ const App = () => {
     const isAdmin = () => {
         const payload = jwt_decode(token);
 
-        return payload.roles.includes('ROLE_ADMIN');
+        //switch to admin role
+        return payload.roles.includes(`ROLE_SETTER@${Context.location.current().id}`);
     };
 
     const appContextValues = {
@@ -116,7 +113,7 @@ const App = () => {
         <Fragment>
             <Router>
                 <AppContext.Provider value={appContextValues}>
-                    <Navigation/>
+                    <Header/>
 
                     <Content disabled={contentDisabled}>
                         <Switch>

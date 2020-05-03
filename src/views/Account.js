@@ -12,7 +12,7 @@ import Container from "../components/Container/Container";
 import {PageHeader} from "../components/PageHeader/PageHeader";
 
 const Account = () => {
-    const {status, data} = useApi('me', api.me.get, false);
+    const {status, data} = useApi('me', api.me.get);
     const [mutate, {status: updateStatus}] = useMutation(api.me.update, {
         throwOnError: true
     });

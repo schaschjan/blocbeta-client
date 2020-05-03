@@ -217,7 +217,7 @@ const Table = ({columns, data, editable = false}) => {
                             </TableRow>
                         )
                     }
-                    console.log(isTablet(), isMobile(), isDesktop());
+
                     return (
                         <TableRow>
                             {row.cells.map(cell => {
@@ -433,7 +433,7 @@ const Index = () => {
             className: `table-cell--name`,
             Cell: ({cell, row}) => (
                 <Fragment>
-                    {isAdmin() && (
+                    {isAdmin && (
                         <Link to={locationPath(`/boulder/${row.original.id}`)} className="edit-boulder"> ✏</Link>
                     )}
 
@@ -514,7 +514,7 @@ const Index = () => {
         }
     ];
 
-    if (isAdmin()) {
+    if (isAdmin) {
         columns.unshift(selectionColumn)
     }
 
@@ -675,7 +675,7 @@ const Index = () => {
         <Fragment>
             <Container>
                 <PageHeader title={`Boulder (${boulders.length})`}>
-                    {isAdmin() && (
+                    {isAdmin && (
                         <Link to={locationPath(`/boulder/add`)}>
                             <Button text={true}>Add</Button>
                         </Link>

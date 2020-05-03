@@ -6,6 +6,9 @@ import {Messages} from "../Messages";
 import {Link} from "react-router-dom";
 import useApi, {api} from "../hooks/useApi";
 import {AppContext} from "../App";
+import {PageHeader} from "../components/PageHeader/PageHeader";
+import Container from "../components/Container/Container";
+import Wrapper from "../components/Wrapper/Wrapper";
 
 const Dashboard = () => {
     const {user} = useContext(AppContext);
@@ -34,58 +37,59 @@ const Dashboard = () => {
 
     return (
         <div className="container">
-            <h1>Hello {user.username}!</h1>
+            <PageHeader title={`Hello ${user.username}!`}/>
 
-            <h2>Reset Rotation</h2>
-            <ul className="list-unstyled">
-                {rotationStats.map(reset => {
-                    let date = null;
+            <Wrapper>
+                <h2>Reset Rotation</h2>
+                <ul className="list-unstyled">
+                    {rotationStats.map(reset => {
+                        let date = null;
 
-                    if (reset.averageSetDate) {
-                        date = `Last set: ${moment(reset.averageSetDate).fromNow()}`
-                    } else {
-                        date = Messages.reset
-                    }
+                        if (reset.averageSetDate) {
+                            date = `Last set: ${moment(reset.averageSetDate).fromNow()}`
+                        } else {
+                            date = Messages.reset
+                        }
 
-                    return <li>
-                        {reset.wall.name} {date}
+                        return <li>
+                            {reset.wall.name} {date}
+                        </li>
+                    })}
+                </ul>
+
+                <h2>Boulders</h2>
+                <ul>
+                    <li>
+                        <Link to={{
+                            pathname: Context.getPath('/boulder'),
+                            search: "?ascent=todo",
+                            state: {fromDashboard: true}
+                        }}>
+                            Todo
+                        </Link>
                     </li>
-                })}
-            </ul>
 
-            <h2>Boulders</h2>
+                    <li>
+                        <Link to={{
+                            pathname: Context.getPath('/boulder'),
+                            search: "?ascent=todo&date=new",
+                            state: {fromDashboard: true}
+                        }}>
+                            New Todos
+                        </Link>
+                    </li>
 
-            <ul>
-                <li>
-                    <Link to={{
-                        pathname: Context.getPath('/boulder'),
-                        search: "?ascent=todo",
-                        state: {fromDashboard: true}
-                    }}>
-                        Todo
-                    </Link>
-                </li>
-
-                <li>
-                    <Link to={{
-                        pathname: Context.getPath('/boulder'),
-                        search: "?ascent=todo&date=new",
-                        state: {fromDashboard: true}
-                    }}>
-                        New Todos
-                    </Link>
-                </li>
-
-                <li>
-                    <Link to={{
-                        pathname: Context.getPath('/boulder'),
-                        search: "?ascent=todo&date=new",
-                        state: {fromDashboard: true}
-                    }}>
-                       Projects
-                    </Link>
-                </li>
-            </ul>
+                    <li>
+                        <Link to={{
+                            pathname: Context.getPath('/boulder'),
+                            search: "?ascent=todo&date=new",
+                            state: {fromDashboard: true}
+                        }}>
+                            Projects
+                        </Link>
+                    </li>
+                </ul>
+            </Wrapper>
         </div>
     )
 };
