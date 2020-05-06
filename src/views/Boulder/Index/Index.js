@@ -322,7 +322,7 @@ const Index = () => {
         }
     };
 
-    if (loading) return <Loader/>;
+    if (loading ) return <Loader/>;
 
     // map ascent data to boulder array, resolve linked ids
     for (let boulder of boulders) {

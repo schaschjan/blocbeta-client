@@ -16,11 +16,15 @@ const Dashboard = () => {
     const {status: wallStatus, data: walls} = useApi('walls', api.walls.all);
 
     useEffect(() => {
-        queryCache.prefetchQuery(cacheKeys.setters, () => api.setters.all);
-        queryCache.prefetchQuery(cacheKeys.tags, () => api.tags.all);
-        queryCache.prefetchQuery(cacheKeys.holdStyles, () => api.holdStyles.all);
-        queryCache.prefetchQuery(cacheKeys.grades, () => api.grades.all);
-        queryCache.prefetchQuery(cacheKeys.boulders, () => api.boulder.active);
+        const prefetch = async () => {
+            await queryCache.prefetchQuery(cacheKeys.boulders, api.boulder.active);
+            await queryCache.prefetchQuery(cacheKeys.setters, api.setters.all);
+            await queryCache.prefetchQuery(cacheKeys.walls, api.walls.all);
+            await queryCache.prefetchQuery(cacheKeys.holdStyles, api.holdStyles.all);
+            await queryCache.prefetchQuery(cacheKeys.tags, api.tags.all);
+        };
+
+        prefetch();
     }, []);
 
     const loading = [
@@ -42,6 +46,7 @@ const Dashboard = () => {
     rotationStats.sort((a, b) => {
         return a.averageSetDate < b.averageSetDate ? -1 : 1
     });
+
 
     return (
         <div className="container">

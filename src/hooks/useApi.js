@@ -144,11 +144,8 @@ export default function useApi(identifier, method, queryOptions) {
         ...queryOptions
     });
 
-
     if (query.error) {
         console.error(query.error);
-        // reset();
-        // history.push('/login');
     }
 
     return query;
