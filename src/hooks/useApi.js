@@ -4,9 +4,9 @@ import React, {useContext} from "react";
 import {AppContext, getLocationSlug} from "../App";
 
 export const getUri = (path, contextualize) => {
-    if (!contextualize) return `/api${path}`;
+    if (!contextualize) return `${process.env.REACT_APP_API_HOST}/api${path}`;
 
-    return `/api/${getLocationSlug()}${path}`
+    return `${process.env.REACT_APP_API_HOST}/api/${getLocationSlug()}${path}`
 };
 
 const getConfig = () => {

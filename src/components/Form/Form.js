@@ -40,7 +40,7 @@ const Form = ({defaultValues, children, onSubmit}) => {
                         {child.props.name ? createFormElement(child, classes) : child}
 
                         {errors[child.props.name] && (
-                            <Error message={errors[child.props.name].message}/>
+                            <Error message={errors[child.props.name].message} key={child.props.name}/>
                         )}
                     </Fragment>
                 );
