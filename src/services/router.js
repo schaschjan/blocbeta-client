@@ -73,7 +73,7 @@ export const router = [
     },
     {
         title: "Account",
-        path: "/account",
+        path: "/:locationSlug/account",
         render: () => <Account/>,
         exact: true
     },

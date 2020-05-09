@@ -12,8 +12,9 @@ import {queryCache} from "react-query";
 
 const Dashboard = () => {
     const {user} = useContext(AppContext);
-    const {status: resetStatus, data: rotation} = useApi('resetRotation', api.stats.resetRotation);
-    const {status: wallStatus, data: walls} = useApi('walls', api.walls.all);
+    const {status: resetStatus, data: rotation} = useApi(cacheKeys.stats.resetRotation, api.stats.resetRotation);
+    const {status: boulderStatus, data: boulders} = useApi(cacheKeys.stats.boulder, api.stats.boulder);
+    const {status: wallStatus, data: walls} = useApi(cacheKeys.walls, api.walls.all);
 
     useEffect(() => {
         const prefetch = async () => {
@@ -30,6 +31,7 @@ const Dashboard = () => {
     const loading = [
         resetStatus,
         wallStatus,
+        boulderStatus
     ].includes('loading');
 
     if (loading) return <Loader/>;
@@ -70,7 +72,7 @@ const Dashboard = () => {
                     })}
                 </ul>
 
-                <h2>Boulders</h2>
+                <h2>Boulders ({boulders.activeBoulders})</h2>
                 <ul>
                     <li>
                         <Link to={{

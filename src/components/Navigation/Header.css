@@ -56,6 +56,10 @@
     right: 0;
 }
 
+.location-list li {
+    margin-bottom: .5em;
+}
+
 @media (min-width: 601px) and (max-width: 1139px) {
 
 }

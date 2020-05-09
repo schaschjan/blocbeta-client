@@ -40,7 +40,7 @@ const Setters = () => {
                 <ul className="setter-list">
                     {alphaSort(data, 'username').map(setter => {
                         return (
-                            <li>
+                            <li key={setter.id}>
                                 <span>{setter.username}</span>
                                 <Button dangerous={true} size={'small'} onClick={() => onRevokeSetter(setter)}>
                                     Revoke

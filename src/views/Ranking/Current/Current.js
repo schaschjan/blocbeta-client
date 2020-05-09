@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {Loader} from "../../../components/Loader/Loader";
 import {useTable, useSortBy, useGlobalFilter} from "react-table";
 import {TableCell, TableHeader, TableRow} from "../../../components/Table/Table";
@@ -13,6 +13,7 @@ import Search from "../../../components/Search/Search";
 import Container from "../../../components/Container/Container";
 import useApi, {api} from "../../../hooks/useApi";
 import SwipeOut from "../../../components/SwipeOut/SwipeOut";
+import {PageHeader} from "../../../components/PageHeader/PageHeader";
 
 const Progress = ({percentage}) => {
     const classes = classnames("progress", percentage > 66 ? "progress--success" : percentage > 33 ? "progress--warning" : "progress--danger");
@@ -108,6 +109,7 @@ const Current = () => {
         {
             Header: 'Rank',
             accessor: 'rank',
+            className: `table-cell--rank`,
             Cell: ({cell}) => {
                 return <strong>{cell.value}</strong>
             }
@@ -115,11 +117,14 @@ const Current = () => {
         {
             Header: 'User',
             accessor: 'user.username',
+            className: 'table-cell--user',
             Cell: ({cell, row}) => {
-                return <div className="user-cell">
-                    <Avatar image={row.original.user.media}/>
-                    {cell.value}
-                </div>
+                return (
+                    <Fragment>
+                        <Avatar image={row.original.user.media}/>
+                        {cell.value}
+                    </Fragment>
+                )
             }
         },
         {
@@ -136,6 +141,7 @@ const Current = () => {
         {
             Header: 'Boulders',
             accessor: 'boulders',
+            className: 'table-cell--boulders',
             Cell: ({cell}) => {
                 const percentage = (cell.value / boulders.length) * 100;
 
@@ -166,14 +172,14 @@ const Current = () => {
         {
             Header: '',
             id: 'user.id',
-            className: 'actions-cell',
+            className: 'table-cell--actions',
             Cell: () => Actions
         }
     ];
 
     return (
         <Container>
-            <h1>Current Ranking</h1>
+            <PageHeader title={"Current Ranking"}/>
             <Table data={ranking} columns={columns}/>
         </Container>
     )

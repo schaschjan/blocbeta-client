@@ -15,24 +15,28 @@ import "./Edit.css";
 import Container from "../../../components/Container/Container";
 import {PageHeader} from "../../../components/PageHeader/PageHeader";
 import Crud from "../../../services/Crud";
+import useApi, {api, cacheKeys} from "../../../hooks/useApi";
+import Wrapper from "../../../components/Wrapper/Wrapper";
 
 const Edit = ({history}) => {
     const {boulderId} = useParams();
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
     const [isSubmitting, setSubmitting] = useState(false);
 
-    useEffect(() => {
-        ApiClient.boulder.get(boulderId)
-            .then(boulder => {
-                return Crud.boulder.resolveFormData(boulder);
-            })
-            .then(boulder => {
-                setData(boulder);
-                setLoading(false);
-            });
+    const {status: boulderStatus, data: boulder} = useApi([cacheKeys.boulders, boulderId], () => api.boulder.get(boulderId));
+    const {status: wallsStatus, data: walls} = useApi(cacheKeys.walls, api.walls.all);
+    const {status: gradesStatus, data: grades} = useApi(cacheKeys.grades, api.grades.all);
+    const {status: holdStylesStatus, data: holdStyles} = useApi(cacheKeys.holdStyles, api.holdStyles.all);
+    const {status: tagsStatus, data: tags} = useApi(cacheKeys.tags, api.tags.all);
+    const {status: settersStatus, data: setters} = useApi(cacheKeys.setters, api.setters.all);
 
-    }, [boulderId]);
+    const loading = [
+        boulderStatus,
+        wallsStatus,
+        gradesStatus,
+        holdStylesStatus,
+        tagsStatus,
+        settersStatus
+    ].includes('loading');
 
     const onSubmit = (data) => {
         setSubmitting(true);
@@ -47,56 +51,62 @@ const Edit = ({history}) => {
     };
 
     if (loading) return <Loader/>;
-
+    console.log(getOptions(grades));
     return (
         <Fragment>
             <Container>
-                <PageHeader title={`Edit ${data.name}`}/>
+                <PageHeader title={`Edit ${boulder.name}`}/>
+                <Wrapper>
+                    <Form onSubmit={onSubmit} defaultValues={boulder}>
+                        <Label>Name</Label>
+                        <Input type="text"
+                               name="name"
+                               validate={{required: Messages.required}}/>
 
-                <Form onSubmit={onSubmit} defaultValues={data}>
-                    <Label>Name</Label>
-                    <Input type="text"
-                           name="name"
-                           validate={{required: Messages.required}}/>
+                        <Label>Grade</Label>
+                        <Select name="grade"
+                                validate={{required: Messages.requiredOption}}
+                                options={getOptions(grades)}/>
 
-                    <Label>Grade</Label>
-                    <Select name="grade"
-                            options={Context.storage.grades.options()}/>
+                        <Label>Hold Style</Label>
+                        <Select name="holdStyle"
+                                validate={{required: Messages.requiredOption}}
+                                options={getOptions(holdStyles)}/>
 
-                    <Label>Hold Style</Label>
-                    <Select name="holdStyle"
-                            options={Context.storage.holdStyles.options()}/>
+                        <Label>Start</Label>
+                        <Select name="startWall"
+                                validate={{required: Messages.requiredOption}}
+                                options={getOptions(walls)}/>
 
-                    <Label>Start</Label>
-                    <Select name="startWall"
-                            options={Context.storage.walls.options()}/>
+                        <Label>End</Label>
+                        <Select name="endWall"
+                                validate={{required: Messages.requiredOption}}
+                                options={getOptions(walls)}/>
 
-                    <Label>End</Label>
-                    <Select name="endWall"
-                            options={Context.storage.walls.options()}/>
+                        <Label>Setters</Label>
+                        <Select name="setters"
+                                multiple={true}
+                                validate={{required: Messages.requiredOption}}
+                                labelProperty="username"
+                                options={getOptions(setters, 'username')}/>
 
-                    <Label>Setters</Label>
-                    <Select name="setters"
-                            multiple={true}
-                            labelProperty="username"
-                            options={Context.storage.setters.options('username', 'id')}/>
+                        <Label>Tags</Label>
+                        <Select name="tags"
+                                multiple={true}
+                                options={getOptions(tags)}/>
 
-                    <Label>Tags</Label>
-                    <Select name="tags"
-                            multiple={true}
-                            options={Context.storage.tags.options()}/>
+                        <Label>Status</Label>
+                        <Select name="status"
+                                options={getOptions(Context.core.states)}/>
 
-                    <Label>Status</Label>
-                    <Select name="status"
-                            options={getOptions(Context.core.states)}/>
+                        <Label>Points</Label>
+                        <Input type="text"
+                               name="points"
+                               validate={{required: Messages.required}}/>
 
-                    <Label>Points</Label>
-                    <Input type="text"
-                           name="points"
-                           validate={{required: Messages.required}}/>
-
-                    <Button type="submit" primary="true" disabled={isSubmitting}>Update</Button>
-                </Form>
+                        <Button type="submit" primary="true" disabled={isSubmitting}>Update</Button>
+                    </Form>
+                </Wrapper>
             </Container>
         </Fragment>
     )

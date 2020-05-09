@@ -1,9 +1,9 @@
 import React, {Fragment, useContext, useRef, useState} from 'react';
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import "./Header.css";
 import Button from "../Button/Button";
-import {AppContext} from "../../App";
-import useApi, {api} from "../../hooks/useApi";
+import {AppContext, getLocationSlug} from "../../App";
+import useApi, {api, cacheKeys} from "../../hooks/useApi";
 import {useHistory} from "react-router-dom";
 import HyperLink from "../HyperLink/HyperLink";
 import {useMediaQuery} from "react-responsive/src";
@@ -13,14 +13,45 @@ import classnames from "classnames";
 import useClickOutside from "../../hooks/useClickOutside";
 import useKeyDown from "../../hooks/useKeyDown";
 import {largeQuery} from "../../Helpers";
+import Modal from "../Modal/Modal";
+import {alphaSort} from "../../helpers/helpers";
 
 const LocationSwitch = () => {
-    const {status} = useApi('locations', api.locations.public);
-    const {currentLocation} = useContext(AppContext);
+    const {status, data: locations} = useApi(cacheKeys.locations, api.locations.public);
+    const [modalOpen, setModalOpen] = useState(false);
+    const modalContentRef = useRef();
+
+    useKeyDown('Escape', () => setModalOpen(false));
+    useClickOutside(modalContentRef, () => {
+        setModalOpen(setModalOpen(false))
+    });
+
+    const redirect = (slug) => {
+        window.location.pathname = `/${slug}/dashboard`;
+    };
 
     if (status === 'loading') return null;
 
-    return <HyperLink>{currentLocation.name}</HyperLink>
+    const currentLocation = locations.find(location => location.url === getLocationSlug());
+
+    return (
+        <Fragment>
+            <Modal open={modalOpen} contentRef={modalContentRef}>
+                <h2>Locations</h2>
+                <ul className="location-list">
+                    {alphaSort(locations, 'name').map(location => {
+                        return (
+                            <li key={location.id}>
+                                <HyperLink onClick={() => redirect(location.url)}>{location.name}</HyperLink>
+                            </li>
+                        )
+                    })}
+                </ul>
+            </Modal>
+
+            <HyperLink onClick={() => setModalOpen(true)}>{currentLocation.name}</HyperLink>
+        </Fragment>
+    );
 };
 
 const Header = () => {
@@ -62,7 +93,7 @@ const Header = () => {
                     <Link to={locationPath('/ranking/current')} {...linkProps}>Ranking</Link>
                 </li>
                 <li>
-                    <Link to={'/account'} {...linkProps}>[{user.username}]</Link>
+                    <Link to={locationPath('/account')} {...linkProps}>[{user.username}]</Link>
                 </li>
                 {isAdmin && (
                     <li>

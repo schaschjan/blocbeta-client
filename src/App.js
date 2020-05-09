@@ -24,6 +24,10 @@ export const isDesktop = () => {
 
 export const AppContext = createContext();
 
+export const getLocationSlug = () => {
+    return window.location.pathname.split('/')[1]
+};
+
 const App = () => {
     const [user, setUser] = usePersistentState('user', null);
     const [token, setToken] = usePersistentState('token', null);
@@ -41,11 +45,7 @@ const App = () => {
     };
 
     const locationPath = (path) => {
-        if (!currentLocation) {
-            throw new Error("No location");
-        }
-
-        return `/${currentLocation.url}${path}`
+        return `/${getLocationSlug()}${path}`
     };
 
     const authenticated = () => {
@@ -118,6 +118,7 @@ const App = () => {
                     <Content disabled={contentDisabled}>
                         <Switch>
                             {router.map((route, i) => {
+
                                 if (!route.public) {
                                     return <PrivateRoute key={i} {...route} />
                                 }

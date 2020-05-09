@@ -1,13 +1,12 @@
 import axios from "axios";
-import Context from "../Context";
 import {useQuery} from "react-query";
 import React, {useContext} from "react";
-import {AppContext} from "../App";
+import {AppContext, getLocationSlug} from "../App";
 
 export const getUri = (path, contextualize) => {
     if (!contextualize) return `/api${path}`;
 
-    return `/api/${Context.location.current().url}${path}`
+    return `/api/${getLocationSlug()}${path}`
 };
 
 const getConfig = () => {
@@ -23,7 +22,12 @@ export const cacheKeys = {
     grades: 'grades',
     holdStyles: 'holdStyles',
     setters: 'setters',
-    tags: 'tags'
+    tags: 'tags',
+    locations: 'locations',
+    stats: {
+        boulder: 'boulderStat',
+        resetRotation: 'resetRotationStat'
+    }
 };
 
 export const api = {
@@ -51,6 +55,7 @@ export const api = {
         }
     },
     stats: {
+        boulder: async () => await httpGet('/stat/boulder'),
         resetRotation: async () => await httpGet('/stat/reset-rotation'),
     },
     walls: {

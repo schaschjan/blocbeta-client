@@ -11,7 +11,7 @@ import Form from "../../../components/Form/Form";
 import ApiClient from "../../../ApiClient";
 import {toast} from "react-toastify";
 import Crud from "../../../services/Crud";
-import useApi, {api} from "../../../hooks/useApi";
+import useApi, {api, cacheKeys} from "../../../hooks/useApi";
 import {Loader} from "../../../components/Loader/Loader";
 
 const defaultStatus = getOption(Context.core.states.find(state => state.id === 'active'));
@@ -20,11 +20,11 @@ const defaultPoints = 1000;
 const Add = () => {
     const [submitting, setSubmitting] = useState(false);
 
-    const {status: wallsStatus, data: walls} = useApi('walls', api.walls.all);
-    const {status: gradesStatus, data: grades} = useApi('grades', api.grades.all);
-    const {status: holdStylesStatus, data: holdStyles} = useApi('holdStyles', api.holdStyles.all);
-    const {status: tagsStatus, data: tags} = useApi('tags', api.tags.all);
-    const {status: settersStatus, data: setters} = useApi('setters', api.setters.all);
+    const {status: wallsStatus, data: walls} = useApi(cacheKeys.walls, api.walls.all);
+    const {status: gradesStatus, data: grades} = useApi(cacheKeys.grades, api.grades.all);
+    const {status: holdStylesStatus, data: holdStyles} = useApi(cacheKeys.holdStyles, api.holdStyles.all);
+    const {status: tagsStatus, data: tags} = useApi(cacheKeys.tags, api.tags.all);
+    const {status: settersStatus, data: setters} = useApi(cacheKeys.setters, api.setters.all);
 
     const loading = [wallsStatus, gradesStatus, holdStylesStatus, tagsStatus, settersStatus].includes('loading');
 
