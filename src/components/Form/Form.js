@@ -4,8 +4,8 @@ import classnames from "classnames";
 import Select from "../Select/Select";
 import "./Form.css";
 
-const Error = ({message}) => {
-    return <span className="form-error">{message}</span>;
+const Error = ({message, ...rest}) => {
+    return <span className="form-error" {...rest}>{message}</span>;
 };
 
 const Form = ({defaultValues, children, onSubmit}) => {
@@ -16,6 +16,7 @@ const Form = ({defaultValues, children, onSubmit}) => {
 
             return (
                 <Controller
+                    key={child.props.name}
                     as={<Select/>}
                     options={child.props.options}
                     name={child.props.name}

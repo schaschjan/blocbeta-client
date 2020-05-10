@@ -83,6 +83,7 @@ const Edit = ({history}) => {
 
         resolveFormData(boulder);
         setResolved(true);
+        console.log(boulder);
 
     }, [loading]);
 
