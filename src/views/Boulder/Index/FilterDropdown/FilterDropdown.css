@@ -15,7 +15,6 @@
   display: grid;
   width: 100%;
   grid-template-columns: 50% 50%;
-  grid-auto-rows: 240px;
 }
 
 .filter-tabs .tab-content {
