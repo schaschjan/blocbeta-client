@@ -15,6 +15,7 @@ const Form = ({ defaultValues, children, onSubmit }) => {
 
   const createFormElement = (child, classes) => {
     if (child.type.name === "Select") {
+      console.log(control, child);
       return (
         <Select
           control={control}

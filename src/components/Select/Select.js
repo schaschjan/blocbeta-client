@@ -35,7 +35,6 @@ const Select = ({
 
   return (
     <Controller
-      isMulti={multiple}
       as={
         <ReactSelect
           components={DropdownIndicator}
