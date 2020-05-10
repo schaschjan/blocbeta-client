@@ -1,86 +1,86 @@
 .filter-dropdown {
-    background-color: var(--color-light);
-    left: 0;
-    z-index: 9;
-    display: none;
-    padding: 1em;
+  background-color: var(--color-light);
+  left: 0;
+  z-index: 9;
+  display: none;
+  padding: 1em;
 }
 
 .filter-dropdown.filter-dropdown--dropped {
-    display: flex;
-    height: calc(100vh - 52px);
+  display: flex;
+  height: calc(100vh - 52px);
 }
 
 .filter-tabs {
-    display: grid;
-    width: 100%;
-    grid-template-columns: 50% 50%;
-    grid-auto-rows: 240px
+  display: grid;
+  width: 100%;
+  grid-template-columns: 50% 50%;
+  grid-auto-rows: 240px;
 }
 
 .filter-tabs .tab-content {
-    overflow-y: auto;
+  overflow-y: auto;
 }
 
 .filter-tabs li {
-    margin-bottom: .5em;
+  margin-bottom: 0.5em;
 }
 
 /**
  * Filter Tab
  */
 .filter-tab {
-    /*display: flex;*/
-    width: 100%;
+  /*display: flex;*/
+  width: 100%;
 }
 
 .tab-page {
-    width: 100%;
-    /*display: none;*/
+  width: 100%;
+  /*display: none;*/
 }
 
 .tab-page.tab-page--active {
-    display: flex;
+  display: flex;
 }
 
 .filter-tab .tab-title {
-    padding: 8px 4px;
-    color: var(--color-grey);
+  padding: 8px 4px;
+  color: var(--color-grey);
 }
 
 .filter-values {
-    overflow-x: hidden;
+  overflow-x: hidden;
 }
 
 .filter-values .filter-option {
-    display: flex;
-    align-items: center;
-    color: var(--color-grey);
-    white-space: nowrap;
-    line-height: 2rem;
-    font-size: 0.875rem;
-    height: 2rem;
+  display: flex;
+  align-items: center;
+  color: var(--color-grey);
+  white-space: nowrap;
+  line-height: 2rem;
+  font-size: 0.875rem;
+  height: 2rem;
 }
 
 .filter-values .filter-option span:hover {
-    color: var(--color-dark);
-    cursor: pointer;
+  color: var(--color-dark);
+  cursor: pointer;
 }
 
 .filter-values .filter-option .holdstyle,
 .filter-values .filter-option .emoji {
-    margin-left: 0;
+  margin-left: 0;
 }
 
 .tab-nav .tab-nav-item {
-    color: var(--color-grey);
-    white-space: nowrap;
+  color: var(--color-grey);
+  white-space: nowrap;
 
-    line-height: 2rem;
-    font-size: 0.875rem;
+  line-height: 2rem;
+  font-size: 0.875rem;
 }
 
 .tab-nav .tab-nav-item.tab-nav-item--active {
-    font-weight: bold;
-    color: var(--color-dark);
+  font-weight: bold;
+  color: var(--color-dark);
 }

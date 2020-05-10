@@ -10,9 +10,9 @@ export const largeQuery = {
 
 export const mediumQuery = {
   minWidth: 601,
-  maxWidth: 1139
+  maxWidth: 1139,
 };
 
 export const smallQuery = {
-  maxWidth: 600
+  maxWidth: 600,
 };

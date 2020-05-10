@@ -32,11 +32,11 @@ const Search = ({
         value={value}
       />
 
-    <Icon
+      <Icon
         name="open-filters-small"
         className="toggle-filter-dropdown"
         onClick={() => onToggle()}
-    />
+      />
 
       {inputElement.current && inputElement.current.value && (
         <Icon

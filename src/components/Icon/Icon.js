@@ -188,15 +188,21 @@ const Icon = ({ name, onClick, className, fill, ...rest }) => {
   }
 
   if (name === "open-filters-small") {
-      size = "small";
-      icon = (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0 0H24V24H0V0Z" fill="white"/>
-              <circle cx="12" cy="7" r="1" fill="#333333"/>
-              <circle cx="12" cy="12" r="1" fill="#333333"/>
-              <circle cx="12" cy="17" r="1" fill="#333333"/>
-          </svg>
-      )
+    size = "small";
+    icon = (
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M0 0H24V24H0V0Z" fill="white" />
+        <circle cx="12" cy="7" r="1" fill="#333333" />
+        <circle cx="12" cy="12" r="1" fill="#333333" />
+        <circle cx="12" cy="17" r="1" fill="#333333" />
+      </svg>
+    );
   }
 
   if (name === "open-filters") {
