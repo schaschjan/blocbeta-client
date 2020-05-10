@@ -1,10 +1,8 @@
-import React from 'react';
-import './Paragraph.css';
+import React from "react";
+import "./Paragraph.css";
 
-const Paragraph = ({children, ...rest}) => {
-
-    return <p {...rest}>{children}</p>
+const Paragraph = ({ children, ...rest }) => {
+  return <p {...rest}>{children}</p>;
 };
 
-
-export default Paragraph
+export default Paragraph;

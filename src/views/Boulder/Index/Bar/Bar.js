@@ -1,10 +1,8 @@
-import React from "react"
-import "./Bar.css"
+import React from "react";
+import "./Bar.css";
 
-const Bar = ({children}) => {
-    return <div className="bar">
-        {children}
-    </div>
+const Bar = ({ children }) => {
+  return <div className="bar">{children}</div>;
 };
 
-export default Bar
+export default Bar;

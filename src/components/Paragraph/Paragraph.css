@@ -1,8 +1,7 @@
 p {
-    font-size: 13px;
-    line-height: 15px;
-    margin: 0;
-    padding: 0;
-    color: var(--color-dark);
+  font-size: 13px;
+  line-height: 15px;
+  margin: 0;
+  padding: 0;
+  color: var(--color-dark);
 }
-

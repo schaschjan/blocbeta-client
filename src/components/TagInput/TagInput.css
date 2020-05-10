@@ -1,24 +1,26 @@
 .tags {
-    display: flex;
-    width: 100%;
+  display: flex;
+  width: 100%;
 }
 
 .tags .clear-tags {
-    margin-left: auto;
+  margin-left: auto;
 }
 
 .tag {
-    height: 32px;
-    border: 1px solid var(--color-dark);
-    padding: 3px 2px 3px 8px;
-    text-transform: lowercase;
-    align-items: center;
-    display: flex;
-    margin-right: 8px;
-    box-sizing: border-box;
-    border-radius: 4px;
+  height: 32px;
+  border: 1px solid var(--color-dark);
+  padding: 3px 2px 3px 8px;
+  text-transform: lowercase;
+  align-items: center;
+  display: flex;
+  margin-right: 8px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  line-height: 1rem;
 }
 
 .tag .icon {
-    margin-left: 8px;
+  margin-left: 8px;
 }

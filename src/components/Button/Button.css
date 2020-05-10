@@ -1,65 +1,66 @@
 .button {
-    appearance: none;
-    border: 0;
-    margin: 0;
-    cursor: pointer;
-    outline: none;
-    padding: 0;
-    background: none;
+  appearance: none;
+  border: 0;
+  margin: 0;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  background: none;
 }
 
 .button.button--primary {
-    font-size: 1em;
-    letter-spacing: .1em;
-    background: var(--color-dark);
-    color: var(--color-light);
-    text-transform: uppercase;
-    font-weight: bold;
-    padding: 16px 128px;
-    margin-top: 36px;
+  font-size: 1em;
+  letter-spacing: 0.1em;
+  background: var(--color-dark);
+  color: var(--color-light);
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 16px 128px;
+  margin-top: 36px;
+  width: 100%;
 }
 
 .button.button--dangerous {
-    font-size: 1em;
-    letter-spacing: .1em;
-    background: var(--color-error);
-    color: var(--color-light);
-    text-transform: uppercase;
-    font-weight: bold;
-    padding: 16px 128px;
-    margin-top: 36px;
+  font-size: 1em;
+  letter-spacing: 0.1em;
+  background: var(--color-error);
+  color: var(--color-light);
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 16px 128px;
+  margin-top: 36px;
 }
 
 .button.button--primary:active {
-    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
 }
 
 .button.button--disabled {
-    pointer-events: none;
-    background: var(--color-lightgrey);
-    color: var(--color-grey);
+  pointer-events: none;
+  background: var(--color-lightgrey);
+  color: var(--color-grey);
 }
 
 .button.button--text {
-    font-size: .875em;
-    display: flex;
-    color: var(--color-blue);
-    padding: 7px 16px;
-    border-radius: 8px;
-    font-weight: bolder;
+  font-size: 0.875em;
+  display: flex;
+  color: var(--color-blue);
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-weight: bolder;
 }
 
 .button.button--text:hover {
-    background: var(--color-lightblue);
+  background: var(--color-lightblue);
 }
 
 .button.button--text.button--secondary {
-    color: var(--color-grey);
+  color: var(--color-grey);
 }
 
 .button.button--size-small {
-    line-height: 1em;
-    font-size: .75em;
-    margin: 0;
-    padding: .25em 2em;
+  line-height: 1em;
+  font-size: 0.75em;
+  margin: 0;
+  padding: 0.25em 2em;
 }

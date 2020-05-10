@@ -1,19 +1,23 @@
-import React from 'react';
+import React from "react";
 import "./Avatar.css";
-import {resolveMedia} from "../../helpers/helpers";
+import { resolveMedia } from "../../helpers/helpers";
 import Icon from "../Icon/Icon";
 
-const Avatar = ({image}) => {
+const Avatar = ({ image }) => {
+  if (!image) {
+    return (
+      <div className="avatar avatar--fallback">
+        <Icon name="avatar" />
+      </div>
+    );
+  }
 
-    if (!image) {
-        return <div className="avatar avatar--fallback">
-            <Icon name="avatar"/>
-        </div>
-    }
-
-    return <div className="avatar" style={
-        {backgroundImage: `url(${resolveMedia(image)})`}}>
-    </div>
+  return (
+    <div
+      className="avatar"
+      style={{ backgroundImage: `url(${resolveMedia(image)})` }}
+    ></div>
+  );
 };
 
-export default Avatar
+export default Avatar;

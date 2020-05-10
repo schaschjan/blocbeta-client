@@ -12,76 +12,76 @@ import React from "react";
 import Settings from "../views/Settings/Settings";
 
 export const router = [
-    {
-        title: "Login",
-        path: "/login",
-        render: () => <Login/>,
-        exact: true,
-        public: true,
-    },
-    {
-        title: "Register",
-        path: "/register",
-        render: () => <Register/>,
-        exact: true,
-        public: true,
-    },
-    {
-        title: "Reset Password",
-        path: "/reset-password",
-        render: () => <PasswordReset/>,
-        exact: true,
-        public: true,
-    },
-    {
-        title: "Dashboard",
-        path: "/:locationSlug/dashboard",
-        render: () => <Dashboard/>,
-        exact: true,
-    },
-    {
-        title: "Boulder index",
-        path: "/:locationSlug/boulder",
-        render: () => <BoulderIndex/>,
-        exact: true
-    },
-    {
-        title: "Add Boulder",
-        path: "/:locationSlug/boulder/add",
-        render: () => <BoulderAdd/>,
-        exact: true,
-        admin: true
-    },
-    {
-        title: "Edit Boulder",
-        path: "/:locationSlug/boulder/:boulderId",
-        render: () => <BoulderEdit/>,
-        exact: true,
-        admin: true
-    },
-    {
-        title: "Current Ranking",
-        path: "/:locationSlug/ranking/current",
-        render: () => <CurrentRanking/>,
-        exact: true
-    },
-    {
-        title: "Compare current",
-        path: "/:locationSlug/compare/:a/to/:b/at/current",
-        render: () => <CurrentComparison/>,
-        exact: true
-    },
-    {
-        title: "Account",
-        path: "/:locationSlug/account",
-        render: () => <Account/>,
-        exact: true
-    },
-    {
-        title: "Settings",
-        path: "/:locationSlug/settings",
-        render: () => <Settings/>,
-        exact: true,
-        admin: true
-    }
+  {
+    title: "Login",
+    path: "/login",
+    render: () => <Login />,
+    exact: true,
+    public: true,
+  },
+  {
+    title: "Register",
+    path: "/register",
+    render: () => <Register />,
+    exact: true,
+    public: true,
+  },
+  {
+    title: "Reset Password",
+    path: "/reset-password",
+    render: () => <PasswordReset />,
+    exact: true,
+    public: true,
+  },
+  {
+    title: "Dashboard",
+    path: "/:locationSlug/dashboard",
+    render: () => <Dashboard />,
+    exact: true,
+  },
+  {
+    title: "Boulder index",
+    path: "/:locationSlug/boulder",
+    render: () => <BoulderIndex />,
+    exact: true,
+  },
+  {
+    title: "Add Boulder",
+    path: "/:locationSlug/boulder/add",
+    render: () => <BoulderAdd />,
+    exact: true,
+    admin: true,
+  },
+  {
+    title: "Edit Boulder",
+    path: "/:locationSlug/boulder/:boulderId",
+    render: () => <BoulderEdit />,
+    exact: true,
+    admin: true,
+  },
+  {
+    title: "Current Ranking",
+    path: "/:locationSlug/ranking/current",
+    render: () => <CurrentRanking />,
+    exact: true,
+  },
+  {
+    title: "Compare current",
+    path: "/:locationSlug/compare/:a/to/:b/at/current",
+    render: () => <CurrentComparison />,
+    exact: true,
+  },
+  {
+    title: "Account",
+    path: "/:locationSlug/account",
+    render: () => <Account />,
+    exact: true,
+  },
+  {
+    title: "Settings",
+    path: "/:locationSlug/settings",
+    render: () => <Settings />,
+    exact: true,
+    admin: true,
+  },
 ];

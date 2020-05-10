@@ -1,27 +1,34 @@
 @import "~normalize.css/normalize.css";
-@import url('https://fonts.googleapis.com/css?family=Karla&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Karla&display=swap");
 
 :root {
     --color-black: #000;
     --color-dark: #333;
     --color-light: #fff;
-    --color-lightgrey: #F2F2F2;
-    --color-error: #FF0000;
-    --color-grey: #A2A2A2;
-    --color-blue: #5759FB;
-    --color-lightblue: #CDCEFE;
+    --color-lightgrey: #f2f2f2;
+    --color-error: #ff0000;
+    --color-grey: #a2a2a2;
+    --color-blue: #5759fb;
+    --color-lightblue: #cdcefe;
 
-    --color-flash: #1687FF;
-    --color-top: #02DEAF;
-    --color-resign: #FF5D5F;
-    --color-warning: #FCF6A4;
+    --color-flash: #1687ff;
+    --color-top: #02deaf;
+    --color-resign: #ff5d5f;
+    --color-warning: #fcf6a4;
 
     --drawer-width: 320px;
+
+    --line-height-default: 1rem;
+    --font-size-default: 0.875rem;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 * {
-    font-family: 'Karla', sans-serif;
-    font-size: 0.875rem;
+    font-family: "Karla", sans-serif;
+    font-size: 1em;
 }
 
 h1 {

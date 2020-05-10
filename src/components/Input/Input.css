@@ -1,42 +1,41 @@
 ::placeholder {
-    color: var(--color-dark);
+  color: var(--color-dark);
 }
 
 .input {
-    display: inline-flex;
-    width: 100%;
-    padding: 5px 0 10px;
-    box-shadow: inset 0 -1px 0 0 var(--color-dark);
+  display: inline-flex;
+  width: 100%;
+  padding: 5px 0 10px;
+  box-shadow: inset 0 -1px 0 0 var(--color-dark);
 }
 
 .input.input--checkbox,
 .input.input--hidden {
-    box-shadow: none;
+  box-shadow: none;
 }
 
-
 .input.input--checkbox:focus-within {
-    box-shadow: none;
+  box-shadow: none;
 }
 
 .input:focus-within {
-    box-shadow: inset 0 -2px 0 0 var(--color-dark);
+  box-shadow: inset 0 -2px 0 0 var(--color-dark);
 }
 
 .input .icon {
-    margin: 0 4px 0 0;
+  margin: 0 4px 0 0;
 }
 
 .input input {
-    width: 100%;
-    font-weight: bold;
-    outline: none;
-    border: 0;
-    font-size: 1.125rem;
-    line-height: 1.25em;
-    background: none;
+  width: 100%;
+  font-weight: bold;
+  outline: none;
+  border: 0;
+  font-size: 1.125rem;
+  line-height: 1.25em;
+  background: none;
 }
 
 .input input[type="checkbox"] {
-    box-shadow: none;
+  box-shadow: none;
 }

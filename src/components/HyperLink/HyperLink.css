@@ -1,8 +1,8 @@
 .hyperlink {
-    cursor: pointer;
-    font-weight: bold;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 .hyperlink.hyperlink--active {
-    color: var(--color-dark);
+  color: var(--color-dark);
 }

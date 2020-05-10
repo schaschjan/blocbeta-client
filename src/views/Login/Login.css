@@ -1,12 +1,12 @@
 .support-links {
-    margin-top: 36px;
-    display: flex;
+  margin-top: 36px;
+  display: flex;
 }
 
 .support-links a {
-    display: flex;
+  display: flex;
 }
 
 .support-links a:last-child {
-    margin-left: auto;
+  margin-left: auto;
 }

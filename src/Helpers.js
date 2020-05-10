@@ -1,17 +1,18 @@
 import Context from "./Context";
 
 export const alphabeticalSort = (a, b) => {
-    return a > b ? 1 : -1;
+  return a > b ? 1 : -1;
 };
 
 export const largeQuery = {
-    minWidth: 600
+  minWidth: 1140,
 };
 
 export const mediumQuery = {
-    minWidth: 600
+  minWidth: 601,
+  maxWidth: 1139
 };
 
 export const smallQuery = {
-    minWidth: 600
+  maxWidth: 600
 };

@@ -1,16 +1,21 @@
 .loader {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
 }
 
-.loader svg{
-    stroke: var(--color-black);
+.loader svg {
+  stroke: var(--color-black);
 }
 
 .loader div {
-    animation:spin 1s linear infinite;
+  animation: spin 1s linear infinite;
 }
 
-@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}

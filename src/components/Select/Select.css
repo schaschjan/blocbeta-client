@@ -1,46 +1,46 @@
 .react-select {
-    background-color: red;
+  background-color: red;
 }
 
 .react-select.react-select--formless .react-select__control {
-    box-shadow: none;
+  box-shadow: none;
 }
 
 .react-select .react-select__control {
-    border-radius: 0;
-    border: 0;
-    box-shadow: inset 0 -1px 0 0 var(--color-dark);
+  border-radius: 0;
+  border: 0;
+  box-shadow: inset 0 -1px 0 0 var(--color-dark);
 }
 
 .react-select .react-select__control--is-focused {
-    box-shadow: inset 0 -2px 0 0 var(--color-dark);
+  box-shadow: inset 0 -2px 0 0 var(--color-dark);
 }
 
 .react-select .react-select__value-container {
-    padding: 0;
-    margin: 0;
-    height: 24px;
+  padding: 0;
+  margin: 0;
+  height: 24px;
 }
 
 .react-select .react-select__value-container > * {
-    font-weight: bold;
-    font-size: 1.125rem;
-    line-height: 1.25em;
+  font-weight: bold;
+  font-size: 1.125rem;
+  line-height: 1.25em;
 }
 
 .react-select .react-select__indicators {
-    height: 24px;
+  height: 24px;
 }
 
 .react-select .react-select__dropdown-indicator {
-    padding: 0;
+  padding: 0;
 }
 
 .react-select .react-select__indicator-separator {
-    display: none;
+  display: none;
 }
 
 .react-select .react-select__multi-value {
-    background: none;
-    border: 1px solid var(--color-dark);
+  background: none;
+  border: 1px solid var(--color-dark);
 }

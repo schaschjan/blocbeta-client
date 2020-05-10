@@ -1,147 +1,153 @@
-import React, {createContext, Fragment, useState} from 'react';
-import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
+import React, { createContext, Fragment, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import Context from "./Context";
 import Header from "./components/Navigation/Header";
-import {Content} from "./components/Content/Content";
-import {router} from "./services/router";
-import {ToastContainer} from "react-toastify";
-import {Footer} from "./components/Footer/Footer";
-import {ReactQueryDevtools} from 'react-query-devtools'
+import { Content } from "./components/Content/Content";
+import { router } from "./services/router";
+import { ToastContainer } from "react-toastify";
+import { Footer } from "./components/Footer/Footer";
+import { ReactQueryDevtools } from "react-query-devtools";
 import usePersistentState from "./hooks/usePersistentState";
 import jwt_decode from "jwt-decode";
 
 export const isMobile = () => {
-    return matchMedia('(max-width: 600px)').matches;
+  return matchMedia("(max-width: 600px)").matches;
 };
 
 export const isTablet = () => {
-    return matchMedia('(min-width: 601px) and (max-width: 1139px)').matches;
+  return matchMedia("(min-width: 601px) and (max-width: 1139px)").matches;
 };
 
 export const isDesktop = () => {
-    return matchMedia('(min-width: 1140px)').matches;
+  return matchMedia("(min-width: 1140px)").matches;
 };
 
 export const AppContext = createContext();
 
 export const getLocationSlug = () => {
-    return window.location.pathname.split('/')[1]
+  return window.location.pathname.split("/")[1];
 };
 
 const App = () => {
-    const [user, setUser] = usePersistentState('user', null);
-    const [token, setToken] = usePersistentState('token', null);
-    const [currentLocation, setCurrentLocation] = usePersistentState('location', null);
-    const [expiration, setExpiration] = usePersistentState('expiration', null);
-    const [contentDisabled, disableContent] = useState(false);
+  const [user, setUser] = usePersistentState("user", null);
+  const [token, setToken] = usePersistentState("token", null);
+  const [currentLocation, setCurrentLocation] = usePersistentState(
+    "location",
+    null
+  );
+  const [expiration, setExpiration] = usePersistentState("expiration", null);
+  const [contentDisabled, disableContent] = useState(false);
 
-    const reset = () => {
-        setUser(null);
-        setToken(null);
-        setCurrentLocation(null);
-        setExpiration(null);
+  const reset = () => {
+    setUser(null);
+    setToken(null);
+    setCurrentLocation(null);
+    setExpiration(null);
 
-        localStorage.clear();
-    };
+    localStorage.clear();
+  };
 
-    const locationPath = (path) => {
-        return `/${getLocationSlug()}${path}`
-    };
+  const locationPath = (path) => {
+    return `/${getLocationSlug()}${path}`;
+  };
 
-    const authenticated = () => {
-        if (token === null) {
-            return false
-        }
+  const authenticated = () => {
+    if (token === null) {
+      return false;
+    }
 
-        if (new Date().getTime() / 1000 > expiration) {
-            return false
-        }
+    if (new Date().getTime() / 1000 > expiration) {
+      return false;
+    }
 
-        return true;
-    };
+    return true;
+  };
 
-    const isAdmin = () => {
-        const payload = jwt_decode(token);
+  const isAdmin = () => {
+    const payload = jwt_decode(token);
 
-        //switch to admin role
-        return payload.roles.includes(`ROLE_SETTER@${Context.location.current().id}`);
-    };
-
-    const appContextValues = {
-        token,
-        setToken,
-        user,
-        setUser,
-        currentLocation,
-        setCurrentLocation,
-        expiration,
-        setExpiration,
-        contentDisabled,
-
-        disableContent,
-        isAdmin,
-        authenticated,
-        reset,
-        locationPath
-    };
-
-
-    const PrivateRoute = ({children, ...rest}) => {
-        if (authenticated()) {
-            return <Route {...rest}/>
-        }
-
-        return (
-            <Route
-                {...rest}
-                render={() =>
-                    authenticated() ? (children) : <LoginRedirect/>
-                }
-            />
-        );
-    };
-
-    const LoginRedirect = () => (
-        <Redirect
-            to={{
-                pathname: "/login"
-            }}
-        />
+    //switch to admin role
+    return payload.roles.includes(
+      `ROLE_SETTER@${Context.location.current().id}`
     );
+  };
+
+  const appContextValues = {
+    token,
+    setToken,
+    user,
+    setUser,
+    currentLocation,
+    setCurrentLocation,
+    expiration,
+    setExpiration,
+    contentDisabled,
+
+    disableContent,
+    isAdmin,
+    authenticated,
+    reset,
+    locationPath,
+  };
+
+  const PrivateRoute = ({ children, ...rest }) => {
+    if (authenticated()) {
+      return <Route {...rest} />;
+    }
 
     return (
-        <Fragment>
-            <Router>
-                <AppContext.Provider value={appContextValues}>
-                    <Header/>
-
-                    <Content disabled={contentDisabled}>
-                        <Switch>
-                            {router.map((route, i) => {
-
-                                if (!route.public) {
-                                    return <PrivateRoute key={i} {...route} />
-                                }
-
-                                if (route.admin && !Context.user.isAdmin()) {
-                                    return null
-                                }
-
-                                return <Route key={i} {...route} />
-                            })}
-
-                            <Route render={() => <LoginRedirect/>}/>
-                        </Switch>
-                    </Content>
-                </AppContext.Provider>
-            </Router>
-
-            <ToastContainer/>
-            <Footer/>
-
-            <ReactQueryDevtools initialIsOpen={process.env.REACT_APP_ENV === 'dev'}/>
-        </Fragment>
+      <Route
+        {...rest}
+        render={() => (authenticated() ? children : <LoginRedirect />)}
+      />
     );
+  };
+
+  const LoginRedirect = () => (
+    <Redirect
+      to={{
+        pathname: "/login",
+      }}
+    />
+  );
+
+  return (
+    <Fragment>
+      <Router>
+        <AppContext.Provider value={appContextValues}>
+          <Header />
+
+          <Content disabled={contentDisabled}>
+            <Switch>
+              {router.map((route, i) => {
+                if (!route.public) {
+                  return <PrivateRoute key={i} {...route} />;
+                }
+
+                if (route.admin && !Context.user.isAdmin()) {
+                  return null;
+                }
+
+                return <Route key={i} {...route} />;
+              })}
+
+              <Route render={() => <LoginRedirect />} />
+            </Switch>
+          </Content>
+        </AppContext.Provider>
+      </Router>
+
+      <ToastContainer />
+      <Footer />
+
+      <ReactQueryDevtools initialIsOpen={process.env.REACT_APP_ENV === "dev"} />
+    </Fragment>
+  );
 };
 
-export default App
+export default App;

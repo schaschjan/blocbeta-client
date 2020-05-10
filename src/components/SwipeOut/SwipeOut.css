@@ -1,21 +1,21 @@
 .swipe-out {
-    position: relative;
-    overflow: hidden;
+  position: relative;
+  overflow: hidden;
 }
 
 .swipe-out .swipe-out__facade {
-    background: var(--color-light);
-    overflow: hidden;
+  background: var(--color-light);
+  overflow: hidden;
 }
 
 .swipe-out .swipe-out__actions {
-    overflow: hidden;
-    z-index: -1;
-    position: absolute;
-    top: 0;
-    right: 0;
+  overflow: hidden;
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .swipe-out.swipe-out--revealed .swipe-out__actions {
-    z-index: 1;
+  z-index: 1;
 }

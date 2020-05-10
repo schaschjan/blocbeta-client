@@ -1,11 +1,11 @@
 textarea {
-    background: var(--color-lightgrey);
-    border-radius: 4px;
-    border: none;
-    resize: none;
-    height: 260px;
-    width: 100%;
-    box-sizing: border-box;
-    outline: none;
-    padding: 16px;
+  background: var(--color-lightgrey);
+  border-radius: 4px;
+  border: none;
+  resize: none;
+  height: 260px;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  padding: 16px;
 }
