@@ -12,7 +12,7 @@ const Form = ({defaultValues, children, onSubmit}) => {
     const {register, errors, handleSubmit, control} = useForm({defaultValues});
 
     const createFormElement = (child, classes) => {
-        if (child.type.name === "Select") {
+        if (child.type === Select) {
 
             return (
                 <Controller

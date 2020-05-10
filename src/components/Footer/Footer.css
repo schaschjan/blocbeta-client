@@ -29,5 +29,6 @@ ul.footer li {
 
   ul.footer li {
     margin-right: 1em;
+    margin-bottom: 0;
   }
 }
