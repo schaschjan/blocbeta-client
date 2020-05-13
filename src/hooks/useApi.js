@@ -56,7 +56,7 @@ export const api = {
   },
   stats: {
     boulder: async () => await httpGet("/statistic/boulder"),
-    resetRotation: async () => await httpGet("/statistic/reset-rotation"),
+    resetRotation: async () => await httpGet("/statistic/wall-reset-rotation"),
   },
   walls: {
     all: async () => await httpGet("/wall"),
