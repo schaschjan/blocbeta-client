@@ -1,178 +1,188 @@
-import React, {useState, reset, useEffect, Fragment} from "react";
-import {Loader} from "../../../components/Loader/Loader";
+import React, { useState, reset, useEffect, Fragment } from "react";
+import { Loader } from "../../../components/Loader/Loader";
 import ApiClient from "../../../ApiClient";
-import {useParams} from "react-router-dom";
-import {withRouter} from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import Form from "../../../components/Form/Form";
 import Label from "../../../components/Label/Label";
 import Input from "../../../components/Input/Input";
 import Select from "../../../components/Select/Select";
 import Button from "../../../components/Button/Button";
-import Context, {getOption, getOptions} from "../../../Context";
-import {Messages} from "../../../Messages";
-import {toast} from "react-toastify";
+import Context, { getOption, getOptions } from "../../../Context";
+import { Messages } from "../../../Messages";
+import { toast } from "react-toastify";
 import "./Edit.css";
 import Container from "../../../components/Container/Container";
-import {PageHeader} from "../../../components/PageHeader/PageHeader";
+import { PageHeader } from "../../../components/PageHeader/PageHeader";
 import Crud from "../../../services/Crud";
-import useApi, {api, cacheKeys} from "../../../hooks/useApi";
+import useApi, { api, cacheKeys } from "../../../hooks/useApi";
 import Wrapper from "../../../components/Wrapper/Wrapper";
 
-const Edit = ({history}) => {
-    const {boulderId} = useParams();
-    const [isSubmitting, setSubmitting] = useState(false);
-    const [resolved, setResolved] = useState(false);
+const Edit = ({ history }) => {
+  const { boulderId } = useParams();
+  const [isSubmitting, setSubmitting] = useState(false);
+  const [resolved, setResolved] = useState(false);
 
-    const {status: boulderStatus, data: boulder} = useApi(
-        [cacheKeys.boulders, boulderId],
-        () => api.boulder.get(boulderId)
+  const { status: boulderStatus, data: boulder } = useApi(
+    [cacheKeys.boulders, boulderId],
+    () => api.boulder.get(boulderId)
+  );
+  const { status: wallsStatus, data: walls } = useApi(
+    cacheKeys.walls,
+    api.walls.all
+  );
+  const { status: gradesStatus, data: grades } = useApi(
+    cacheKeys.grades,
+    api.grades.all
+  );
+  const { status: holdStylesStatus, data: holdStyles } = useApi(
+    cacheKeys.holdStyles,
+    api.holdStyles.all
+  );
+  const { status: tagsStatus, data: tags } = useApi(
+    cacheKeys.tags,
+    api.tags.all
+  );
+  const { status: settersStatus, data: setters } = useApi(
+    cacheKeys.setters,
+    api.setters.all
+  );
+
+  const resolveFormData = (boulder) => {
+    boulder.startWall = getOption(
+      walls.find((wall) => wall.id === boulder.startWall.id)
     );
-    const {status: wallsStatus, data: walls} = useApi(
-        cacheKeys.walls,
-        api.walls.all
+
+    if (boulder.endWall) {
+      boulder.endWall = getOption(
+        walls.find((wall) => wall.id === boulder.endWall.id)
+      );
+    }
+
+    boulder.setters = boulder.setters.map((boulderSetter) => {
+      return getOption(
+        setters.find((setter) => setter.id === boulderSetter.id),
+        "username"
+      );
+    });
+
+    boulder.tags = boulder.tags.map((boulderTag) => {
+      return getOption(tags.find((tag) => tag.id === boulderTag.id));
+    });
+
+    boulder.grade = getOption(
+      grades.find((grade) => grade.id === boulder.grade.id)
     );
-    const {status: gradesStatus, data: grades} = useApi(
-        cacheKeys.grades,
-        api.grades.all
+    boulder.holdStyle = getOption(
+      holdStyles.find((holdStyle) => holdStyle.id === boulder.holdStyle.id)
     );
-    const {status: holdStylesStatus, data: holdStyles} = useApi(
-        cacheKeys.holdStyles,
-        api.holdStyles.all
-    );
-    const {status: tagsStatus, data: tags} = useApi(
-        cacheKeys.tags,
-        api.tags.all
-    );
-    const {status: settersStatus, data: setters} = useApi(
-        cacheKeys.setters,
-        api.setters.all
-    );
+  };
 
-    const resolveFormData = (boulder) => {
-        boulder.startWall = getOption(walls.find(wall => wall.id === boulder.startWall.id));
+  const loading = [
+    boulderStatus,
+    wallsStatus,
+    gradesStatus,
+    holdStylesStatus,
+    tagsStatus,
+    settersStatus,
+  ].includes("loading");
 
-        if (boulder.endWall) {
-            boulder.endWall = getOption(walls.find(wall => wall.id === boulder.endWall.id));
-        }
+  useEffect(() => {
+    if (loading) {
+      return;
+    }
 
-        boulder.setters = boulder.setters.map(boulderSetter => {
-            return getOption(setters.find(setter => setter.id === boulderSetter.id), "username")
-        });
+    resolveFormData(boulder);
+    setResolved(true);
+    console.log(boulder);
+  }, [loading]);
 
-        boulder.tags = boulder.tags.map(boulderTag => {
-            return getOption(tags.find(tag => tag.id === boulderTag.id))
-        });
+  const onSubmit = (data) => {
+    setSubmitting(true);
 
-        boulder.grade = getOption(grades.find(grade => grade.id === boulder.grade.id));
-        boulder.holdStyle = getOption(holdStyles.find(holdStyle => holdStyle.id === boulder.holdStyle.id));
-    };
+    ApiClient.boulder
+      .update(boulderId, Crud.boulder.resolveApiData(data))
+      .then(() => {
+        setSubmitting(false);
+        history.push(Context.getPath("/Boulder"));
+        toast.success("Boulder updated");
+        reset();
+      });
+  };
 
-    const loading = [
-        boulderStatus,
-        wallsStatus,
-        gradesStatus,
-        holdStylesStatus,
-        tagsStatus,
-        settersStatus,
-    ].includes("loading");
+  if (!resolved) return <Loader />;
 
-    useEffect(() => {
-        if (loading) {
-            return
-        }
+  return (
+    <Fragment>
+      <Container>
+        <PageHeader title={`Edit ${boulder.name}`} />
+        <Wrapper>
+          <Form onSubmit={onSubmit} defaultValues={boulder}>
+            <Label>Name</Label>
+            <Input
+              type="text"
+              name="name"
+              validate={{ required: Messages.required }}
+            />
 
-        resolveFormData(boulder);
-        setResolved(true);
-        console.log(boulder);
+            <Label>Grade</Label>
+            <Select
+              name="grade"
+              validate={{ required: Messages.requiredOption }}
+              options={getOptions(grades)}
+            />
 
-    }, [loading]);
+            <Label>Hold Style</Label>
+            <Select
+              name="holdStyle"
+              validate={{ required: Messages.requiredOption }}
+              options={getOptions(holdStyles)}
+            />
 
-    const onSubmit = (data) => {
-        setSubmitting(true);
+            <Label>Start</Label>
+            <Select
+              name="startWall"
+              validate={{ required: Messages.requiredOption }}
+              options={getOptions(walls)}
+            />
 
-        ApiClient.boulder
-            .update(boulderId, Crud.boulder.resolveApiData(data))
-            .then(() => {
-                setSubmitting(false);
-                history.push(Context.getPath("/Boulder"));
-                toast.success("Boulder updated");
-                reset();
-            });
-    };
+            <Label>End</Label>
+            <Select
+              name="endWall"
+              validate={{ required: Messages.requiredOption }}
+              options={getOptions(walls)}
+            />
 
-    if (!resolved) return <Loader/>;
+            <Label>Setters</Label>
+            <Select
+              name="setters"
+              multiple={true}
+              validate={{ required: Messages.requiredOption }}
+              labelProperty="username"
+              options={getOptions(setters, "username")}
+            />
 
-    return (
-        <Fragment>
-            <Container>
-                <PageHeader title={`Edit ${boulder.name}`}/>
-                <Wrapper>
-                    <Form onSubmit={onSubmit} defaultValues={boulder}>
-                        <Label>Name</Label>
-                        <Input
-                            type="text"
-                            name="name"
-                            validate={{required: Messages.required}}
-                        />
+            <Label>Tags</Label>
+            <Select name="tags" multiple={true} options={getOptions(tags)} />
 
-                        <Label>Grade</Label>
-                        <Select
-                            name="grade"
-                            validate={{required: Messages.requiredOption}}
-                            options={getOptions(grades)}
-                        />
+            <Label>Status</Label>
+            <Select name="status" options={getOptions(Context.core.states)} />
 
-                        <Label>Hold Style</Label>
-                        <Select
-                            name="holdStyle"
-                            validate={{required: Messages.requiredOption}}
-                            options={getOptions(holdStyles)}
-                        />
+            <Label>Points</Label>
+            <Input
+              type="text"
+              name="points"
+              validate={{ required: Messages.required }}
+            />
 
-                        <Label>Start</Label>
-                        <Select
-                            name="startWall"
-                            validate={{required: Messages.requiredOption}}
-                            options={getOptions(walls)}
-                        />
-
-                        <Label>End</Label>
-                        <Select
-                            name="endWall"
-                            validate={{required: Messages.requiredOption}}
-                            options={getOptions(walls)}
-                        />
-
-                        <Label>Setters</Label>
-                        <Select
-                            name="setters"
-                            multiple={true}
-                            validate={{required: Messages.requiredOption}}
-                            labelProperty="username"
-                            options={getOptions(setters, "username")}
-                        />
-
-                        <Label>Tags</Label>
-                        <Select name="tags" multiple={true} options={getOptions(tags)}/>
-
-                        <Label>Status</Label>
-                        <Select name="status" options={getOptions(Context.core.states)}/>
-
-                        <Label>Points</Label>
-                        <Input
-                            type="text"
-                            name="points"
-                            validate={{required: Messages.required}}
-                        />
-
-                        <Button type="submit" primary="true" disabled={isSubmitting}>
-                            Update
-                        </Button>
-                    </Form>
-                </Wrapper>
-            </Container>
-        </Fragment>
-    );
+            <Button type="submit" primary="true" disabled={isSubmitting}>
+              Update
+            </Button>
+          </Form>
+        </Wrapper>
+      </Container>
+    </Fragment>
+  );
 };
 
 export default withRouter(Edit);

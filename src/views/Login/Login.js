@@ -55,11 +55,12 @@ const Login = () => {
     }
 
     const payload = jwt_decode(token);
+    console.log(payload);
 
     setExpiration(payload.exp);
     setUser({
       id: payload.id,
-      username: payload.username
+      username: payload.username,
     });
 
     setCurrentLocation(payload.location);
