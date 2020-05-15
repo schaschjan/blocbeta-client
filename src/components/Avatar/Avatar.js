@@ -1,6 +1,6 @@
 import React from "react";
 import "./Avatar.css";
-import { resolveMedia } from "../../helpers/helpers";
+import { resolveMedia } from "../../helpers";
 import Icon from "../Icon/Icon";
 
 const Avatar = ({ image }) => {

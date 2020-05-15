@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import "./FilterDropdown.css";
-import Context from "../../../../Context";
 import HoldStyle from "../../../../components/HoldStyle/HoldStyle";
-import { alphabeticalSort } from "../../../../Helpers";
 import HyperLink from "../../../../components/HyperLink/HyperLink";
 import Emoji from "../../../../components/Emoji/Emoji";
 import Grade from "../../../../components/Grade/Grade";
 import Icon from "../../../../components/Icon/Icon";
 import classnames from "classnames";
 import useApi, { api } from "../../../../hooks/useApi";
+import { store } from "../../../../store";
+import { alphaSort } from "../../../../helpers";
 
 export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
   const [activeTab, setActiveTab] = useState("holdStyle");
@@ -35,20 +35,16 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       render: () => {
         return (
           <ul className="filter-values">
-            {holdStyles
-              .sort((a, b) => alphabeticalSort(a.name, b.name))
-              .map((holdStyle) => {
-                return (
-                  <li className="filter-option">
-                    <span
-                      onClick={() => addFilter("holdStyle", holdStyle.name)}
-                    >
-                      <HoldStyle name={holdStyle.name} small={true} />
-                      <span>{holdStyle.name}</span>
-                    </span>
-                  </li>
-                );
-              })}
+            {alphaSort(holdStyles, "name").map((holdStyle) => {
+              return (
+                <li className="filter-option">
+                  <span onClick={() => addFilter("holdStyle", holdStyle.name)}>
+                    <HoldStyle name={holdStyle.name} small={true} />
+                    <span>{holdStyle.name}</span>
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         );
       },
@@ -59,17 +55,15 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       render: () => {
         return (
           <ul className="filter-values">
-            {walls
-              .sort((a, b) => alphabeticalSort(a.name, b.name))
-              .map((wall) => {
-                return (
-                  <li className="filter-option">
-                    <span onClick={() => addFilter("start", wall.name)}>
-                      <span>{wall.name}</span>
-                    </span>
-                  </li>
-                );
-              })}
+            {alphaSort(walls, "name").map((wall) => {
+              return (
+                <li className="filter-option">
+                  <span onClick={() => addFilter("start", wall.name)}>
+                    <span>{wall.name}</span>
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         );
       },
@@ -80,17 +74,15 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       render: () => {
         return (
           <ul className="filter-values">
-            {walls
-              .sort((a, b) => alphabeticalSort(a.name, b.name))
-              .map((wall) => {
-                return (
-                  <li className="filter-option">
-                    <span onClick={() => addFilter("end", wall.name)}>
-                      <span>{wall.name}</span>
-                    </span>
-                  </li>
-                );
-              })}
+            {alphaSort(walls, "name").map((wall) => {
+              return (
+                <li className="filter-option">
+                  <span onClick={() => addFilter("end", wall.name)}>
+                    <span>{wall.name}</span>
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         );
       },
@@ -101,17 +93,15 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       render: () => {
         return (
           <ul className="filter-values">
-            {grades
-              .sort((a, b) => alphabeticalSort(a.name, b.name))
-              .map((grade) => {
-                return (
-                  <li className="filter-option">
-                    <span onClick={() => addFilter("grade", grade.name)}>
-                      <Grade name={grade.name} color={grade.color} />
-                    </span>
-                  </li>
-                );
-              })}
+            {alphaSort(grades, "name").map((grade) => {
+              return (
+                <li className="filter-option">
+                  <span onClick={() => addFilter("grade", grade.name)}>
+                    <Grade name={grade.name} color={grade.color} />
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         );
       },
@@ -122,17 +112,15 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       render: () => {
         return (
           <ul className="filter-values">
-            {tags
-              .sort((a, b) => alphabeticalSort(a.name, b.name))
-              .map((tag) => {
-                return (
-                  <li className="filter-option">
-                    <span onClick={() => addFilter("tag", tag.emoji)}>
-                      <Emoji>{tag.emoji}</Emoji> {tag.name}
-                    </span>
-                  </li>
-                );
-              })}
+            {alphaSort(tags, "name").map((tag) => {
+              return (
+                <li className="filter-option">
+                  <span onClick={() => addFilter("tag", tag.emoji)}>
+                    <Emoji>{tag.emoji}</Emoji> {tag.name}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         );
       },
@@ -143,17 +131,15 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       render: () => {
         return (
           <ul className="filter-values">
-            {Context.core.ascents
-              .sort((a, b) => alphabeticalSort(a.name, b.name))
-              .map((ascent) => {
-                return (
-                  <li className="filter-option">
-                    <span onClick={() => addFilter("ascent", ascent.name)}>
-                      <Icon name={ascent.id} /> {ascent.name}
-                    </span>
-                  </li>
-                );
-              })}
+            {alphaSort(store.ascents, "name").map((ascent) => {
+              return (
+                <li className="filter-option">
+                  <span onClick={() => addFilter("ascent", ascent.name)}>
+                    <Icon name={ascent.id} /> {ascent.name}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         );
       },

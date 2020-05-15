@@ -1,6 +1,5 @@
-import React, { useState, reset, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Loader } from "../../../components/Loader/Loader";
-import ApiClient from "../../../ApiClient";
 import { useParams } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 import Form from "../../../components/Form/Form";
@@ -8,15 +7,14 @@ import Label from "../../../components/Label/Label";
 import Input from "../../../components/Input/Input";
 import Select from "../../../components/Select/Select";
 import Button from "../../../components/Button/Button";
-import Context, { getOption, getOptions } from "../../../Context";
-import { Messages } from "../../../Messages";
-import { toast } from "react-toastify";
+import { messages } from "../../../messages";
 import "./Edit.css";
 import Container from "../../../components/Container/Container";
 import { PageHeader } from "../../../components/PageHeader/PageHeader";
-import Crud from "../../../services/Crud";
 import useApi, { api, cacheKeys } from "../../../hooks/useApi";
 import Wrapper from "../../../components/Wrapper/Wrapper";
+import { store } from "../../../store";
+import { getOption, getOptions } from "../../../helpers";
 
 const Edit = ({ history }) => {
   const { boulderId } = useParams();
@@ -100,14 +98,7 @@ const Edit = ({ history }) => {
   const onSubmit = (data) => {
     setSubmitting(true);
 
-    ApiClient.boulder
-      .update(boulderId, Crud.boulder.resolveApiData(data))
-      .then(() => {
-        setSubmitting(false);
-        history.push(Context.getPath("/Boulder"));
-        toast.success("Boulder updated");
-        reset();
-      });
+    alert();
   };
 
   if (!resolved) return <Loader />;
@@ -122,34 +113,34 @@ const Edit = ({ history }) => {
             <Input
               type="text"
               name="name"
-              validate={{ required: Messages.required }}
+              validate={{ required: messages.required }}
             />
 
             <Label>Grade</Label>
             <Select
               name="grade"
-              validate={{ required: Messages.requiredOption }}
+              validate={{ required: messages.requiredOption }}
               options={getOptions(grades)}
             />
 
             <Label>Hold Style</Label>
             <Select
               name="holdStyle"
-              validate={{ required: Messages.requiredOption }}
+              validate={{ required: messages.requiredOption }}
               options={getOptions(holdStyles)}
             />
 
             <Label>Start</Label>
             <Select
               name="startWall"
-              validate={{ required: Messages.requiredOption }}
+              validate={{ required: messages.requiredOption }}
               options={getOptions(walls)}
             />
 
             <Label>End</Label>
             <Select
               name="endWall"
-              validate={{ required: Messages.requiredOption }}
+              validate={{ required: messages.requiredOption }}
               options={getOptions(walls)}
             />
 
@@ -157,7 +148,7 @@ const Edit = ({ history }) => {
             <Select
               name="setters"
               multiple={true}
-              validate={{ required: Messages.requiredOption }}
+              validate={{ required: messages.requiredOption }}
               labelProperty="username"
               options={getOptions(setters, "username")}
             />
@@ -166,13 +157,13 @@ const Edit = ({ history }) => {
             <Select name="tags" multiple={true} options={getOptions(tags)} />
 
             <Label>Status</Label>
-            <Select name="status" options={getOptions(Context.core.states)} />
+            <Select name="status" options={getOptions(store.states)} />
 
             <Label>Points</Label>
             <Input
               type="text"
               name="points"
-              validate={{ required: Messages.required }}
+              validate={{ required: messages.required }}
             />
 
             <Button type="submit" primary="true" disabled={isSubmitting}>

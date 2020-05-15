@@ -8,7 +8,7 @@ import Button from "../../components/Button/Button";
 import Wrapper from "../../components/Wrapper/Wrapper";
 import { queryCache, useMutation } from "react-query";
 import { toast } from "react-toastify";
-import { alphaSort } from "../../helpers/helpers";
+import { alphaSort } from "../../helpers";
 
 const Setters = () => {
   const { status, data } = useApi("setters", api.setters.all);

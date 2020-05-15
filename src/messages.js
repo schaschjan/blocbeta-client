@@ -1,4 +1,4 @@
-export const Messages = {
+export const messages = {
   range: {
     min: (value, property) => {
       return `Minimal ${property} is ${value}`;

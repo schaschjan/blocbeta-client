@@ -6,7 +6,7 @@ import Label from "../components/Label/Label";
 import Input from "../components/Input/Input";
 import Button from "../components/Button/Button";
 import useApi, { api } from "../hooks/useApi";
-import { Messages } from "../Messages";
+import { messages } from "../messages";
 import { useMutation } from "react-query";
 import Container from "../components/Container/Container";
 import { PageHeader } from "../components/PageHeader/PageHeader";
@@ -50,10 +50,10 @@ const Account = () => {
         <Input
           name="email"
           validate={{
-            required: Messages.required,
+            required: messages.required,
             pattern: {
               value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-              message: Messages.email.invalid,
+              message: messages.email.invalid,
             },
           }}
         />
@@ -62,14 +62,14 @@ const Account = () => {
         <Input
           name="armSpan"
           validate={{
-            required: Messages.required,
+            required: messages.required,
             min: {
               value: 120,
-              message: Messages.range.min(120, "arm span"),
+              message: messages.range.min(120, "arm span"),
             },
             max: {
               value: 220,
-              message: Messages.range.max(220, "arm span"),
+              message: messages.range.max(220, "arm span"),
             },
           }}
           type="number"
@@ -79,7 +79,7 @@ const Account = () => {
         <Input
           name="height"
           validate={{
-            required: Messages.required,
+            required: messages.required,
             min: {
               value: 120,
               message: "Minimal height is 120",
@@ -96,7 +96,7 @@ const Account = () => {
         <Input
           name="weight"
           validate={{
-            required: Messages.required,
+            required: messages.required,
             min: {
               value: 40,
               message: "Minimal weight is 40",

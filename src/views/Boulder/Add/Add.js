@@ -3,20 +3,18 @@ import Container from "../../../components/Container/Container";
 import { PageHeader } from "../../../components/PageHeader/PageHeader";
 import Label from "../../../components/Label/Label";
 import Input from "../../../components/Input/Input";
-import { Messages } from "../../../Messages";
+import { messages } from "../../../messages";
 import Select from "../../../components/Select/Select";
-import Context, { getOption, getOptions } from "../../../Context";
+import { getOption, getOptions } from "../../../helpers";
 import Button from "../../../components/Button/Button";
 import Form from "../../../components/Form/Form";
-import ApiClient from "../../../ApiClient";
-import { toast } from "react-toastify";
-import Crud from "../../../services/Crud";
 import useApi, { api, cacheKeys } from "../../../hooks/useApi";
 import { Loader } from "../../../components/Loader/Loader";
 import Wrapper from "../../../components/Wrapper/Wrapper";
+import { store } from "../../../store";
 
 const defaultStatus = getOption(
-  Context.core.states.find((state) => state.id === "active")
+  store.states.find((state) => state.id === "active")
 );
 const defaultPoints = 1000;
 
@@ -55,11 +53,7 @@ const Add = () => {
   const onSubmit = (data) => {
     setSubmitting(true);
 
-    ApiClient.boulder.create(Crud.boulder.resolveApiData(data)).then(() => {
-      setSubmitting(false);
-      toast.success(`Created ${data.name}`);
-      // reset form
-    });
+    alert();
   };
 
   if (loading) return <Loader />;
@@ -74,34 +68,34 @@ const Add = () => {
           <Input
             type="text"
             name="name"
-            validate={{ required: Messages.required }}
+            validate={{ required: messages.required }}
           />
 
           <Label>Grade</Label>
           <Select
             name="grade"
-            validate={{ required: Messages.requiredOption }}
+            validate={{ required: messages.requiredOption }}
             options={getOptions(grades)}
           />
 
           <Label>Hold Style</Label>
           <Select
             name="holdStyle"
-            validate={{ required: Messages.requiredOption }}
+            validate={{ required: messages.requiredOption }}
             options={getOptions(holdStyles)}
           />
 
           <Label>Start</Label>
           <Select
             name="startWall"
-            validate={{ required: Messages.requiredOption }}
+            validate={{ required: messages.requiredOption }}
             options={getOptions(walls)}
           />
 
           <Label>End</Label>
           <Select
             name="endWall"
-            validate={{ required: Messages.requiredOption }}
+            validate={{ required: messages.requiredOption }}
             options={getOptions(walls)}
           />
 
@@ -109,7 +103,7 @@ const Add = () => {
           <Select
             name="setters"
             multiple={true}
-            validate={{ required: Messages.requiredOption }}
+            validate={{ required: messages.requiredOption }}
             labelProperty="username"
             options={getOptions(setters, "username")}
           />
@@ -121,8 +115,8 @@ const Add = () => {
           <Select
             name="status"
             defaultValue={defaultStatus}
-            validate={{ required: Messages.requiredOption }}
-            options={getOptions(Context.core.states)}
+            validate={{ required: messages.requiredOption }}
+            options={getOptions(store.states)}
           />
 
           <Label>Points</Label>
@@ -130,7 +124,7 @@ const Add = () => {
             type="number"
             name="points"
             defaultValue={defaultPoints}
-            validate={{ required: Messages.required }}
+            validate={{ required: messages.required }}
           />
 
           <Button type="submit" primary="true" disabled={submitting}>

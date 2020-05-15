@@ -33,7 +33,7 @@ const Search = ({
       />
 
       <Icon
-        name="open-filters-small"
+        name="menu-small"
         className="toggle-filter-dropdown"
         onClick={() => onToggle()}
       />

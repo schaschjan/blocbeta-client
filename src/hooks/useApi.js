@@ -69,11 +69,16 @@ export const api = {
     get: async (id) => await httpGet(`/boulder/${id}`),
     active: async () => await httpGet(`/boulder/filter/active`),
     mass: async (data) => await httpPost(`/boulder/mass`, data),
+    reportError: async (id, data) => httpPost(`/boulder/${id}/error`, data),
   },
   ascents: {
     active: async () => await httpGet(`/ascent/filter/active`),
     add: async (data) => await httpPost(`/ascent`, data),
     remove: async (id) => await httpDelete(`/ascent/${id}`),
+    doubt: async (id, data) => await httpPost(`/ascent/${id}/doubt`, data),
+  },
+  errors: {
+    unresolved: async () => await httpGet(`/error`),
   },
   grades: {
     all: async () => await httpGet("/grade"),

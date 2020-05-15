@@ -1,10 +1,6 @@
 .react-select {
 }
 
-.react-select.react-select--formless .react-select__control {
-  box-shadow: none;
-}
-
 .react-select .react-select__control {
   border-radius: 0;
   border: 0;

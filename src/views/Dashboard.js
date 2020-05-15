@@ -1,8 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Loader } from "../components/Loader/Loader";
-import Context from "../Context";
 import moment from "moment";
-import { Messages } from "../Messages";
+import { messages } from "../messages";
 import { Link } from "react-router-dom";
 import useApi, { api, cacheKeys } from "../hooks/useApi";
 import { AppContext } from "../App";
@@ -11,7 +10,7 @@ import Wrapper from "../components/Wrapper/Wrapper";
 import { queryCache } from "react-query";
 
 const Dashboard = () => {
-  const { user } = useContext(AppContext);
+  const { user, locationPath } = useContext(AppContext);
   const { status: resetStatus, data: rotation } = useApi(
     cacheKeys.stats.resetRotation,
     api.stats.resetRotation
@@ -67,7 +66,7 @@ const Dashboard = () => {
             if (reset.averageSetDate) {
               date = `Last set: ${moment(reset.averageSetDate).fromNow()}`;
             } else {
-              date = Messages.reset;
+              date = messages.reset;
             }
 
             return (
@@ -83,7 +82,7 @@ const Dashboard = () => {
           <li>
             <Link
               to={{
-                pathname: Context.getPath("/boulder"),
+                pathname: locationPath("/boulder"),
                 search: "?ascent=todo",
                 state: { fromDashboard: true },
               }}
@@ -95,7 +94,7 @@ const Dashboard = () => {
           <li>
             <Link
               to={{
-                pathname: Context.getPath("/boulder"),
+                pathname: locationPath("/boulder"),
                 search: "?ascent=todo&date=new",
                 state: { fromDashboard: true },
               }}
@@ -107,7 +106,7 @@ const Dashboard = () => {
           <li>
             <Link
               to={{
-                pathname: Context.getPath("/boulder"),
+                pathname: locationPath("/boulder"),
                 search: "?ascent=todo&date=new",
                 state: { fromDashboard: true },
               }}

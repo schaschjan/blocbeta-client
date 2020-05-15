@@ -1,15 +1,15 @@
-import Login from "../views/Login/Login";
-import Register from "../views/Register";
-import PasswordReset from "../views/PasswordReset";
-import Dashboard from "../views/Dashboard";
-import BoulderIndex from "../views/Boulder/Index/Index";
-import BoulderAdd from "../views/Boulder/Add/Add";
-import BoulderEdit from "../views/Boulder/Edit/Edit";
-import CurrentRanking from "../views/Ranking/Current/Current";
-import CurrentComparison from "../views/Compare/Current";
-import Account from "../views/Account";
+import Login from "./views/Login/Login";
+import Register from "./views/Register";
+import PasswordReset from "./views/PasswordReset";
+import Dashboard from "./views/Dashboard";
+import BoulderIndex from "./views/Boulder/Index/Index";
+import BoulderAdd from "./views/Boulder/Add/Add";
+import BoulderEdit from "./views/Boulder/Edit/Edit";
+import CurrentRanking from "./views/Ranking/Current/Current";
+import CurrentComparison from "./views/Compare/Current";
+import Account from "./views/Account";
 import React from "react";
-import Settings from "../views/Settings/Settings";
+import Settings from "./views/Settings/Settings";
 
 export const router = [
   {

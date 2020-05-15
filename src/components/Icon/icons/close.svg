@@ -1,0 +1,25 @@
+<svg
+        width="50"
+        height="50"
+        viewBox="0 0 50 50"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+>
+    <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M0 0H50V50H0V0Z"
+            fill="white"
+            fill-opacity="0.01"
+    />
+    <path
+            d="M13.48 36.52L36.52 13.48"
+            stroke="black"
+            stroke-linecap="round"
+    />
+    <path
+            d="M36.52 36.52L13.48 13.48"
+            stroke="black"
+            stroke-linecap="round"
+    />
+</svg>

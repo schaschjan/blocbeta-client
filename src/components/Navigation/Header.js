@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useRef, useState } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./Header.css";
 import Button from "../Button/Button";
 import { AppContext, getLocationSlug } from "../../App";
@@ -12,9 +12,8 @@ import { motion } from "framer-motion";
 import classnames from "classnames";
 import useClickOutside from "../../hooks/useClickOutside";
 import useKeyDown from "../../hooks/useKeyDown";
-import { largeQuery } from "../../Helpers";
 import Modal from "../Modal/Modal";
-import { alphaSort } from "../../helpers/helpers";
+import { alphaSort, largeQuery } from "../../helpers";
 
 const LocationSwitch = () => {
   const { status, data: locations } = useApi(
@@ -160,7 +159,7 @@ const Header = () => {
           {offCanvasOpen ? (
             <Icon name="close-large" onClick={() => closeOffCanvas()} />
           ) : (
-            <Icon name="menu" onClick={() => openOffCanvas()} />
+            <Icon name="burger" onClick={() => openOffCanvas()} />
           )}
 
           <motion.div

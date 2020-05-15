@@ -26,9 +26,9 @@ export const TableHeader = ({ headerGroups }) => {
               <span className="sort-indicator">
                 {column.isSorted ? (
                   column.isSortedDesc ? (
-                    <Icon name="down" />
+                    <Icon name="downward" />
                   ) : (
-                    <Icon name="up" />
+                    <Icon name="upward" />
                   )
                 ) : (
                   ""

@@ -5,27 +5,14 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import Context from "./Context";
 import Header from "./components/Navigation/Header";
 import { Content } from "./components/Content/Content";
-import { router } from "./services/router";
+import { router } from "./router";
 import { ToastContainer } from "react-toastify";
 import { Footer } from "./components/Footer/Footer";
 import { ReactQueryDevtools } from "react-query-devtools";
 import usePersistentState from "./hooks/usePersistentState";
 import jwt_decode from "jwt-decode";
-
-export const isMobile = () => {
-  return matchMedia("(max-width: 600px)").matches;
-};
-
-export const isTablet = () => {
-  return matchMedia("(min-width: 601px) and (max-width: 1139px)").matches;
-};
-
-export const isDesktop = () => {
-  return matchMedia("(min-width: 1140px)").matches;
-};
 
 export const AppContext = createContext();
 
@@ -72,9 +59,7 @@ const App = () => {
     const payload = jwt_decode(token);
 
     //switch to admin role
-    return payload.roles.includes(
-      `ROLE_SETTER@${Context.location.current().id}`
-    );
+    return payload.roles.includes(`ROLE_SETTER@${currentLocation.id}`);
   };
 
   const appContextValues = {
@@ -129,7 +114,7 @@ const App = () => {
                   return <PrivateRoute key={i} {...route} />;
                 }
 
-                if (route.admin && !Context.user.isAdmin()) {
+                if (route.admin && !isAdmin()) {
                   return null;
                 }
 
