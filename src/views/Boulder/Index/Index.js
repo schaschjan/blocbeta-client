@@ -45,24 +45,13 @@ import SwipeOut from "../../../components/SwipeOut/SwipeOut";
 import {useMediaQuery} from "react-responsive/src";
 import {mediumQuery, smallQuery} from "../../../helpers";
 import {Tag} from "../../../components/TagInput/TagInput";
+import Wrapper from "../../../components/Wrapper/Wrapper";
 
 const Table = ({columns, data, editable = false}) => {
     const isMedium = useMediaQuery(mediumQuery);
     const isSmall = useMediaQuery(smallQuery);
 
-    const url = new URL(window.location);
-    const parameters = new URLSearchParams(url.search);
-
-    let defaultFilters = [];
-
-    for (let parameter of parameters) {
-        defaultFilters.push({
-            id: parameter[0],
-            value: parameter[1],
-        });
-    }
-
-    const [filters, setFilters] = useState(defaultFilters);
+    const [filters, setFilters] = useState([]);
     const [filtersDropped, setFiltersDropped] = useState(false);
 
     const removeFilter = (id) => {
@@ -129,6 +118,22 @@ const Table = ({columns, data, editable = false}) => {
     };
 
     useEffect(() => {
+        const url = new URL(window.location);
+        const parameters = new URLSearchParams(url.search);
+
+        let defaultFilters = [];
+
+        for (let parameter of parameters) {
+            defaultFilters.push({
+                id: parameter[0],
+                value: parameter[1],
+            });
+        }
+
+        setFilters(defaultFilters)
+    }, []);
+
+    useEffect(() => {
         filters.map((filter) => setFilter(filter.id, filter.value));
         setAllFilters(filters);
 
@@ -139,47 +144,12 @@ const Table = ({columns, data, editable = false}) => {
         }
     }, [filters, filtersDropped]);
 
-    const Search = () => {
-        const inputElement = useRef(null);
-
-        return (
-            <div className="search" id={"search"}>
-                <Icon name="search" onClick={() => inputElement.current.focus()}/>
-
-                {filters && (
-                    filters.map((filter) => (
-                        <Tag id={filter.id} value={filter.value} onRemove={removeFilter(filter.id)}/>
-                    ))
-                )}
-
-                <Input
-                    register={inputElement}
-                    placeholder={"search"}
-                    onChange={null}
-                    value={null}
-                />
-
-                <Icon name={filtersDropped ? "close" : "menu-small"}
-                      className="toggle-filter-dropdown"
-                      onClick={() => setFiltersDropped(!filtersDropped)}
-                />
-
-                {/*{inputElement.current && inputElement.current.value && (*/}
-                {/*    <Icon*/}
-                {/*        name="close"*/}
-                {/*        onClick={() => {*/}
-                {/*            inputElement.current.value = null;*/}
-                {/*            onClear();*/}
-                {/*        }}*/}
-                {/*    />*/}
-                {/*)}*/}
-            </div>
-        )
-    };
-
     return (
         <Fragment>
-            <Search/>
+            <Search filters={filters}
+                    filtersDropped={filtersDropped}
+                    removeFilter={() => removeFilter}
+                    toggleFilters={() => setFiltersDropped(!filtersDropped)}/>
 
             <FilterDropdown addFilter={addFilter} dropped={filtersDropped}/>
 
@@ -227,8 +197,10 @@ const Table = ({columns, data, editable = false}) => {
                                             {renderCell("name")}
 
                                             <span className="inline-wall-names">
-                        {renderCell("end")} <span>></span> {renderCell("start")}
-                      </span>
+                                                {renderCell("end")}
+                                                <span>></span>
+                                                {renderCell("start")}
+                                            </span>
 
                                             {renderCell("grade")}
                                         </div>
@@ -308,6 +280,44 @@ const Table = ({columns, data, editable = false}) => {
             )}
         </Fragment>
     );
+};
+
+const Search = ({filters, removeFilter, filtersDropped, toggleFilters}) => {
+    const inputElement = useRef(null);
+console.log(filters);
+    return (
+        <div className="search" id={"search"}>
+            <Icon name="search" onClick={() => inputElement.current.focus()}/>
+
+            {filters && (
+                filters.map((filter) => (
+                    <Tag id={filter.id} value={filter.value} onRemove={removeFilter(filter.id)}/>
+                ))
+            )}
+
+            <Input
+                register={inputElement}
+                placeholder={"search"}
+                onChange={null}
+                value={null}
+            />
+
+            <Icon name={filtersDropped ? "close" : "menu-small"}
+                  className="toggle-filter-dropdown"
+                  onClick={() => toggleFilters()}
+            />
+
+            {/*{inputElement.current && inputElement.current.value && (*/}
+            {/*    <Icon*/}
+            {/*        name="close"*/}
+            {/*        onClick={() => {*/}
+            {/*            inputElement.current.value = null;*/}
+            {/*            onClear();*/}
+            {/*        }}*/}
+            {/*    />*/}
+            {/*)}*/}
+        </div>
+    )
 };
 
 const Index = () => {
@@ -814,7 +824,9 @@ const Index = () => {
                     )}
                 </PageHeader>
 
-                <Table columns={columns} data={boulders} editable={isAdmin}/>
+                <Wrapper>
+                    <Table columns={columns} data={boulders} editable={isAdmin}/>
+                </Wrapper>
             </Container>
 
             <Drawer

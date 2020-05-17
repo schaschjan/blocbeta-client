@@ -29,6 +29,7 @@
   font-weight: bold;
   padding: 16px 128px;
   margin-top: 36px;
+  width: 100%;
 }
 
 .button.button--primary:active {

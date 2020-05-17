@@ -15,6 +15,7 @@ import axios from "axios";
 import { useIsFetching } from "react-query";
 import { Loader } from "../../components/Loader/Loader";
 import Wrapper from "../../components/Wrapper/Wrapper";
+import {messages} from "../../messages";
 
 const Login = () => {
   const [submitting, setSubmitting] = useState(false);
@@ -81,7 +82,7 @@ const Login = () => {
           <Label>Username</Label>
           <Input
             type="text"
-            validate={{ required: "Please provide your username" }}
+            validate={{required: messages.requiredOption}}
             placeholder="…"
             name="username"
           />
@@ -89,20 +90,14 @@ const Login = () => {
           <Label>Password</Label>
           <Input
             type="password"
-            validate={{ required: "Please provide your password" }}
+            validate={{required: messages.requiredOption}}
             placeholder="…"
             name="password"
           />
 
-          {submitting ? (
-            <Button primary="true" type="submit" disabled="true">
-              Login
-            </Button>
-          ) : (
-            <Button primary="true" type="submit">
-              Login
-            </Button>
-          )}
+          <Button type="submit" primary="true" disabled={submitting}>
+            Login
+          </Button>
         </Form>
 
         <div className="support-links">
