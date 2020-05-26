@@ -189,7 +189,7 @@ const Table = ({columns, data, editable = false}) => {
 
                         if (isSmall) {
                             return (
-                                <SwipeOut actions={renderCell("ascent")} width={150}>
+                                <SwipeOut actions={renderCell("ascent")} width={172}>
                                     <TableRow>
                                         <div>{renderCell("holdStyle")}</div>
 
@@ -297,7 +297,7 @@ console.log(filters);
 
             <Input
                 register={inputElement}
-                placeholder={"search"}
+                placeholder={"Search"}
                 onChange={null}
                 value={null}
             />
@@ -387,6 +387,8 @@ const Index = () => {
     });
 
     const addAscent = async (id, type) => {
+
+
         try {
             await mutateOnAddAscent({
                 boulder: id,

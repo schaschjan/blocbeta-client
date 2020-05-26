@@ -82,7 +82,7 @@ const Login = () => {
           <Label>Username</Label>
           <Input
             type="text"
-            validate={{required: messages.requiredOption}}
+            validate={{required: messages.required}}
             placeholder="…"
             name="username"
           />
@@ -90,7 +90,7 @@ const Login = () => {
           <Label>Password</Label>
           <Input
             type="password"
-            validate={{required: messages.requiredOption}}
+            validate={{required: messages.required}}
             placeholder="…"
             name="password"
           />

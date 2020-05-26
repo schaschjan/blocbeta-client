@@ -56,6 +56,10 @@ const App = () => {
     };
 
     const isAdmin = useMemo(() => {
+        if (!token) {
+            return false
+        }
+
         const payload = jwt_decode(token);
 
         return payload.roles.includes(`ROLE_ADMIN@${currentLocation.id}`);
