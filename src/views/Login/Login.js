@@ -56,7 +56,6 @@ const Login = () => {
     }
 
     const payload = jwt_decode(token);
-    console.log(payload);
 
     setExpiration(payload.exp);
     setUser({

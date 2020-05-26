@@ -1,7 +1,6 @@
 import React, {useState, useEffect, Fragment} from "react";
 import {Loader} from "../../../components/Loader/Loader";
 import {useParams} from "react-router-dom";
-import {withRouter} from "react-router-dom";
 import Form from "../../../components/Form/Form";
 import Label from "../../../components/Label/Label";
 import Input from "../../../components/Input/Input";
@@ -78,10 +77,6 @@ const Edit = () => {
         );
 
         boulder.status = getOption(store.states.find(state => boulder.status === state.name))
-    };
-
-    const getApiData = () => {
-
     };
 
     const loading = [

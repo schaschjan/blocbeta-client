@@ -62,7 +62,7 @@ const App = () => {
 
         const payload = jwt_decode(token);
 
-        return payload.roles.includes(`ROLE_ADMIN@${currentLocation.id}`);
+        return Object.values(payload.roles).includes(`ROLE_ADMIN@${currentLocation.id}`);
     }, [token]);
 
     const appContextValues = {

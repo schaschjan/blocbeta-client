@@ -70,7 +70,8 @@ export const api = {
     active: async () => await httpGet(`/boulder/filter/active`),
     mass: async (data) => await httpPost(`/boulder/mass`, data),
     reportError: async (id, data) => httpPost(`/boulder/${id}/error`, data),
-    update: async(id, data) => httpPut(`/boulder/${id}`, data)
+    update: async(id, data) => httpPut(`/boulder/${id}`, data),
+    add: async(data) => httpPost(`/boulder`, data)
   },
   ascents: {
     active: async () => await httpGet(`/ascent/filter/active`),

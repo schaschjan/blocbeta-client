@@ -29,8 +29,9 @@ const Form = ({defaultValues, children, onSubmit}) => {
         if (child.type === Select) {
             return (
                 <Controller
+                    rules={child.props.validate}
                     key={child.props.name}
-                    as={<Select/>}
+                    as={<Select isMulti={child.props.multiple}/>}
                     options={child.props.options}
                     name={child.props.name}
                     isClearable
@@ -41,7 +42,7 @@ const Form = ({defaultValues, children, onSubmit}) => {
 
         if (child.type === Button) {
             return (
-                <Button {...child.props} disabled={child.props.disabled || !formState.dirty}>
+                <Button {...child.props}>
                     {child.props.children}
                 </Button>
             )
@@ -70,15 +71,11 @@ const Form = ({defaultValues, children, onSubmit}) => {
                             {formElements.includes(child.type) ? createFormElement(child, classes) : child}
 
                             {errors[child.props.name] && (
-                                <Error
-                                    message={errors[child.props.name].message}
-                                    key={child.props.name}
-                                />
+                                <Error message={errors[child.props.name].message}/>
                             )}
                         </Fragment>
                     );
-                })
-            : children}
+                }) : children}
         </form>
     );
 };

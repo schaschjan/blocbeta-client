@@ -388,7 +388,6 @@ const Index = () => {
 
     const addAscent = async (id, type) => {
 
-
         try {
             await mutateOnAddAscent({
                 boulder: id,
