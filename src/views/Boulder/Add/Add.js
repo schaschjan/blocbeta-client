@@ -18,7 +18,6 @@ import {toast} from "react-toastify";
 const defaultStatus = getOption(
     store.states.find((state) => state.id === "active")
 );
-const defaultPoints = 1000;
 
 const Add = () => {
     const [submitting, setSubmitting] = useState(false);
@@ -43,6 +42,11 @@ const Add = () => {
         cacheKeys.setters,
         api.setters.all
     );
+
+    const defaults = {
+        status: getOption(store.states.find(state => state.id === 'active')),
+        points: 1000
+    };
 
     const loading = [
         wallsStatus,
@@ -96,7 +100,7 @@ const Add = () => {
             <PageHeader title={`Add Boulder`}/>
 
             <Wrapper>
-                <Form onSubmit={onSubmit}>
+                <Form onSubmit={onSubmit} defaultValues={defaults}>
                     <Label>Name</Label>
                     <Input
                         type="text"
@@ -156,7 +160,6 @@ const Add = () => {
                     <Input
                         type="number"
                         name="points"
-                        defaultValue={defaultPoints}
                         validate={{required: messages.required}}
                     />
 
