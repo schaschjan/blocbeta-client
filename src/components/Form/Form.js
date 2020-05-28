@@ -15,7 +15,7 @@ const Error = ({message, ...rest}) => {
 };
 
 const Form = ({defaultValues, children, onSubmit}) => {
-    const {register, errors, handleSubmit, control, formState} = useForm({
+    const {register, errors, handleSubmit, control} = useForm({
         defaultValues,
     });
 

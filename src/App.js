@@ -96,13 +96,17 @@ const App = () => {
         );
     };
 
-    const LoginRedirect = () => (
-        <Redirect
-            to={{
-                pathname: "/login",
-            }}
-        />
-    );
+    const LoginRedirect = () => {
+        reset();
+
+        return (
+            <Redirect
+                to={{
+                    pathname: "/login",
+                }}
+            />
+        );
+    };
 
     return (
         <Fragment>

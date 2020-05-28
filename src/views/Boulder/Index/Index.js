@@ -284,7 +284,7 @@ const Table = ({columns, data, editable = false}) => {
 
 const Search = ({filters, removeFilter, filtersDropped, toggleFilters}) => {
     const inputElement = useRef(null);
-console.log(filters);
+
     return (
         <div className="search" id={"search"}>
             <Icon name="search" onClick={() => inputElement.current.focus()}/>

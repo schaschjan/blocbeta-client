@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useRef} from "react";
 import Container from "../../../components/Container/Container";
 import {PageHeader} from "../../../components/PageHeader/PageHeader";
 import Label from "../../../components/Label/Label";
@@ -45,7 +45,9 @@ const Add = () => {
 
     const defaults = {
         status: getOption(store.states.find(state => state.id === 'active')),
-        points: 1000
+        points: 1000,
+        startWall: null,
+        endWall: null
     };
 
     const loading = [
@@ -59,6 +61,7 @@ const Add = () => {
     const [mutateOnAddBoulder] = useMutation(api.boulder.add, {
         onSuccess: () => {
             queryCache.refetchQueries(cacheKeys.boulders);
+            queryCache.refetchQueries(cacheKeys.ascents);
         },
     });
 
@@ -71,7 +74,7 @@ const Add = () => {
         }
     };
 
-    const onSubmit = (data) => {
+    const onSubmit = (data, event) => {
         setSubmitting(true);
 
         data.startWall = data.startWall.value;
@@ -94,6 +97,7 @@ const Add = () => {
     };
 
     if (loading) return <Loader/>;
+    console.log('render');
 
     return (
         <Container>

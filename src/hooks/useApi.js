@@ -72,7 +72,7 @@ export const api = {
     reportError: async (id, data) => httpPost(`/boulder/${id}/error`, data),
     update: async(id, data) => httpPut(`/boulder/${id}`, data),
     add: async(data) => httpPost(`/boulder`, data)
-  },  
+  },
   ascents: {
     active: async () => await httpGet(`/ascent/filter/active`),
     add: async (data) => await httpPost(`/ascent`, data),

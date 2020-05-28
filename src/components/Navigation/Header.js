@@ -67,7 +67,7 @@ const LocationSwitch = () => {
 };
 
 const Header = () => {
-  const { user, authenticated, reset, locationPath, isAdmin } = useContext(
+  const { user, authenticated, token, reset, locationPath, isAdmin } = useContext(
     AppContext
   );
   let history = useHistory();
