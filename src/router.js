@@ -10,6 +10,7 @@ import CurrentComparison from "./views/Compare/Current";
 import Account from "./views/Account";
 import React from "react";
 import Settings from "./views/Settings/Settings";
+import AllTime from "./views/Ranking/AllTime/AllTime";
 
 export const router = [
   {
@@ -46,23 +47,29 @@ export const router = [
     exact: true,
   },
   {
-    title: "Add Boulder",
+    title: "Add boulder",
     path: "/:locationSlug/boulder/add",
     render: () => <BoulderAdd />,
     exact: true,
     admin: true,
   },
   {
-    title: "Edit Boulder",
+    title: "Edit boulder",
     path: "/:locationSlug/boulder/:boulderId",
     render: () => <BoulderEdit />,
     exact: true,
     admin: true,
   },
   {
-    title: "Current Ranking",
+    title: "Current ranking",
     path: "/:locationSlug/ranking/current",
     render: () => <CurrentRanking />,
+    exact: true,
+  },
+  {
+    title: "All time ranking",
+    path: "/:locationSlug/ranking/all-time",
+    render: () => <AllTime />,
     exact: true,
   },
   {

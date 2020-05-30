@@ -67,9 +67,14 @@ const LocationSwitch = () => {
 };
 
 const Header = () => {
-  const { user, authenticated, token, reset, locationPath, isAdmin } = useContext(
-    AppContext
-  );
+  const {
+    user,
+    authenticated,
+    token,
+    reset,
+    locationPath,
+    isAdmin,
+  } = useContext(AppContext);
   let history = useHistory();
 
   const isLarge = useMediaQuery(largeQuery);

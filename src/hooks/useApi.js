@@ -15,6 +15,18 @@ const getConfig = () => {
   };
 };
 
+const assignRanks = (ranking)=>{
+    ranking.map((result, rank) => {
+        rank++;
+
+        if (rank <= 9) {
+            return (result.rank = `0${rank}`);
+        }
+
+        return (result.rank = rank.toString());
+    });
+};
+
 export const cacheKeys = {
   boulders: "boulders",
   ascents: "ascents",
@@ -24,6 +36,10 @@ export const cacheKeys = {
   setters: "setters",
   tags: "tags",
   locations: "locations",
+  ranking: {
+    current: 'currentRanking',
+    allTime: 'allTimeRanking'
+  },
   stats: {
     boulder: "boulderStat",
     resetRotation: "resetRotationStat",
@@ -39,20 +55,16 @@ export const api = {
   ranking: {
     current: async () => {
       const data = await httpGet("/ranking/current");
-
-      // assign ranks
-      data.map((result, rank) => {
-        rank++;
-
-        if (rank <= 9) {
-          return (result.rank = `0${rank}`);
-        }
-
-        return (result.rank = rank.toString());
-      });
+      assignRanks(data);
 
       return data;
     },
+    allTime: async () => {
+        const data = await httpGet("/ranking/all-time");
+        assignRanks(data);
+
+        return data;
+    }
   },
   stats: {
     boulder: async () => await httpGet("/statistic/boulder"),
@@ -70,8 +82,8 @@ export const api = {
     active: async () => await httpGet(`/boulder/filter/active`),
     mass: async (data) => await httpPost(`/boulder/mass`, data),
     reportError: async (id, data) => httpPost(`/boulder/${id}/error`, data),
-    update: async(id, data) => httpPut(`/boulder/${id}`, data),
-    add: async(data) => httpPost(`/boulder`, data)
+    update: async (id, data) => httpPut(`/boulder/${id}`, data),
+    add: async (data) => httpPost(`/boulder`, data),
   },
   ascents: {
     active: async () => await httpGet(`/ascent/filter/active`),

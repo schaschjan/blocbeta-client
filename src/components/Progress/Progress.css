@@ -1,0 +1,24 @@
+.progress {
+    height: 10px;
+    width: 100%;
+    border-radius: 2px;
+    background-color: #e8e8e8;
+    margin-right: 40px;
+}
+
+.progress > div {
+    height: 100%;
+    border-radius: 2px 0 0 2px;
+}
+
+.progress--success > div {
+    background: #02deaf;
+}
+
+.progress--danger > div {
+    background: #ff625f;
+}
+
+.progress--warning > div {
+    background: #ffcb41;
+}

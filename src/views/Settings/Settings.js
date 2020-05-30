@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import Container from "../../components/Container/Container";
 import { PageHeader } from "../../components/PageHeader/PageHeader";
-import useApi, {api, cacheKeys} from "../../hooks/useApi";
+import useApi, { api, cacheKeys } from "../../hooks/useApi";
 import { Loader } from "../../components/Loader/Loader";
 import "./Settings.css";
 import Button from "../../components/Button/Button";

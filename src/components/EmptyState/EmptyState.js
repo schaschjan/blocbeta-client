@@ -1,11 +1,7 @@
 import React from "react";
 
-const EmptyState = ({children}) => {
-    return (
-        <div>
-            {children}
-        </div>
-    )
+const EmptyState = ({ children }) => {
+  return <div>{children}</div>;
 };
 
-export default EmptyState
+export default EmptyState;

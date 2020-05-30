@@ -1,0 +1,23 @@
+.table--all-time .table-row {
+    display: grid;
+    grid-template-columns: 72px auto 40px;
+    box-shadow: inset 0 -1px 0 0 var(--color-dark);
+}
+
+.table--all-time .table-cell--rank {
+    margin: 1em;
+}
+
+.table--all-time .table-header {
+    display: none;
+}
+
+.table--all-time .table-cell--rank,
+.table--all-time .table-cell--boulders,
+.table--all-time .table-cell--actions {
+    display: none;
+}
+
+.table--all-time .avatar {
+    margin: 1em;
+}
