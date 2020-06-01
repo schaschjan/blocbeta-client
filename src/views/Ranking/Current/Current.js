@@ -92,7 +92,7 @@ const Current = () => {
       Header: "Last activity",
       accessor: "user.lastActivity",
       Cell: ({ cell }) => {
-        return <Paragraph>{moment(cell.value).fromNow()}</Paragraph>;
+        return <Paragraph>{moment(cell.value).fromNow()}</Paragraph>
       },
     },
     {

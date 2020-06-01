@@ -5,6 +5,7 @@ import Select from "../Select/Select";
 import "./Form.css";
 import Button from "../Button/Button";
 import Input from "../Input/Input";
+import Switch from "../Switch/Switch";
 
 const Error = ({ message, ...rest }) => {
   return (
@@ -14,12 +15,12 @@ const Error = ({ message, ...rest }) => {
   );
 };
 
-const Form = ({ defaultValues, children, onSubmit }) => {
+const Form = ({ defaultValues, children, onSubmit, className}) => {
   const { register, errors, handleSubmit, control } = useForm({
     defaultValues,
   });
 
-  const formElements = [Button, Select, Input];
+  const formElements = [Button, Select, Input, Switch];
 
   const createFormElement = (child, classes) => {
     if (child.type === Select) {
@@ -48,10 +49,11 @@ const Form = ({ defaultValues, children, onSubmit }) => {
         className: classes,
       },
     });
+
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className={className}>
       {Array.isArray(children)
         ? children.map((child) => {
             const classes = classnames(
@@ -60,9 +62,7 @@ const Form = ({ defaultValues, children, onSubmit }) => {
 
             return (
               <Fragment key={child.props.name}>
-                {formElements.includes(child.type)
-                  ? createFormElement(child, classes)
-                  : child}
+                {formElements.includes(child.type) ? createFormElement(child, classes) : child}
 
                 {errors[child.props.name] && (
                   <Error message={errors[child.props.name].message} />

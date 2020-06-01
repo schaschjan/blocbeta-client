@@ -16,7 +16,10 @@
   color: var(--color-light);
   text-transform: uppercase;
   font-weight: bold;
-  padding: 16px 128px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  width: 100%;
+  max-width: 335px;
   margin-top: 36px;
 }
 

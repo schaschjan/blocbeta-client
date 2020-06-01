@@ -11,6 +11,7 @@ import { useMutation } from "react-query";
 import Container from "../components/Container/Container";
 import { PageHeader } from "../components/PageHeader/PageHeader";
 import Wrapper from "../components/Wrapper/Wrapper";
+import Switch from "../components/Switch/Switch";
 
 const Account = () => {
   const { status, data } = useApi("me", api.me.get);
@@ -43,10 +44,12 @@ const Account = () => {
       <Wrapper>
         <Form onSubmit={onSubmit} defaultValues={data}>
           <Label>Visible</Label>
-          <Input name="visible" type="checkbox" />
+          <Switch name="visible" />
 
           <Label>Username</Label>
           <Input name="username" disabled />
+
+
 
           <Label>Email</Label>
           <Input

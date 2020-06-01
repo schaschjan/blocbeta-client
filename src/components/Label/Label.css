@@ -1,6 +1,6 @@
 label {
   margin: 36px 0 5px 0;
   display: flex;
-  font-size: 12px;
-  line-height: 14px;
+  font-size: .75em;
+  line-height: .875em;
 }

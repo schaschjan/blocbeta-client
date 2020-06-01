@@ -77,7 +77,7 @@ const Login = () => {
       <Wrapper>
         <h1>Sign in</h1>
 
-        <Form onSubmit={onSubmit}>
+        <Form onSubmit={onSubmit} className={"login-form"}>
           <Label>Username</Label>
           <Input
             type="text"
@@ -94,17 +94,17 @@ const Login = () => {
             name="password"
           />
 
+          <div className="support-links">
+            <Link to="/register">Create Account</Link>
+            <Link to="/reset-password" className="secondary">
+              Forgot Password
+            </Link>
+          </div>
+
           <Button type="submit" primary="true" disabled={submitting}>
             Login
           </Button>
         </Form>
-
-        <div className="support-links">
-          <Link to="/register">Create Account</Link>
-          <Link to="/reset-password" className="secondary">
-            Forgot Password
-          </Link>
-        </div>
       </Wrapper>
     </Container>
   );

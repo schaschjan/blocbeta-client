@@ -7,9 +7,13 @@ import Emoji from "../../../components/Emoji/Emoji";
 import React, {Fragment} from "react";
 import {Loader} from "../../../components/Loader/Loader";
 import RankingTable from "../../../components/RankingTable/RankingTable";
-import Avatar from "../../../components/Avatar/Avatar";
 import Progress from "../../../components/Progress/Progress";
 import {getPercentage} from "../../../helpers";
+import "./AllTime.css";
+import Avatar from "../../../components/Avatar/Avatar";
+import Icon from "../../../components/Icon/Icon";
+import Paragraph from "../../../components/Paragraph/Paragraph";
+import moment from "moment";
 
 const AllTime = () => {
     const {status: rankingStatus, data: ranking} = useApi(
@@ -29,29 +33,9 @@ const AllTime = () => {
             Header: "Rank",
             accessor: "rank",
             className: `table-cell--rank`,
-            Cell: ({cell}) => {
+            Cell: ({ cell }) => {
                 return <strong>{cell.value}</strong>;
             },
-        },
-        {
-            Header: "Boulders",
-            accessor: "boulders",
-            className: "table-cell--boulders",
-            Cell: ({cell}) => {
-                const percentage = (cell.value / boulders.length) * 100;
-
-                return <Progress percentage={percentage}/>;
-            },
-        },
-        {
-            Header: "Flashed",
-            accessor: "flashes",
-            Cell: ({cell}) => getPercentage(cell.value, boulders.length),
-        },
-        {
-            Header: "Topped",
-            accessor: "tops",
-            Cell: ({cell}) => getPercentage(cell.value, boulders.length),
         },
         {
             Header: "User",
@@ -60,10 +44,43 @@ const AllTime = () => {
             Cell: ({ cell, row }) => {
                 return (
                     <Fragment>
-                        {/*<Avatar user={row.original.user} />*/}
+                        <Avatar user={row.original.user} />
                         {cell.value}
                     </Fragment>
                 );
+            },
+        },
+        {
+            Header: "Gender",
+            accessor: "user.gender",
+            Cell: ({ cell }) => {
+                return <Icon name={cell.value} />;
+            },
+        },
+        {
+            Header: "Boulders",
+                accessor: "percentage",
+            className: "table-cell--boulders",
+            Cell: ({ cell }) => {
+                const percentage = (cell.value / boulders.length) * 100;
+                return <Progress percentage={percentage} />;
+            },
+        },
+        {
+            Header: "Flashed",
+            accessor: "flashes",
+            Cell: ({ cell }) => getPercentage(cell.value, boulders.length),
+        },
+        {
+            Header: "Topped",
+            accessor: "tops",
+            Cell: ({ cell }) => getPercentage(cell.value, boulders.length),
+        },
+        {
+            Header: "Last activity",
+            accessor: "user.lastActivity",
+            Cell: ({ cell }) => {
+                return <Paragraph>{moment(cell.value).fromNow()}</Paragraph>
             },
         }
     ];
