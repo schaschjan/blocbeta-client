@@ -24,7 +24,7 @@
     "react-toastify": "^5.5.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "REACT_APP_API_HOST=https://blocbeta.com react-scripts start",
     "build": "REACT_APP_API_HOST=https://blocbeta.com react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

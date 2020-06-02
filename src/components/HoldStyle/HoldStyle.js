@@ -2,12 +2,10 @@ import React from "react";
 import "./HoldStyle.css";
 import classnames from "classnames";
 
-const HoldStyle = ({ name, small }) => {
-  let icon = <div style={{ background: "#ffffff" }}></div>;
-
+const HoldStyle = ({ name, small, icon }) => {
   return (
     <div className={classnames("holdstyle", ``, small ? "holdstyle--small" : null)}>
-      {icon}
+     <div style={{backgroundImage: `url(${icon})` }}/>
     </div>
   );
 };

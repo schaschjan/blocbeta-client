@@ -535,8 +535,8 @@ const Index = () => {
       Header: "holdStyle",
       accessor: "holdStyle.name",
       className: `table-cell--holdStyle`,
-      Cell: ({ cell }) => {
-        return <HoldStyle name={cell.value} />;
+      Cell: ({ row }) => {
+        return <HoldStyle name={row.original.holdStyle.name} icon={row.original.holdStyle.icon}  />;
       },
     },
     {
