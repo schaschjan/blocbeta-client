@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import classnames from "classnames";
 import Select from "../Select/Select";
@@ -16,9 +16,13 @@ const Error = ({ message, ...rest }) => {
 };
 
 const Form = ({ defaultValues, children, onSubmit, className}) => {
-  const { register, errors, handleSubmit, control } = useForm({
+  const { register, reset, errors, handleSubmit, control } = useForm({
     defaultValues,
   });
+
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues]);
 
   const formElements = [Button, Select, Input, Switch];
 

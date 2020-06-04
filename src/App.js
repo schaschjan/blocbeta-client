@@ -48,11 +48,7 @@ const App = () => {
       return false;
     }
 
-    if (new Date().getTime() / 1000 > expiration) {
-      return false;
-    }
-
-    return true;
+    return new Date().getTime() / 1000 <= expiration
   };
 
   const isAdmin = useMemo(() => {
