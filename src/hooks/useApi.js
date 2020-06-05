@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useQuery } from "react-query";
-import React, { useContext } from "react";
-import { AppContext, getLocationSlug } from "../App";
+import {useQuery} from "react-query";
+import React, {useContext} from "react";
+import {AppContext, getLocationSlug} from "../App";
 
 export const getUri = (path, contextualize) => {
   if (!contextualize) return `${process.env.REACT_APP_API_HOST}/api${path}`;
@@ -11,24 +11,25 @@ export const getUri = (path, contextualize) => {
 
 const getConfig = () => {
   return {
-    headers: { Authorization: `Bearer ${api.token}` },
+    headers: {Authorization: `Bearer ${api.token}`},
   };
 };
 
-const assignRanks = (ranking)=>{
-    ranking.map((result, rank) => {
-        rank++;
+const assignRanks = (ranking) => {
+  ranking.map((result, rank) => {
+    rank++;
 
-        if (rank <= 9) {
-            return (result.rank = `0${rank}`);
-        }
+    if (rank <= 9) {
+      return (result.rank = `0${rank}`);
+    }
 
-        return (result.rank = rank.toString());
-    });
+    return (result.rank = rank.toString());
+  });
 };
 
 export const cacheKeys = {
   boulders: "boulders",
+  compare: "compare",
   ascents: "ascents",
   walls: "walls",
   grades: "grades",
@@ -36,6 +37,7 @@ export const cacheKeys = {
   setters: "setters",
   tags: "tags",
   locations: "locations",
+  user: "user",
   ranking: {
     current: 'currentRanking',
     allTime: 'allTimeRanking'
@@ -60,11 +62,14 @@ export const api = {
       return data;
     },
     allTime: async () => {
-        const data = await httpGet("/ranking/all-time");
-        assignRanks(data);
+      const data = await httpGet("/ranking/all-time");
+      assignRanks(data);
 
-        return data;
+      return data;
     }
+  },
+  compare: {
+    current: async (a, b) => await httpGet(`/compare/${a}/to/${b}/at/current`)
   },
   stats: {
     boulder: async () => await httpGet("/statistic/boulder"),
@@ -108,6 +113,7 @@ export const api = {
   },
   user: {
     find: async (username) => await httpGet(`/user?username=${username}`),
+    show: async (id) => await httpGet(`/user/${id}`),
   },
 };
 
@@ -144,7 +150,7 @@ const httpGet = async (path, contextualize = true) => {
 };
 
 export default function useApi(identifier, method, queryOptions) {
-  const { token } = useContext(AppContext);
+  const {token} = useContext(AppContext);
 
   if (!token) {
     throw new Error(`No token provided for call ${identifier}`);

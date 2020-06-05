@@ -1,11 +1,10 @@
-import React, { Fragment } from "react";
+import React, { Fragment,useContext } from "react";
 import { Loader } from "../../../components/Loader/Loader";
 import Avatar from "../../../components/Avatar/Avatar";
 import Paragraph from "../../../components/Paragraph/Paragraph";
 import moment from "moment";
 import "./Current.css";
 import Icon from "../../../components/Icon/Icon";
-import Button from "../../../components/Button/Button";
 import Container from "../../../components/Container/Container";
 import useApi, {api, cacheKeys} from "../../../hooks/useApi";
 import { PageHeader } from "../../../components/PageHeader/PageHeader";
@@ -15,8 +14,15 @@ import Wrapper from "../../../components/Wrapper/Wrapper";
 import RankingTable from "../../../components/RankingTable/RankingTable";
 import Progress from "../../../components/Progress/Progress";
 import {getPercentage} from "../../../helpers";
+import {Link} from "react-router-dom";
+import {AppContext} from "../../../App";
 
-const Actions = <Button text={true}>Compare</Button>;
+const Actions = ({ b }) => {
+  const { user, locationPath } = useContext(AppContext);
+  const a = user.id;
+
+  return <Link to={locationPath(`/compare/${a}/to/${b}/at/current`)}>Compare</Link>
+};
 
 const Current = () => {
   const { status: rankingStatus, data: ranking } = useApi(
@@ -98,8 +104,9 @@ const Current = () => {
     {
       Header: "",
       id: "user.id",
+      accessor: "user.id",
       className: "table-cell--actions",
-      Cell: () => Actions,
+      Cell: ({cell}) => <Actions b={cell.value}/>,
     },
   ];
 

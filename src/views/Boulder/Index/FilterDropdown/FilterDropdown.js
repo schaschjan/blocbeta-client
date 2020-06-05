@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import "./FilterDropdown.css";
 import HoldStyle from "../../../../components/HoldStyle/HoldStyle";
 import HyperLink from "../../../../components/HyperLink/HyperLink";
@@ -6,23 +6,18 @@ import Emoji from "../../../../components/Emoji/Emoji";
 import Grade from "../../../../components/Grade/Grade";
 import Icon from "../../../../components/Icon/Icon";
 import classnames from "classnames";
-import useApi, { api } from "../../../../hooks/useApi";
-import { store } from "../../../../store";
-import { alphaSort } from "../../../../helpers";
+import useApi, {api, cacheKeys} from "../../../../hooks/useApi";
+import {store} from "../../../../store";
+import {alphaSort} from "../../../../helpers";
 
-export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
+export const FilterDropdown = ({addFilter, dropped, ...rest}) => {
   const [activeTab, setActiveTab] = useState("holdStyle");
 
-  const { status: wallsStatus, data: walls } = useApi("walls", api.walls.all);
-  const { status: gradesStatus, data: grades } = useApi(
-    "grades",
-    api.grades.all
-  );
-  const { status: holdStylesStatus, data: holdStyles } = useApi(
-    "holdStyles",
-    api.holdStyles.all
-  );
-  const { status: tagsStatus, data: tags } = useApi("tags", api.tags.all);
+  const {data: walls} = useApi(cacheKeys.walls, api.walls.all);
+  const {data: grades} = useApi(cacheKeys.grades, api.grades.all);
+  const {data: holdStyles} = useApi(cacheKeys.holdStyles, api.holdStyles.all);
+  const {data: tags} = useApi(cacheKeys.tags, api.tags.all);
+  const {data: setters} = useApi(cacheKeys.setters, api.setters.all);
 
   const isActive = (tabName) => {
     return tabName === activeTab;
@@ -39,7 +34,7 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
               return (
                 <li className="filter-option">
                   <span onClick={() => addFilter("holdStyle", holdStyle.name)}>
-                    <HoldStyle name={holdStyle.name} small={true} />
+                    <HoldStyle name={holdStyle.name} icon={holdStyle.icon} small={true}/>
                     <span>{holdStyle.name}</span>
                   </span>
                 </li>
@@ -97,7 +92,7 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
               return (
                 <li className="filter-option">
                   <span onClick={() => addFilter("grade", grade.name)}>
-                    <Grade name={grade.name} color={grade.color} />
+                    <Grade name={grade.name} color={grade.color}/>
                   </span>
                 </li>
               );
@@ -112,7 +107,7 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       render: () => {
         return (
           <ul className="filter-values">
-            {alphaSort(tags, "name").map((tag) => {
+            {alphaSort(tags, "name").map(tag => {
               return (
                 <li className="filter-option">
                   <span onClick={() => addFilter("tag", tag.emoji)}>
@@ -126,6 +121,25 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       },
     },
     {
+      id: 'setter',
+      label: 'Setter',
+      render: () => {
+        return (
+          <ul className="filter-values">
+            {alphaSort(setters, "username").map(user => {
+              return (
+                <li className="filter-option">
+                  <span onClick={() => addFilter("setters", user.username)}>
+                   {user.username}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        )
+      }
+    },
+    {
       id: "ascent",
       label: "Ascent",
       render: () => {
@@ -135,7 +149,7 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
               return (
                 <li className="filter-option">
                   <span onClick={() => addFilter("ascent", ascent.name)}>
-                    <Icon name={ascent.id} /> {ascent.name}
+                    <Icon name={ascent.id}/> {ascent.name}
                   </span>
                 </li>
               );

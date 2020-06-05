@@ -4,8 +4,9 @@ import React, {
   useContext,
   Fragment,
   useRef,
+  useMemo
 } from "react";
-import { Loader } from "../../../components/Loader/Loader";
+import {Loader} from "../../../components/Loader/Loader";
 import Grade from "../../../components/Grade/Grade";
 import moment from "moment";
 import HoldStyle from "../../../components/HoldStyle/HoldStyle";
@@ -32,28 +33,28 @@ import {
   useRowSelect,
   useFilters,
 } from "react-table";
-import { Link } from "react-router-dom";
-import { messages } from "../../../messages";
-import { toast } from "react-toastify";
-import { FilterDropdown } from "./FilterDropdown/FilterDropdown";
-import { PageHeader } from "../../../components/PageHeader/PageHeader";
+import {Link} from "react-router-dom";
+import {messages} from "../../../messages";
+import {toast} from "react-toastify";
+import {FilterDropdown} from "./FilterDropdown/FilterDropdown";
+import {PageHeader} from "../../../components/PageHeader/PageHeader";
 import Container from "../../../components/Container/Container";
 import Bar from "./Bar/Bar";
-import useApi, { api, cacheKeys } from "../../../hooks/useApi";
-import { useMutation, queryCache } from "react-query";
-import { AppContext } from "../../../App";
-import { Drawer } from "../../../components/Drawer/Drawer";
+import useApi, {api, cacheKeys} from "../../../hooks/useApi";
+import {useMutation, queryCache} from "react-query";
+import {AppContext} from "../../../App";
+import {Drawer} from "../../../components/Drawer/Drawer";
 import Form from "../../../components/Form/Form";
-import { Textarea } from "../../../components/Textarea/Textarea";
+import {Textarea} from "../../../components/Textarea/Textarea";
 import Input from "../../../components/Input/Input";
 import useDrawer from "../../../hooks/useDrawer";
 import SwipeOut from "../../../components/SwipeOut/SwipeOut";
-import { useMediaQuery } from "react-responsive/src";
-import { mediumQuery, smallQuery } from "../../../helpers";
-import { Tag } from "../../../components/TagInput/TagInput";
+import {useMediaQuery} from "react-responsive/src";
+import {mediumQuery, smallQuery} from "../../../helpers";
+import {Tag} from "../../../components/TagInput/TagInput";
 import Wrapper from "../../../components/Wrapper/Wrapper";
 
-const Table = ({ columns, data, editable = false }) => {
+const Table = ({columns, data, editable = false}) => {
   const isMedium = useMediaQuery(mediumQuery);
   const isSmall = useMediaQuery(smallQuery);
 
@@ -69,7 +70,7 @@ const Table = ({ columns, data, editable = false }) => {
   };
 
   const addFilter = (id, value) => {
-    const filter = { id, value };
+    const filter = {id, value};
     setFilters([...filters, filter]);
   };
 
@@ -88,12 +89,12 @@ const Table = ({ columns, data, editable = false }) => {
     setFilter,
     setAllFilters,
     setGlobalFilter,
-    state: { pageIndex, pageSize },
+    state: {pageIndex, pageSize},
   } = useTable(
     {
       columns,
       data,
-      initialState: { pageIndex: 0, pageSize: 20 },
+      initialState: {pageIndex: 0, pageSize: 20},
       autoResetFilters: false,
       autoResetSortBy: false,
       autoResetPage: false,
@@ -107,7 +108,7 @@ const Table = ({ columns, data, editable = false }) => {
 
   const [mutateOnMassDeactivation] = useMutation(api.boulder.mass, {
     onSuccess: () => {
-      queryCache.refetchQueries("boulders");
+      queryCache.refetchQueries(cacheKeys.boulders);
     },
   });
 
@@ -162,7 +163,7 @@ const Table = ({ columns, data, editable = false }) => {
         toggleFilters={() => setFiltersDropped(!filtersDropped)}
       />
 
-      <FilterDropdown addFilter={addFilter} dropped={filtersDropped} />
+      <FilterDropdown addFilter={addFilter} dropped={filtersDropped}/>
 
       <div
         className={classnames(
@@ -172,7 +173,7 @@ const Table = ({ columns, data, editable = false }) => {
         )}
         {...getTableProps()}
       >
-        <TableHeader headerGroups={headerGroups} />
+        <TableHeader headerGroups={headerGroups}/>
 
         <div className="table-content" {...getTableBodyProps()}>
           {page.map((row) => {
@@ -191,7 +192,7 @@ const Table = ({ columns, data, editable = false }) => {
 
               return (
                 <TableCell
-                  {...cell.getCellProps({ className: cell.column.className })}
+                  {...cell.getCellProps({className: cell.column.className})}
                 >
                   {cell.render("Cell")}
                 </TableCell>
@@ -217,7 +218,7 @@ const Table = ({ columns, data, editable = false }) => {
                     </div>
 
                     <div>
-                      {row.original.me && <Icon name={row.original.me.type} />}
+                      {row.original.me && <Icon name={row.original.me.type}/>}
                     </div>
                   </TableRow>
                 </SwipeOut>
@@ -294,13 +295,13 @@ const Table = ({ columns, data, editable = false }) => {
 };
 
 const Search = ({
-  filters,
-  removeFilter,
-  clearFilters,
-  filtersDropped,
-  toggleFilters,
-  setGlobalFilter,
-}) => {
+                  filters,
+                  removeFilter,
+                  clearFilters,
+                  filtersDropped,
+                  toggleFilters,
+                  setGlobalFilter,
+                }) => {
   const inputElement = useRef(null);
 
   const searchHasValue = inputElement.current
@@ -309,16 +310,16 @@ const Search = ({
 
   return (
     <div className="search" id={"search"}>
-      <Icon name="search" onClick={() => inputElement.current.focus()} />
+      <Icon name="search" onClick={() => inputElement.current.focus()}/>
 
       {filters &&
-        filters.map((filter) => (
-          <Tag
-            id={filter.id}
-            value={filter.value}
-            onRemove={() => removeFilter(filter.id)}
-          />
-        ))}
+      filters.map((filter) => (
+        <Tag
+          id={filter.id}
+          value={filter.value}
+          onRemove={() => removeFilter(filter.id)}
+        />
+      ))}
 
       <Input
         register={inputElement}
@@ -352,7 +353,7 @@ const Search = ({
 };
 
 const Index = () => {
-  const { isAdmin, locationPath } = useContext(AppContext);
+  const {isAdmin, locationPath} = useContext(AppContext);
 
   const {
     open,
@@ -366,31 +367,31 @@ const Index = () => {
     setActivePage: setDrawerActivePage,
   } = useDrawer("details");
 
-  const { status: bouldersStatus, data: boulders } = useApi(
+  const {status: bouldersStatus, data: boulders} = useApi(
     cacheKeys.boulders,
     api.boulder.active
   );
-  const { status: ascentsStatus, data: ascents } = useApi(
+  const {status: ascentsStatus, data: ascents} = useApi(
     cacheKeys.ascents,
     api.ascents.active
   );
-  const { status: wallsStatus, data: walls } = useApi(
+  const {status: wallsStatus, data: walls} = useApi(
     cacheKeys.walls,
     api.walls.all
   );
-  const { status: gradesStatus, data: grades } = useApi(
+  const {status: gradesStatus, data: grades} = useApi(
     cacheKeys.grades,
     api.grades.all
   );
-  const { status: holdStylesStatus, data: holdStyles } = useApi(
+  const {status: holdStylesStatus, data: holdStyles} = useApi(
     cacheKeys.holdStyles,
     api.holdStyles.all
   );
-  const { status: tagsStatus, data: tags } = useApi(
+  const {status: tagsStatus, data: tags} = useApi(
     cacheKeys.tags,
     api.tags.all
   );
-  const { status: settersStatus, data: setters } = useApi(
+  const {status: settersStatus, data: setters} = useApi(
     cacheKeys.setters,
     api.setters.all
   );
@@ -436,29 +437,43 @@ const Index = () => {
     }
   };
 
-  if (loading) return <Loader />;
+  const resolvedData = useMemo(() => {
 
-  // map ascent data to boulder array, resolve linked ids
-  for (let boulder of boulders) {
-    const ascentData = ascents.find(
-      (ascent) => ascent.boulderId === boulder.id
-    );
-
-    boulder.points = ascentData.points;
-    boulder.ascents = ascentData.ascents;
-    boulder.me = ascentData.me;
-
-    boulder.startWall = walls.find((wall) => wall.id === boulder.startWall.id);
-
-    if (boulder.endWall) {
-      boulder.endWall = walls.find((wall) => wall.id === boulder.endWall.id);
+    if (!ascents || !grades || !walls || !boulders || !holdStyles || !setters) {
+      return
     }
 
-    boulder.grade = grades.find((grade) => grade.id === boulder.grade.id);
-    boulder.holdStyle = holdStyles.find(
-      (holdStyle) => holdStyle.id === boulder.holdStyle.id
-    );
-  }
+    // map ascent data to boulder array, resolve linked ids
+    for (let boulder of boulders) {
+      const ascentData = ascents.find(
+        (ascent) => ascent.boulderId === boulder.id
+      );
+
+      boulder.points = ascentData.points;
+      boulder.ascents = ascentData.ascents;
+      boulder.me = ascentData.me;
+
+      boulder.startWall = walls.find((wall) => wall.id === boulder.startWall.id);
+
+      if (boulder.endWall) {
+        boulder.endWall = walls.find((wall) => wall.id === boulder.endWall.id);
+      }
+
+      boulder.grade = grades.find((grade) => grade.id === boulder.grade.id);
+
+      boulder.holdStyle = holdStyles.find(
+        (holdStyle) => holdStyle.id === boulder.holdStyle.id
+      );
+
+      boulder.setters = boulder.setters.map(boulderSetter => setters.find(setter => boulderSetter.id === setter.id))
+    }
+
+
+    return boulders
+
+  }, [boulders, ascents, grades, walls, boulders, holdStyles, setters]);
+
+  if (loading) return <Loader/>;
 
   const showDetails = async (boulderId) => {
     open(true);
@@ -478,14 +493,14 @@ const Index = () => {
   };
 
   const selectionColumn = {
-    Header: ({ getToggleAllRowsSelectedProps }) => (
+    Header: ({getToggleAllRowsSelectedProps}) => (
       <div>
         <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
       </div>
     ),
     id: "selection",
     className: `table-cell--selection`,
-    Cell: ({ row }) => (
+    Cell: ({row}) => (
       <div>
         <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
       </div>
@@ -494,7 +509,7 @@ const Index = () => {
 
   const newBoulderTimeOffset = moment().subtract(14, "days");
 
-  const Ascents = ({ boulderId, ascent, flashed, topped, resigned }) => {
+  const Ascents = ({boulderId, ascent, flashed, topped, resigned}) => {
     return (
       <div className="ascents">
         <Ascent
@@ -535,8 +550,8 @@ const Index = () => {
       Header: "holdStyle",
       accessor: "holdStyle.name",
       className: `table-cell--holdStyle`,
-      Cell: ({ row }) => {
-        return <HoldStyle name={row.original.holdStyle.name} icon={row.original.holdStyle.icon}  />;
+      Cell: ({row}) => {
+        return <HoldStyle name={row.original.holdStyle.name} icon={row.original.holdStyle.icon}/>;
       },
     },
     {
@@ -544,7 +559,7 @@ const Index = () => {
       Header: "Grade",
       accessor: "grade.name",
       className: `table-cell--grade`,
-      Cell: ({ row }) => {
+      Cell: ({row}) => {
         return (
           <Grade
             name={row.original.grade.name}
@@ -558,14 +573,14 @@ const Index = () => {
       Header: "Points",
       accessor: "points",
       className: `table-cell--points`,
-      Cell: ({ cell }) => <Paragraph>{cell.value} pts</Paragraph>,
+      Cell: ({cell}) => <Paragraph>{cell.value} pts</Paragraph>,
     },
     {
       id: "name",
       Header: "Name",
       accessor: "name",
       className: `table-cell--name`,
-      Cell: ({ cell, row }) => (
+      Cell: ({cell, row}) => (
         <Fragment>
           {isAdmin && (
             <Link
@@ -581,7 +596,7 @@ const Index = () => {
             onClick={() => showDetails(row.original.id)}
             className="table-cell--name__details-button"
           >
-            {cell.value} <Icon name="forward" />
+            {cell.value} <Icon name="forward"/>
           </Button>
         </Fragment>
       ),
@@ -613,7 +628,7 @@ const Index = () => {
 
         return true;
       },
-      Cell: ({ cell }) => {
+      Cell: ({cell}) => {
         return <Paragraph>{moment(cell.value).format("l")}</Paragraph>;
       },
     },
@@ -628,7 +643,7 @@ const Index = () => {
 
         return "todo";
       },
-      Cell: ({ row }) => {
+      Cell: ({row}) => {
         const ascent = row.original.me;
 
         let flashed = false;
@@ -658,6 +673,20 @@ const Index = () => {
         );
       },
     },
+    {
+      id: 'setters',
+      className: `table-cell--hidden`,
+      accessor: (originalRow, i, row) => {
+        return originalRow.setters.map(setter => setter.username);
+      }
+    },
+    {
+      id: 'tags',
+      className: `table-cell--hidden`,
+      accessor: (originalRow, i, row) => {
+        return originalRow.tags.map(tag => tag.description);
+      }
+    },
   ];
 
   if (isAdmin) {
@@ -666,7 +695,7 @@ const Index = () => {
 
   const onErrorSubmit = async (data) => {
     try {
-      await api.boulder.reportError(data.boulder, { ...data.message });
+      await api.boulder.reportError(data.boulder, {...data.message});
       toast.success("Error reported!");
     } catch (e) {
       toast.error(messages.errors.general);
@@ -675,7 +704,7 @@ const Index = () => {
 
   const onDoubtSubmit = async (data) => {
     try {
-      await api.boulder.reportError(data.boulder, { ...data.message });
+      await api.boulder.reportError(data.boulder, {...data.message});
       toast.success("Error reported!");
     } catch (e) {
       toast.error(messages.errors.general);
@@ -688,7 +717,7 @@ const Index = () => {
       header: (data) => {
         return (
           <div className="header-detail">
-            <HoldStyle name={data.holdStyle.name} />
+            <HoldStyle name={data.holdStyle.name}/>
             <h3>{data.name}</h3>
           </div>
         );
@@ -704,7 +733,7 @@ const Index = () => {
                   {data.ascents.map((ascent) => {
                     return (
                       <li>
-                        <Icon name={ascent.type} />
+                        <Icon name={ascent.type}/>
                         {ascent.user.username}
 
                         <Button
@@ -789,10 +818,10 @@ const Index = () => {
             <Form onSubmit={onErrorSubmit}>
               <Textarea
                 name="message"
-                validate={{ required: messages.required }}
+                validate={{required: messages.required}}
                 placeholder="Write something…"
               />
-              <Input type={"hidden"} name={"boulder"} value={data.id} />
+              <Input type={"hidden"} name={"boulder"} value={data.id}/>
 
               <Button text={true}>Send Message</Button>
             </Form>
@@ -825,12 +854,12 @@ const Index = () => {
             <Form onSubmit={onDoubtSubmit}>
               <Textarea
                 name="message"
-                validate={{ required: messages.required }}
+                validate={{required: messages.required}}
                 placeholder="Describe whats is wrong…"
               />
 
-              <Input type="hidden" name="recipient" value={data.user.id} />
-              <Input type="hidden" name="boulder" value={data.boulder.id} />
+              <Input type="hidden" name="recipient" value={data.user.id}/>
+              <Input type="hidden" name="boulder" value={data.boulder.id}/>
 
               <Button text={true} type="submit">
                 Send Message
@@ -845,7 +874,7 @@ const Index = () => {
   return (
     <Fragment>
       <Container>
-        <PageHeader title={`Boulder (${boulders.length})`}>
+        <PageHeader title={`Boulder (${resolvedData.length})`}>
           {isAdmin && (
             <Link to={locationPath(`/boulder/add`)}>
               <Button primary={true} size={"small"}>
@@ -856,7 +885,7 @@ const Index = () => {
         </PageHeader>
 
         <Wrapper>
-          <Table columns={columns} data={boulders} editable={isAdmin} />
+          <Table columns={columns} data={resolvedData} editable={isAdmin}/>
         </Wrapper>
       </Container>
 
