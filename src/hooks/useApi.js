@@ -80,6 +80,7 @@ export const api = {
   },
   setters: {
     all: async () => await httpGet("/setter"),
+    withActiveBoulders: async()=>await httpGet('/setter?withActiveBoulders'),
     revoke: async (userId) => httpPut(`/setter/${userId}/revoke`),
   },
   boulder: {

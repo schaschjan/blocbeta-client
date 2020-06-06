@@ -17,7 +17,7 @@ export const FilterDropdown = ({addFilter, dropped, ...rest}) => {
   const {data: grades} = useApi(cacheKeys.grades, api.grades.all);
   const {data: holdStyles} = useApi(cacheKeys.holdStyles, api.holdStyles.all);
   const {data: tags} = useApi(cacheKeys.tags, api.tags.all);
-  const {data: setters} = useApi(cacheKeys.setters, api.setters.all);
+  const {data: setters} = useApi([cacheKeys.setters, 'withActiveBoulders'], api.setters.withActiveBoulders);
 
   const isActive = (tabName) => {
     return tabName === activeTab;
@@ -126,11 +126,12 @@ export const FilterDropdown = ({addFilter, dropped, ...rest}) => {
       render: () => {
         return (
           <ul className="filter-values">
-            {alphaSort(setters, "username").map(user => {
+            {setters.sort((a,b) => b.boulders - a.boulders).map(setter => {
+
               return (
                 <li className="filter-option">
-                  <span onClick={() => addFilter("setters", user.username)}>
-                   {user.username}
+                  <span onClick={() => addFilter("setters", setter.username)}>
+                   {setter.username} ({setter.boulders})
                   </span>
                 </li>
               );
