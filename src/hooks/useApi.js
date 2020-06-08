@@ -1,7 +1,7 @@
 import axios from "axios";
-import {useQuery} from "react-query";
-import React, {useContext} from "react";
-import {AppContext, getLocationSlug} from "../App";
+import { useQuery } from "react-query";
+import React, { useContext } from "react";
+import { AppContext, getLocationSlug } from "../App";
 
 export const getUri = (path, contextualize) => {
   if (!contextualize) return `${process.env.REACT_APP_API_HOST}/api${path}`;
@@ -11,7 +11,7 @@ export const getUri = (path, contextualize) => {
 
 const getConfig = () => {
   return {
-    headers: {Authorization: `Bearer ${api.token}`},
+    headers: { Authorization: `Bearer ${api.token}` },
   };
 };
 
@@ -39,8 +39,8 @@ export const cacheKeys = {
   locations: "locations",
   user: "user",
   ranking: {
-    current: 'currentRanking',
-    allTime: 'allTimeRanking'
+    current: "currentRanking",
+    allTime: "allTimeRanking",
   },
   stats: {
     boulder: "boulderStat",
@@ -66,10 +66,10 @@ export const api = {
       assignRanks(data);
 
       return data;
-    }
+    },
   },
   compare: {
-    current: async (a, b) => await httpGet(`/compare/${a}/to/${b}/at/current`)
+    current: async (a, b) => await httpGet(`/compare/${a}/to/${b}/at/current`),
   },
   stats: {
     boulder: async () => await httpGet("/statistic/boulder"),
@@ -80,7 +80,7 @@ export const api = {
   },
   setters: {
     all: async () => await httpGet("/setter"),
-    withActiveBoulders: async()=>await httpGet('/setter?withActiveBoulders'),
+    withActiveBoulders: async () => await httpGet("/setter?withActiveBoulders"),
     revoke: async (userId) => httpPut(`/setter/${userId}/revoke`),
   },
   boulder: {
@@ -113,8 +113,9 @@ export const api = {
     public: async () => await httpGet("/location", false),
   },
   user: {
-    find: async (username) => await httpGet(`/user?username=${username}`),
-    show: async (id) => await httpGet(`/user/${id}`),
+    find: async (username) =>
+      await httpGet(`/user?username=${username}`, false),
+    show: async (id) => await httpGet(`/user/${id}`, false),
   },
 };
 
@@ -151,7 +152,7 @@ const httpGet = async (path, contextualize = true) => {
 };
 
 export default function useApi(identifier, method, queryOptions) {
-  const {token} = useContext(AppContext);
+  const { token } = useContext(AppContext);
 
   if (!token) {
     throw new Error(`No token provided for call ${identifier}`);

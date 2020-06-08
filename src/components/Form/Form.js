@@ -15,7 +15,7 @@ const Error = ({ message, ...rest }) => {
   );
 };
 
-const Form = ({ defaultValues, children, onSubmit, className}) => {
+const Form = ({ defaultValues, children, onSubmit, className }) => {
   const { register, reset, errors, handleSubmit, control } = useForm({
     defaultValues,
   });
@@ -53,7 +53,6 @@ const Form = ({ defaultValues, children, onSubmit, className}) => {
         className: classes,
       },
     });
-
   };
 
   return (
@@ -66,7 +65,9 @@ const Form = ({ defaultValues, children, onSubmit, className}) => {
 
             return (
               <Fragment key={child.props.name}>
-                {formElements.includes(child.type) ? createFormElement(child, classes) : child}
+                {formElements.includes(child.type)
+                  ? createFormElement(child, classes)
+                  : child}
 
                 {errors[child.props.name] && (
                   <Error message={errors[child.props.name].message} />

@@ -49,8 +49,6 @@ const Account = () => {
           <Label>Username</Label>
           <Input name="username" disabled />
 
-
-
           <Label>Email</Label>
           <Input
             name="email"

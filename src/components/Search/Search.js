@@ -32,13 +32,13 @@ const Search = ({
         value={value}
       />
 
-    {onToggle &&(
+      {onToggle && (
         <Icon
-            name="menu-small"
-            className="toggle-filter-dropdown"
-            onClick={() => onToggle()}
+          name="menu-small"
+          className="toggle-filter-dropdown"
+          onClick={() => onToggle()}
         />
-    )}
+      )}
 
       {inputElement.current && inputElement.current.value && (
         <Icon

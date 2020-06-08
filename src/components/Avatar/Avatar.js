@@ -13,7 +13,10 @@ const Avatar = ({ user }) => {
   }
 
   return (
-    <div className="avatar" style={{ backgroundImage: `url(${resolveMedia(user.media)})` }}/>
+    <div
+      className="avatar"
+      style={{ backgroundImage: `url(${resolveMedia(user.media)})` }}
+    />
   );
 };
 

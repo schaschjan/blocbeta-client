@@ -1,4 +1,4 @@
-import React, { Fragment,useContext } from "react";
+import React, { Fragment, useContext } from "react";
 import { Loader } from "../../../components/Loader/Loader";
 import Avatar from "../../../components/Avatar/Avatar";
 import Paragraph from "../../../components/Paragraph/Paragraph";
@@ -6,27 +6,29 @@ import moment from "moment";
 import "./Current.css";
 import Icon from "../../../components/Icon/Icon";
 import Container from "../../../components/Container/Container";
-import useApi, {api, cacheKeys} from "../../../hooks/useApi";
+import useApi, { api, cacheKeys } from "../../../hooks/useApi";
 import { PageHeader } from "../../../components/PageHeader/PageHeader";
 import EmptyState from "../../../components/EmptyState/EmptyState";
 import Emoji from "../../../components/Emoji/Emoji";
 import Wrapper from "../../../components/Wrapper/Wrapper";
 import RankingTable from "../../../components/RankingTable/RankingTable";
 import Progress from "../../../components/Progress/Progress";
-import {getPercentage} from "../../../helpers";
-import {Link} from "react-router-dom";
-import {AppContext} from "../../../App";
+import { getPercentage } from "../../../helpers";
+import { Link } from "react-router-dom";
+import { AppContext } from "../../../App";
 
 const Actions = ({ b }) => {
   const { user, locationPath } = useContext(AppContext);
   const a = user.id;
 
-  return <Link to={locationPath(`/compare/${a}/to/${b}/at/current`)}>Compare</Link>
+  return (
+    <Link to={locationPath(`/compare/${a}/to/${b}/at/current`)}>Compare</Link>
+  );
 };
 
 const Current = () => {
   const { status: rankingStatus, data: ranking } = useApi(
-   cacheKeys.ranking.current,
+    cacheKeys.ranking.current,
     api.ranking.current
   );
 
@@ -98,7 +100,7 @@ const Current = () => {
       Header: "Last activity",
       accessor: "user.lastActivity",
       Cell: ({ cell }) => {
-        return <Paragraph>{moment(cell.value).fromNow()}</Paragraph>
+        return <Paragraph>{moment(cell.value).fromNow()}</Paragraph>;
       },
     },
     {
@@ -106,7 +108,7 @@ const Current = () => {
       id: "user.id",
       accessor: "user.id",
       className: "table-cell--actions",
-      Cell: ({cell}) => <Actions b={cell.value}/>,
+      Cell: ({ cell }) => <Actions b={cell.value} />,
     },
   ];
 
@@ -116,7 +118,11 @@ const Current = () => {
 
       <Wrapper>
         {ranking.length > 0 ? (
-          <RankingTable data={ranking} columns={columns} className={"current"} />
+          <RankingTable
+            data={ranking}
+            columns={columns}
+            className={"current"}
+          />
         ) : (
           <EmptyState>
             <h2>

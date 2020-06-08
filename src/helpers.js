@@ -61,3 +61,57 @@ export const getPercentage = (amount, total) => {
 
   return `${amount} (${Math.floor(percentage)}%)`;
 };
+
+export const resolveBoulders = (
+  boulders,
+  ascents,
+  grades,
+  walls,
+  holdStyles,
+  setters
+) => {
+  if (!boulders) {
+    return [];
+  }
+
+  // map ascent data to boulder array, resolve linked ids
+  for (let boulder of boulders) {
+    if (ascents) {
+      const ascentData = ascents.find(
+        (ascent) => ascent.boulderId === boulder.id
+      );
+
+      boulder.points = ascentData.points;
+      boulder.ascents = ascentData.ascents;
+      boulder.me = ascentData.me;
+    }
+
+    if (walls) {
+      boulder.startWall = walls.find(
+        (wall) => wall.id === boulder.startWall.id
+      );
+
+      if (boulder.endWall) {
+        boulder.endWall = walls.find((wall) => wall.id === boulder.endWall.id);
+      }
+    }
+
+    if (grades) {
+      boulder.grade = grades.find((grade) => grade.id === boulder.grade.id);
+    }
+
+    if (holdStyles) {
+      boulder.holdStyle = holdStyles.find(
+        (holdStyle) => holdStyle.id === boulder.holdStyle.id
+      );
+    }
+
+    if (setters) {
+      boulder.setters = boulder.setters.map((boulderSetter) =>
+        setters.find((setter) => boulderSetter.id === setter.id)
+      );
+    }
+  }
+
+  return boulders;
+};
