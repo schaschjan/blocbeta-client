@@ -1,22 +1,22 @@
-import React, { Fragment, useContext, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import React, {Fragment, useContext, useRef, useState, useEffect} from "react";
+import {Link,useLocation} from "react-router-dom";
 import "./Header.css";
 import Button from "../Button/Button";
-import { AppContext, getLocationSlug } from "../../App";
-import useApi, { api, cacheKeys } from "../../hooks/useApi";
-import { useHistory } from "react-router-dom";
+import {AppContext, getLocationSlug} from "../../App";
+import useApi, {api, cacheKeys} from "../../hooks/useApi";
+import {useHistory} from "react-router-dom";
 import HyperLink from "../HyperLink/HyperLink";
-import { useMediaQuery } from "react-responsive/src";
+import {useMediaQuery} from "react-responsive/src";
 import Icon from "../Icon/Icon";
-import { motion } from "framer-motion";
+import {motion} from "framer-motion";
 import classnames from "classnames";
 import useClickOutside from "../../hooks/useClickOutside";
 import useKeyDown from "../../hooks/useKeyDown";
 import Modal from "../Modal/Modal";
-import { alphaSort, largeQuery } from "../../helpers";
+import {alphaSort, largeQuery} from "../../helpers";
 
 const LocationSwitch = () => {
-  const { status, data: locations } = useApi(
+  const {status, data: locations} = useApi(
     cacheKeys.locations,
     api.locations.public
   );
@@ -70,19 +70,17 @@ const Header = () => {
   const {
     user,
     authenticated,
-    token,
     reset,
     locationPath,
     isAdmin,
   } = useContext(AppContext);
+
   let history = useHistory();
+  const {pathname} = useLocation();
 
-  const isLarge = useMediaQuery(largeQuery);
-  const [offCanvasOpen, setOffCanvasOpen] = useState(false);
-
-  const offCanvasRef = useRef();
-  useClickOutside(offCanvasRef, () => closeOffCanvas());
-  useKeyDown("Escape", () => closeOffCanvas());
+  useEffect(() => {
+    closeOffCanvas()
+  }, [pathname]);
 
   const closeOffCanvas = () => {
     setOffCanvasOpen(false);
@@ -98,31 +96,36 @@ const Header = () => {
     history.push("/login");
   };
 
-  const Navigation = () => {
-    const linkProps = {
-      onClick: () => closeOffCanvas(),
-    };
 
+  const isLarge = useMediaQuery(largeQuery);
+  const [offCanvasOpen, setOffCanvasOpen] = useState(false);
+
+  const offCanvasRef = useRef();
+
+  useClickOutside(offCanvasRef, () => closeOffCanvas());
+  useKeyDown("Escape", () => closeOffCanvas());
+
+  const Navigation = () => {
     return (
       <ul className="navigation">
         <li>
-          <Link to={locationPath("/boulder")} {...linkProps}>
+          <Link to={locationPath("/boulder")}>
             Boulder
           </Link>
         </li>
         <li>
-          <Link to={locationPath("/ranking/current")} {...linkProps}>
+          <Link to={locationPath("/ranking/current")}>
             Ranking
           </Link>
         </li>
         <li>
-          <Link to={locationPath("/account")} {...linkProps}>
+          <Link to={locationPath("/account")}>
             [{user.username}]
           </Link>
         </li>
         {isAdmin && (
           <li>
-            <Link to={locationPath("/settings")} {...linkProps}>
+            <Link to={locationPath("/settings")}>
               Settings
             </Link>
           </li>
@@ -154,17 +157,17 @@ const Header = () => {
         <Link to={locationPath("/dashboard")} className="logo">
           BlocBeta @
         </Link>
-        <LocationSwitch />
+        <LocationSwitch/>
       </div>
 
       {isLarge ? (
-        <Navigation />
+        <Navigation/>
       ) : (
         <Fragment>
           {offCanvasOpen ? (
-            <Icon name="close-large" onClick={() => closeOffCanvas()} />
+            <Icon name="close-large" onClick={() => closeOffCanvas()}/>
           ) : (
-            <Icon name="burger" onClick={() => openOffCanvas()} />
+            <Icon name="burger" onClick={() => openOffCanvas()}/>
           )}
 
           <motion.div
@@ -175,7 +178,7 @@ const Header = () => {
             )}
             positionTransition
           >
-            <Navigation />
+            <Navigation/>
           </motion.div>
         </Fragment>
       )}
