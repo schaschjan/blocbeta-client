@@ -123,7 +123,7 @@ const Edit = () => {
       <Container>
         <PageHeader title={`Edit ${boulder.name}`} />
         <Wrapper>
-          <Form onSubmit={onSubmit} defaultValues={boulder}>
+          <Form onSubmit={onSubmit} defaultValues={boulder} className='edit-boulder-form'>
             <Label>Name</Label>
             <Input
               type="text"
@@ -135,6 +135,12 @@ const Edit = () => {
             <Select
               name="grade"
               validate={{ required: messages.requiredOption }}
+              options={getOptions(grades)}
+            />
+
+            <Label>Internal Grade</Label>
+            <Select
+              name="internalGrade"
               options={getOptions(grades)}
             />
 

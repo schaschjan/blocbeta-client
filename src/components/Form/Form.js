@@ -1,5 +1,5 @@
-import React, { Fragment, useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
+import React, {Fragment, useEffect} from "react";
+import {Controller, useForm} from "react-hook-form";
 import classnames from "classnames";
 import Select from "../Select/Select";
 import "./Form.css";
@@ -7,7 +7,7 @@ import Button from "../Button/Button";
 import Input from "../Input/Input";
 import Switch from "../Switch/Switch";
 
-const Error = ({ message, ...rest }) => {
+const Error = ({message, ...rest}) => {
   return (
     <span className="form-error" {...rest}>
       {message}
@@ -15,8 +15,8 @@ const Error = ({ message, ...rest }) => {
   );
 };
 
-const Form = ({ defaultValues, children, onSubmit, className }) => {
-  const { register, reset, errors, handleSubmit, control } = useForm({
+const Form = ({defaultValues, children, onSubmit, className}) => {
+  const {register, reset, errors, handleSubmit, control, setValue} = useForm({
     defaultValues,
   });
 
@@ -28,16 +28,27 @@ const Form = ({ defaultValues, children, onSubmit, className }) => {
 
   const createFormElement = (child, classes) => {
     if (child.type === Select) {
+
+      const SelectElement = <Select
+        isMulti={child.props.multiple}
+        {...child.props}
+      />;
+
+      const controllerProps = {
+        control: control,
+        name: child.props.name,
+        options: child.props.options,
+        as: SelectElement,
+        key: child.props.name,
+        rules: child.props.validate
+      };
+
+      if (child.props.mirror) {
+        controllerProps.onChange = ([selected]) => child.props.mirror ? setValue(child.props.mirror, selected) : null;
+      }
+
       return (
-        <Controller
-          rules={child.props.validate}
-          key={child.props.name}
-          as={<Select isMulti={child.props.multiple} />}
-          options={child.props.options}
-          name={child.props.name}
-          isClearable
-          control={control}
-        />
+        <Controller {...controllerProps} />
       );
     }
 
@@ -59,22 +70,22 @@ const Form = ({ defaultValues, children, onSubmit, className }) => {
     <form onSubmit={handleSubmit(onSubmit)} className={className}>
       {Array.isArray(children)
         ? children.map((child) => {
-            const classes = classnames(
-              errors[child.props.name] ? "has-error" : null
-            );
+          const classes = classnames(
+            errors[child.props.name] ? "has-error" : null
+          );
 
-            return (
-              <Fragment key={child.props.name}>
-                {formElements.includes(child.type)
-                  ? createFormElement(child, classes)
-                  : child}
+          return (
+            <Fragment key={child.props.name}>
+              {formElements.includes(child.type)
+                ? createFormElement(child, classes)
+                : child}
 
-                {errors[child.props.name] && (
-                  <Error message={errors[child.props.name].message} />
-                )}
-              </Fragment>
-            );
-          })
+              {errors[child.props.name] && (
+                <Error message={errors[child.props.name].message}/>
+              )}
+            </Fragment>
+          );
+        })
         : children}
     </form>
   );

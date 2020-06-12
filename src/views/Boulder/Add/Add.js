@@ -91,6 +91,7 @@ const Add = () => {
     data.startWall = data.startWall.value;
     data.endWall = data.endWall.value;
     data.grade = data.grade.value;
+    data.grade = data.grade.value;
     data.holdStyle = data.holdStyle.value;
     data.status = data.status.value;
 
@@ -117,7 +118,7 @@ const Add = () => {
       <PageHeader title={`Add Boulder`} />
 
       <Wrapper>
-        <Form onSubmit={onSubmit} defaultValues={formDefaults}>
+        <Form onSubmit={onSubmit} defaultValues={formDefaults} className='add-boulder-form'>
           <Label>Name</Label>
           <Input
             type="text"
@@ -128,7 +129,14 @@ const Add = () => {
           <Label>Grade</Label>
           <Select
             name="grade"
+            mirror="internalGrade"
             validate={{ required: messages.requiredOption }}
+            options={getOptions(grades)}
+          />
+
+          <Label>Internal Grade</Label>
+          <Select
+            name="internalGrade"
             options={getOptions(grades)}
           />
 

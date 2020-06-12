@@ -681,6 +681,42 @@ const Index = () => {
     }
   };
 
+  const Labels = ({boulderId, items}) => {
+    const [labels, setLabels] = useState(items);
+
+    const handleKeyDown = async (event) => {
+      if (event.key === 'Enter') {
+        const label = event.target.value.toLowerCase().replace(/ /g,'-').replace(/[^\w-]+/g,'');
+
+        setLabels([...labels, label]);
+        event.target.value = null;
+
+        await api.label.add(boulderId, {
+          title: label
+        })
+      }
+    };
+
+    return (
+      <div className={'labels'}>
+        <ul>
+          {labels.map(label => {
+            return (
+              <li>
+                # {label} <Icon name={'close'} onClick={()=>alert()}/>
+              </li>
+            );
+          })}
+        </ul>
+
+        <Input type='text'
+               name='title'
+               prefix={'#'}
+               onKeyDown={handleKeyDown} />
+      </div>
+    )
+  };
+
   const drawerPages = [
     {
       id: "details",
@@ -753,6 +789,12 @@ const Index = () => {
                 </ul>
               </div>
             )}
+
+            <div className="detail__list">
+              <h4>Labels</h4>
+
+              <Labels items={data.labels}/>
+            </div>
 
             <Button
               text={true}

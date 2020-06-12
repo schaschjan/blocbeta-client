@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useQuery } from "react-query";
-import React, { useContext } from "react";
-import { AppContext, getLocationSlug } from "../App";
+import {useQuery} from "react-query";
+import React, {useContext} from "react";
+import {AppContext, getLocationSlug} from "../App";
 
 export const getUri = (path, contextualize) => {
   if (!contextualize) return `${process.env.REACT_APP_API_HOST}/api${path}`;
@@ -11,7 +11,7 @@ export const getUri = (path, contextualize) => {
 
 const getConfig = () => {
   return {
-    headers: { Authorization: `Bearer ${api.token}` },
+    headers: {Authorization: `Bearer ${api.token}`},
   };
 };
 
@@ -117,6 +117,10 @@ export const api = {
       await httpGet(`/user?username=${username}`, false),
     show: async (id) => await httpGet(`/user/${id}`, false),
   },
+  label: {
+    add: async (id, data) => await httpPost(`/boulder/${id}/label`, data),
+    remove: async (id, label) => await httpDelete(`/boulder/${id}/label/${label}`)
+  }
 };
 
 const httpDelete = async (path, contextualize = true) => {
@@ -152,7 +156,7 @@ const httpGet = async (path, contextualize = true) => {
 };
 
 export default function useApi(identifier, method, queryOptions) {
-  const { token } = useContext(AppContext);
+  const {token} = useContext(AppContext);
 
   if (!token) {
     throw new Error(`No token provided for call ${identifier}`);
