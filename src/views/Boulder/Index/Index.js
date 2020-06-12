@@ -684,20 +684,26 @@ const Index = () => {
   const Labels = ({boulderId, items}) => {
     const [labels, setLabels] = useState(items);
 
-    const handleKeyDown = async (event) => {
+    const addLabel = async (event) => {
       if (event.key === 'Enter') {
         const label = event.target.value.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
 
-        setLabels([...labels, label]);
-        event.target.value = null;
-
         if (!labels.includes(label)) {
-          
+
+          setLabels([...labels, label]);
+          event.target.value = null;
+
           await api.label.add(boulderId, {
             title: label
           })
         }
       }
+    };
+
+    const removeLabel = async (title) => {
+      setLabels([...labels.filter(label => label !== title)]);
+
+      await api.label.remove(boulderId, title);
     };
 
     return (
@@ -706,16 +712,18 @@ const Index = () => {
           {labels.map(label => {
             return (
               <li>
-                # {label} <Icon name={'close'} onClick={() => alert()}/>
+                # {label} <Icon name={'close'} onClick={() => removeLabel(label)}/>
               </li>
             );
           })}
-        </ul>
 
-        <Input type='text'
-               name='title'
-               prefix={'#'}
-               onKeyDown={handleKeyDown}/>
+          <li>
+            <Input type='text'
+                   name='title'
+                   prefix={'#'}
+                   onKeyDown={addLabel}/>
+          </li>
+        </ul>
       </div>
     )
   };
