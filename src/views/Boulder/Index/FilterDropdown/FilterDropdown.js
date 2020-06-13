@@ -17,6 +17,8 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
   const { data: grades } = useApi(cacheKeys.grades, api.grades.all);
   const { data: holdStyles } = useApi(cacheKeys.holdStyles, api.holdStyles.all);
   const { data: tags } = useApi(cacheKeys.tags, api.tags.all);
+  const { data: labels } = useApi(cacheKeys.labels, api.labels.all);
+
   const { data: setters } = useApi(
     [cacheKeys.setters, "withActiveBoulders"],
     api.setters.withActiveBoulders
@@ -164,6 +166,25 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
               );
             })}
           </ul>
+        );
+      },
+    },
+    {
+      id: "label",
+      label: "Label",
+      render: () => {
+        return (
+            <ul className="filter-values">
+              {labels.sort().map(label => {
+                return (
+                    <li className="filter-option">
+                      <span onClick={() => addFilter("labels", label)}>
+                        {label}
+                      </span>
+                    </li>
+                );
+              })}
+            </ul>
         );
       },
     },

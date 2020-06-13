@@ -76,14 +76,7 @@ export const resolveBoulders = (
 
   // map ascent data to boulder array, resolve linked ids
   for (let boulder of boulders) {
-    resolveBoulder(
-      boulder,
-      ascents,
-      grades,
-      walls,
-      holdStyles,
-      setters
-    )
+    resolveBoulder(boulder, ascents, grades, walls, holdStyles, setters);
   }
 
   return boulders;
@@ -99,7 +92,7 @@ export const resolveBoulder = (
   tags
 ) => {
   if (!boulder) {
-    return null
+    return null;
   }
 
   if (ascents) {
@@ -113,9 +106,7 @@ export const resolveBoulder = (
   }
 
   if (walls) {
-    boulder.startWall = walls.find(
-      (wall) => wall.id === boulder.startWall.id
-    );
+    boulder.startWall = walls.find((wall) => wall.id === boulder.startWall.id);
 
     if (boulder.endWall) {
       boulder.endWall = walls.find((wall) => wall.id === boulder.endWall.id);
@@ -133,19 +124,18 @@ export const resolveBoulder = (
   }
 
   if (setters) {
-    boulder.setters = boulder.setters.map(boulderSetter => {
-        const match = setters.find(setter => boulderSetter.id === setter.id);
+    boulder.setters = boulder.setters.map((boulderSetter) => {
+      const match = setters.find((setter) => boulderSetter.id === setter.id);
 
-        if (!match) {
-          return {
-            id: null,
-            username: 'removed user'
-          }
-        }
-
-        return match
+      if (!match) {
+        return {
+          id: null,
+          username: "removed user",
+        };
       }
-    );
+
+      return match;
+    });
   }
 
   if (tags) {

@@ -118,7 +118,11 @@ const Add = () => {
       <PageHeader title={`Add Boulder`} />
 
       <Wrapper>
-        <Form onSubmit={onSubmit} defaultValues={formDefaults} className='add-boulder-form'>
+        <Form
+          onSubmit={onSubmit}
+          defaultValues={formDefaults}
+          className="add-boulder-form"
+        >
           <Label>Name</Label>
           <Input
             type="text"
@@ -135,10 +139,7 @@ const Add = () => {
           />
 
           <Label>Internal Grade</Label>
-          <Select
-            name="internalGrade"
-            options={getOptions(grades)}
-          />
+          <Select name="internalGrade" options={getOptions(grades)} />
 
           <Label>Hold Style</Label>
           <Select

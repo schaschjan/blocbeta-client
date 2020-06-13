@@ -2,7 +2,7 @@ import React from "react";
 import ReactSelect from "react-select";
 import "./Select.css";
 
-const Select = ({onChange, ...rest}) => {
+const Select = ({ onChange, ...rest }) => {
   return (
     <ReactSelect
       {...rest}

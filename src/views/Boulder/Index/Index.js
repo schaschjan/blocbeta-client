@@ -6,7 +6,7 @@ import React, {
   useRef,
   useMemo,
 } from "react";
-import {Loader} from "../../../components/Loader/Loader";
+import { Loader } from "../../../components/Loader/Loader";
 import Grade from "../../../components/Grade/Grade";
 import moment from "moment";
 import HoldStyle from "../../../components/HoldStyle/HoldStyle";
@@ -33,28 +33,33 @@ import {
   useRowSelect,
   useFilters,
 } from "react-table";
-import {Link} from "react-router-dom";
-import {messages} from "../../../messages";
-import {toast} from "react-toastify";
-import {FilterDropdown} from "./FilterDropdown/FilterDropdown";
-import {PageHeader} from "../../../components/PageHeader/PageHeader";
+import { Link } from "react-router-dom";
+import { messages } from "../../../messages";
+import { toast } from "react-toastify";
+import { FilterDropdown } from "./FilterDropdown/FilterDropdown";
+import { PageHeader } from "../../../components/PageHeader/PageHeader";
 import Container from "../../../components/Container/Container";
 import Bar from "./Bar/Bar";
-import useApi, {api, cacheKeys} from "../../../hooks/useApi";
-import {useMutation, queryCache} from "react-query";
-import {AppContext} from "../../../App";
-import {Drawer} from "../../../components/Drawer/Drawer";
+import useApi, { api, cacheKeys } from "../../../hooks/useApi";
+import { useMutation, queryCache } from "react-query";
+import { AppContext } from "../../../App";
+import { Drawer } from "../../../components/Drawer/Drawer";
 import Form from "../../../components/Form/Form";
-import {Textarea} from "../../../components/Textarea/Textarea";
+import { Textarea } from "../../../components/Textarea/Textarea";
 import Input from "../../../components/Input/Input";
 import useDrawer from "../../../hooks/useDrawer";
 import SwipeOut from "../../../components/SwipeOut/SwipeOut";
-import {useMediaQuery} from "react-responsive/src";
-import {mediumQuery, resolveBoulder, resolveBoulders, smallQuery} from "../../../helpers";
-import {Tag} from "../../../components/TagInput/TagInput";
+import { useMediaQuery } from "react-responsive/src";
+import {
+  mediumQuery,
+  resolveBoulder,
+  resolveBoulders,
+  smallQuery,
+} from "../../../helpers";
+import { Tag } from "../../../components/TagInput/TagInput";
 import Wrapper from "../../../components/Wrapper/Wrapper";
 
-const Table = ({columns, data, editable = false}) => {
+const Table = ({ columns, data, editable = false }) => {
   const isMedium = useMediaQuery(mediumQuery);
   const isSmall = useMediaQuery(smallQuery);
 
@@ -70,7 +75,7 @@ const Table = ({columns, data, editable = false}) => {
   };
 
   const addFilter = (id, value) => {
-    const filter = {id, value};
+    const filter = { id, value };
     setFilters([...filters, filter]);
   };
 
@@ -89,12 +94,12 @@ const Table = ({columns, data, editable = false}) => {
     setFilter,
     setAllFilters,
     setGlobalFilter,
-    state: {pageIndex, pageSize},
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
       data,
-      initialState: {pageIndex: 0, pageSize: 20},
+      initialState: { pageIndex: 0, pageSize: 20 },
       autoResetFilters: false,
       autoResetSortBy: false,
       autoResetPage: false,
@@ -163,7 +168,7 @@ const Table = ({columns, data, editable = false}) => {
         toggleFilters={() => setFiltersDropped(!filtersDropped)}
       />
 
-      <FilterDropdown addFilter={addFilter} dropped={filtersDropped}/>
+      <FilterDropdown addFilter={addFilter} dropped={filtersDropped} />
 
       <div
         className={classnames(
@@ -173,7 +178,7 @@ const Table = ({columns, data, editable = false}) => {
         )}
         {...getTableProps()}
       >
-        <TableHeader headerGroups={headerGroups}/>
+        <TableHeader headerGroups={headerGroups} />
 
         <div className="table-content" {...getTableBodyProps()}>
           {page.map((row) => {
@@ -192,7 +197,7 @@ const Table = ({columns, data, editable = false}) => {
 
               return (
                 <TableCell
-                  {...cell.getCellProps({className: cell.column.className})}
+                  {...cell.getCellProps({ className: cell.column.className })}
                 >
                   {cell.render("Cell")}
                 </TableCell>
@@ -218,7 +223,7 @@ const Table = ({columns, data, editable = false}) => {
                     </div>
 
                     <div>
-                      {row.original.me && <Icon name={row.original.me.type}/>}
+                      {row.original.me && <Icon name={row.original.me.type} />}
                     </div>
                   </TableRow>
                 </SwipeOut>
@@ -295,13 +300,13 @@ const Table = ({columns, data, editable = false}) => {
 };
 
 const Search = ({
-                  filters,
-                  removeFilter,
-                  clearFilters,
-                  filtersDropped,
-                  toggleFilters,
-                  setGlobalFilter,
-                }) => {
+  filters,
+  removeFilter,
+  clearFilters,
+  filtersDropped,
+  toggleFilters,
+  setGlobalFilter,
+}) => {
   const inputElement = useRef(null);
 
   const searchHasValue = inputElement.current
@@ -310,16 +315,16 @@ const Search = ({
 
   return (
     <div className="search" id={"search"}>
-      <Icon name="search" onClick={() => inputElement.current.focus()}/>
+      <Icon name="search" onClick={() => inputElement.current.focus()} />
 
       {filters &&
-      filters.map((filter) => (
-        <Tag
-          id={filter.id}
-          value={filter.value}
-          onRemove={() => removeFilter(filter.id)}
-        />
-      ))}
+        filters.map((filter) => (
+          <Tag
+            id={filter.id}
+            value={filter.value}
+            onRemove={() => removeFilter(filter.id)}
+          />
+        ))}
 
       <Input
         register={inputElement}
@@ -353,7 +358,7 @@ const Search = ({
 };
 
 const Index = () => {
-  const {isAdmin, locationPath} = useContext(AppContext);
+  const { isAdmin, locationPath } = useContext(AppContext);
 
   const {
     open,
@@ -367,31 +372,31 @@ const Index = () => {
     setActivePage: setDrawerActivePage,
   } = useDrawer("details");
 
-  const {status: bouldersStatus, data: boulders} = useApi(
+  const { status: bouldersStatus, data: boulders } = useApi(
     cacheKeys.boulders,
     api.boulder.active
   );
-  const {status: ascentsStatus, data: ascents} = useApi(
+  const { status: ascentsStatus, data: ascents } = useApi(
     cacheKeys.ascents,
     api.ascents.active
   );
-  const {status: wallsStatus, data: walls} = useApi(
+  const { status: wallsStatus, data: walls } = useApi(
     cacheKeys.walls,
     api.walls.all
   );
-  const {status: gradesStatus, data: grades} = useApi(
+  const { status: gradesStatus, data: grades } = useApi(
     cacheKeys.grades,
     api.grades.all
   );
-  const {status: holdStylesStatus, data: holdStyles} = useApi(
+  const { status: holdStylesStatus, data: holdStyles } = useApi(
     cacheKeys.holdStyles,
     api.holdStyles.all
   );
-  const {status: tagsStatus, data: tags} = useApi(
+  const { status: tagsStatus, data: tags } = useApi(
     cacheKeys.tags,
     api.tags.all
   );
-  const {status: settersStatus, data: setters} = useApi(
+  const { status: settersStatus, data: setters } = useApi(
     cacheKeys.setters,
     api.setters.all
   );
@@ -448,26 +453,28 @@ const Index = () => {
     );
   }, [boulders, ascents, grades, walls, holdStyles, setters]);
 
-  if (loading || !resolvedData) return <Loader/>;
+  if (loading || !resolvedData) return <Loader />;
 
   const showDetails = async (boulderId) => {
     open(true);
 
     const details = await api.boulder.get(boulderId);
 
-    setDrawerData(resolveBoulder(details, null, grades, walls, holdStyles, setters, tags));
+    setDrawerData(
+      resolveBoulder(details, null, grades, walls, holdStyles, setters, tags)
+    );
     setLoading(false);
   };
 
   const selectionColumn = {
-    Header: ({getToggleAllRowsSelectedProps}) => (
+    Header: ({ getToggleAllRowsSelectedProps }) => (
       <div>
         <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
       </div>
     ),
     id: "selection",
     className: `table-cell--selection`,
-    Cell: ({row}) => (
+    Cell: ({ row }) => (
       <div>
         <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
       </div>
@@ -476,7 +483,7 @@ const Index = () => {
 
   const newBoulderTimeOffset = moment().subtract(14, "days");
 
-  const Ascents = ({boulderId, ascent, flashed, topped, resigned}) => {
+  const Ascents = ({ boulderId, ascent, flashed, topped, resigned }) => {
     return (
       <div className="ascents">
         <Ascent
@@ -517,7 +524,7 @@ const Index = () => {
       Header: "holdStyle",
       accessor: "holdStyle.name",
       className: `table-cell--holdStyle`,
-      Cell: ({row}) => {
+      Cell: ({ row }) => {
         return (
           <HoldStyle
             name={row.original.holdStyle.name}
@@ -531,7 +538,7 @@ const Index = () => {
       Header: "Grade",
       accessor: "grade.name",
       className: `table-cell--grade`,
-      Cell: ({row}) => {
+      Cell: ({ row }) => {
         return (
           <Grade
             name={row.original.grade.name}
@@ -545,14 +552,14 @@ const Index = () => {
       Header: "Points",
       accessor: "points",
       className: `table-cell--points`,
-      Cell: ({cell}) => <Paragraph>{cell.value} pts</Paragraph>,
+      Cell: ({ cell }) => <Paragraph>{cell.value} pts</Paragraph>,
     },
     {
       id: "name",
       Header: "Name",
       accessor: "name",
       className: `table-cell--name`,
-      Cell: ({cell, row}) => (
+      Cell: ({ cell, row }) => (
         <Fragment>
           {isAdmin && (
             <Link
@@ -568,7 +575,7 @@ const Index = () => {
             onClick={() => showDetails(row.original.id)}
             className="table-cell--name__details-button"
           >
-            {cell.value} <Icon name="forward"/>
+            {cell.value} <Icon name="forward" />
           </Button>
         </Fragment>
       ),
@@ -598,7 +605,7 @@ const Index = () => {
 
         return true;
       },
-      Cell: ({cell}) => {
+      Cell: ({ cell }) => {
         return <Paragraph>{moment(cell.value).format("l")}</Paragraph>;
       },
     },
@@ -613,7 +620,7 @@ const Index = () => {
 
         return "todo";
       },
-      Cell: ({row}) => {
+      Cell: ({ row }) => {
         const ascent = row.original.me;
 
         let flashed = false;
@@ -646,15 +653,22 @@ const Index = () => {
     {
       id: "setters",
       className: `table-cell--hidden`,
-      accessor: (originalRow, i, row) => {
-        return originalRow.setters.map((setter) => setter.username);
+      accessor: (originalRow) => {
+        return originalRow.setters.map(setter => setter.username);
       },
     },
     {
       id: "tags",
       className: `table-cell--hidden`,
-      accessor: (originalRow, i, row) => {
-        return originalRow.tags.map((tag) => tag.description);
+      accessor: (originalRow) => {
+        return originalRow.tags.map(tag => tag.description);
+      },
+    },
+    {
+      id: "labels",
+      className: `table-cell--hidden`,
+      accessor: (originalRow) => {
+        return originalRow.labels.map(label => label);
       },
     },
   ];
@@ -665,7 +679,7 @@ const Index = () => {
 
   const onErrorSubmit = async (data) => {
     try {
-      await api.boulder.reportError(data.boulder, {...data.message});
+      await api.boulder.reportError(data.boulder, { ...data.message });
       toast.success("Error reported!");
     } catch (e) {
       toast.error(messages.errors.general);
@@ -674,58 +688,59 @@ const Index = () => {
 
   const onDoubtSubmit = async (data) => {
     try {
-      await api.boulder.reportError(data.boulder, {...data.message});
+      await api.boulder.reportError(data.boulder, { ...data.message });
       toast.success("Error reported!");
     } catch (e) {
       toast.error(messages.errors.general);
     }
   };
 
-  const Labels = ({boulderId, items}) => {
+  const Labels = ({ boulderId, items }) => {
     const [labels, setLabels] = useState(items);
 
     const addLabel = async (event) => {
-      if (event.key === 'Enter') {
-        const label = event.target.value.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+      if (event.key === "Enter") {
+        const label = event.target.value
+          .toLowerCase()
+          .replace(/ /g, "-")
+          .replace(/[^\w-]+/g, "");
 
-        if (!labels.includes(label)) {
-
+        if (!labels.includes(label) && label.length > 0) {
           setLabels([...labels, label]);
           event.target.value = null;
 
-          await api.label.add(boulderId, {
-            title: label
-          })
+          await api.labels.add({
+            title: label,
+            boulder: boulderId,
+          });
         }
       }
     };
 
     const removeLabel = async (title) => {
-      setLabels([...labels.filter(label => label !== title)]);
+      setLabels([...labels.filter((label) => label !== title)]);
 
-      await api.label.remove(boulderId, title);
+      await api.labels.remove(boulderId, title);
     };
 
     return (
-      <div className={'labels'}>
+      <div className={"labels"}>
         <ul>
-          {labels.map(label => {
+          {labels.map((label) => {
             return (
               <li>
-                # {label} <Icon name={'close'} onClick={() => removeLabel(label)}/>
+                # {label}{" "}
+                <Icon name={"close"} onClick={() => removeLabel(label)} />
               </li>
             );
           })}
 
           <li>
-            <Input type='text'
-                   name='title'
-                   prefix={'#'}
-                   onKeyDown={addLabel}/>
+            <Input type="text" name="title" prefix={"#"} onKeyDown={addLabel} />
           </li>
         </ul>
       </div>
-    )
+    );
   };
 
   const drawerPages = [
@@ -734,7 +749,11 @@ const Index = () => {
       header: (data) => {
         return (
           <div className="header-detail">
-            <HoldStyle name={data.holdStyle.name} icon={data.holdStyle.icon} small={true}/>
+            <HoldStyle
+              name={data.holdStyle.name}
+              icon={data.holdStyle.icon}
+              small={true}
+            />
             <h3>{data.name}</h3>
           </div>
         );
@@ -750,7 +769,7 @@ const Index = () => {
                   {data.ascents.map((ascent) => {
                     return (
                       <li>
-                        <Icon name={ascent.type}/>
+                        <Icon name={ascent.type} />
                         {ascent.user.username}
 
                         <Button
@@ -804,7 +823,7 @@ const Index = () => {
             <div className="detail__list">
               <h4>Labels</h4>
 
-              <Labels items={data.labels}/>
+              <Labels items={data.labels} boulderId={data.id} />
             </div>
 
             <Button
@@ -841,10 +860,10 @@ const Index = () => {
             <Form onSubmit={onErrorSubmit}>
               <Textarea
                 name="message"
-                validate={{required: messages.required}}
+                validate={{ required: messages.required }}
                 placeholder="Write something…"
               />
-              <Input type={"hidden"} name={"boulder"} value={data.id}/>
+              <Input type={"hidden"} name={"boulder"} value={data.id} />
 
               <Button text={true}>Send Message</Button>
             </Form>
@@ -877,12 +896,12 @@ const Index = () => {
             <Form onSubmit={onDoubtSubmit}>
               <Textarea
                 name="message"
-                validate={{required: messages.required}}
+                validate={{ required: messages.required }}
                 placeholder="Describe whats is wrong…"
               />
 
-              <Input type="hidden" name="recipient" value={data.user.id}/>
-              <Input type="hidden" name="boulder" value={data.boulder.id}/>
+              <Input type="hidden" name="recipient" value={data.user.id} />
+              <Input type="hidden" name="boulder" value={data.boulder.id} />
 
               <Button text={true} type="submit">
                 Send Message
@@ -908,7 +927,7 @@ const Index = () => {
         </PageHeader>
 
         <Wrapper>
-          <Table columns={columns} data={resolvedData} editable={isAdmin}/>
+          <Table columns={columns} data={resolvedData} editable={isAdmin} />
         </Wrapper>
       </Container>
 

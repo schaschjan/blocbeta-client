@@ -1,22 +1,28 @@
-import React, {Fragment, useContext, useRef, useState, useEffect} from "react";
-import {Link,useLocation} from "react-router-dom";
+import React, {
+  Fragment,
+  useContext,
+  useRef,
+  useState,
+  useEffect,
+} from "react";
+import { Link, useLocation } from "react-router-dom";
 import "./Header.css";
 import Button from "../Button/Button";
-import {AppContext, getLocationSlug} from "../../App";
-import useApi, {api, cacheKeys} from "../../hooks/useApi";
-import {useHistory} from "react-router-dom";
+import { AppContext, getLocationSlug } from "../../App";
+import useApi, { api, cacheKeys } from "../../hooks/useApi";
+import { useHistory } from "react-router-dom";
 import HyperLink from "../HyperLink/HyperLink";
-import {useMediaQuery} from "react-responsive/src";
+import { useMediaQuery } from "react-responsive/src";
 import Icon from "../Icon/Icon";
-import {motion} from "framer-motion";
+import { motion } from "framer-motion";
 import classnames from "classnames";
 import useClickOutside from "../../hooks/useClickOutside";
 import useKeyDown from "../../hooks/useKeyDown";
 import Modal from "../Modal/Modal";
-import {alphaSort, largeQuery} from "../../helpers";
+import { alphaSort, largeQuery } from "../../helpers";
 
 const LocationSwitch = () => {
-  const {status, data: locations} = useApi(
+  const { status, data: locations } = useApi(
     cacheKeys.locations,
     api.locations.public
   );
@@ -67,19 +73,15 @@ const LocationSwitch = () => {
 };
 
 const Header = () => {
-  const {
-    user,
-    authenticated,
-    reset,
-    locationPath,
-    isAdmin,
-  } = useContext(AppContext);
+  const { user, authenticated, reset, locationPath, isAdmin } = useContext(
+    AppContext
+  );
 
   let history = useHistory();
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    closeOffCanvas()
+    closeOffCanvas();
   }, [pathname]);
 
   const closeOffCanvas = () => {
@@ -96,7 +98,6 @@ const Header = () => {
     history.push("/login");
   };
 
-
   const isLarge = useMediaQuery(largeQuery);
   const [offCanvasOpen, setOffCanvasOpen] = useState(false);
 
@@ -109,25 +110,17 @@ const Header = () => {
     return (
       <ul className="navigation">
         <li>
-          <Link to={locationPath("/boulder")}>
-            Boulder
-          </Link>
+          <Link to={locationPath("/boulder")}>Boulder</Link>
         </li>
         <li>
-          <Link to={locationPath("/ranking/current")}>
-            Ranking
-          </Link>
+          <Link to={locationPath("/ranking/current")}>Ranking</Link>
         </li>
         <li>
-          <Link to={locationPath("/account")}>
-            [{user.username}]
-          </Link>
+          <Link to={locationPath("/account")}>[{user.username}]</Link>
         </li>
         {isAdmin && (
           <li>
-            <Link to={locationPath("/settings")}>
-              Settings
-            </Link>
+            <Link to={locationPath("/settings")}>Settings</Link>
           </li>
         )}
         <li>
@@ -157,17 +150,17 @@ const Header = () => {
         <Link to={locationPath("/dashboard")} className="logo">
           BlocBeta @
         </Link>
-        <LocationSwitch/>
+        <LocationSwitch />
       </div>
 
       {isLarge ? (
-        <Navigation/>
+        <Navigation />
       ) : (
         <Fragment>
           {offCanvasOpen ? (
-            <Icon name="close-large" onClick={() => closeOffCanvas()}/>
+            <Icon name="close-large" onClick={() => closeOffCanvas()} />
           ) : (
-            <Icon name="burger" onClick={() => openOffCanvas()}/>
+            <Icon name="burger" onClick={() => openOffCanvas()} />
           )}
 
           <motion.div
@@ -178,7 +171,7 @@ const Header = () => {
             )}
             positionTransition
           >
-            <Navigation/>
+            <Navigation />
           </motion.div>
         </Fragment>
       )}
