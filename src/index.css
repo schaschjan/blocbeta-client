@@ -26,13 +26,9 @@ html {
   scroll-behavior: smooth;
 }
 
-* {
-  font-family: "Karla", sans-serif;
-  font-size: 1em;
-}
-
 body {
-  font-size: 16px;
+  font-family: "Karla", sans-serif;
+  font-size: .875rem;
 }
 
 h1 {

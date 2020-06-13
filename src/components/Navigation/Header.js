@@ -110,7 +110,7 @@ const Header = () => {
     return (
       <ul className="navigation">
         <li>
-          <Link to={locationPath("/boulder")}>Boulder</Link>
+          <Link to={locationPath("/boulder?ascent=todo")}>Boulder</Link>
         </li>
         <li>
           <Link to={locationPath("/ranking/current")}>Ranking</Link>
