@@ -4,10 +4,11 @@ import moment from "moment";
 import { messages } from "../messages";
 import { Link } from "react-router-dom";
 import useApi, { api, cacheKeys } from "../hooks/useApi";
-import { AppContext } from "../App";
+import {AppContext, Meta} from "../App";
 import { PageHeader } from "../components/PageHeader/PageHeader";
 import Wrapper from "../components/Wrapper/Wrapper";
 import { queryCache } from "react-query";
+import Container from "../components/Container/Container";
 
 const Dashboard = () => {
   const { user, locationPath } = useContext(AppContext);
@@ -55,6 +56,7 @@ const Dashboard = () => {
 
   return (
     <div className="container">
+      <Meta title='Dashboard'/>
       <PageHeader title={`Hello ${user.username}!`} />
 
       <Wrapper>

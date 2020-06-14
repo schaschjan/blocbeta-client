@@ -16,6 +16,7 @@ import { store } from "../../../store";
 import { getOption, getOptions } from "../../../helpers";
 import { toast } from "react-toastify";
 import { queryCache, useMutation } from "react-query";
+import {Meta} from "../../../App";
 
 const Edit = () => {
   const { boulderId } = useParams();
@@ -120,6 +121,8 @@ const Edit = () => {
 
   return (
     <Fragment>
+      <Meta title={`Edit ${boulder.name}`}/>
+
       <Container>
         <PageHeader title={`Edit ${boulder.name}`} />
         <Wrapper>

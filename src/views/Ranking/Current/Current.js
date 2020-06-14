@@ -15,7 +15,7 @@ import RankingTable from "../../../components/RankingTable/RankingTable";
 import Progress from "../../../components/Progress/Progress";
 import { getPercentage } from "../../../helpers";
 import { Link } from "react-router-dom";
-import { AppContext } from "../../../App";
+import {AppContext, Meta} from "../../../App";
 
 const Actions = ({ b }) => {
   const { user, locationPath } = useContext(AppContext);
@@ -114,7 +114,8 @@ const Current = () => {
 
   return (
     <Container>
-      <PageHeader title={"Current Ranking"} />
+      <Meta title='Current Ranking'/>
+      <PageHeader title='Current Ranking' />
 
       <Wrapper>
         {ranking.length > 0 ? (

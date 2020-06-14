@@ -42,7 +42,7 @@ import Container from "../../../components/Container/Container";
 import Bar from "./Bar/Bar";
 import useApi, { api, cacheKeys } from "../../../hooks/useApi";
 import { useMutation, queryCache } from "react-query";
-import { AppContext } from "../../../App";
+import {AppContext, Meta} from "../../../App";
 import { Drawer } from "../../../components/Drawer/Drawer";
 import Form from "../../../components/Form/Form";
 import { Textarea } from "../../../components/Textarea/Textarea";
@@ -927,6 +927,8 @@ const Index = () => {
 
   return (
     <Fragment>
+      <Meta title={'Boulder'}/>
+
       <Container>
         <PageHeader title={`Boulder (${resolvedData.length})`}>
           {isAdmin && (

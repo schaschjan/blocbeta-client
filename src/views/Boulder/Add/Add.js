@@ -16,6 +16,7 @@ import { queryCache, useMutation } from "react-query";
 import { toast } from "react-toastify";
 import useHoldStyleOptions from "../../../hooks/useHoldStyleOptions";
 import useTagOptions from "../../../hooks/useTagOptions";
+import {Meta} from "../../../App";
 
 const defaultStatus = getOption(
   store.states.find((state) => state.id === "active")
@@ -115,6 +116,7 @@ const Add = () => {
 
   return (
     <Container>
+      <Meta title={'Add Boulder'}/>
       <PageHeader title={`Add Boulder`} />
 
       <Wrapper>

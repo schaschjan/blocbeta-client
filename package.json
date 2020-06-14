@@ -13,6 +13,7 @@
     "normalize.css": "^8.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-helmet": "^6.1.0",
     "react-hook-form": "^5.7.2",
     "react-query": "^1.5.7",
     "react-query-devtools": "^1.1.17",
@@ -23,7 +24,6 @@
     "react-table": "7.2.0",
     "react-toastify": "^6.0.5"
   },
-
   "scripts": {
     "start": "react-scripts start",
     "build": "REACT_APP_API_HOST=https://blocbeta.com react-scripts build",

@@ -14,6 +14,7 @@ import Avatar from "../../../components/Avatar/Avatar";
 import Icon from "../../../components/Icon/Icon";
 import Paragraph from "../../../components/Paragraph/Paragraph";
 import moment from "moment";
+import {Meta} from "../../../App";
 
 const AllTime = () => {
   const { status: rankingStatus, data: ranking } = useApi(
@@ -87,6 +88,7 @@ const AllTime = () => {
 
   return (
     <Container>
+      <Meta title='All time ranking'/>
       <PageHeader title={"All time ranking"} />
 
       <Wrapper>
