@@ -93,22 +93,6 @@ const Account = () => {
             type="number"
           />
 
-          <Label>Weight</Label>
-          <Input
-            name="weight"
-            validate={{
-              min: {
-                value: 40,
-                message: "Minimal weight is 40",
-              },
-              max: {
-                value: 120,
-                message: "Maximal weight is 120",
-              },
-            }}
-            type="number"
-          />
-
           <Button
             type="submit"
             primary="true"
