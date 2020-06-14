@@ -698,6 +698,13 @@ const Index = () => {
   const Labels = ({ boulderId, items }) => {
     const [labels, setLabels] = useState(items);
 
+    const [mutateOnAddLabel] = useMutation(api.labels.add, {
+      onSuccess: () => {
+        queryCache.refetchQueries(cacheKeys.boulders);
+        queryCache.refetchQueries(cacheKeys.labels);
+      },
+    });
+
     const addLabel = async (event) => {
       if (event.key === "Enter") {
         const label = event.target.value
@@ -709,10 +716,15 @@ const Index = () => {
           setLabels([...labels, label]);
           event.target.value = null;
 
-          await api.labels.add({
-            title: label,
-            boulder: boulderId,
-          });
+          try {
+            await mutateOnAddLabel({
+              title: label,
+              boulder: boulderId,
+            });
+
+          } catch (error) {
+            console.error(error)
+          }
         }
       }
     };

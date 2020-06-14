@@ -27,13 +27,16 @@ const LocationSwitch = () => {
         api.locations.public
     );
 
-    const {currentLocation} = useContext(AppContext);
+    const {currentLocation, setCurrentLocation} = useContext(AppContext);
     const modalContentRef = useRef();
 
     const [modalOpen, setModalOpen] = useState(false);
     const [focusedLocation, setFocusedLocation] = useState(currentLocation);
 
-    console.log(currentLocation);
+    const switchLocation = (location) => {
+        setCurrentLocation(location);
+        redirect(location.url)
+    };
 
     useEffect(() => {
         setFocusedLocation(currentLocation);
@@ -56,41 +59,61 @@ const LocationSwitch = () => {
                 <div className='locations'>
                     <ul className="location-list">
                         {alphaSort(locations, "name").map((location) => {
+
+                            const isCurrent = currentLocation.id === location.id;
+
                             return (
-                                <motion.li whileHover={{x: 4}} key={location.id}
-                                    className={classnames('location-list__item', currentLocation.id === location.id ? 'location-list__item--active' : null)}>
-                                        <span
-                                            onMouseEnter={() => setFocusedLocation(location)}
-                                            onMouseLeave={() => setFocusedLocation(location)}
-                                            onClick={() => redirect(location.url)}>
-                                            {location.name}
-                                        </span>
+                                <motion.li whileHover={!isCurrent ? {x: 4} : null} key={location.id}
+                                           className={classnames('location-list__item', isCurrent ? 'location-list__item--active' : null)}
+                                           onMouseEnter={() => setFocusedLocation(location)}
+                                           onMouseLeave={() => setFocusedLocation(location)}
+                                           onClick={() => switchLocation(location)}>
+                                    {location.name}
+                                    <span className='geo'>[{location.city}, {location.countryCode.toUpperCase()}]</span>
                                 </motion.li>
                             );
                         })}
                     </ul>
 
                     <div className="location-info">
-                        <img src={focusedLocation.image} alt={focusedLocation.title}/>
+                        <div className='location-info__image' style={{backgroundImage: `url(${focusedLocation.image})`}}/>
 
                         <div className={'location-info__address'}>
                             <address>
-                                {focusedLocation.address_line_one} <br/>
+                                {focusedLocation.addressLineOne} <br/>
 
-                                {focusedLocation.address_line_two && (
-                                    <Fragment>{focusedLocation.address_line_two} <br/></Fragment>
+                                {focusedLocation.addressLineTwo && (
+                                    <Fragment>{focusedLocation.addressLineTwo} <br/></Fragment>
                                 )}
                                 {focusedLocation.zip} {focusedLocation.city} <br/>
                             </address>
+                        </div>
 
+                        <ul className="location-info__social">
                             {focusedLocation.website && (
-                                <a href={focusedLocation.website}>{focusedLocation.website}</a>
+                                <li>
+                                    <a href={focusedLocation.website}>{focusedLocation.website}</a>
+                                </li>
                             )}
-                        </div>
 
-                        <div className={'location-info__social'}>
+                            {focusedLocation.twitter && (
+                                <li>
+                                    <a href={focusedLocation.website}>Twitter</a>
+                                </li>
+                            )}
 
-                        </div>
+                            {focusedLocation.facebook && (
+                                <li>
+                                    <a href={focusedLocation.facebook}>Facebook</a>
+                                </li>
+                            )}
+
+                            {focusedLocation.instagram && (
+                                <li>
+                                    <a href={focusedLocation.instagram}>Instagram</a>
+                                </li>
+                            )}
+                        </ul>
                     </div>
                 </div>
             </Modal>
