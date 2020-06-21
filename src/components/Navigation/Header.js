@@ -69,10 +69,10 @@ const LocationSwitch = () => {
                                            onMouseLeave={() => setFocusedLocation(location)}
                                            onClick={() => switchLocation(location)}>
                                     {location.name}
-                                    <span className='geo'>[{location.city}, {location.countryCode.toUpperCase()}]</span>
+                                    <span className='geo'>[{location.city}, {location.countryCode}]</span>
                                 </motion.li>
                             );
-                        })}
+                        })}s
                     </ul>
 
                     <div className="location-info">

@@ -687,9 +687,12 @@ const Index = () => {
   };
 
   const onDoubtSubmit = async (data) => {
+
     try {
-      await api.boulder.reportError(data.boulder, { ...data.message });
-      toast.success("Error reported!");
+      await api.ascents.doubt(data.ascent, { ...data.message });
+      close();
+      setDrawerActivePage("details");
+      toast.success("Doubt submitted!");
     } catch (e) {
       toast.error(messages.errors.general);
     }
@@ -778,7 +781,7 @@ const Index = () => {
 
               {data.ascents.length > 0 && (
                 <ul>
-                  {data.ascents.map((ascent) => {
+                  {data.ascents.map(ascent => {
                     return (
                       <li>
                         <Icon name={ascent.type} />
@@ -788,7 +791,11 @@ const Index = () => {
                           text={true}
                           onClick={() => {
                             setDrawerActivePage("doubt");
+
                             setDrawerData({
+                              ascent: {
+                                id: ascent.id
+                              },
                               user: ascent.user,
                               boulder: {
                                 id: data.id,
@@ -913,10 +920,10 @@ const Index = () => {
               />
 
               <Input type="hidden" name="recipient" value={data.user.id} />
-              <Input type="hidden" name="boulder" value={data.boulder.id} />
+              <Input type="hidden" name="ascent" value={data.ascent.id} />
 
               <Button text={true} type="submit">
-                Send Message
+                Submit doubt
               </Button>
             </Form>
           </div>

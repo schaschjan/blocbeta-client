@@ -57,8 +57,18 @@
   background: var(--color-lightblue);
 }
 
-.button.button--text.button--secondary {
-  color: var(--color-grey);
+.button.button--secondary {
+  color: var(--color-light);
+  font-size: 1em;
+  letter-spacing: 0.1em;
+  background: var(--color-grey);
+  text-transform: uppercase;
+  font-weight: bold;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  width: 100%;
+  max-width: 335px;
+  margin-top: 36px;
 }
 
 .button.button--size-small {

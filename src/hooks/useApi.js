@@ -96,7 +96,7 @@ export const api = {
         active: async () => await httpGet(`/ascent`),
         add: async (data) => await httpPost(`/ascent`, data),
         remove: async (id) => await httpDelete(`/ascent/${id}`),
-        doubt: async (id, data) => await httpPost(`/ascent/${id}/doubt`, data),
+        doubt: async (ascentId, data) => await httpPost(`/ascent/${ascentId}/doubt`, data),
     },
     errors: {
         unresolved: async () => await httpGet(`/error`),

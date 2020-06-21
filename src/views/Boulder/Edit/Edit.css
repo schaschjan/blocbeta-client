@@ -1,3 +1,35 @@
 .edit-boulder-form {
-  display: grid;
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+.edit-boulder-form .button:first-child {
+    grid-column: 1;
+}
+
+.edit-boulder-form .button:last-child {
+    margin-left: auto;
+    grid-column: 2;
+}
+
+@media (min-width: 1140px) {
+    .edit-boulder-form {
+        display: grid;
+        grid-column-gap: 30px;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .edit-boulder-form .form__row {
+        grid-column: 1 / 3;
+    }
+
+    .edit-boulder-form .row-start,
+    .edit-boulder-form .grade {
+        grid-column: 1;
+    }
+
+    .edit-boulder-form .row-end,
+    .edit-boulder-form .internal-grade {
+        grid-column: 2;
+    }
 }

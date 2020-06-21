@@ -1,5 +1,5 @@
 import Login from "./views/Login/Login";
-import Register from "./views/Register";
+import Register from "./views/Register/Register";
 import PasswordReset from "./views/PasswordReset";
 import Dashboard from "./views/Dashboard";
 import BoulderIndex from "./views/Boulder/Index/Index";

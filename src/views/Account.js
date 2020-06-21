@@ -21,6 +21,7 @@ const Account = () => {
   });
 
   const onSubmit = async (data) => {
+      console.log(data);
     try {
       await mutate(data);
       toast.success("Account updated");

@@ -12,8 +12,6 @@ import {AppContext, Meta} from "../../App";
 import jwt_decode from "jwt-decode";
 import {getUri} from "../../hooks/useApi";
 import axios from "axios";
-import {useIsFetching} from "react-query";
-import {Loader} from "../../components/Loader/Loader";
 import Wrapper from "../../components/Wrapper/Wrapper";
 import {messages} from "../../messages";
 import {PageHeader} from "../../components/PageHeader/PageHeader";
@@ -25,7 +23,6 @@ const Login = () => {
     );
 
     const history = useHistory();
-    const isFetching = useIsFetching();
 
     const getToken = async (username, password) => {
         try {
@@ -74,11 +71,10 @@ const Login = () => {
 
     return (
         <Container>
-            {isFetching ? <Loader/> : null}
-            <Wrapper>
-                <Meta title='Log in'/>
-                <PageHeader title='Log in'/>
+            <Meta title='Log in'/>
+            <PageHeader title='Log in'/>
 
+            <Wrapper>
                 <Form onSubmit={onSubmit} className={"login-form"}>
                     <Label>Username</Label>
                     <Input
