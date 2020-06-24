@@ -689,10 +689,15 @@ const Index = () => {
   const onDoubtSubmit = async (data) => {
 
     try {
-      await api.ascents.doubt(data.ascent, { ...data.message });
+      await api.ascents.doubt(data.ascent, {
+        recipient: data.recipient,
+        message: data.message
+      });
+
       close();
       setDrawerActivePage("details");
       toast.success("Doubt submitted!");
+
     } catch (e) {
       toast.error(messages.errors.general);
     }
@@ -782,10 +787,15 @@ const Index = () => {
               {data.ascents.length > 0 && (
                 <ul>
                   {data.ascents.map(ascent => {
+
+                    const doubted = ascent.type.includes('pending-doubt');
+
                     return (
                       <li>
-                        <Icon name={ascent.type} />
-                        {ascent.user.username}
+                        <span className={classnames('ascent-info', doubted ? 'ascent-info--pending-doubt': null)}>
+                            <Icon name={ascent.type} />
+                            {ascent.user.username}
+                        </span>
 
                         <Button
                           text={true}
