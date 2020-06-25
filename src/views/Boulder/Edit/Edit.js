@@ -1,158 +1,72 @@
-import React, {useState, Fragment} from "react";
-import {Loader} from "../../../components/Loader/Loader";
-import {useParams} from "react-router-dom";
-import Form, {FormRow} from "../../../components/Form/Form";
-import Label from "../../../components/Label/Label";
-import Input from "../../../components/Input/Input";
-import Select from "../../../components/Select/Select";
-import Button from "../../../components/Button/Button";
-import {messages} from "../../../messages";
+import React, { useState, useContext, Fragment } from "react";
+import { Loader } from "../../../components/Loader/Loader";
+import { useParams } from "react-router-dom";
 import Container from "../../../components/Container/Container";
-import {PageHeader} from "../../../components/PageHeader/PageHeader";
-import {api, cacheKeys} from "../../../hooks/useApi";
+import { PageHeader } from "../../../components/PageHeader/PageHeader";
+import { api, cacheKeys } from "../../../hooks/useApi";
 import Wrapper from "../../../components/Wrapper/Wrapper";
-import {store} from "../../../store";
-import {getOptions} from "../../../helpers";
-import {toast} from "react-toastify";
-import {queryCache, useMutation} from "react-query";
-import {Meta} from "../../../App";
+import { toast } from "react-toastify";
+import { queryCache, useMutation } from "react-query";
+import { AppContext, Meta } from "../../../App";
 import useBoulderFormData from "../../../hooks/useBoulderFormData";
-import "./Edit.css";
+import { useHistory } from "react-router-dom";
+import BoulderForm from "../../../forms/Boulder/BoulderForm";
+import { resolveApiData } from "../../../components/Form/Form";
 
 const Edit = () => {
-    const {boulderId} = useParams();
-    const [submitting, setSubmitting] = useState(false);
+  const { boulderId } = useParams();
+  const { locationPath } = useContext(AppContext);
 
-    const {
-        status,
-        boulder,
-        grades,
-        walls,
-        holdStyles,
-        setters,
-        tags
-    } = useBoulderFormData(boulderId);
+  const [submitting, setSubmitting] = useState(false);
+  let history = useHistory();
 
-    const [updateBoulder] = useMutation(api.boulder.update, {
-        throwOnError: true,
-        onSuccess: () => {
-            queryCache.refetchQueries(cacheKeys.boulders);
-        },
-    });
+  const { status, boulder } = useBoulderFormData(boulderId);
 
-    const onSubmit = async (data) => {
-        setSubmitting(true);
+  const [mutateOnUpdateBoulder] = useMutation(api.boulder.update, {
+    throwOnError: true,
+    onSuccess: () => {
+      queryCache.refetchQueries(cacheKeys.boulders);
+    },
+  });
 
-        try {
-            await updateBoulder(boulderId, data);
-        } catch (error) {
-            toast.error(error.response.data.message);
-        }
-    };
+  const onSubmit = async (data) => {
+    setSubmitting(true);
 
-    if (status !== 'resolved') return <Loader/>;
+    try {
+      resolveApiData(data);
+      await mutateOnUpdateBoulder({
+        id: boulderId,
+        data: data,
+      });
 
-    return (
-        <Fragment>
-            <Meta title={`Edit ${boulder.name}`}/>
+      toast.success(`Updated boulder ${data.name}`);
+      history.push(locationPath("/boulder"));
+    } catch (error) {
+      toast.error(error.response.data.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
-            <Container>
-                <PageHeader title={`Edit ${boulder.name}`}/>
-                <Wrapper>
-                    <Form onSubmit={onSubmit} defaultValues={boulder} className="edit-boulder-form">
-                        <FormRow>
-                            <Label>Name</Label>
-                            <Input
-                                type="text"
-                                name="name"
-                                validate={{required: messages.required}}
-                            />
-                        </FormRow>
+  if (status !== "resolved") return <Loader />;
 
-                        <FormRow className="grade">
-                            <Label>Grade</Label>
-                            <Select
-                                name="grade"
-                                mirror="internalGrade"
-                                validate={{required: messages.requiredOption}}
-                                options={getOptions(grades)}
-                            />
-                        </FormRow>
+  return (
+    <Fragment>
+      <Meta title={`Edit ${boulder.name}`} />
 
-                        <FormRow className="internal-grade">
-                            <Label>Internal Grade</Label>
-                            <Select name="internalGrade" options={getOptions(grades)}/>
-                        </FormRow>
-
-                        <FormRow>
-                            <Label>Hold Style</Label>
-                            <Select
-                                name="holdStyle"
-                                validate={{required: messages.requiredOption}}
-                                options={getOptions(holdStyles)}
-                            />
-                        </FormRow>
-
-                        <FormRow className={'row-start'}>
-                            <Label>Start</Label>
-                            <Select
-                                name="startWall"
-                                validate={{required: messages.requiredOption}}
-                                options={getOptions(walls)}
-                            />
-                        </FormRow>
-
-                        <FormRow className={'row-end'}>
-                            <Label>End</Label>
-                            <Select
-                                name="endWall"
-                                validate={{required: messages.requiredOption}}
-                                options={getOptions(walls)}
-                            />
-                        </FormRow>
-
-                        <FormRow>
-                            <Label>Setters</Label>
-                            <Select
-                                name="setters"
-                                multiple={true}
-                                validate={{required: messages.requiredOption}}
-                                labelProperty="username"
-                                options={getOptions(setters, "username")}
-                            />
-                        </FormRow>
-
-                        <FormRow>
-                            <Label>Tags</Label>
-                            <Select name="tags" multiple={true} options={getOptions(tags)}/>
-                        </FormRow>
-
-                        <FormRow>
-                            <Label>Status</Label>
-                            <Select name="status" options={getOptions(store.states)}/>
-                        </FormRow>
-
-                        <FormRow>
-                            <Label>Points</Label>
-                            <Input
-                                type="text"
-                                name="points"
-                                validate={{required: messages.required}}
-                            />
-                        </FormRow>
-
-                        <Button secondary="true">
-                            Cancel
-                        </Button>
-
-                        <Button type="submit" primary="true" disabled={submitting}>
-                            Update
-                        </Button>
-                    </Form>
-                </Wrapper>
-            </Container>
-        </Fragment>
-    );
+      <Container>
+        <PageHeader title={`Edit ${boulder.name}`} />
+        <Wrapper>
+          <BoulderForm
+            defaultValues={boulder}
+            submitting={submitting}
+            onSubmit={onSubmit}
+            submitLabel={"Update"}
+          />
+        </Wrapper>
+      </Container>
+    </Fragment>
+  );
 };
 
 export default Edit;

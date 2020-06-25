@@ -10,7 +10,7 @@ import Wrapper from "../../components/Wrapper/Wrapper";
 import RankingTable from "../../components/RankingTable/RankingTable";
 import { useParams } from "react-router-dom";
 import Icon from "../../components/Icon/Icon";
-import {AppContext, Meta} from "../../App";
+import { AppContext, Meta } from "../../App";
 import { resolveBoulders } from "../../helpers";
 import HoldStyle from "../../components/HoldStyle/HoldStyle";
 import Grade from "../../components/Grade/Grade";
@@ -149,7 +149,7 @@ const Current = () => {
 
   return (
     <Container>
-      <Meta title={'Compare'}/>
+      <Meta title={"Compare"} />
       <PageHeader title={"Compare"} />
 
       <Wrapper>

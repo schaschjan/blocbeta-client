@@ -174,17 +174,17 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       label: "Label",
       render: () => {
         return (
-            <ul className="filter-values">
-              {labels.sort().map(label => {
-                return (
-                    <li className="filter-option">
-                      <span onClick={() => addFilter("labels", label)}>
-                        {label}
-                      </span>
-                    </li>
-                );
-              })}
-            </ul>
+          <ul className="filter-values">
+            {labels.sort().map((label) => {
+              return (
+                <li className="filter-option">
+                  <span onClick={() => addFilter("labels", label)}>
+                    {label}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
         );
       },
     },

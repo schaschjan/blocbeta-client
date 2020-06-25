@@ -42,7 +42,7 @@ import Container from "../../../components/Container/Container";
 import Bar from "./Bar/Bar";
 import useApi, { api, cacheKeys } from "../../../hooks/useApi";
 import { useMutation, queryCache } from "react-query";
-import {AppContext, Meta} from "../../../App";
+import { AppContext, Meta } from "../../../App";
 import { Drawer } from "../../../components/Drawer/Drawer";
 import Form from "../../../components/Form/Form";
 import { Textarea } from "../../../components/Textarea/Textarea";
@@ -540,10 +540,20 @@ const Index = () => {
       className: `table-cell--grade`,
       Cell: ({ row }) => {
         return (
-          <Grade
-            name={row.original.grade.name}
-            color={row.original.grade.color}
-          />
+          <Fragment>
+            <Grade
+              name={row.original.grade.name}
+              color={row.original.grade.color}
+            />
+
+            {isAdmin && (
+              <Grade
+                internal={true}
+                name={row.original.internalGrade.name}
+                color={row.original.internalGrade.color}
+              />
+            )}
+          </Fragment>
         );
       },
     },
@@ -654,21 +664,21 @@ const Index = () => {
       id: "setters",
       className: `table-cell--hidden`,
       accessor: (originalRow) => {
-        return originalRow.setters.map(setter => setter.username);
+        return originalRow.setters.map((setter) => setter.username);
       },
     },
     {
       id: "tags",
       className: `table-cell--hidden`,
       accessor: (originalRow) => {
-        return originalRow.tags.map(tag => tag.description);
+        return originalRow.tags.map((tag) => tag.description);
       },
     },
     {
       id: "labels",
       className: `table-cell--hidden`,
       accessor: (originalRow) => {
-        return originalRow.labels.map(label => label);
+        return originalRow.labels.map((label) => label);
       },
     },
   ];
@@ -687,17 +697,15 @@ const Index = () => {
   };
 
   const onDoubtSubmit = async (data) => {
-
     try {
       await api.ascents.doubt(data.ascent, {
         recipient: data.recipient,
-        message: data.message
+        message: data.message,
       });
 
       close();
       setDrawerActivePage("details");
       toast.success("Doubt submitted!");
-
     } catch (e) {
       toast.error(messages.errors.general);
     }
@@ -729,9 +737,8 @@ const Index = () => {
               title: label,
               boulder: boulderId,
             });
-
           } catch (error) {
-            console.error(error)
+            console.error(error);
           }
         }
       }
@@ -786,15 +793,19 @@ const Index = () => {
 
               {data.ascents.length > 0 && (
                 <ul>
-                  {data.ascents.map(ascent => {
-
-                    const doubted = ascent.type.includes('pending-doubt');
+                  {data.ascents.map((ascent) => {
+                    const doubted = ascent.type.includes("pending-doubt");
 
                     return (
                       <li>
-                        <span className={classnames('ascent-info', doubted ? 'ascent-info--pending-doubt': null)}>
-                            <Icon name={ascent.type} />
-                            {ascent.user.username}
+                        <span
+                          className={classnames(
+                            "ascent-info",
+                            doubted ? "ascent-info--pending-doubt" : null
+                          )}
+                        >
+                          <Icon name={ascent.type} />
+                          {ascent.user.username}
                         </span>
 
                         <Button
@@ -804,7 +815,7 @@ const Index = () => {
 
                             setDrawerData({
                               ascent: {
-                                id: ascent.id
+                                id: ascent.id,
                               },
                               user: ascent.user,
                               boulder: {
@@ -944,7 +955,7 @@ const Index = () => {
 
   return (
     <Fragment>
-      <Meta title={'Boulder'}/>
+      <Meta title={"Boulder"} />
 
       <Container>
         <PageHeader title={`Boulder (${resolvedData.length})`}>

@@ -115,6 +115,13 @@ export const resolveBoulder = (
 
   if (grades) {
     boulder.grade = grades.find((grade) => grade.id === boulder.grade.id);
+    boulder.internalGrade = grades.find((grade) => {
+      if (boulder.internalGrade) {
+        return grade.id === boulder.internalGrade.id;
+      }
+
+      return grade.id === boulder.grade.id;
+    });
   }
 
   if (holdStyles) {

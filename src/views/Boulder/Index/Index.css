@@ -79,8 +79,8 @@
   }
 }
 
-.ascent-info.ascent-info--pending-doubt{
-  opacity: .3;
+.ascent-info.ascent-info--pending-doubt {
+  opacity: 0.3;
 }
 
 @media (min-width: 1140px) {

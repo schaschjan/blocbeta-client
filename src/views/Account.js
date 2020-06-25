@@ -12,7 +12,7 @@ import Container from "../components/Container/Container";
 import { PageHeader } from "../components/PageHeader/PageHeader";
 import Wrapper from "../components/Wrapper/Wrapper";
 import Switch from "../components/Switch/Switch";
-import {Meta} from "../App";
+import { Meta } from "../App";
 
 const Account = () => {
   const { status, data } = useApi("me", api.me.get);
@@ -21,7 +21,7 @@ const Account = () => {
   });
 
   const onSubmit = async (data) => {
-      console.log(data);
+    console.log(data);
     try {
       await mutate(data);
       toast.success("Account updated");
@@ -41,7 +41,7 @@ const Account = () => {
 
   return (
     <Container>
-      <Meta title='Account'/>
+      <Meta title="Account" />
       <PageHeader title={`Account`} />
 
       <Wrapper>

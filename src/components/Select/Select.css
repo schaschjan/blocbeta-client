@@ -14,7 +14,10 @@
 .react-select .react-select__value-container {
   padding: 0;
   margin: 0;
-  height: 24px;
+}
+
+.react-select .react-select__value-container .holdstyle {
+  margin-left: 0;
 }
 
 .react-select .react-select__value-container > * {
