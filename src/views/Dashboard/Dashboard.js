@@ -53,9 +53,18 @@ const Dashboard = () => {
 
     if (loading) return <Loader/>;
 
-    const rank = ranking.find((rank) => {
+    let rank = ranking.find((rank) => {
         return rank.user.id == user.id;
     });
+
+    if (!rank) {
+        rank = {
+            rank: '–',
+            boulders: 0,
+            flashes: 0,
+            tops: 0,
+        }
+    }
 
     const rotationStats = walls.map((wall) => {
         const reset = rotation.find((reset) => reset.id === wall.id);
@@ -70,56 +79,59 @@ const Dashboard = () => {
         return a.averageSetDate < b.averageSetDate ? -1 : 1;
     });
 
+    console.log(boulders);
+
     return (
         <div className="container">
             <Meta title="Dashboard"/>
             <PageHeader title={`Hello ${user.username}!`}/>
 
             <Wrapper>
-                {/*<div className='tiles'>*/}
-                {/*    <div>*/}
-                {/*        <Link*/}
-                {/*            to={{*/}
-                {/*                pathname: locationPath("/boulder"),*/}
-                {/*                search: "?ascent=todo",*/}
-                {/*                state: {fromDashboard: true},*/}
-                {/*            }}>*/}
-                {/*            <h2>All ({boulders.activeBoulders})</h2>*/}
-                {/*        </Link>*/}
+                <div className='tiles'>
+                    <div>
+                        <Link
+                            to={{
+                                pathname: locationPath("/boulder"),
+                                search: "?ascent=todo",
+                                state: {fromDashboard: true},
+                            }}>
+                            <h2>All ({boulders.activeBoulders})</h2>
+                        </Link>
 
-                {/*        <Link*/}
-                {/*            to={{*/}
-                {/*                pathname: locationPath("/boulder"),*/}
-                {/*                search: "?ascent=todo",*/}
-                {/*                state: {fromDashboard: true},*/}
-                {/*            }}>*/}
-                {/*            <h2>Todos ({boulders.activeBoulders - rank.boulders})</h2>*/}
-                {/*        </Link>*/}
+                        <Link
+                            to={{
+                                pathname: locationPath("/boulder"),
+                                search: "?ascent=todo",
+                                state: {fromDashboard: true},
+                            }}>
+                            <h2>Todos ({boulders.activeBoulders - rank.boulders})</h2>
+                        </Link>
 
-                {/*        <Link*/}
-                {/*            to={{*/}
-                {/*                pathname: locationPath("/boulder"),*/}
-                {/*                search: "?ascent=todo&date=new",*/}
-                {/*                state: {fromDashboard: true},*/}
-                {/*            }}>*/}
-                {/*            <h2>New Boulders ({boulders.newBoulders})</h2>*/}
-                {/*        </Link>*/}
-                {/*    </div>*/}
+                        <Link
+                            to={{
+                                pathname: locationPath("/boulder"),
+                                search: "?ascent=todo&date=new",
+                                state: {fromDashboard: true},
+                            }}>
+                            <h2>New Boulders ({boulders.newBoulders})</h2>
+                        </Link>
+                    </div>
 
-                {/*    <div>*/}
-                {/*        <h2>*/}
-                {/*            Rank {rank.rank}*/}
-                {/*        </h2>*/}
+                    <div>
+                        <h2>
+                            Rank {rank.rank}
+                        </h2>
 
-                {/*        <h2>*/}
-                {/*            Flashrate {Math.floor(rank.flashes / rank.boulders * 100)}%*/}
-                {/*        </h2>*/}
+                        <h2>
+                            Flashrate {rank.boulders > 0 ? Math.floor(rank.flashes / rank.boulders * 100) : 0}%
+                        </h2>
 
-                {/*        <h2>*/}
-                {/*            Boulders {Math.floor(rank.boulders / boulders.activeBoulders * 100)}% ({rank.boulders} of {boulders.activeBoulders})*/}
-                {/*        </h2>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
+                        <h2>
+                            Boulders {Math.floor(rank.boulders / boulders.activeBoulders * 100)}%
+                            ({rank.boulders} of {boulders.activeBoulders})
+                        </h2>
+                    </div>
+                </div>
             </Wrapper>
         </div>
     );

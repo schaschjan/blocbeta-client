@@ -73,18 +73,21 @@ export const router = [
         path: "/:locationSlug/ranking/current",
         render: () => <CurrentRanking/>,
         exact: true,
+        visibleOnly: true
     },
     {
         title: "All time ranking",
         path: "/:locationSlug/ranking/all-time",
         render: () => <AllTime/>,
         exact: true,
+        visibleOnly: true
     },
     {
         title: "Compare current",
         path: "/:locationSlug/compare/:a/to/:b/at/current",
         render: () => <CurrentComparison/>,
         exact: true,
+        visibleOnly: true
     },
     {
         title: "Account",

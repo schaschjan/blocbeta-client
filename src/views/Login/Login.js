@@ -59,6 +59,7 @@ const Login = () => {
     setUser({
       id: payload.id,
       username: payload.username,
+      visible: payload.visible
     });
 
     setCurrentLocation(payload.location);

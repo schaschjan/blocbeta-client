@@ -179,17 +179,23 @@ const Header = () => {
         <li>
           <Link to={locationPath("/boulder?ascent=todo")}>Boulder</Link>
         </li>
-        <li>
-          <Link to={locationPath("/ranking/current")}>Ranking</Link>
-        </li>
+
+        {user.visible && (
+            <li>
+              <Link to={locationPath("/ranking/current")}>Ranking</Link>
+            </li>
+        )}
+
         <li>
           <Link to={locationPath("/account")}>[{user.username}]</Link>
         </li>
+
         {isAdmin && (
           <li>
             <Link to={locationPath("/settings")}>Settings</Link>
           </li>
         )}
+
         <li>
           <Button onClick={(event) => logout(event)}>Logout</Button>
         </li>

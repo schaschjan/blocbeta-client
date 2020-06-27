@@ -104,6 +104,16 @@ const App = () => {
     );
   };
 
+  const DashboardRedirect = () =>{
+    return (
+        <Redirect
+            to={{
+              pathname: locationPath('/dashboard'),
+            }}
+        />
+    );
+  };
+
   const LoginRedirect = () => {
     reset();
 
@@ -125,12 +135,17 @@ const App = () => {
           <Content disabled={contentDisabled}>
             <Switch>
               {router.map((route, i) => {
-                if (!route.public) {
-                  return <PrivateRoute key={i} {...route} />;
-                }
 
                 if (route.admin && !isAdmin) {
-                  return null;
+                    return <DashboardRedirect/>;
+                }
+    
+                if (route.visibleOnly && !user.visible) {
+                  return <DashboardRedirect/>;
+                }
+
+                if (!route.public) {
+                  return <PrivateRoute key={i} {...route} />;
                 }
 
                 return <Route key={i} {...route} />;
