@@ -134,15 +134,17 @@ const App = () => {
 
           <Content disabled={contentDisabled}>
             <Switch>
-              {router.map((route, i) => {
+              {router.filter(route => {
+                  if (route.admin === true && !isAdmin) {
+                      return false
+                  }
 
-                if (route.admin && !isAdmin) {
-                    return <DashboardRedirect/>;
-                }
-    
-                if (route.visibleOnly && !user.visible) {
-                  return <DashboardRedirect/>;
-                }
+                  if (route.visibleOnly === true && user && !user.visible) {
+                      return false
+                  }
+
+                  return true
+              }).map((route, i) => {
 
                 if (!route.public) {
                   return <PrivateRoute key={i} {...route} />;
