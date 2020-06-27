@@ -1,18 +1,18 @@
 import React from "react";
-import { Loader } from "../components/Loader/Loader";
+import { Loader } from "../../components/Loader/Loader";
 import { toast } from "react-toastify";
-import Form from "../components/Form/Form";
-import Label from "../components/Label/Label";
-import Input from "../components/Input/Input";
-import Button from "../components/Button/Button";
-import useApi, { api } from "../hooks/useApi";
-import { messages } from "../messages";
+import Form from "../../components/Form/Form";
+import Label from "../../components/Label/Label";
+import Input from "../../components/Input/Input";
+import Button from "../../components/Button/Button";
+import useApi, { api } from "../../hooks/useApi";
+import { messages } from "../../messages";
 import { useMutation } from "react-query";
-import Container from "../components/Container/Container";
-import { PageHeader } from "../components/PageHeader/PageHeader";
-import Wrapper from "../components/Wrapper/Wrapper";
-import Switch from "../components/Switch/Switch";
-import { Meta } from "../App";
+import Container from "../../components/Container/Container";
+import { PageHeader } from "../../components/PageHeader/PageHeader";
+import Wrapper from "../../components/Wrapper/Wrapper";
+import Switch from "../../components/Switch/Switch";
+import { Meta } from "../../App";
 
 const Account = () => {
   const { status, data } = useApi("me", api.me.get);

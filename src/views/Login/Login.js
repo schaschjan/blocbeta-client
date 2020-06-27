@@ -94,7 +94,7 @@ const Login = () => {
 
           <div className="support-links">
             <Link to="/register">Create Account</Link>
-            <Link to="/reset-password" className="secondary">
+            <Link to="/password-reset/request" className="secondary">
               Forgot Password
             </Link>
           </div>
