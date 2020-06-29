@@ -63,6 +63,7 @@ const Form = ({ defaultValues, children, onSubmit, className }) => {
   });
 
   useEffect(() => {
+    console.log(defaultValues);
     reset(defaultValues);
   }, [defaultValues]);
 

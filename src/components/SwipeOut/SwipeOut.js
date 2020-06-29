@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import "./SwipeOut.css";
 import { motion, useAnimation, useMotionValue } from "framer-motion";
 import useClickOutside from "../../hooks/useClickOutside";
 import classnames from "classnames";
 
-const SwipeOut = ({ children, actions, width }) => {
-  const ref = React.useRef();
+const SwipeOut = ({ children, actions, width, closeOnClick =true }) => {
+  const wrapper = useRef();
   const dragWidth = -width;
   const dragFull = { x: dragWidth };
   const dragReset = { x: 0 };
@@ -13,7 +13,7 @@ const SwipeOut = ({ children, actions, width }) => {
   const animation = useAnimation();
   const [revealed, setRevealed] = useState(false);
 
-  useClickOutside(ref, () => {
+  useClickOutside(wrapper, () => {
     animation.start(dragReset);
     setRevealed(false);
   });
@@ -24,7 +24,7 @@ const SwipeOut = ({ children, actions, width }) => {
         "swipe-out",
         revealed ? "swipe-out--revealed" : null
       )}
-      ref={ref}
+      ref={wrapper}
     >
       <motion.div
         drag={"x"}

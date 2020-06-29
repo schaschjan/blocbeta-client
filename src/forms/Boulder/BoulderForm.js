@@ -112,7 +112,7 @@ const BoulderForm = ({ submitting, submitLabel, onSubmit, ...rest }) => {
       <FormRow>
         <Label>Points</Label>
         <Input
-          type="text"
+          type="number"
           name="points"
           validate={{ required: messages.required }}
         />
