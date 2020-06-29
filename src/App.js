@@ -104,13 +104,13 @@ const App = () => {
     );
   };
 
-  const DashboardRedirect = () =>{
+  const DashboardRedirect = () => {
     return (
-        <Redirect
-            to={{
-              pathname: locationPath('/dashboard'),
-            }}
-        />
+      <Redirect
+        to={{
+          pathname: locationPath("/dashboard"),
+        }}
+      />
     );
   };
 
@@ -134,24 +134,25 @@ const App = () => {
 
           <Content disabled={contentDisabled}>
             <Switch>
-              {router.filter(route => {
+              {router
+                .filter((route) => {
                   if (route.admin === true && !isAdmin) {
-                      return false
+                    return false;
                   }
 
                   if (route.visibleOnly === true && user && !user.visible) {
-                      return false
+                    return false;
                   }
 
-                  return true
-              }).map((route, i) => {
+                  return true;
+                })
+                .map((route, i) => {
+                  if (!route.public) {
+                    return <PrivateRoute key={i} {...route} />;
+                  }
 
-                if (!route.public) {
-                  return <PrivateRoute key={i} {...route} />;
-                }
-
-                return <Route key={i} {...route} />;
-              })}
+                  return <Route key={i} {...route} />;
+                })}
 
               <Route render={() => <LoginRedirect />} />
             </Switch>

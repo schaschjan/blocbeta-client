@@ -43,7 +43,7 @@ const Add = () => {
       await mutateOnAddBoulder(data);
 
       toast.success(`Added boulder ${data.name}`);
-      setFormDefaults({...initial});
+      setFormDefaults({ ...initial });
     } catch (error) {
       toast.error(messages.errors.general);
     } finally {

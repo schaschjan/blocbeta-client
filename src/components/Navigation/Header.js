@@ -181,9 +181,9 @@ const Header = () => {
         </li>
 
         {user.visible && (
-            <li>
-              <Link to={locationPath("/ranking/current")}>Ranking</Link>
-            </li>
+          <li>
+            <Link to={locationPath("/ranking/current")}>Ranking</Link>
+          </li>
         )}
 
         <li>

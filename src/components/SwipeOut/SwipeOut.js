@@ -1,10 +1,10 @@
-import React, { useState,useRef } from "react";
+import React, { useState, useRef } from "react";
 import "./SwipeOut.css";
 import { motion, useAnimation, useMotionValue } from "framer-motion";
 import useClickOutside from "../../hooks/useClickOutside";
 import classnames from "classnames";
 
-const SwipeOut = ({ children, actions, width, closeOnClick =true }) => {
+const SwipeOut = ({ children, actions, width, closeOnClick = true }) => {
   const wrapper = useRef();
   const dragWidth = -width;
   const dragFull = { x: dragWidth };
