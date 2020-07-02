@@ -39,12 +39,12 @@ const RankingTable = ({ columns, data, Actions, className }) => {
         <TableHeader headerGroups={headerGroups} />
 
         <div className="table-content" {...getTableBodyProps()}>
-          {rows.map((row) => {
+          {rows.map((row, index) => {
             prepareRow(row);
 
-            const Row = () => {
+            const Row = ({...rest}) => {
               return (
-                <TableRow>
+                <TableRow {...rest}>
                   {row.cells.map((cell) => {
                     return (
                       <TableCell
@@ -63,7 +63,7 @@ const RankingTable = ({ columns, data, Actions, className }) => {
             if (Actions) {
               return (
                 <SwipeOut actions={Actions}>
-                  <Row />
+                  <Row key={index}/>
                 </SwipeOut>
               );
             }

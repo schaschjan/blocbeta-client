@@ -17,9 +17,9 @@ export const TagInput = ({ children, onClear }) => {
   );
 };
 
-export const Tag = ({ id, value, onRemove }) => {
+export const Tag = ({ id, value, onRemove, ...rest }) => {
   return (
-    <span className="tag">
+    <span className="tag" {...rest}>
       {value}
       <Icon name="close" onClick={() => onRemove(id, value)} />
     </span>

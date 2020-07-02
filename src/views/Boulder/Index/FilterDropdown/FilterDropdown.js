@@ -35,9 +35,10 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       render: () => {
         return (
           <ul className="filter-values">
-            {alphaSort(holdStyles, "name").map((holdStyle) => {
+            {alphaSort(holdStyles, "name").map((holdStyle, index) => {
+
               return (
-                <li className="filter-option">
+                <li className="filter-option" key={index}>
                   <span onClick={() => addFilter("holdStyle", holdStyle.name)}>
                     <HoldStyle
                       name={holdStyle.name}
@@ -57,11 +58,12 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       id: "start",
       label: "Start",
       render: () => {
+
         return (
           <ul className="filter-values">
-            {alphaSort(walls, "name").map((wall) => {
+            {alphaSort(walls, "name").map((wall, index) => {
               return (
-                <li className="filter-option">
+                <li className="filter-option" key={index}>
                   <span onClick={() => addFilter("start", wall.name)}>
                     <span>{wall.name}</span>
                   </span>
@@ -76,11 +78,12 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       id: "end",
       label: "End",
       render: () => {
+
         return (
           <ul className="filter-values">
-            {alphaSort(walls, "name").map((wall) => {
+            {alphaSort(walls, "name").map((wall, index) => {
               return (
-                <li className="filter-option">
+                <li className="filter-option" key={index}>
                   <span onClick={() => addFilter("end", wall.name)}>
                     <span>{wall.name}</span>
                   </span>
@@ -97,9 +100,9 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       render: () => {
         return (
           <ul className="filter-values">
-            {alphaSort(grades, "name").map((grade) => {
+            {alphaSort(grades, "name").map((grade,index) => {
               return (
-                <li className="filter-option">
+                <li className="filter-option" key={index}>
                   <span onClick={() => addFilter("grade", grade.name)}>
                     <Grade name={grade.name} color={grade.color} />
                   </span>
@@ -116,9 +119,9 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       render: () => {
         return (
           <ul className="filter-values">
-            {alphaSort(tags, "name").map((tag) => {
+            {alphaSort(tags, "name").map((tag, index) => {
               return (
-                <li className="filter-option">
+                <li className="filter-option" key={index}>
                   <span onClick={() => addFilter("tag", tag.emoji)}>
                     <Emoji>{tag.emoji}</Emoji> {tag.name}
                   </span>
@@ -137,9 +140,9 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
           <ul className="filter-values">
             {setters
               .sort((a, b) => b.boulders - a.boulders)
-              .map((setter) => {
+              .map((setter, index) => {
                 return (
-                  <li className="filter-option">
+                  <li className="filter-option" key={index}>
                     <span onClick={() => addFilter("setters", setter.username)}>
                       {setter.username} ({setter.boulders})
                     </span>
@@ -156,9 +159,9 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       render: () => {
         return (
           <ul className="filter-values">
-            {alphaSort(store.ascents, "name").map((ascent) => {
+            {alphaSort(store.ascents, "name").map((ascent, index) => {
               return (
-                <li className="filter-option">
+                <li className="filter-option" key={index}>
                   <span onClick={() => addFilter("ascent", ascent.name)}>
                     <Icon name={ascent.id} /> {ascent.name}
                   </span>
@@ -175,9 +178,9 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       render: () => {
         return (
           <ul className="filter-values">
-            {labels.sort().map((label) => {
+            {labels.sort().map((label,index) => {
               return (
-                <li className="filter-option">
+                <li className="filter-option" key={index}>
                   <span onClick={() => addFilter("labels", label)}>
                     {label}
                   </span>
@@ -202,7 +205,7 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
         <ul className="tab-nav">
           {tabs.map((tab) => {
             return (
-              <li className="tab-nav-item">
+              <li className="tab-nav-item" key={tab.id}>
                 <HyperLink
                   active={isActive(tab.id)}
                   onClick={() => setActiveTab(tab.id)}
