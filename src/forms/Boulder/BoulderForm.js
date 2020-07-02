@@ -37,7 +37,6 @@ const BoulderForm = ({ submitting, submitLabel, onSubmit, ...rest }) => {
         <Input
           type="text"
           name="name"
-          validate={{ required: messages.required }}
         />
       </FormRow>
 
