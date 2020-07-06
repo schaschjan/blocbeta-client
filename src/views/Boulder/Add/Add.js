@@ -29,6 +29,7 @@ const Add = () => {
   const [formDefaults, setFormDefaults] = useState(initial);
 
   const [mutateOnAddBoulder] = useMutation(api.boulder.add, {
+    throwOnError: true,
     onSuccess: () => {
       queryCache.refetchQueries(cacheKeys.boulders);
       queryCache.refetchQueries(cacheKeys.ascents);

@@ -27,4 +27,18 @@ export const store = {
       name: "inactive",
     },
   ],
+  genders: [
+    {
+      id: "female",
+      name: "female",
+    },
+    {
+      id: "male",
+      name: "male",
+    },
+    {
+      id: "neutral",
+      name: "neutral",
+    },
+  ]
 };

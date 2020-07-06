@@ -12,6 +12,7 @@ import React from "react";
 import Settings from "./views/Settings/Settings";
 import AllTime from "./views/Ranking/AllTime/AllTime";
 import ResetPassword from "./views/ResetPassword/ResetPassword";
+import Setup from "./views/Setup/Setup";
 
 export const router = [
   {
@@ -27,6 +28,12 @@ export const router = [
     render: () => <Register />,
     exact: true,
     public: true,
+  },
+  {
+    title: "Setup",
+    path: "/setup",
+    render: () => <Setup />,
+    exact: true,
   },
   {
     title: "Reset Password",

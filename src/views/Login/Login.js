@@ -1,112 +1,119 @@
-import React, { useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, {useContext, useState} from "react";
+import {useHistory} from "react-router-dom";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import Form from "../../components/Form/Form";
 import Container from "../../components/Container/Container";
 import Label from "../../components/Label/Label";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import "./Login.css";
-import { toast } from "react-toastify";
-import { AppContext, Meta } from "../../App";
+import {toast} from "react-toastify";
+import {AppContext, Meta} from "../../App";
 import jwt_decode from "jwt-decode";
-import { getUri } from "../../hooks/useApi";
+import {getUri} from "../../hooks/useApi";
 import axios from "axios";
 import Wrapper from "../../components/Wrapper/Wrapper";
-import { messages } from "../../messages";
-import { PageHeader } from "../../components/PageHeader/PageHeader";
+import {messages} from "../../messages";
+import {PageHeader} from "../../components/PageHeader/PageHeader";
 
 const Login = () => {
-  const [submitting, setSubmitting] = useState(false);
-  const { setUser, setToken, setCurrentLocation, setExpiration } = useContext(
-    AppContext
-  );
-
-  const history = useHistory();
-
-  const getToken = async (username, password) => {
-    try {
-      const { data } = await axios.post(getUri("/login"), {
-        username: username,
-        password: password,
-      });
-
-      return { token: data.token, success: true };
-    } catch (error) {
-      return { error: error, success: false };
-    }
-  };
-
-  const onSubmit = async (data) => {
-    setSubmitting(true);
-    const { token, error, success } = await getToken(
-      data.username,
-      data.password
+    const [submitting, setSubmitting] = useState(false);
+    const {setUser, setToken, setCurrentLocation, setExpiration} = useContext(
+        AppContext
     );
 
-    if (!success) {
-      toast.error(error.response.data.message, {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      });
-      setSubmitting(false);
+    const history = useHistory();
 
-      return;
-    }
+    const getToken = async (username, password) => {
+        try {
+            const {data} = await axios.post(getUri("/login", false), {
+                username: username,
+                password: password,
+            });
 
-    const payload = jwt_decode(token);
+            return {token: data.token, success: true};
+        } catch (error) {
+            return {error: error, success: false};
+        }
+    };
 
-    setExpiration(payload.exp);
-    setUser({
-      id: payload.id,
-      username: payload.username,
-      visible: payload.visible,
-    });
+    const onSubmit = async (data) => {
+        setSubmitting(true);
+        const {token, error, success} = await getToken(
+            data.username,
+            data.password
+        );
 
-    setCurrentLocation(payload.location);
-    setToken(token);
+        if (!success) {
+            toast.error(error.response.data.message, {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
+            setSubmitting(false);
 
-    setSubmitting(false);
+            return;
+        }
 
-    history.push(`/${payload.location.url}/dashboard`);
-  };
+        const payload = jwt_decode(token);
 
-  return (
-    <Container>
-      <Meta title="Log in" />
-      <PageHeader title="Log in" />
+        setExpiration(payload.exp);
+        setUser({
+            id: payload.id,
+            username: payload.username,
+            visible: payload.visible,
+        });
 
-      <Wrapper>
-        <Form onSubmit={onSubmit} className={"login-form"}>
-          <Label>Username</Label>
-          <Input
-            type="text"
-            validate={{ required: messages.required }}
-            placeholder="…"
-            name="username"
-          />
+        setToken(token);
+        setSubmitting(false);
 
-          <Label>Password</Label>
-          <Input
-            type="password"
-            validate={{ required: messages.required }}
-            placeholder="…"
-            name="password"
-          />
+            console.log(payload);
 
-          <div className="support-links">
-            <Link to="/register">Create Account</Link>
-            <Link to="/password-reset/request" className="secondary">
-              Forgot Password
-            </Link>
-          </div>
+        // if no location is returned by the token the user logged in for the first time
+        if (!payload.location) {
+            history.push(`/setup`);
+            return
+        }
 
-          <Button type="submit" primary="true" disabled={submitting}>
-            Login
-          </Button>
-        </Form>
-      </Wrapper>
-    </Container>
-  );
+        setCurrentLocation(payload.location);
+        history.push(`/${payload.location.url}/dashboard`);
+    };
+
+    return (
+        <Container>
+            <Meta title="Log in"/>
+            <PageHeader title="Log in"/>
+
+            <Wrapper>
+                <Form onSubmit={onSubmit} className={"login-form"}>
+                    <Label>Username</Label>
+                    <Input
+                        type="text"
+                        validate={{required: messages.required}}
+                        placeholder="…"
+                        name="username"
+                    />
+
+                    <Label>Password</Label>
+                    <Input
+                        type="password"
+                        validate={{required: messages.required}}
+                        placeholder="…"
+                        name="password"
+                    />
+
+                    <div className="support-links">
+                        <Link to="/register">Create Account</Link>
+                        <Link to="/password-reset/request" className="secondary">
+                            Forgot Password
+                        </Link>
+                    </div>
+
+                    <Button type="submit" primary="true" disabled={submitting}>
+                        Login
+                    </Button>
+                </Form>
+            </Wrapper>
+        </Container>
+    );
 };
 
 export default Login;

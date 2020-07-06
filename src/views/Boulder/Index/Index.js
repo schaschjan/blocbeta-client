@@ -503,11 +503,9 @@ const Index = () => {
         ),
         id: "selection",
         className: `table-cell--selection`,
-        Cell: ({row}) => (
-            <div>
-                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-            </div>
-        ),
+        Cell: ({row}) => {
+            return <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+        },
     };
 
     const newBoulderTimeOffset = moment().subtract(14, "days");

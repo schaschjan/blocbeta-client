@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { useContext } from "react";
 import { AppContext, getLocationSlug } from "../App";
 
-export const getUri = (path, contextualize) => {
+export const getUri = (path, contextualize = true) => {
   if (!contextualize) return `${process.env.REACT_APP_API_HOST}/api${path}`;
 
   return `${process.env.REACT_APP_API_HOST}/api/${getLocationSlug()}${path}`;
