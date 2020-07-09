@@ -61,6 +61,7 @@ export const api = {
     get: async () => await httpGet("/me", false),
     update: async (data) => await httpPut("/me", data, false),
   },
+  ping: async () => await httpGet("/ping    "),
   ranking: {
     current: async () => {
       const data = await httpGet("/ranking/current");

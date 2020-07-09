@@ -17,11 +17,11 @@ import FormError from "../../components/FormError/FormError";
 import { useHistory } from "react-router-dom";
 
 const Register = () => {
-    const [submitting, setSubmitting] = useState(false);
-
     let history = useHistory();
+
     const {handleSubmit} = useForm();
     const [formErrors, setFormErrors] = useState([]);
+    const [submitting, setSubmitting] = useState(false);
 
     const onSubmit = async (data) => {
         setSubmitting(true);
