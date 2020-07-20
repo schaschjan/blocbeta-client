@@ -1,5 +1,4 @@
 .boulder-form {
-
 }
 
 .boulder-form .button:first-child {
@@ -13,7 +12,6 @@
 
 @media (min-width: 601px) {
   .boulder-form {
-
     display: grid;
     grid-column-gap: 30px;
     grid-template-columns: 1fr 1fr;

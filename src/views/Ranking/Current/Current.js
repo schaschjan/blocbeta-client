@@ -57,6 +57,8 @@ const Current = () => {
           <Fragment>
             <Avatar user={row.original.user} />
             {cell.value}
+
+            {row.original.boulder === boulders.length && <span> s🥋</span>}
           </Fragment>
         );
       },

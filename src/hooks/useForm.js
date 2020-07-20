@@ -1,22 +1,22 @@
-import {useState} from "react";
+import { useState } from "react";
 
 const useForm = (initialData = {}) => {
-    const [data, setData] = useState(initialData);
+  const [data, setData] = useState(initialData);
 
-    const handleSubmit = (event, callback) => {
-        event.preventDefault();
+  const handleSubmit = (event, callback) => {
+    event.preventDefault();
 
-        const data = {};
+    const data = {};
 
-        for (let [key, value] of new FormData(event.target).entries()) {
-            data[key] = value
-        }
+    for (let [key, value] of new FormData(event.target).entries()) {
+      data[key] = value;
+    }
 
-        setData(data);
-        callback(data);
-    };
+    setData(data);
+    callback(data);
+  };
 
-    return {data, handleSubmit};
+  return { data, handleSubmit };
 };
 
 export default useForm;

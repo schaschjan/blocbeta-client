@@ -1,6 +1,6 @@
 .form-error {
-    font-size: 0.625em;
-    color: var(--color-error);
-    display: flex;
-    padding-top: 5px;
+  font-size: 0.625em;
+  color: var(--color-error);
+  display: flex;
+  padding-top: 5px;
 }

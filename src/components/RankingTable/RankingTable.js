@@ -42,7 +42,7 @@ const RankingTable = ({ columns, data, Actions, className }) => {
           {rows.map((row, index) => {
             prepareRow(row);
 
-            const Row = ({...rest}) => {
+            const Row = ({ ...rest }) => {
               return (
                 <TableRow {...rest}>
                   {row.cells.map((cell) => {
@@ -63,7 +63,7 @@ const RankingTable = ({ columns, data, Actions, className }) => {
             if (Actions) {
               return (
                 <SwipeOut actions={Actions}>
-                  <Row key={index}/>
+                  <Row key={index} />
                 </SwipeOut>
               );
             }

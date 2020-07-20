@@ -44,7 +44,6 @@ const Dashboard = () => {
     prefetch();
 
     api.ping();
-
   }, []);
 
   const loading = [

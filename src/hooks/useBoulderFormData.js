@@ -55,8 +55,11 @@ const useBoulderFormData = (boulderId = null) => {
       );
     }
 
-    boulder.setters = boulder.setters.map(boulderSetter => {
-      return getOption(setters.find(setter => setter.id === boulderSetter.id), "username");
+    boulder.setters = boulder.setters.map((boulderSetter) => {
+      return getOption(
+        setters.find((setter) => setter.id === boulderSetter.id),
+        "username"
+      );
     });
 
     boulder.tags = boulder.tags.map((boulderTag) => {

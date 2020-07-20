@@ -40,5 +40,5 @@ export const store = {
       id: "neutral",
       name: "neutral",
     },
-  ]
+  ],
 };

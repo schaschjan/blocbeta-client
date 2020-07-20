@@ -36,7 +36,6 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
         return (
           <ul className="filter-values">
             {alphaSort(holdStyles, "name").map((holdStyle, index) => {
-
               return (
                 <li className="filter-option" key={index}>
                   <span onClick={() => addFilter("holdStyle", holdStyle.name)}>
@@ -58,7 +57,6 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       id: "start",
       label: "Start",
       render: () => {
-
         return (
           <ul className="filter-values">
             {alphaSort(walls, "name").map((wall, index) => {
@@ -78,7 +76,6 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       id: "end",
       label: "End",
       render: () => {
-
         return (
           <ul className="filter-values">
             {alphaSort(walls, "name").map((wall, index) => {
@@ -100,7 +97,7 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       render: () => {
         return (
           <ul className="filter-values">
-            {alphaSort(grades, "name").map((grade,index) => {
+            {alphaSort(grades, "name").map((grade, index) => {
               return (
                 <li className="filter-option" key={index}>
                   <span onClick={() => addFilter("grade", grade.name)}>
@@ -178,7 +175,7 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
       render: () => {
         return (
           <ul className="filter-values">
-            {labels.sort().map((label,index) => {
+            {labels.sort().map((label, index) => {
               return (
                 <li className="filter-option" key={index}>
                   <span onClick={() => addFilter("labels", label)}>

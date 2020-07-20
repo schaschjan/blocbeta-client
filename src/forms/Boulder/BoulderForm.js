@@ -34,10 +34,7 @@ const BoulderForm = ({ submitting, submitLabel, onSubmit, ...rest }) => {
     <Form className="boulder-form" onSubmit={onSubmit} {...rest}>
       <FormRow>
         <Label>Name</Label>
-        <Input
-          type="text"
-          name="name"
-        />
+        <Input type="text" name="name" />
       </FormRow>
 
       <FormRow className="row-grade">
