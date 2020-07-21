@@ -58,7 +58,7 @@ const Current = () => {
             <Avatar user={row.original.user} />
             {cell.value}
 
-            {row.original.boulder === boulders.length && <span> s🥋</span>}
+            {row.original.boulder === boulders.length &&  <span className='rank-badge'>🥋</span>}
           </Fragment>
         );
       },
