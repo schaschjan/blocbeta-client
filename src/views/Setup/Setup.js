@@ -39,6 +39,8 @@ const Setup = () => {
             </span>
           );
         })}
+
+        Want to track your progress in privacy? Disable visi
       </Wrapper>
     </Container>
   );

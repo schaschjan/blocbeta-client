@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useQuery } from "react-query";
-import { useContext } from "react";
-import { AppContext, getLocationSlug } from "../App";
+import {useQuery} from "react-query";
+import {useContext} from "react";
+import {AppContext, getLocationSlug} from "../App";
 
 export const getUri = (path, contextualize = true) => {
   if (!contextualize) return `${process.env.REACT_APP_API_HOST}/api${path}`;
@@ -11,7 +11,7 @@ export const getUri = (path, contextualize = true) => {
 
 const getConfig = () => {
   return {
-    headers: { Authorization: `Bearer ${api.token}` },
+    headers: {Authorization: `Bearer ${api.token}`},
   };
 };
 
@@ -43,6 +43,9 @@ export const cacheKeys = {
     current: "currentRanking",
     allTime: "allTimeRanking",
   },
+  doubts: {
+    unresolved: "unresolvedDoubts"
+  },
   stats: {
     boulder: "boulderStat",
     resetRotation: "resetRotationStat",
@@ -61,7 +64,7 @@ export const api = {
     get: async () => await httpGet("/me", false),
     update: async (data) => await httpPut("/me", data, false),
   },
-  ping: async () => await httpGet("/ping    "),
+  ping: async () => await httpGet("/ping"),
   ranking: {
     current: async () => {
       const data = await httpGet("/ranking/current");
@@ -96,7 +99,7 @@ export const api = {
     active: async () => await httpGet(`/boulder`),
     mass: async (data) => await httpPut(`/boulder/mass`, data),
     reportError: async (id, data) => httpPost(`/boulder/${id}/error`, data),
-    update: async ({ data, id }) => httpPut(`/boulder/${id}`, data),
+    update: async ({data, id}) => httpPut(`/boulder/${id}`, data),
     add: async (data) => httpPost(`/boulder`, data),
   },
   ascents: {
@@ -132,6 +135,9 @@ export const api = {
     remove: async (id, label) =>
       await httpDelete(`/boulder/${id}/label/${label}`),
   },
+  doubts: {
+    unresolved: async () => await httpGet("/doubt"),
+  }
 };
 
 const httpDelete = async (path, contextualize = true) => {
@@ -167,7 +173,7 @@ const httpGet = async (path, contextualize = true) => {
 };
 
 export default function useApi(identifier, method, queryOptions) {
-  const { token } = useContext(AppContext);
+  const {token} = useContext(AppContext);
 
   if (!token) {
     throw new Error(`No token provided for call ${identifier}`);

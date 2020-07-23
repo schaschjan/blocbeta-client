@@ -1,35 +1,40 @@
-import React, { useContext, useEffect } from "react";
-import { Loader } from "../../components/Loader/Loader";
+import React, {useContext, useEffect} from "react";
+import {Loader} from "../../components/Loader/Loader";
 import moment from "moment";
-import { Link } from "react-router-dom";
-import useApi, { api, cacheKeys } from "../../hooks/useApi";
-import { AppContext, Meta } from "../../App";
-import { PageHeader } from "../../components/PageHeader/PageHeader";
+import {Link} from "react-router-dom";
+import useApi, {api, cacheKeys} from "../../hooks/useApi";
+import {AppContext, Meta} from "../../App";
+import {PageHeader} from "../../components/PageHeader/PageHeader";
 import Wrapper from "../../components/Wrapper/Wrapper";
-import { queryCache } from "react-query";
+import {queryCache} from "react-query";
 import "./Dashboard.css";
 
 const Dashboard = () => {
-  const { user, locationPath } = useContext(AppContext);
+  const {user, locationPath} = useContext(AppContext);
 
-  const { status: resetStatus, data: rotation } = useApi(
+  const {status: resetStatus, data: rotation} = useApi(
     cacheKeys.stats.resetRotation,
     api.stats.resetRotation
   );
 
-  const { status: boulderStatus, data: boulders } = useApi(
+  const {status: boulderStatus, data: boulders} = useApi(
     cacheKeys.stats.boulder,
     api.stats.boulder
   );
 
-  const { status: wallStatus, data: walls } = useApi(
+  const {status: wallStatus, data: walls} = useApi(
     cacheKeys.walls,
     api.walls.all
   );
 
-  const { status: rankingStatus, data: ranking } = useApi(
+  const {status: rankingStatus, data: ranking} = useApi(
     cacheKeys.ranking.current,
     api.ranking.current
+  );
+
+  const {status: doubtsStatus, data: doubts} = useApi(
+    cacheKeys.doubts.unresolved,
+    api.doubts.unresolved
   );
 
   useEffect(() => {
@@ -51,9 +56,10 @@ const Dashboard = () => {
     wallStatus,
     boulderStatus,
     rankingStatus,
+    doubtsStatus
   ].includes("loading");
 
-  if (loading) return <Loader />;
+  if (loading) return <Loader/>;
 
   let rank = ranking.find((rank) => {
     return rank.user.id == user.id;
@@ -85,8 +91,8 @@ const Dashboard = () => {
 
   return (
     <div className="container">
-      <Meta title="Dashboard" />
-      <PageHeader title={`Hello ${user.username}!`} />
+      <Meta title="Dashboard"/>
+      <PageHeader title={`Hello ${user.username}!`}/>
 
       <Wrapper>
         <div className="tiles">
@@ -95,7 +101,7 @@ const Dashboard = () => {
               to={{
                 pathname: locationPath("/boulder"),
                 search: "?ascent=todo",
-                state: { fromDashboard: true },
+                state: {fromDashboard: true},
               }}
             >
               <h2>All ({boulders.activeBoulders})</h2>
@@ -104,8 +110,7 @@ const Dashboard = () => {
             <Link
               to={{
                 pathname: locationPath("/boulder"),
-                search: "?ascent=todo",
-                state: { fromDashboard: true },
+                search: "?ascent=todo"
               }}
             >
               <h2>Todos ({boulders.activeBoulders - rank.boulders})</h2>
@@ -114,8 +119,7 @@ const Dashboard = () => {
             <Link
               to={{
                 pathname: locationPath("/boulder"),
-                search: "?ascent=todo&date=new",
-                state: { fromDashboard: true },
+                search: "?ascent=todo&date=new"
               }}
             >
               <h2>New Boulders ({boulders.newBoulders})</h2>
@@ -138,6 +142,18 @@ const Dashboard = () => {
               {Math.floor((rank.boulders / boulders.activeBoulders) * 100)}% (
               {rank.boulders} of {boulders.activeBoulders})
             </h2>
+          </div>
+        </div>
+
+        <div className="tiles">
+          <div style={{
+            opacity: doubts.length > 0 ? 1 : .2,
+            pointerEvents: doubts.length > 0 ? 'auto' : 'none'
+          }}>
+
+            <Link to={{pathname: locationPath("/doubts")}}>
+              <h2>Ascent doubts ({doubts.length})</h2>
+            </Link>
           </div>
         </div>
       </Wrapper>
