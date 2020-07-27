@@ -61,7 +61,7 @@ const Dashboard = () => {
 
   if (loading) return <Loader/>;
 
-  let rank = ranking.find((rank) => {
+  let rank = ranking.list.find(rank => {
     return rank.user.id == user.id;
   });
 

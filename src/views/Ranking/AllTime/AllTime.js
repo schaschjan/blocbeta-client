@@ -94,7 +94,7 @@ const AllTime = () => {
       <Wrapper>
         {ranking.list.length > 0 ? (
           <RankingTable
-            data={ranking}
+            data={ranking.list}
             columns={columns}
             className={"all-time"}
           />
