@@ -68,13 +68,13 @@ export const api = {
   ranking: {
     current: async () => {
       const data = await httpGet("/ranking/current");
-      assignRanks(data);
+      assignRanks(data.list);
 
       return data;
     },
     allTime: async () => {
       const data = await httpGet("/ranking/all-time");
-      assignRanks(data);
+      assignRanks(data.list);
 
       return data;
     },
