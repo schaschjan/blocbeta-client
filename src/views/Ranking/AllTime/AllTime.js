@@ -92,7 +92,7 @@ const AllTime = () => {
       <PageHeader title={"All time ranking"} />
 
       <Wrapper>
-        {ranking.length > 0 ? (
+        {ranking.list.length > 0 ? (
           <RankingTable
             data={ranking}
             columns={columns}

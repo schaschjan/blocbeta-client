@@ -1,24 +1,24 @@
-import React, { Fragment, useContext } from "react";
-import { Loader } from "../../../components/Loader/Loader";
+import React, {Fragment, useContext} from "react";
+import {Loader} from "../../../components/Loader/Loader";
 import Avatar from "../../../components/Avatar/Avatar";
 import Paragraph from "../../../components/Paragraph/Paragraph";
 import moment from "moment";
 import "./Current.css";
 import Icon from "../../../components/Icon/Icon";
 import Container from "../../../components/Container/Container";
-import useApi, { api, cacheKeys } from "../../../hooks/useApi";
-import { PageHeader } from "../../../components/PageHeader/PageHeader";
+import useApi, {api, cacheKeys} from "../../../hooks/useApi";
+import {PageHeader} from "../../../components/PageHeader/PageHeader";
 import EmptyState from "../../../components/EmptyState/EmptyState";
 import Emoji from "../../../components/Emoji/Emoji";
 import Wrapper from "../../../components/Wrapper/Wrapper";
 import RankingTable from "../../../components/RankingTable/RankingTable";
 import Progress from "../../../components/Progress/Progress";
-import { getPercentage } from "../../../helpers";
-import { Link } from "react-router-dom";
-import { AppContext, Meta } from "../../../App";
+import {getPercentage} from "../../../helpers";
+import {Link} from "react-router-dom";
+import {AppContext, Meta} from "../../../App";
 
-const Actions = ({ b }) => {
-  const { user, locationPath } = useContext(AppContext);
+const Actions = ({b}) => {
+  const {user, locationPath} = useContext(AppContext);
   const a = user.id;
 
   return (
@@ -27,24 +27,24 @@ const Actions = ({ b }) => {
 };
 
 const Current = () => {
-  const { status: rankingStatus, data: ranking } = useApi(
+  const {status: rankingStatus, data: ranking} = useApi(
     cacheKeys.ranking.current,
     api.ranking.current
   );
 
-  const { status: bouldersStatus, data: boulders } = useApi(
+  const {status: bouldersStatus, data: boulders} = useApi(
     cacheKeys.boulders,
     api.boulder.active
   );
 
-  if ([rankingStatus, bouldersStatus].includes("loading")) return <Loader />;
+  if ([rankingStatus, bouldersStatus].includes("loading")) return <Loader/>;
 
   const columns = [
     {
       Header: "Rank",
       accessor: "rank",
       className: `table-cell--rank`,
-      Cell: ({ cell }) => {
+      Cell: ({cell}) => {
         return <strong>{cell.value}</strong>;
       },
     },
@@ -52,13 +52,13 @@ const Current = () => {
       Header: "User",
       accessor: "user.username",
       className: "table-cell--user",
-      Cell: ({ cell, row }) => {
+      Cell: ({cell, row}) => {
         return (
           <Fragment>
-            <Avatar user={row.original.user} />
+            <Avatar user={row.original.user}/>
             {cell.value}
 
-            {row.original.boulder === boulders.length &&  <span className='rank-badge'>🥋</span>}
+            {row.original.boulder === boulders.length && <span className='rank-badge'>🥋</span>}
           </Fragment>
         );
       },
@@ -66,8 +66,8 @@ const Current = () => {
     {
       Header: "Gender",
       accessor: "user.gender",
-      Cell: ({ cell }) => {
-        return <Icon name={cell.value} />;
+      Cell: ({cell}) => {
+        return <Icon name={cell.value}/>;
       },
     },
     {
@@ -82,26 +82,26 @@ const Current = () => {
       Header: "Boulders",
       accessor: "boulders",
       className: "table-cell--boulders",
-      Cell: ({ cell }) => {
+      Cell: ({cell}) => {
         const percentage = (cell.value / boulders.length) * 100;
 
-        return <Progress percentage={percentage} />;
+        return <Progress percentage={percentage}/>;
       },
     },
     {
       Header: "Flashed",
       accessor: "flashes",
-      Cell: ({ cell }) => getPercentage(cell.value, boulders.length),
+      Cell: ({cell}) => getPercentage(cell.value, boulders.length),
     },
     {
       Header: "Topped",
       accessor: "tops",
-      Cell: ({ cell }) => getPercentage(cell.value, boulders.length),
+      Cell: ({cell}) => getPercentage(cell.value, boulders.length),
     },
     {
       Header: "Last activity",
       accessor: "user.lastActivity",
-      Cell: ({ cell }) => {
+      Cell: ({cell}) => {
         return <Paragraph>{moment(cell.value).fromNow()}</Paragraph>;
       },
     },
@@ -110,17 +110,19 @@ const Current = () => {
       id: "user.id",
       accessor: "user.id",
       className: "table-cell--actions",
-      Cell: ({ cell }) => <Actions b={cell.value} />,
+      Cell: ({cell}) => <Actions b={cell.value}/>,
     },
   ];
 
   return (
     <Container>
-      <Meta title="Current Ranking" />
-      <PageHeader title="Current Ranking" />
+      <Meta title="Current Ranking"/>
+      <PageHeader title="Current Ranking">
+        <span className="t--tech">Last updated {ranking.lastRun}</span>
+      </PageHeader>
 
       <Wrapper>
-        {ranking.length > 0 ? (
+        {ranking.list.length > 0 ? (
           <RankingTable
             data={ranking}
             columns={columns}
