@@ -11,7 +11,6 @@ import { AppContext, Meta } from "../../../App";
 import useBoulderFormData from "../../../hooks/useBoulderFormData";
 import { useHistory } from "react-router-dom";
 import BoulderForm from "../../../forms/Boulder/BoulderForm";
-import { resolveApiData } from "../../../components/Form/Form";
 
 const Edit = () => {
   const { boulderId } = useParams();
@@ -33,7 +32,6 @@ const Edit = () => {
     setSubmitting(true);
 
     try {
-      resolveApiData(data);
       await mutateOnUpdateBoulder({
         id: boulderId,
         data: data,

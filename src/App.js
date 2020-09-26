@@ -1,4 +1,4 @@
-import React, { createContext, Fragment, useMemo, useState } from "react";
+import React, {createContext, Fragment, useMemo, useState} from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -6,81 +6,67 @@ import {
   Redirect,
 } from "react-router-dom";
 import Header from "./components/Navigation/Header";
-import { Content } from "./components/Content/Content";
-import { router } from "./router";
-import { ToastContainer } from "react-toastify";
-import { Footer } from "./components/Footer/Footer";
-import { ReactQueryDevtools } from "react-query-devtools";
+import {router} from "./router";
+import {Footer} from "./components/Footer/Footer";
 import usePersistentState from "./hooks/usePersistentState";
-import jwt_decode from "jwt-decode";
-import { Helmet } from "react-helmet";
+import {Helmet} from "react-helmet";
+import classNames from "classnames";
 
-export const Meta = ({ title, description }) => {
+export const Meta = ({title, description}) => {
   return (
     <Helmet>
-      <meta charSet="utf-8" />
+      <meta charSet="utf-8"/>
       <title>Blocbeta - {title}</title>
-      <meta name="description" content={description} />
+      <meta name="description" content={description}/>
     </Helmet>
   );
 };
 
-export const AppContext = createContext();
-
-export const getLocationSlug = () => {
-  return window.location.pathname.split("/")[1];
-};
+export const AppContext = createContext({});
 
 const App = () => {
   const [user, setUser] = usePersistentState("user", null);
-  const [token, setToken] = usePersistentState("token", null);
-  const [currentLocation, setCurrentLocation] = usePersistentState(
-    "location",
-    null
-  );
+  const [currentLocation, setCurrentLocation] = usePersistentState("location", null);
   const [expiration, setExpiration] = usePersistentState("expiration", null);
+
   const [contentDisabled, disableContent] = useState(false);
+  const [appClassName, setAppClassName] = useState(null);
+
+  const contextualizedPath = (path) => {
+    return `/${currentLocation.url}${path}`
+  };
 
   const reset = () => {
     setUser(null);
-    setToken(null);
     setCurrentLocation(null);
     setExpiration(null);
 
     localStorage.clear();
   };
 
-  const locationPath = (path) => {
-    return `/${getLocationSlug()}${path}`;
-  };
-
   const authenticated = () => {
-    if (token === null) {
-      return false;
+    if (!currentLocation) {
+      return false
+    }
+
+    if (!user) {
+      return false
     }
 
     return new Date().getTime() / 1000 <= expiration;
   };
 
   const isAdmin = useMemo(() => {
-    if (!token) {
-      return false;
-    }
-
-    const payload = jwt_decode(token);
-
     if (!currentLocation) {
       return false;
     }
 
-    return Object.values(payload.roles).includes(
+    return user.roles.includes(
       `ROLE_ADMIN@${currentLocation.id}`
     );
-  }, [token]);
+  }, []);
 
   const appContextValues = {
-    token,
-    setToken,
     user,
     setUser,
     currentLocation,
@@ -89,14 +75,17 @@ const App = () => {
     setExpiration,
     contentDisabled,
 
+    contextualizedPath,
+    appClassName,
+    setAppClassName,
+
     disableContent,
     isAdmin,
     authenticated,
     reset,
-    locationPath,
   };
 
-  const PrivateRoute = ({ children, ...rest }) => {
+  const PrivateRoute = ({children, ...rest}) => {
     if (authenticated()) {
       return <Route {...rest} />;
     }
@@ -104,14 +93,12 @@ const App = () => {
     return (
       <Route
         {...rest}
-        render={() => (authenticated() ? children : <LoginRedirect />)}
+        render={() => (authenticated() ? children : <LoginRedirect/>)}
       />
     );
   };
 
   const LoginRedirect = () => {
-    reset();
-
     return (
       <Redirect
         to={{
@@ -125,22 +112,21 @@ const App = () => {
     <Fragment>
       <Router>
         <AppContext.Provider value={appContextValues}>
-          <Header />
+          <div className={classNames("app", `app--${appClassName}`)}>
+            <Header/>
 
-          <Content disabled={contentDisabled}>
             <Switch>
-              {router
-                .filter((route) => {
-                  if (route.admin === true && !isAdmin) {
-                    return false;
-                  }
+              {router.filter((route) => {
+                if (route.admin === true && !isAdmin) {
+                  return false;
+                }
 
-                  if (route.visibleOnly === true && user && !user.visible) {
-                    return false;
-                  }
+                if (route.visibleOnly === true && user && !user.visible) {
+                  return false;
+                }
 
-                  return true;
-                })
+                return true;
+              })
                 .map((route, i) => {
                   if (!route.public) {
                     return <PrivateRoute key={i} {...route} />;
@@ -149,16 +135,14 @@ const App = () => {
                   return <Route key={i} {...route} />;
                 })}
 
-              <Route render={() => <LoginRedirect />} />
+              <Route render={() => <LoginRedirect/>}/>
             </Switch>
-          </Content>
+          </div>
         </AppContext.Provider>
       </Router>
 
-      <ToastContainer />
-      <Footer />
+      <Footer/>
 
-      <ReactQueryDevtools initialIsOpen={process.env.REACT_APP_ENV === "dev"} />
     </Fragment>
   );
 };

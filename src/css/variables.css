@@ -1,0 +1,32 @@
+/*
+Every component has its own fitting logic:
+
+.element-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.element {
+  width: 100%;
+  max-width: var(--max-desktop-width);
+  margin-left: var(--margin-default-horizontal);
+  margin-right: var(--margin-default-horizontal);
+}
+
+*/
+
+:root {
+  /* Colors */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-red: rgba(255, 0, 79, 0.98);
+
+  /* Typography */
+  --font-family-sans: Karla, Arial, sans-serif;
+  /* For font classes, look at typography.css */
+
+  /* Spacing */
+  --spacing-unit: 8px;
+  --max-desktop-width: 1440px;
+  --margin-default-horizontal: calc(var(--spacing-unit) * 14);
+}

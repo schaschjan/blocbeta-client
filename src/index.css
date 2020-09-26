@@ -1,7 +1,24 @@
-@import "~normalize.css/normalize.css";
+@import "~sanitize.css";
+@import "./css/variables.css";
+@import "./css/normalizations.css";
+@import "./css/typography.css";
+@import "./css/utils.css";
 @import url("https://fonts.googleapis.com/css?family=Karla&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap");
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+    --spacing-unit: 8px;
+}
 
 :root {
     --color-black: #000;
@@ -27,78 +44,7 @@
     --font-family-tech: "IBM Plex Mono", monospace;
 }
 
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    font-family: "Karla", sans-serif;
-    font-size: 0.875rem;
-    line-height: 1rem;
-}
-
-h1 {
-    font-size: 2em;
-    font-weight: bold;
-    padding-top: 50px;
-    padding-bottom: 80px;
-}
-
-h2 {
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-h3 {
-    font-size: 1em;
-    font-weight: bold;
-}
-
-h4 {
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 16px;
-}
-
-strong {
-    font-weight: bold;
-}
-
-a {
-    color: var(--color-dark);
-    text-decoration: none;
-}
-
-a.secondary {
-    color: var(--color-grey);
-}
-
-ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-li {
-    margin: 0;
-}
-
-span {
-    display: flex;
-    align-items: center;
-}
-
-/* font utilities */
-
-.font.font--small {
-    font-size: 13px;
-    line-height: 15px;
-}
-
-
-.t--tech {
-    font-family: var(--font-family-tech);
-    font-size: 0.875rem; /* 14px */
-    line-height: 1.286em;
-    font-weight: 400;
+.app {
+    min-height: 100vh;
+    padding: calc(3 * var(--spacing-unit));
 }

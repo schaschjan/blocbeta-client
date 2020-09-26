@@ -5,29 +5,28 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import { Link, useLocation } from "react-router-dom";
 import "./Header.css";
 import Button from "../Button/Button";
-import { AppContext, getLocationSlug } from "../../App";
-import useApi, { api, cacheKeys } from "../../hooks/useApi";
-import { useHistory } from "react-router-dom";
+import {AppContext} from "../../App";
+import useApi, {api, cacheKeys} from "../../hooks/useApi";
+import {NavLink, useHistory} from "react-router-dom";
 import HyperLink from "../HyperLink/HyperLink";
-import { useMediaQuery } from "react-responsive/src";
+import {useMediaQuery} from "react-responsive/src";
 import Icon from "../Icon/Icon";
 import useClickOutside from "../../hooks/useClickOutside";
 import useKeyDown from "../../hooks/useKeyDown";
 import Modal from "../Modal/Modal";
-import { alphaSort, largeQuery } from "../../helpers";
+import {alphaSort, largeQuery} from "../../helpers";
 import classnames from "classnames";
-import { motion } from "framer-motion";
+import {motion} from "framer-motion";
 
 const LocationSwitch = () => {
-  const { status, data: locations } = useApi(
+  const {status, data: locations} = useApi(
     cacheKeys.locations,
     api.locations.public
   );
 
-  const { currentLocation, setCurrentLocation } = useContext(AppContext);
+  const {currentLocation, setCurrentLocation} = useContext(AppContext);
   const modalContentRef = useRef();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -63,7 +62,7 @@ const LocationSwitch = () => {
 
               return (
                 <motion.li
-                  whileHover={!isCurrent ? { x: 4 } : null}
+                  whileHover={!isCurrent ? {x: 4} : null}
                   key={location.id}
                   className={classnames(
                     "location-list__item",
@@ -86,18 +85,18 @@ const LocationSwitch = () => {
           <div className="location-info">
             <div
               className="location-info__image"
-              style={{ backgroundImage: `url(${focusedLocation.image})` }}
+              style={{backgroundImage: `url(${focusedLocation.image})`}}
             />
 
             <div className={"location-info__address"}>
               <address>
-                {focusedLocation.addressLineOne} <br />
+                {focusedLocation.addressLineOne} <br/>
                 {focusedLocation.addressLineTwo && (
                   <Fragment>
-                    {focusedLocation.addressLineTwo} <br />
+                    {focusedLocation.addressLineTwo} <br/>
                   </Fragment>
                 )}
-                {focusedLocation.zip} {focusedLocation.city} <br />
+                {focusedLocation.zip} {focusedLocation.city} <br/>
               </address>
             </div>
 
@@ -139,122 +138,168 @@ const LocationSwitch = () => {
   );
 };
 
+const NavItem = ({link, children}) => {
+  return (
+    <NavLink to={link} className="header-nav__item" activeClassName="header-nav__item--active">
+      {children}
+    </NavLink>
+  )
+};
+
 const Header = () => {
-  const {
-    user,
-    authenticated,
-    currentLocation,
-    reset,
-    locationPath,
-    isAdmin,
-  } = useContext(AppContext);
+  const {user, contextualizedPath, reset, authenticated} = useContext(AppContext);
 
-  let history = useHistory();
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    closeOffCanvas();
-  }, [pathname]);
-
-  const closeOffCanvas = () => {
-    setOffCanvasOpen(false);
-  };
-
-  const openOffCanvas = () => {
-    setOffCanvasOpen(true);
-  };
-
-  const logout = (event) => {
-    closeOffCanvas();
-    reset();
-    history.push("/login");
-  };
-
-  const isLarge = useMediaQuery(largeQuery);
-  const [offCanvasOpen, setOffCanvasOpen] = useState(false);
-
-  const offCanvasRef = useRef();
-
-  useClickOutside(offCanvasRef, () => closeOffCanvas());
-  useKeyDown("Escape", () => closeOffCanvas());
-
-  const Navigation = () => {
-    return (
-      <ul className="navigation">
-        <li>
-          <Link to={locationPath("/boulder?ascent=todo")}>Boulder</Link>
-        </li>
-
-        {user.visible && (
-          <li>
-            <Link to={locationPath("/ranking/current")}>Ranking</Link>
-          </li>
-        )}
-
-        <li>
-          <Link to={locationPath("/account")}>[{user.username}]</Link>
-        </li>
-
-        {isAdmin && (
-          <li>
-            <Link to={locationPath("/settings")}>Settings</Link>
-          </li>
-        )}
-
-        <li>
-          <Button onClick={(event) => logout(event)}>Logout</Button>
-        </li>
-      </ul>
-    );
-  };
-
-  if (!authenticated() || !getLocationSlug() || !currentLocation) {
+  if (!authenticated()) {
     return (
       <header className="header">
-        <ul>
-          <li>
-            <Link to="/login" className="logo">
-              BlocBeta
-            </Link>
-          </li>
-        </ul>
+        <span className="header__logo">BlocBeta</span>
       </header>
-    );
+    )
   }
 
   return (
     <header className="header">
-      <div className="location-switch">
-        <Link to={locationPath("/dashboard")} className="logo">
-          BlocBeta @
-        </Link>
-        <LocationSwitch />
-      </div>
+      <NavLink className="header__logo" to={contextualizedPath("/dashboard")}>BlocBeta</NavLink>
 
-      {isLarge ? (
-        <Navigation />
-      ) : (
-        <Fragment>
-          {offCanvasOpen ? (
-            <Icon name="close-large" onClick={() => closeOffCanvas()} />
-          ) : (
-            <Icon name="burger" onClick={() => openOffCanvas()} />
-          )}
+      <nav className="header__nav header-nav">
+        <NavItem link={contextualizedPath("/boulder")}>
+          Boulder
+        </NavItem>
 
-          <motion.div
-            ref={offCanvasRef}
-            className={classnames(
-              "offcanvas-navigation",
-              offCanvasOpen ? "offcanvas-navigation--open" : null
-            )}
-            positionTransition
-          >
-            <Navigation />
-          </motion.div>
-        </Fragment>
-      )}
+        <NavItem link={contextualizedPath("/ranking")}>
+          Ranking
+        </NavItem>
+
+        <NavItem link={contextualizedPath("/account")}>
+          [{user.username}]
+        </NavItem>
+
+        <a href={"http://schedule.blocbeta.com/schedule"} className="header-nav__item">
+          Schedule
+        </a>
+
+        <span onClick={() => reset()} className="header-nav__item">
+          Out!
+        </span>
+      </nav>
     </header>
-  );
+  )
 };
+
+// const Header = () => {
+//   const {
+//     user,
+//     authenticated,
+//     currentLocation,
+//     reset,
+//     locationPath,
+//     isAdmin,
+//   } = useContext(AppContext);
+//
+//   let history = useHistory();
+//   const {pathname} = useLocation();
+//
+//   useEffect(() => {
+//     closeOffCanvas();
+//   }, [pathname]);
+//
+//   const closeOffCanvas = () => {
+//     setOffCanvasOpen(false);
+//   };
+//
+//   const openOffCanvas = () => {
+//     setOffCanvasOpen(true);
+//   };
+//
+//   const logout = (event) => {
+//     closeOffCanvas();
+//     reset();
+//     history.push("/login");
+//   };
+//
+//   const isLarge = useMediaQuery(largeQuery);
+//   const [offCanvasOpen, setOffCanvasOpen] = useState(false);
+//
+//   const offCanvasRef = useRef();
+//
+//   useClickOutside(offCanvasRef, () => closeOffCanvas());
+//   useKeyDown("Escape", () => closeOffCanvas());
+//
+//   const Navigation = () => {
+//     return (
+//       <ul className="navigation">
+//         <li>
+//           <Link to={locationPath("/boulder?ascent=todo")}>Boulder</Link>
+//         </li>
+//
+//         {user.visible && (
+//           <li>
+//             <Link to={locationPath("/ranking/current")}>Ranking</Link>
+//           </li>
+//         )}
+//
+//         <li>
+//           <Link to={locationPath("/account")}>[{user.username}]</Link>
+//         </li>
+//
+//         {isAdmin && (
+//           <li>
+//             <Link to={locationPath("/settings")}>Settings</Link>
+//           </li>
+//         )}
+//
+//         <li>
+//           <Button onClick={(event) => logout(event)}>Logout</Button>
+//         </li>
+//       </ul>
+//     );
+//   };
+//
+//   if (!authenticated() || !getLocationSlug() || !currentLocation) {
+//     return (
+//       <header className="header">
+//         <ul>
+//           <li>
+//             <Link to="/login" className="header__logo">
+//               BlocBeta
+//             </Link>
+//           </li>
+//         </ul>
+//       </header>
+//     );
+//   }
+//
+//   return (
+//     <header className="header">
+//       <Link to={locationPath("/dashboard")} className="header__logo">
+//         BlocBeta @
+//       </Link>
+//       <LocationSwitch/>
+//
+//       {isLarge ? (
+//         <Navigation/>
+//       ) : (
+//         <Fragment>
+//           {offCanvasOpen ? (
+//             <Icon name="close-large" onClick={() => closeOffCanvas()}/>
+//           ) : (
+//             <Icon name="burger" onClick={() => openOffCanvas()}/>
+//           )}
+//
+//           <motion.div
+//             ref={offCanvasRef}
+//             className={classnames(
+//               "offcanvas-navigation",
+//               offCanvasOpen ? "offcanvas-navigation--open" : null
+//             )}
+//             positionTransition
+//           >
+//             <Navigation/>
+//           </motion.div>
+//         </Fragment>
+//       )}
+//     </header>
+//   );
+// };
 
 export default Header;

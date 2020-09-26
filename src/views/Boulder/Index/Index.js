@@ -44,7 +44,7 @@ import useApi, { api, cacheKeys } from "../../../hooks/useApi";
 import { useMutation, queryCache } from "react-query";
 import { AppContext, Meta } from "../../../App";
 import { Drawer } from "../../../components/Drawer/Drawer";
-import Form from "../../../components/Form/Form";
+import {Form} from "../../../components/Form/Form";
 import { Textarea } from "../../../components/Textarea/Textarea";
 import Input from "../../../components/Input/Input";
 import useDrawer from "../../../hooks/useDrawer";

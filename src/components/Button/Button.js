@@ -1,35 +1,13 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./Button.css";
-import classnames from "classnames";
 
-const Button = ({
-  type,
-  disabled,
-  dangerous,
-  text,
-  primary,
-  secondary,
-  children,
-  size,
-  className,
-  ...rest
-}) => {
-  const classes = classnames(
-    "button",
-    disabled ? "button--disabled" : null,
-    dangerous ? "button--dangerous" : null,
-    text ? "button--text" : null,
-    primary ? "button--primary" : null,
-    secondary ? "button--secondary" : null,
-    `button--size-${size}`,
-    className
-  );
+const Button = ({ variant = "primary", asLink = false, ...rest }) => {
+  if (asLink) {
+    return <Link {...rest} className={`button button--${variant}`} />;
+  }
 
-  return (
-    <button type={type} className={classes} {...rest}>
-      {children}
-    </button>
-  );
+  return <button className={`button button--${variant}`} {...rest} />;
 };
 
 export default Button;

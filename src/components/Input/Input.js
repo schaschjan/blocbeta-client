@@ -1,7 +1,7 @@
 import React from "react";
-import "./Input.css";
 import Icon from "../Icon/Icon";
 import classnames from "classnames";
+import "./Input.css";
 
 const Input = ({ register, ref, prefix, icon, type, ...rest }) => {
   return (

@@ -3,7 +3,7 @@ import Container from "../../components/Container/Container";
 import { Meta } from "../../App";
 import { PageHeader } from "../../components/PageHeader/PageHeader";
 import Wrapper from "../../components/Wrapper/Wrapper";
-import Form from "../../components/Form/Form";
+  import {Form} from "../../components/Form/Form";
 import Label from "../../components/Label/Label";
 import Input from "../../components/Input/Input";
 import { messages } from "../../messages";

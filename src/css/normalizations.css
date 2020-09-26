@@ -1,0 +1,74 @@
+/*
+- define global styles, e.g. for lists or anchor tags
+- define utility classes
+ */
+/* Universal CSS basics */
+* {
+  box-sizing: border-box;
+  position: relative;
+}
+body {
+  margin: 0;
+  font-family: var(--font-family-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 300;
+  font-feature-settings: "kern" 1, "liga" 1;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  text-size-adjust: none;
+  background: var(--color-white);
+}
+ul {
+  margin-block-start: 0;
+  margin-block-end: 0;
+  padding-inline-start: 0;
+  padding-left: 0;
+}
+figure {
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+button {
+  display: block;
+  background: none;
+  border: 0;
+  font-size: 100%;
+}
+a {
+  color: inherit;
+}
+pre {
+  white-space: pre-wrap;
+}
+img,
+svg {
+  display: block;
+  vertical-align: middle;
+  height: auto;
+}
+img {
+  border-style: none;
+}
+svg {
+  overflow: hidden;
+}
+article,
+aside,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section {
+  display: block;
+}
+code {
+  font-feature-settings: normal;
+}

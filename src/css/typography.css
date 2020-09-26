@@ -1,0 +1,64 @@
+/*
+|--------------------------------------------------------------------------
+| Load fonts
+|--------------------------------------------------------------------------
+| Example
+|
+| @font-face {
+|   font-family: "Sans";
+|  ;
+|   font-style: normal;
+|   src: url('/fonts/NotoSans-Bold.ttf') format('truetype')
+| }
+|
+|--------------------------------------------------------------------------
+| Create a font class system
+|--------------------------------------------------------------------------
+|
+| Font classes are created according to the individual project.
+| Speak with the designer and take your time
+| Changing the class system afterwards is very error prone.
+|
+| Questions you might wanna ask yourself:
+| - Do we have multiple font families?
+| - How correlate font sizes to each other?
+| - Do we need media queries for font sizes?
+| - Are we gonna use special classes for italic or bold fonts?
+|
+|--------------------------------------------------------------------------
+| Naming
+|--------------------------------------------------------------------------
+|
+| - use t--alpha, t--beta etc.
+| - try to avoid using additional font utility classes, e.g. t--beta-bold
+| - no h
+*/
+
+.t--alpha,
+.t--beta,
+.t--gamma,
+.t--delta,
+.t--epsilon,
+.t--zeta,
+.t--eta,
+.t--theta {
+    font-family: var(--font-family-sans);
+}
+
+.t--alpha,
+.t--beta,
+.t--gamma,
+.t--delta,
+.t--epsilon,
+.t--zeta,
+.t--eta {
+    letter-spacing: 0;
+}
+
+.t--alpha {
+    font-family: Karla;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 48px;
+    line-height: 56px;
+}

@@ -1,118 +1,102 @@
-import React, { useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
-import Button from "../../components/Button/Button";
+import React, {useEffect, useState, useContext, Fragment} from "react";
 import Input from "../../components/Input/Input";
-import Form from "../../components/Form/Form";
-import Container from "../../components/Container/Container";
-import Label from "../../components/Label/Label";
-import { Link } from "react-router-dom";
-import "./Login.css";
-import { toast } from "react-toastify";
-import { AppContext, Meta } from "../../App";
-import jwt_decode from "jwt-decode";
-import { getUri } from "../../hooks/useApi";
+import Button from "../../components/Button/Button";
+import useForm, {composeFormElement} from "../../hooks/useForm";
+import {AppContext, Meta} from "../../App";
 import axios from "axios";
-import Wrapper from "../../components/Wrapper/Wrapper";
-import { messages } from "../../messages";
-import { PageHeader } from "../../components/PageHeader/PageHeader";
+import {FormRow} from "../../components/Form/Form";
+import useQueryParameters from "../../hooks/useQueryParameters";
+import "./Login.css";
 
 const Login = () => {
+  const {setAppClassName} = useContext(AppContext);
+
+  const {handleSubmit, formData, observeField} = useForm({
+    username: null,
+    password: null
+  });
+
   const [submitting, setSubmitting] = useState(false);
-  const { setUser, setToken, setCurrentLocation, setExpiration } = useContext(
-    AppContext
-  );
+  const {setUser, setCurrentLocation, setExpiration} = useContext(AppContext);
 
-  const history = useHistory();
+  const queryParameters = useQueryParameters();
+  let target = queryParameters.get("target");
 
-  const getToken = async (username, password) => {
-    try {
-      const { data } = await axios.post(getUri("/login", false), {
-        username: username,
-        password: password,
-      });
-
-      return { token: data.token, success: true };
-    } catch (error) {
-      return { error: error, success: false };
-    }
+  const getScheduleUrl = (location) => {
+    return `https://schedule.blocbeta.com/${location}.url/schedule`
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (payload) => {
     setSubmitting(true);
-    const { token, error, success } = await getToken(
-      data.username,
-      data.password
-    );
 
-    if (!success) {
-      toast.error(error.response.data.message, {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      });
+    try {
+      const {data} = await axios.post(`/api/login`, payload, {params: target});
+
+      setExpiration(data.expiration);
+      setUser(data.user);
+      setCurrentLocation(data.location);
+
+      if (queryParameters.get("target") === "schedule") {
+        window.location.href = getScheduleUrl(data.location);
+      } else {
+        window.location.href = "/salon/dashboard"
+      }
+
+    } catch (error) {
+      alert(error.response.data.message);
+    } finally {
       setSubmitting(false);
-
-      return;
     }
-
-    const payload = jwt_decode(token);
-
-    setExpiration(payload.exp);
-    setUser({
-      id: payload.id,
-      username: payload.username,
-      visible: payload.visible,
-    });
-
-    setToken(token);
-    setSubmitting(false);
-
-    console.log(payload);
-
-    // if no location is returned by the token the user logged in for the first time
-    if (!payload.location) {
-      history.push(`/setup`);
-      return;
-    }
-
-    setCurrentLocation(payload.location);
-    history.push(`/${payload.location.url}/dashboard`);
   };
+
+  useEffect(() => {
+    setAppClassName("login");
+  }, []);
 
   return (
-    <Container>
-      <Meta title="Log in" />
-      <PageHeader title="Log in" />
+    <Fragment>
+      <Meta title="Log in"/>
 
-      <Wrapper>
-        <Form onSubmit={onSubmit} className={"login-form"}>
-          <Label>Username</Label>
-          <Input
-            type="text"
-            validate={{ required: messages.required }}
-            placeholder="…"
-            name="username"
-          />
+      <div className="login-layout">
+        <div className="login-layout__intro login-layout-intro">
+          <h1 className="t--alpha login-layout-intro__text">Please sign in to book a training slot:</h1>
+        </div>
 
-          <Label>Password</Label>
-          <Input
-            type="password"
-            validate={{ required: messages.required }}
-            placeholder="…"
-            name="password"
-          />
+        <form onSubmit={(event) => handleSubmit(event, onSubmit)} className="login-layout__form">
+          <FormRow>
+            {composeFormElement(
+              "username",
+              "Username",
+              formData.username,
+              Input,
+              observeField,
+              {
+                type: "text",
+                required: true
+              }
+            )}
+          </FormRow>
 
-          <div className="support-links">
-            <Link to="/register">Create Account</Link>
-            <Link to="/password-reset/request" className="secondary">
-              Forgot Password
-            </Link>
-          </div>
+          <FormRow>
+            {composeFormElement(
+              "password",
+              "Password",
+              formData.password,
+              Input,
+              observeField,
+              {
+                type: "password",
+                required: true
+              }
+            )}
+          </FormRow>
 
-          <Button type="submit" primary="true" disabled={submitting}>
+          <Button type="submit" disabled={submitting}>
             Login
           </Button>
-        </Form>
-      </Wrapper>
-    </Container>
+        </form>
+      </div>
+    </Fragment>
   );
 };
 

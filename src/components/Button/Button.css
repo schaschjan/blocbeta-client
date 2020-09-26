@@ -9,7 +9,7 @@
   white-space: nowrap;
 }
 
-.button.button--primary {
+.button--primary {
   font-size: 1em;
   letter-spacing: 0.1em;
   background: var(--color-dark);
@@ -23,7 +23,7 @@
   margin-top: 36px;
 }
 
-.button.button--dangerous {
+.button--danger {
   font-size: 1em;
   letter-spacing: 0.1em;
   background: var(--color-error);

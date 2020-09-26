@@ -10,7 +10,6 @@ import { queryCache, useMutation } from "react-query";
 import { toast } from "react-toastify";
 import { Meta } from "../../../App";
 import BoulderForm from "../../../forms/Boulder/BoulderForm";
-import { resolveApiData } from "../../../components/Form/Form";
 
 const Add = () => {
   const initial = {
@@ -40,7 +39,6 @@ const Add = () => {
     setSubmitting(true);
 
     try {
-      resolveApiData(data);
       await mutateOnAddBoulder(data);
 
       toast.success(`Added boulder ${data.name}`);

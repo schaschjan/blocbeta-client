@@ -1,22 +1,40 @@
-import React from "react";
-import { Loader } from "../../components/Loader/Loader";
-import { toast } from "react-toastify";
-import Form from "../../components/Form/Form";
+import React, {Fragment} from "react";
+import {Loader} from "../../components/Loader/Loader";
+import {toast} from "react-toastify";
+import {Form, FormRow} from "../../components/Form/Form";
 import Label from "../../components/Label/Label";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
-import useApi, { api } from "../../hooks/useApi";
-import { messages } from "../../messages";
-import { useMutation } from "react-query";
-import Container from "../../components/Container/Container";
-import { PageHeader } from "../../components/PageHeader/PageHeader";
-import Wrapper from "../../components/Wrapper/Wrapper";
+import {api} from "../../hooks/useApi";
+import {useMutation, useQuery} from "react-query";
 import Switch from "../../components/Switch/Switch";
-import { Meta } from "../../App";
+import {Meta} from "../../App";
+import axios from "axios";
+import useForm, {composeFormElement} from "../../hooks/useForm";
 
 const Account = () => {
-  const { status, data } = useApi("me", api.me.get);
-  const [mutate, { status: updateStatus }] = useMutation(api.me.update, {
+
+  const {status, data} = useQuery("me", async () => {
+    const {data} = await axios.get(`/api/me`);
+
+    return data;
+  });
+
+  const defaults = {
+    apeIndex: null,
+    armSpan: null,
+    email: null,
+    gender: null,
+    height: null,
+    media: null,
+    username: null,
+    visible: null,
+    weight: null,
+  };
+
+  const {handleSubmit, formData, observeField} = useForm(status === "success" ? data : defaults);
+
+  const [mutate, {status: updateStatus}] = useMutation(api.me.update, {
     throwOnError: true,
   });
 
@@ -37,79 +55,109 @@ const Account = () => {
     }
   };
 
-  if (status === "loading") return <Loader />;
+  if (status === "loading") return <Loader/>;
 
   return (
-    <Container>
-      <Meta title="Account" />
-      <PageHeader title={`Account`} />
+    <Fragment>
+      <Meta title="Account"/>
 
-      <Wrapper>
-        <Form onSubmit={onSubmit} defaultValues={data}>
-          <Label>Visible</Label>
-          <Switch name="visible" />
+      <Form onSubmit={onSubmit} defaultValues={data}>
 
+        <FormRow>
+          {composeFormElement(
+            "visible",
+            "Visibile",
+            formData.visible,
+            Switch,
+            observeField
+          )}
+        </FormRow>
+
+        <FormRow>
           <Label>Username</Label>
-          <Input name="username" disabled />
+          <Input value={formData.username} disabled/>
+        </FormRow>
 
-          <Label>Email</Label>
-          <Input
-            name="email"
-            validate={{
-              required: messages.required,
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                message: messages.email.invalid,
-              },
-            }}
-          />
+        <FormRow>
+          {composeFormElement(
+            "email",
+            "Email",
+            formData.email,
+            Input,
+            observeField,
+            {
+              type: "email",
+              required: true
+            }
+          )}
+        </FormRow>
 
-          <Label>Arm span</Label>
-          <Input
-            name="armSpan"
-            validate={{
-              min: {
-                value: 120,
-                message: messages.range.min(120, "arm span"),
-              },
-              max: {
-                value: 220,
-                message: messages.range.max(220, "arm span"),
-              },
-            }}
-            type="number"
-          />
+        <FormRow>
+          {composeFormElement(
+            "firstName",
+            "First Name",
+            formData.firstName,
+            Input,
+            observeField,
+            {
+              type: "text",
+              required: true
+            }
+          )}
+        </FormRow>
 
-          <Label>Height</Label>
-          <Input
-            name="height"
-            validate={{
-              min: {
-                value: 120,
-                message: "Minimal height is 120",
-              },
-              max: {
-                value: 220,
-                message: "Maximal height is 220",
-              },
-            }}
-            type="number"
-          />
+        <FormRow>
+          {composeFormElement(
+            "lastName",
+            "Last Name",
+            formData.lastName,
+            Input,
+            observeField,
+            {
+              type: "text",
+              required: true
+            }
+          )}
+        </FormRow>
 
-          <Button
-            type="submit"
-            primary="true"
-            disabled={updateStatus === "loading"}
-          >
-            Update
-          </Button>
-        </Form>
+        <FormRow>
+          {composeFormElement(
+            "armSpan",
+            "Arm span",
+            formData.armSpan,
+            Input,
+            observeField,
+            {
+              type: "text"
+            }
+          )}
+        </FormRow>
 
-        <Button dangerous={true} onClick={() => scheduleAccountDeletion()}>
-          Delete Account
+        <FormRow>
+          {composeFormElement(
+            "height",
+            "Height",
+            formData.height,
+            Input,
+            observeField,
+            {
+              type: "number"
+            }
+          )}
+        </FormRow>
+
+        <Button
+          type="submit"
+          primary="true"
+          disabled={updateStatus === "loading"}>
+          Update
         </Button>
-      </Wrapper>
-    </Container>
+      </Form>
+
+      <Button variant="danger" onClick={() => scheduleAccountDeletion()}>
+        Delete Account
+      </Button>
+    </Fragment>
   );
 };
 

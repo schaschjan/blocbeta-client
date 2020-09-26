@@ -1,19 +1,17 @@
-import axios from "axios";
-import {useQuery} from "react-query";
 import {useContext} from "react";
-import {AppContext, getLocationSlug} from "../App";
-
-export const getUri = (path, contextualize = true) => {
-  if (!contextualize) return `${process.env.REACT_APP_API_HOST}/api${path}`;
-
-  return `${process.env.REACT_APP_API_HOST}/api/${getLocationSlug()}${path}`;
-};
+import {AppContext} from "../App";
+import axios from "axios";
 
 const getConfig = () => {
   return {
     headers: {Authorization: `Bearer ${api.token}`},
   };
 };
+
+const getUri = () => {
+
+};
+
 
 const assignRanks = (ranking) => {
   ranking.map((result, rank) => {
@@ -172,24 +170,18 @@ const httpGet = async (path, contextualize = true) => {
   return response.data;
 };
 
-export default function useApi(identifier, method, queryOptions) {
-  const {token} = useContext(AppContext);
+export default function useApi(method, path, contextualize = true, ...rest) {
+  const {currentLocation} = useContext(AppContext);
 
-  if (!token) {
-    throw new Error(`No token provided for call ${identifier}`);
+  if (!contextualize) {
+    return `${process.env.REACT_APP_API_HOST}/api${path}`;
   }
 
-  api.token = token;
-
-  const query = useQuery(identifier, method, {
-    refetchOnWindowFocus: false,
-    retry: false,
-    ...queryOptions,
-  });
-
-  if (query.error) {
-    console.error(query.error);
+  if (!currentLocation) {
+    new Error("poop");
   }
 
-  return query;
+  if (method.toLowerCase() === "get") {
+    return axios.get(`/api/${currentLocation.url}${path}`);
+  }
 }

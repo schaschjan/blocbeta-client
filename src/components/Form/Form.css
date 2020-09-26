@@ -1,13 +1,11 @@
 .form {
-  display: grid;
 }
 
-.form .form__row {
+.form-row {
+  display: block;
+  margin-bottom: calc(8 * var(--spacing-unit));
 }
 
-.form-error {
-  font-size: 0.625em;
-  color: var(--color-error);
-  display: flex;
-  padding-top: 5px;
+.form-element {
+  flex-direction: column;
 }

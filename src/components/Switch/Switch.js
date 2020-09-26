@@ -1,17 +1,15 @@
-import React, { Fragment } from "react";
+import React, {Fragment} from "react";
 import "./Switch.css";
 
-const Switch = ({ register, ref, name }) => {
+const Switch = ({value,...rest}) => {
   return (
     <Fragment>
       <input
         type="checkbox"
-        id="toggle"
         className="checkbox"
-        ref={register || ref}
-        name={name}
+        {...rest}
       />
-      <label htmlFor="toggle" className="switch" />
+      <label htmlFor="toggle" className="switch"/>
     </Fragment>
   );
 };

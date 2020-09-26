@@ -8,8 +8,6 @@ import Label from "../../components/Label/Label";
 import Wrapper from "../../components/Wrapper/Wrapper";
 import Button from "../../components/Button/Button";
 import useForm from "../../hooks/useForm";
-import { getUri } from "../../hooks/useApi";
-import axios from "axios";
 import Select from "../../components/Select/Select";
 import { store } from "../../store";
 import { getOptions } from "../../helpers";
@@ -27,7 +25,6 @@ const Register = () => {
     setSubmitting(true);
 
     try {
-      await axios.post(getUri("/register", false), data);
       history.push("/login");
     } catch (error) {
       setFormErrors(error.response.data.form);
