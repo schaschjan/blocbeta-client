@@ -1,21 +1,23 @@
-import React, { useContext } from "react";
+import React, {Fragment, useContext} from "react";
 import Container from "../../components/Container/Container";
-import { AppContext, Meta } from "../../App";
-import { PageHeader } from "../../components/PageHeader/PageHeader";
+import {AppContext, Meta} from "../../App";
+import {PageHeader} from "../../components/PageHeader/PageHeader";
 import Wrapper from "../../components/Wrapper/Wrapper";
-import useApi, { api, cacheKeys } from "../../hooks/useApi";
-import { Loader } from "../../components/Loader/Loader";
-import { alphaSort } from "../../helpers";
-import { Link } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import {Loader} from "../../components/Loader/Loader";
+import {alphaSort} from "../../helpers";
+import {useHistory} from "react-router-dom";
+import {useQuery} from "react-query";
+import axios from "axios";
 
 const Setup = () => {
   let history = useHistory();
-  const { setCurrentLocation } = useContext(AppContext);
-  const { status, data: locations } = useApi(
-    cacheKeys.locations,
-    api.locations.public
-  );
+  const {setCurrentLocation} = useContext(AppContext);
+
+  const {status, data: locations} = useQuery("stat-boulders", async () => {
+    const {data} = await axios.get(`/api/location`);
+
+    return data;
+  });
 
   const switchLocation = (location) => {
     setCurrentLocation(location);
@@ -23,26 +25,28 @@ const Setup = () => {
     history.push(`${location.url}/dashboard`);
   };
 
-  if (status === "loading") return <Loader />;
+  if (status === "loading") return <Loader/>;
 
   return (
-    <Container>
-      <Meta title="Setup your account" />
-      <PageHeader title="Setup your account" />
+    <Fragment>
+      <Meta title="Setup your account"/>
+      <PageHeader title="Setup your account"/>
 
       <Wrapper>
         Choose your gym:
-        {alphaSort(locations, "name").map((location) => {
-          return (
-            <span onClick={() => switchLocation(location)}>
-              {location.name}
-            </span>
-          );
-        })}
+        <ul>
+          {alphaSort(locations, "name").map((location) => {
+            return (
+              <li onClick={() => switchLocation(location)}>
+                {location.name}
+              </li>
+            );
+          })}
+        </ul>
 
-        Want to track your progress in privacy? Disable visi
+        Want to track your progress in privacy? You can edit your visibility settings in the account page.
       </Wrapper>
-    </Container>
+    </Fragment>
   );
 };
 

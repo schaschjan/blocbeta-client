@@ -62,7 +62,6 @@ const Account = () => {
       <Meta title="Account"/>
 
       <Form onSubmit={onSubmit} defaultValues={data}>
-
         <FormRow>
           {composeFormElement(
             "visible",

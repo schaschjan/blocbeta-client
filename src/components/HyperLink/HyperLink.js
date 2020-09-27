@@ -2,11 +2,12 @@ import React from "react";
 import classnames from "classnames";
 import "./HyperLink.css";
 
-const HyperLink = ({ children, light, active, href, ...rest }) => {
+const HyperLink = ({className,children, light, active, href, ...rest }) => {
   const classes = classnames(
     "hyperlink",
     active ? "hyperlink--active" : null,
-    light ? "hyperlink--light" : null
+    light ? "hyperlink--light" : null,
+    className
   );
 
   if (href) {

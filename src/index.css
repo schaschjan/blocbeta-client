@@ -3,6 +3,8 @@
 @import "./css/normalizations.css";
 @import "./css/typography.css";
 @import "./css/utils.css";
+@import "./css/layouts.css";
+
 @import url("https://fonts.googleapis.com/css?family=Karla&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap");
@@ -44,7 +46,27 @@ body {
     --font-family-tech: "IBM Plex Mono", monospace;
 }
 
+@keyframes rainbow {
+    0% {
+        background-position: 100% 0;
+    }
+    50% {
+        background-position: 0 19%;
+    }
+    100% {
+        background-position: 100% 10%;
+    }
+}
+
 .app {
     min-height: 100vh;
     padding: calc(3 * var(--spacing-unit));
+    background: linear-gradient(49.93deg, rgba(255, 230, 0, 0.39) 18.88%, rgba(255, 230, 0, 0) 66.41%),
+    linear-gradient(30deg, rgba(216, 210, 254, 0), transparent 80%),
+    radial-gradient(28.63% 28.63% at 45.43% 50%, rgba(251, 87, 87, 0.6) 0%, rgba(216, 210, 254, 0) 100%),
+    radial-gradient(50% 50% at 50% 50%, rgba(87, 89, 251, 0.64) 0%, rgba(216, 210, 254, 0) 100%);
+    background-size: 200% 200%;
+    animation: rainbow 20s linear infinite;
+    display: grid;
+    grid-template-rows: 60px auto 60px;
 }

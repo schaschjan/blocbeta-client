@@ -1,80 +1,91 @@
 .button {
-  appearance: none;
-  border: 0;
-  margin: 0;
-  cursor: pointer;
-  outline: none;
-  padding: 0;
-  background: none;
-  white-space: nowrap;
+    appearance: none;
+    border: 0;
+    margin: 0;
+    cursor: pointer;
+    outline: none;
+    background: none;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background 100ms ease-in-out, color 60ms ease-in-out;
+    align-items: center;
+    padding: calc(2 * var(--spacing-unit)) calc(6 * var(--spacing-unit));
+    position: relative;
+    box-sizing: border-box;
+}
+
+.button .loader {
+    margin-right: var(--spacing-unit);
+    position: absolute;
+    top: 0;
+    height: 100%;
+    right: 0;
 }
 
 .button--primary {
-  font-size: 1em;
-  letter-spacing: 0.1em;
-  background: var(--color-dark);
-  color: var(--color-light);
-  text-transform: uppercase;
-  font-weight: bold;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  width: 100%;
-  max-width: 335px;
-  margin-top: 36px;
+    font-size: 1em;
+    letter-spacing: 0.1em;
+    background: var(--color-dark);
+    color: var(--color-light);
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 100%;
+    max-width: 335px;
+    margin-top: 36px;
 }
 
 .button--danger {
-  font-size: 1em;
-  letter-spacing: 0.1em;
-  background: var(--color-error);
-  color: var(--color-light);
-  text-transform: uppercase;
-  font-weight: bold;
-  padding: 16px 128px;
-  margin-top: 36px;
+    font-size: 1em;
+    letter-spacing: 0.1em;
+    background: var(--color-error);
+    color: var(--color-light);
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 16px 128px;
+    margin-top: 36px;
 }
 
-.button.button--primary:active {
-  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+.button--primary:active {
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
 }
 
-.button.button--disabled {
-  pointer-events: none;
-  background: var(--color-lightgrey);
-  color: var(--color-grey);
+.button--disabled {
+    pointer-events: none;
+    background: var(--color-lightgrey);
+    color: var(--color-grey);
 }
 
-.button.button--text {
-  font-size: 0.875em;
-  display: flex;
-  color: var(--color-blue);
-  padding: 7px 16px;
-  border-radius: 8px;
-  font-weight: bolder;
+.button--text {
+    font-size: 0.875em;
+    display: inline-flex;
+    color: var(--color-blue);
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-weight: bold
 }
 
-.button.button--text:hover {
-  background: var(--color-lightblue);
+.button--text:hover {
+    background: var(--color-lightblue);
 }
 
-.button.button--secondary {
-  color: var(--color-light);
-  font-size: 1em;
-  letter-spacing: 0.1em;
-  background: var(--color-grey);
-  text-transform: uppercase;
-  font-weight: bold;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  width: 100%;
-  max-width: 335px;
-  margin-top: 36px;
+.button--secondary {
+    color: var(--color-light);
+    font-size: 1em;
+    letter-spacing: 0.1em;
+    background: var(--color-grey);
+    text-transform: uppercase;
+    font-weight: bold;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    width: 100%;
+    max-width: 335px;
+    margin-top: 36px;
 }
 
 .button.button--size-small {
-  line-height: 1em;
-  font-size: 0.75em;
-  margin: 0;
-  padding: 0.25em 2em;
-  display: inline-flex;
+    line-height: 1em;
+    font-size: 0.75em;
+    margin: 0;
+    padding: 0.25em 2em;
+    display: inline-flex;
 }

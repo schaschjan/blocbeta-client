@@ -1,52 +1,70 @@
-import React, { useState } from "react";
-import Container from "../../components/Container/Container";
-import { Meta } from "../../App";
-import { PageHeader } from "../../components/PageHeader/PageHeader";
-import Wrapper from "../../components/Wrapper/Wrapper";
-import {Form} from "../../components/Form/Form";
-import Label from "../../components/Label/Label";
+import React, {Fragment} from "react";
+import {Meta} from "../../App";
+import {FormRow} from "../../components/Form/Form";
 import Input from "../../components/Input/Input";
-import { messages } from "../../messages";
-import { toast } from "react-toastify";
 import Button from "../../components/Button/Button";
-import { api } from "../../hooks/useApi";
+import useForm, {composeFormElement} from "../../hooks/useForm";
+import {useHistory} from "react-router-dom";
+import axios from "axios";
+import {handleErrors} from "../../hooks/useApi";
 
 const RequestPasswordReset = () => {
-  const [submitting, setSubmitting] = useState(false);
+  const history = useHistory();
 
-  const onSubmit = async (data) => {
+  const {handleSubmit, observeField, submitting, formData} = useForm({
+    email: null
+  });
+
+  const onSubmit = async (payload) => {
+
     try {
-      setSubmitting(true);
-      await api.requestPasswordReset(data);
-      toast.success(`Password reset mail sent!`);
+      await axios.post(`/api/request-reset`, payload);
+      alert("You will receive instructions on how to reset your password via E-Mail.");
+      history.push("/login");
+
     } catch (error) {
-      toast.error(error.response.data.form.username);
-    } finally {
-      setSubmitting(false);
+      handleErrors(error);
     }
   };
 
   return (
-    <Container>
-      <Meta title="Reset password" />
-      <PageHeader title="Reset password" />
+    <Fragment>
+      <Meta title="Reset password"/>
 
-      <Wrapper>
-        <Form onSubmit={onSubmit} className={"login-form"}>
-          <Label>Username</Label>
-          <Input
-            type="text"
-            validate={{ required: messages.required }}
-            placeholder=""
-            name="username"
-          />
+      <div className="side-title-layout">
+        <h1 className="t--alpha side-title-layout__title">
+          Receive instructions on how to recover your password via E-Mail.
+        </h1>
 
-          <Button type="submit" primary="true" disabled={submitting}>
-            Send reset link
-          </Button>
-        </Form>
-      </Wrapper>
-    </Container>
+        <div className="side-title-layout__content">
+          <form onSubmit={(event) => handleSubmit(event, onSubmit)}>
+            <FormRow>
+              {composeFormElement(
+                "email",
+                "E-Mail",
+                formData.email,
+                Input,
+                observeField,
+                {
+                  type: "email",
+                  required: true,
+                  maxLength: 60
+                }
+              )}
+            </FormRow>
+
+            <Button
+              type="submit"
+              primary="true"
+              loader={true}
+              loading={submitting}
+              disabled={submitting}>
+              Send reset link
+            </Button>
+          </form>
+        </div>
+      </div>
+    </Fragment>
   );
 };
 

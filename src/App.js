@@ -45,10 +45,6 @@ const App = () => {
   };
 
   const authenticated = () => {
-    if (!currentLocation) {
-      return false
-    }
-
     if (!user) {
       return false
     }
@@ -108,6 +104,14 @@ const App = () => {
     );
   };
 
+  const routes = router.filter((route) => {
+    if (route.admin === true && !isAdmin) {
+      return false;
+    }
+
+    return !(route.visibleOnly === true && user && !user.visible);
+  });
+
   return (
     <Fragment>
       <Router>
@@ -116,32 +120,21 @@ const App = () => {
             <Header/>
 
             <Switch>
-              {router.filter((route) => {
-                if (route.admin === true && !isAdmin) {
-                  return false;
+              {routes.map((route, i) => {
+                if (!route.public) {
+                  return <PrivateRoute key={i} {...route} />;
                 }
 
-                if (route.visibleOnly === true && user && !user.visible) {
-                  return false;
-                }
-
-                return true;
-              })
-                .map((route, i) => {
-                  if (!route.public) {
-                    return <PrivateRoute key={i} {...route} />;
-                  }
-
-                  return <Route key={i} {...route} />;
-                })}
+                return <Route key={i} {...route} />;
+              })}
 
               <Route render={() => <LoginRedirect/>}/>
             </Switch>
+
+            <Footer/>
           </div>
         </AppContext.Provider>
       </Router>
-
-      <Footer/>
 
     </Fragment>
   );

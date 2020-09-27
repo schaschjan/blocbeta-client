@@ -1,35 +1,37 @@
-import React, { useState, useEffect } from "react";
-import Container from "../../components/Container/Container";
-import { Meta } from "../../App";
-import { PageHeader } from "../../components/PageHeader/PageHeader";
-import Wrapper from "../../components/Wrapper/Wrapper";
-  import {Form} from "../../components/Form/Form";
-import Label from "../../components/Label/Label";
+import React, {useState, useEffect, Fragment} from "react";
+import {Meta} from "../../App";
+import {FormRow} from "../../components/Form/Form";
 import Input from "../../components/Input/Input";
-import { messages } from "../../messages";
-import { toast } from "react-toastify";
 import Button from "../../components/Button/Button";
-import { api } from "../../hooks/useApi";
-import { useParams } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import {handleErrors} from "../../hooks/useApi";
+import {useParams} from "react-router-dom";
+import {useHistory} from "react-router-dom";
+import useForm, {composeFormElement} from "../../hooks/useForm";
+import axios from "axios";
+import classNames from "classnames";
+import "./ResetPassword.css";
 
 const ResetPassword = () => {
-  const [submitting, setSubmitting] = useState(false);
-  const [hashValid, setHashValid] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [hashFound, setHashFound] = useState(false);
 
   const history = useHistory();
-  const { hash } = useParams();
+  const {hash} = useParams();
+
+  const {handleSubmit, observeField, submitting, formData} = useForm({
+    username: null,
+    email: null,
+    firstName: null,
+    lastName: null,
+    gender: "",
+    password: null
+  });
 
   const checkToken = async (hash) => {
     try {
-      setLoading(true);
-      await api.checkPasswordResetHash(hash);
-      setHashValid(true);
+      await axios.get(`/api/reset/${hash}`, false);
+      setHashFound(true);
     } catch (error) {
-      toast.error(error.response.data.message);
-    } finally {
-      setLoading(false);
+      handleErrors(error);
     }
   };
 
@@ -37,44 +39,56 @@ const ResetPassword = () => {
     checkToken(hash);
   }, []);
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (payload) => {
     try {
-      setSubmitting(true);
-      await api.resetPassword(hash, data);
-      toast.success(`Password updated!`);
+      await axios.post(`/api/reset/${hash}`, payload);
+      alert("Your Password was successfully updated. You can now log in again.");
       history.push("/login");
+
     } catch (error) {
-      toast.error(error.response.data.message);
-    } finally {
-      setSubmitting(false);
+      handleErrors(error);
     }
   };
 
   return (
-    <Container>
-      <Meta title="Reset password" />
-      <PageHeader title="Reset password" />
+    <Fragment>
+      <Meta title="Reset password"/>
 
-      <Wrapper>
-        <Form onSubmit={onSubmit} className={"login-form"}>
-          <Label>Password</Label>
-          <Input
-            type="password"
-            validate={{ required: messages.required }}
-            name="password"
-          />
+      <div className="side-title-layout">
+        <h1 className="t--alpha side-title-layout__title">
+          Choose your new password wisely.
+        </h1>
 
-          <Button
-            type="submit"
-            primary="true"
-            disabled={!hashValid || submitting}
-            loading={loading}
-          >
-            Update password
-          </Button>
-        </Form>
-      </Wrapper>
-    </Container>
+        <div className="side-title-layout__content">
+          <form onSubmit={(event) => handleSubmit(event, onSubmit)}
+                className={classNames("reset-form", (!hashFound) ? "reset-form--disabled" : null)}>
+            <FormRow>
+              {composeFormElement(
+                "password",
+                "Password",
+                formData.password,
+                Input,
+                observeField,
+                {
+                  type: "password",
+                  required: true,
+                  minlength: 6,
+                }
+              )}
+            </FormRow>
+
+            <Button
+              type="submit"
+              primary="true"
+              loader={true}
+              loading={submitting}
+              disabled={submitting}>
+              Update password
+            </Button>
+          </form>
+        </div>
+      </div>
+    </Fragment>
   );
 };
 

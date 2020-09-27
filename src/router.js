@@ -21,6 +21,7 @@ export const router = [
     render: () => <Login />,
     exact: true,
     public: true,
+    footer: false,
   },
   {
     title: "Register",
@@ -28,12 +29,14 @@ export const router = [
     render: () => <Register />,
     exact: true,
     public: true,
+    footer: false,
   },
   {
     title: "Setup",
     path: "/setup",
     render: () => <Setup />,
     exact: true,
+    footer: false,
   },
   {
     title: "Reset Password",
@@ -41,6 +44,7 @@ export const router = [
     render: () => <RequestPasswordReset />,
     exact: true,
     public: true,
+    footer: false,
   },
   {
     title: "Reset Password",
@@ -48,18 +52,21 @@ export const router = [
     render: () => <ResetPassword />,
     exact: true,
     public: true,
+    footer: false,
   },
   {
     title: "Dashboard",
     path: "/:locationSlug/dashboard",
     render: () => <Dashboard />,
     exact: true,
+    footer: true,
   },
   {
     title: "Boulder index",
     path: "/:locationSlug/boulder",
     render: () => <BoulderIndex />,
     exact: true,
+    footer: true,
   },
   {
     title: "Add boulder",

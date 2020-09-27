@@ -1,84 +1,162 @@
-import React, { useState } from "react";
-import Container from "../../components/Container/Container";
-import { PageHeader } from "../../components/PageHeader/PageHeader";
-import { Meta } from "../../App";
-import { FormRow } from "../../components/Form/Form";
+import React, {Fragment} from "react";
+import {Meta} from "../../App";
+import {FormRow} from "../../components/Form/Form";
 import Input from "../../components/Input/Input";
-import Label from "../../components/Label/Label";
-import Wrapper from "../../components/Wrapper/Wrapper";
 import Button from "../../components/Button/Button";
-import useForm from "../../hooks/useForm";
+import useForm, {composeFormElement} from "../../hooks/useForm";
+import axios from "axios";
 import Select from "../../components/Select/Select";
-import { store } from "../../store";
-import { getOptions } from "../../helpers";
-import FormError from "../../components/FormError/FormError";
-import { useHistory } from "react-router-dom";
+import {useHistory} from "react-router-dom";
+import "./Register.css"
+import {handleErrors} from "../../hooks/useApi";
 
 const Register = () => {
-  let history = useHistory();
+  const history = useHistory();
 
-  const { handleSubmit } = useForm();
-  const [formErrors, setFormErrors] = useState([]);
-  const [submitting, setSubmitting] = useState(false);
+  const {handleSubmit, observeField, submitting, formData} = useForm({
+    username: null,
+    email: null,
+    firstName: null,
+    lastName: null,
+    gender: "",
+    password: null
+  });
 
-  const onSubmit = async (data) => {
-    setSubmitting(true);
+  const onSubmit = async (payload) => {
 
     try {
+      await axios.post(`/api/register`, payload);
+      alert("Your account was created! You can now log in.");
       history.push("/login");
+
+
     } catch (error) {
-      setFormErrors(error.response.data.form);
-    } finally {
-      setSubmitting(false);
+      handleErrors(error);
     }
   };
 
   return (
-    <Container>
-      <Meta title="Register" />
-      <PageHeader title={"Register"} />
+    <Fragment>
+      <Meta title="Account"/>
 
-      <Wrapper>
-        <form onSubmit={(event) => handleSubmit(event, onSubmit)}>
-          <FormRow>
-            <Label for="username">Username</Label>
-            <Input id="username" type="text" name="username" required />
+      <div className="side-title-layout">
+        <h1 className="t--alpha side-title-layout__title">
+          Please provide some information for your account.
+        </h1>
 
-            <FormError message={formErrors.username} />
-          </FormRow>
+        <div className="side-title-layout__content">
+          <form onSubmit={(event) => handleSubmit(event, onSubmit)}>
+            <FormRow>
+              {composeFormElement(
+                "firstName",
+                "First Name",
+                formData.firstName,
+                Input,
+                observeField,
+                {
+                  type: "text",
+                  required: true,
+                  minlength: 2,
+                  maxLength: 40
+                }
+              )}
+            </FormRow>
 
-          <FormRow>
-            <Label for="gender">Gender</Label>
-            <Select
-              id="gender"
-              options={getOptions(store.genders)}
-              name="gender"
-              required
-            />
+            <FormRow>
+              {composeFormElement(
+                "lastName",
+                "Last Name",
+                formData.lastName,
+                Input,
+                observeField,
+                {
+                  type: "text",
+                  required: true,
+                  minlength: 2,
+                  maxLength: 40
+                }
+              )}
+            </FormRow>
 
-            <FormError message={formErrors.gender} />
-          </FormRow>
+            <FormRow>
+              {composeFormElement(
+                "username",
+                "Username",
+                formData.username,
+                Input,
+                observeField,
+                {
+                  type: "text",
+                  required: true,
+                  minlength: 2,
+                  maxLength: 20
+                }
+              )}
+            </FormRow>
 
-          <FormRow>
-            <Label for="email">E-Mail</Label>
-            <Input id="email" type="email" name="email" required />
+            <FormRow>
+              {composeFormElement(
+                "email",
+                "E-Mail",
+                formData.email,
+                Input,
+                observeField,
+                {
+                  type: "email",
+                  required: true,
+                  maxLength: 60
+                }
+              )}
+            </FormRow>
 
-            <FormError message={formErrors.email} />
-          </FormRow>
+            <FormRow>
+              {composeFormElement(
+                "gender",
+                "Gender",
+                formData.gender,
+                Select,
+                observeField,
+                {
+                  children: (
+                    <Fragment>
+                      <option value="">–</option>
+                      <option value="neutral">Neutral</option>
+                      <option value="female">Female</option>
+                      <option value="male">Male</option>
+                    </Fragment>
+                  ),
+                  required: true
+                }
+              )}
+            </FormRow>
 
-          <FormRow>
-            <Label for="password">Password</Label>
-            <Input id="password" type="password" name="password" required />
+            <FormRow>
+              {composeFormElement(
+                "password",
+                "Password",
+                formData.password,
+                Input,
+                observeField,
+                {
+                  type: "password",
+                  required: true,
+                  minlength: 6,
+                }
+              )}
+            </FormRow>
 
-            <FormError message={formErrors.password} />
-          </FormRow>
-
-          <Button type="submit" primary="true" disabled={submitting}>
-            Register
-          </Button>
-        </form>
-      </Wrapper>
-    </Container>
+            <Button
+              type="submit"
+              primary="true"
+              loader={true}
+              loading={submitting}
+              disabled={submitting}>
+              Create Account
+            </Button>
+          </form>
+        </div>
+      </div>
+    </Fragment>
   );
 };
 

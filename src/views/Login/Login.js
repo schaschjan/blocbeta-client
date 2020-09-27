@@ -6,46 +6,51 @@ import {AppContext, Meta} from "../../App";
 import axios from "axios";
 import {FormRow} from "../../components/Form/Form";
 import useQueryParameters from "../../hooks/useQueryParameters";
+import {useHistory} from "react-router-dom";
 import "./Login.css";
+import {handleErrors} from "../../hooks/useApi";
 
 const Login = () => {
-  const {setAppClassName} = useContext(AppContext);
+  const history = useHistory();
 
-  const {handleSubmit, formData, observeField} = useForm({
+  const {setAppClassName, contextualizedPath} = useContext(AppContext);
+
+  const {handleSubmit, formData, submitting, observeField} = useForm({
     username: null,
     password: null
   });
 
-  const [submitting, setSubmitting] = useState(false);
   const {setUser, setCurrentLocation, setExpiration} = useContext(AppContext);
 
   const queryParameters = useQueryParameters();
   let target = queryParameters.get("target");
 
   const getScheduleUrl = (location) => {
-    return `https://schedule.blocbeta.com/${location}.url/schedule`
+    return `https://schedule.blocbeta.com/${location.url}/schedule`
   };
 
   const onSubmit = async (payload) => {
-    setSubmitting(true);
-
     try {
       const {data} = await axios.post(`/api/login`, payload, {params: target});
 
       setExpiration(data.expiration);
       setUser(data.user);
+
+      if (!data.location) {
+        history.push("/setup");
+        return;
+      }
+
       setCurrentLocation(data.location);
 
       if (queryParameters.get("target") === "schedule") {
         window.location.href = getScheduleUrl(data.location);
       } else {
-        window.location.href = "/salon/dashboard"
+        history.push(contextualizedPath("/dashboard"))
       }
 
     } catch (error) {
-      alert(error.response.data.message);
-    } finally {
-      setSubmitting(false);
+      handleErrors(error);
     }
   };
 
@@ -57,44 +62,63 @@ const Login = () => {
     <Fragment>
       <Meta title="Log in"/>
 
-      <div className="login-layout">
-        <div className="login-layout__intro login-layout-intro">
-          <h1 className="t--alpha login-layout-intro__text">Please sign in to book a training slot:</h1>
+      <div className="side-title-layout">
+        <h1 className="t--alpha side-title-layout__title">
+          {queryParameters.get("target") === "schedule" ? (
+            <Fragment>Please sign in to book a training slot.</Fragment>
+          ) : (
+            <Fragment>Please sign to access BlocBeta.</Fragment>
+          )}
+        </h1>
+
+        <div className="side-title-layout__content">
+          <form onSubmit={(event) => handleSubmit(event, onSubmit)}>
+            <FormRow>
+              {composeFormElement(
+                "username",
+                "Username",
+                formData.username,
+                Input,
+                observeField,
+                {
+                  type: "text",
+                  required: true
+                }
+              )}
+            </FormRow>
+
+            <FormRow>
+              {composeFormElement(
+                "password",
+                "Password",
+                formData.password,
+                Input,
+                observeField,
+                {
+                  type: "password",
+                  required: true
+                }
+              )}
+            </FormRow>
+
+            <Button type="submit"
+                    loader={true}
+                    loading={submitting}
+                    disabled={submitting}>
+              Login
+            </Button>
+          </form>
+
+          <div className="login-extra">
+            <Button variant="text" asLink={true} to="/register">
+              Create Account
+            </Button>
+
+            <Button variant="text" asLink={true} to="/password-reset/request">
+              Forgot Password
+            </Button>
+          </div>
         </div>
-
-        <form onSubmit={(event) => handleSubmit(event, onSubmit)} className="login-layout__form">
-          <FormRow>
-            {composeFormElement(
-              "username",
-              "Username",
-              formData.username,
-              Input,
-              observeField,
-              {
-                type: "text",
-                required: true
-              }
-            )}
-          </FormRow>
-
-          <FormRow>
-            {composeFormElement(
-              "password",
-              "Password",
-              formData.password,
-              Input,
-              observeField,
-              {
-                type: "password",
-                required: true
-              }
-            )}
-          </FormRow>
-
-          <Button type="submit" disabled={submitting}>
-            Login
-          </Button>
-        </form>
       </div>
     </Fragment>
   );

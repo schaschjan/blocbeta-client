@@ -9,7 +9,7 @@ import "./Header.css";
 import Button from "../Button/Button";
 import {AppContext} from "../../App";
 import useApi, {api, cacheKeys} from "../../hooks/useApi";
-import {NavLink, useHistory} from "react-router-dom";
+import {Link, NavLink, useHistory} from "react-router-dom";
 import HyperLink from "../HyperLink/HyperLink";
 import {useMediaQuery} from "react-responsive/src";
 import Icon from "../Icon/Icon";
@@ -147,12 +147,12 @@ const NavItem = ({link, children}) => {
 };
 
 const Header = () => {
-  const {user, contextualizedPath, reset, authenticated} = useContext(AppContext);
+  const {user, contextualizedPath, reset, currentLocation} = useContext(AppContext);
 
-  if (!authenticated()) {
+  if (!currentLocation) {
     return (
       <header className="header">
-        <span className="header__logo">BlocBeta</span>
+        <Link className="header__logo" to="/login">BlocBeta</Link>
       </header>
     )
   }
@@ -165,7 +165,6 @@ const Header = () => {
         <NavItem link={contextualizedPath("/boulder")}>
           Boulder
         </NavItem>
-
         <NavItem link={contextualizedPath("/ranking")}>
           Ranking
         </NavItem>

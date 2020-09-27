@@ -15,22 +15,28 @@ export const composeFormElement = (
     id: name,
     value: value ? value : "",
     onChange: observe,
+
     ...additionalInputProps,
   };
 
   return (
     <FormElement name={name} label={label}>
-      {React.createElement(Component, inputProps)}
+      {React.createElement(Component, inputProps, additionalInputProps.children)}
     </FormElement>
   );
 };
 
 const useForm = (defaults) => {
   const [formData, setFormData] = useState(defaults);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (event, callback) => {
+  const handleSubmit = async (event, callback) => {
+    setSubmitting(true);
+
     event.preventDefault();
-    callback(formData);
+    await callback(formData);
+
+    setSubmitting(false);
   };
 
   const observeField = (event) => {
@@ -41,12 +47,7 @@ const useForm = (defaults) => {
     setFormData({...current});
   };
 
-
-  useEffect(() => {
-    setFormData(defaults);
-  }, [defaults]);
-
-  return {formData, setFormData, handleSubmit, observeField};
+  return {formData, setFormData, handleSubmit, submitting, setSubmitting, observeField};
 };
 
 export default useForm;

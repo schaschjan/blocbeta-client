@@ -2,6 +2,20 @@ import {useContext} from "react";
 import {AppContext} from "../App";
 import axios from "axios";
 
+export const handleErrors = (error) => {
+  if (error.response.data.code === 401) {
+    alert("Invalid credentials");
+  }
+
+  if (error.response.data.code === 404) {
+    alert("Not found");
+  }
+
+  if (error.response.data.type === "formError") {
+    alert(Object.values(error.response.data.errors).map(message => `⚠️ ${message}`).join('\n'));
+  }
+};
+
 const getConfig = () => {
   return {
     headers: {Authorization: `Bearer ${api.token}`},
