@@ -1,142 +1,11 @@
-import React, {
-  Fragment,
-  useContext,
-  useRef,
-  useState,
-  useEffect,
-} from "react";
-import "./Header.css";
-import Button from "../Button/Button";
+import React, {useContext, useMemo} from "react";
 import {AppContext} from "../../App";
-import useApi, {api, cacheKeys} from "../../hooks/useApi";
-import {Link, NavLink, useHistory} from "react-router-dom";
-import HyperLink from "../HyperLink/HyperLink";
-import {useMediaQuery} from "react-responsive/src";
-import Icon from "../Icon/Icon";
-import useClickOutside from "../../hooks/useClickOutside";
-import useKeyDown from "../../hooks/useKeyDown";
-import Modal from "../Modal/Modal";
-import {alphaSort, largeQuery} from "../../helpers";
-import classnames from "classnames";
-import {motion} from "framer-motion";
-
-const LocationSwitch = () => {
-  const {status, data: locations} = useApi(
-    cacheKeys.locations,
-    api.locations.public
-  );
-
-  const {currentLocation, setCurrentLocation} = useContext(AppContext);
-  const modalContentRef = useRef();
-
-  const [modalOpen, setModalOpen] = useState(false);
-  const [focusedLocation, setFocusedLocation] = useState(currentLocation);
-
-  const switchLocation = (location) => {
-    setCurrentLocation(location);
-    redirect(location.url);
-  };
-
-  useEffect(() => {
-    setFocusedLocation(currentLocation);
-  }, [currentLocation]);
-
-  useKeyDown("Escape", () => setModalOpen(false));
-  useClickOutside(modalContentRef, () => {
-    setModalOpen(setModalOpen(false));
-  });
-
-  const redirect = (slug) => {
-    window.location.pathname = `/${slug}/dashboard`;
-  };
-
-  if (status === "loading") return null;
-
-  return (
-    <Fragment>
-      <Modal open={modalOpen} contentRef={modalContentRef}>
-        <div className="locations">
-          <ul className="location-list">
-            {alphaSort(locations, "name").map((location) => {
-              const isCurrent = currentLocation.id === location.id;
-
-              return (
-                <motion.li
-                  whileHover={!isCurrent ? {x: 4} : null}
-                  key={location.id}
-                  className={classnames(
-                    "location-list__item",
-                    isCurrent ? "location-list__item--active" : null
-                  )}
-                  onMouseEnter={() => setFocusedLocation(location)}
-                  onMouseLeave={() => setFocusedLocation(location)}
-                  onClick={() => switchLocation(location)}
-                >
-                  {location.name}
-                  <span className="geo">
-                    [{location.city}, {location.countryCode}]
-                  </span>
-                </motion.li>
-              );
-            })}
-            s
-          </ul>
-
-          <div className="location-info">
-            <div
-              className="location-info__image"
-              style={{backgroundImage: `url(${focusedLocation.image})`}}
-            />
-
-            <div className={"location-info__address"}>
-              <address>
-                {focusedLocation.addressLineOne} <br/>
-                {focusedLocation.addressLineTwo && (
-                  <Fragment>
-                    {focusedLocation.addressLineTwo} <br/>
-                  </Fragment>
-                )}
-                {focusedLocation.zip} {focusedLocation.city} <br/>
-              </address>
-            </div>
-
-            <ul className="location-info__social">
-              {focusedLocation.website && (
-                <li>
-                  <a href={focusedLocation.website}>
-                    {focusedLocation.website}
-                  </a>
-                </li>
-              )}
-
-              {focusedLocation.twitter && (
-                <li>
-                  <a href={focusedLocation.website}>Twitter</a>
-                </li>
-              )}
-
-              {focusedLocation.facebook && (
-                <li>
-                  <a href={focusedLocation.facebook}>Facebook</a>
-                </li>
-              )}
-
-              {focusedLocation.instagram && (
-                <li>
-                  <a href={focusedLocation.instagram}>Instagram</a>
-                </li>
-              )}
-            </ul>
-          </div>
-        </div>
-      </Modal>
-
-      <HyperLink onClick={() => setModalOpen(true)}>
-        {currentLocation && currentLocation.name}
-      </HyperLink>
-    </Fragment>
-  );
-};
+import {useApiV2} from "../../hooks/useApi";
+import {Link, NavLink} from "react-router-dom";
+import {useQuery} from "react-query";
+import {useHistory} from "react-router-dom";
+import {serialize} from "../../hooks/useQueryParameters";
+import "./Header.css";
 
 const NavItem = ({link, children}) => {
   return (
@@ -147,7 +16,43 @@ const NavItem = ({link, children}) => {
 };
 
 const Header = () => {
-  const {user, contextualizedPath, reset, currentLocation} = useContext(AppContext);
+  const {
+    user,
+    contextualizedPath,
+    setExpiration,
+    isAdmin,
+    currentLocation,
+    setCurrentLocation,
+    expiration
+  } = useContext(AppContext);
+
+  const history = useHistory();
+
+  const {data: locations} = useQuery("locations", useApiV2("locations"));
+
+  const scheduleUrl = useMemo(() => {
+    let url = new URL(`${process.env.REACT_APP_SCHEDULE_HOST}/login`);
+
+    if (!user || !currentLocation || !expiration) {
+      return null
+    }
+
+    url.search = new URLSearchParams({
+      user: JSON.stringify(user),
+      location: JSON.stringify(currentLocation),
+      expiration: JSON.stringify(expiration),
+    });
+
+    return url.toString();
+
+  }, [user, currentLocation, expiration]);
+
+  const switchLocation = (locationId) => {
+    const newLocation = locations.find(location => location.id === parseInt(locationId));
+
+    setCurrentLocation(newLocation);
+    history.push(`/${newLocation.url}/dashboard`)
+  };
 
   if (!currentLocation) {
     return (
@@ -159,13 +64,30 @@ const Header = () => {
 
   return (
     <header className="header">
-      <NavLink className="header__logo" to={contextualizedPath("/dashboard")}>BlocBeta</NavLink>
+      <NavLink className="header__logo header-logo" to={contextualizedPath("/dashboard")}>
+        BlocBeta
+        <select className="header-logo__location-select location-select t--eta"
+                onChange={(event) => switchLocation(event.target.value)}>
+
+          <option value=""> @{currentLocation.name}</option>
+
+          {locations && locations.map(location => {
+            if (parseInt(currentLocation.id) === location.id) {
+              return null
+            }
+
+            return <option value={location.id} key={location.id}>
+              @{location.name}
+            </option>;
+          })}
+        </select>
+      </NavLink>
 
       <nav className="header__nav header-nav">
         <NavItem link={contextualizedPath("/boulder")}>
           Boulder
         </NavItem>
-        <NavItem link={contextualizedPath("/ranking")}>
+        <NavItem link={contextualizedPath("/ranking/current")}>
           Ranking
         </NavItem>
 
@@ -173,132 +95,22 @@ const Header = () => {
           [{user.username}]
         </NavItem>
 
-        <a href={"http://schedule.blocbeta.com/schedule"} className="header-nav__item">
+        <a href={scheduleUrl} className="header-nav__item" target="_blank" rel="noopener noreferrer">
           Schedule
         </a>
 
-        <span onClick={() => reset()} className="header-nav__item">
+        {isAdmin && (
+          <NavItem className="header-nav__item" link={contextualizedPath("/settings")}>
+            Settings
+          </NavItem>
+        )}
+
+        <span onClick={() => setExpiration(null)} className="header-nav__item">
           Out!
         </span>
       </nav>
     </header>
   )
 };
-
-// const Header = () => {
-//   const {
-//     user,
-//     authenticated,
-//     currentLocation,
-//     reset,
-//     locationPath,
-//     isAdmin,
-//   } = useContext(AppContext);
-//
-//   let history = useHistory();
-//   const {pathname} = useLocation();
-//
-//   useEffect(() => {
-//     closeOffCanvas();
-//   }, [pathname]);
-//
-//   const closeOffCanvas = () => {
-//     setOffCanvasOpen(false);
-//   };
-//
-//   const openOffCanvas = () => {
-//     setOffCanvasOpen(true);
-//   };
-//
-//   const logout = (event) => {
-//     closeOffCanvas();
-//     reset();
-//     history.push("/login");
-//   };
-//
-//   const isLarge = useMediaQuery(largeQuery);
-//   const [offCanvasOpen, setOffCanvasOpen] = useState(false);
-//
-//   const offCanvasRef = useRef();
-//
-//   useClickOutside(offCanvasRef, () => closeOffCanvas());
-//   useKeyDown("Escape", () => closeOffCanvas());
-//
-//   const Navigation = () => {
-//     return (
-//       <ul className="navigation">
-//         <li>
-//           <Link to={locationPath("/boulder?ascent=todo")}>Boulder</Link>
-//         </li>
-//
-//         {user.visible && (
-//           <li>
-//             <Link to={locationPath("/ranking/current")}>Ranking</Link>
-//           </li>
-//         )}
-//
-//         <li>
-//           <Link to={locationPath("/account")}>[{user.username}]</Link>
-//         </li>
-//
-//         {isAdmin && (
-//           <li>
-//             <Link to={locationPath("/settings")}>Settings</Link>
-//           </li>
-//         )}
-//
-//         <li>
-//           <Button onClick={(event) => logout(event)}>Logout</Button>
-//         </li>
-//       </ul>
-//     );
-//   };
-//
-//   if (!authenticated() || !getLocationSlug() || !currentLocation) {
-//     return (
-//       <header className="header">
-//         <ul>
-//           <li>
-//             <Link to="/login" className="header__logo">
-//               BlocBeta
-//             </Link>
-//           </li>
-//         </ul>
-//       </header>
-//     );
-//   }
-//
-//   return (
-//     <header className="header">
-//       <Link to={locationPath("/dashboard")} className="header__logo">
-//         BlocBeta @
-//       </Link>
-//       <LocationSwitch/>
-//
-//       {isLarge ? (
-//         <Navigation/>
-//       ) : (
-//         <Fragment>
-//           {offCanvasOpen ? (
-//             <Icon name="close-large" onClick={() => closeOffCanvas()}/>
-//           ) : (
-//             <Icon name="burger" onClick={() => openOffCanvas()}/>
-//           )}
-//
-//           <motion.div
-//             ref={offCanvasRef}
-//             className={classnames(
-//               "offcanvas-navigation",
-//               offCanvasOpen ? "offcanvas-navigation--open" : null
-//             )}
-//             positionTransition
-//           >
-//             <Navigation/>
-//           </motion.div>
-//         </Fragment>
-//       )}
-//     </header>
-//   );
-// };
 
 export default Header;

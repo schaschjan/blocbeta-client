@@ -1,142 +1,154 @@
-import React, {Fragment, useContext} from "react";
+import React, {Fragment, useContext, useMemo} from "react";
+import {useApiV2} from "../../../hooks/useApi";
+import {useQuery} from "react-query";
 import {Loader} from "../../../components/Loader/Loader";
-import Avatar from "../../../components/Avatar/Avatar";
-import Paragraph from "../../../components/Paragraph/Paragraph";
-import moment from "moment";
-import "./Current.css";
-import Icon from "../../../components/Icon/Icon";
-import Container from "../../../components/Container/Container";
-import useApi, {api, cacheKeys} from "../../../hooks/useApi";
-import {PageHeader} from "../../../components/PageHeader/PageHeader";
+import RankingTable from "../../../components/RankingTable/RankingTable";
 import EmptyState from "../../../components/EmptyState/EmptyState";
 import Emoji from "../../../components/Emoji/Emoji";
-import Wrapper from "../../../components/Wrapper/Wrapper";
-import RankingTable from "../../../components/RankingTable/RankingTable";
 import Progress from "../../../components/Progress/Progress";
 import {getPercentage} from "../../../helpers";
-import {Link} from "react-router-dom";
 import {AppContext, Meta} from "../../../App";
-
-const Actions = ({b}) => {
-  const {user, locationPath} = useContext(AppContext);
-  const a = user.id;
-
-  return (
-    <Link to={locationPath(`/compare/${a}/to/${b}/at/current`)}>Compare</Link>
-  );
-};
+import Paragraph from "../../../components/Paragraph/Paragraph";
+import moment from "moment";
+import Icon from "../../../components/Icon/Icon";
+import Avatar from "../../../components/Avatar/Avatar";
+import "./Current.css";
+import Button from "../../../components/Button/Button";
+import {Female, Male} from "../../../components/Icon/Icons";
 
 const Current = () => {
-  const {status: rankingStatus, data: ranking} = useApi(
-    cacheKeys.ranking.current,
-    api.ranking.current
-  );
+  const {user, contextualizedPath} = useContext(AppContext);
 
-  const {status: bouldersStatus, data: boulders} = useApi(
-    cacheKeys.boulders,
-    api.boulder.active
-  );
+  const {
+    status: rankingStatus,
+    data: ranking
+  } = useQuery("currentRanking", useApiV2("currentRanking"));
 
-  if ([rankingStatus, bouldersStatus].includes("loading")) return <Loader/>;
+  const {
+    status: boulderCountStatus,
+    data: boulderCount
+  } = useQuery("boulderCount", useApiV2("boulderCount"));
 
-  const columns = [
-    {
-      Header: "Rank",
-      accessor: "rank",
-      className: `table-cell--rank`,
-      Cell: ({cell}) => {
-        return <strong>{cell.value}</strong>;
-      },
-    },
-    {
-      Header: "User",
-      accessor: "user.username",
-      className: "table-cell--user",
-      Cell: ({cell, row}) => {
-        return (
-          <Fragment>
-            <Avatar user={row.original.user}/>
-            {cell.value}
+  const columns = useMemo(() => {
 
-            {row.original.boulder === boulders.length && <span className='rank-badge'>🥋</span>}
-          </Fragment>
-        );
+    return [
+      {
+        Header: "Rank",
+        accessor: "rank",
+        className: `table-cell--rank`,
+        Cell: ({row}) => {
+          return <strong>{row.index++}</strong>;
+        },
       },
-    },
-    {
-      Header: "Gender",
-      accessor: "user.gender",
-      Cell: ({cell}) => {
-        return <Icon name={cell.value}/>;
-      },
-    },
-    {
-      Header: "Points",
-      accessor: "score",
-    },
-    {
-      Header: "Advance",
-      accessor: "advance",
-    },
-    {
-      Header: "Boulders",
-      accessor: "boulders",
-      className: "table-cell--boulders",
-      Cell: ({cell}) => {
-        const percentage = (cell.value / boulders.length) * 100;
+      {
+        Header: "User",
+        accessor: "user.username",
+        className: "table-cell--user",
+        Cell: ({cell, row}) => {
+          return (
+            <Fragment>
+              <Avatar user={row.original.user}/>
+              {cell.value}
 
-        return <Progress percentage={percentage}/>;
+              {row.original.boulder === boulderCount && <span className='rank-badge'>🥋</span>}
+            </Fragment>
+          );
+        },
       },
-    },
-    {
-      Header: "Flashed",
-      accessor: "flashes",
-      Cell: ({cell}) => getPercentage(cell.value, boulders.length),
-    },
-    {
-      Header: "Topped",
-      accessor: "tops",
-      Cell: ({cell}) => getPercentage(cell.value, boulders.length),
-    },
-    {
-      Header: "Last activity",
-      accessor: "user.lastActivity",
-      Cell: ({cell}) => {
-        return <Paragraph>{moment(cell.value).fromNow()}</Paragraph>;
+      {
+        Header: "Gender",
+        accessor: "user.gender",
+        Cell: ({cell}) => {
+
+          if (cell.value === "male") {
+            return <Male/>
+          }
+
+          if (cell.value === "female") {
+            return <Female/>
+          }
+
+          return "-"
+        },
       },
-    },
-    {
-      Header: "",
-      id: "user.id",
-      accessor: "user.id",
-      className: "table-cell--actions",
-      Cell: ({cell}) => <Actions b={cell.value}/>,
-    },
-  ];
+      {
+        Header: "Points",
+        accessor: "score",
+      },
+      {
+        Header: "Advance",
+        accessor: "advance",
+      },
+      {
+        Header: "Boulders",
+        accessor: "boulders",
+        className: "table-cell--boulders",
+        Cell: ({cell}) => {
+          const percentage = (cell.value / boulderCount) * 100;
+
+          return <Progress percentage={percentage}/>;
+        },
+      },
+      {
+        Header: "Flashed",
+        accessor: "flashes",
+        Cell: ({cell}) => getPercentage(cell.value, boulderCount),
+      },
+      {
+        Header: "Topped",
+        accessor: "tops",
+        Cell: ({cell}) => getPercentage(cell.value, boulderCount),
+      },
+      {
+        Header: "Last activity",
+        accessor: "user.lastActivity",
+        Cell: ({cell}) => {
+          return <Paragraph>{moment(cell.value).fromNow()}</Paragraph>;
+        },
+      },
+      {
+        Header: "",
+        id: "user.id",
+        accessor: "user.id",
+        className: "table-cell--actions",
+        Cell: ({cell}) => {
+          if (parseInt(cell.value) === parseInt(user.id)) {
+            return null
+          }
+
+          return (
+            <Button asLink={true}
+                    variant="text"
+                    to={contextualizedPath(`/compare/${user.id}/to/${cell.value}/at/current`)}>
+              Compare
+            </Button>
+          );
+        }
+      },
+    ];
+  }, [user.id, boulderCount]);
+
+  if ([rankingStatus, boulderCountStatus].includes("loading")) return <Loader/>;
+
 
   return (
-    <Container>
+    <Fragment>
       <Meta title="Current Ranking"/>
-      <PageHeader title="Current Ranking">
-        <span className="t--tech">Last updated {ranking.lastRun}</span>
-      </PageHeader>
 
-      <Wrapper>
-        {ranking.list.length > 0 ? (
-          <RankingTable
-            data={ranking.list}
-            columns={columns}
-            className={"current"}
-          />
-        ) : (
-          <EmptyState>
-            <h2>
-              No one here… <Emoji>🤷</Emoji>
-            </h2>
-          </EmptyState>
-        )}
-      </Wrapper>
-    </Container>
+      {ranking.list.length > 0 ? (
+        <RankingTable
+          data={ranking.list}
+          columns={columns}
+          className={"current"}
+        />
+      ) : (
+        <EmptyState>
+          <h2>
+            No one here… <Emoji>🤷</Emoji>
+          </h2>
+        </EmptyState>
+      )}
+    </Fragment>
   );
 };
 

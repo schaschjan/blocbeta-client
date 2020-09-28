@@ -1,8 +1,8 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
-import "./Button.css";
 import {Loader} from "../Loader/Loader";
+import "./Button.css";
 
 const Button = ({variant = "primary", disabled = false, asLink = false, loading = false, loader = false, children, ...rest}) => {
 

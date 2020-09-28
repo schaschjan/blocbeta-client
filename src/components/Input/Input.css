@@ -28,7 +28,7 @@
 
 .input input {
   width: 100%;
-  font-weight: bold;
+  font-weight: normal;
   outline: none;
   border: 0;
   font-size: 1.125rem;

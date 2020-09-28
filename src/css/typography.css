@@ -56,9 +56,12 @@
 }
 
 .t--alpha {
-    font-family: Karla;
     font-style: normal;
     font-weight: bold;
     font-size: 48px;
     line-height: 56px;
+}
+
+.t--eta {
+    font-size: 1em;
 }

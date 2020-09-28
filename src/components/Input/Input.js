@@ -3,13 +3,14 @@ import Icon from "../Icon/Icon";
 import classnames from "classnames";
 import "./Input.css";
 
-const Input = ({ register, ref, prefix, icon, type, ...rest }) => {
+const Input = ({className, register, onClear, clearable, ref, prefix, type, ...rest}) => {
   return (
-    <div className={classnames("input", `input--${type}`)}>
-      {icon && <Icon name={icon} />}
+    <div className={classnames(className, "input", `input--${type}`, onClear ? "input--clearable" : null)}>
       {prefix && <span>{prefix}</span>}
 
-      <input ref={register || ref} type={type} {...rest} />
+      <input ref={register || ref} type={type}{...rest} />
+
+      {(onClear && clearable) && <Icon name="close"/>}
     </div>
   );
 };

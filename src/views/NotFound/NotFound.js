@@ -1,12 +1,11 @@
-import React from "react";
-import { Meta } from "../App";
-import { PageHeader } from "../components/PageHeader/PageHeader";
+import React, {Fragment} from "react";
 
-export default function NotFound(props) {
+export default () => {
   return (
-    <div className="container">
-      <Meta title="Not found" />
-      <PageHeader title="Not found" />
-    </div>
+    <Fragment>
+      <div className="not-found-layout content-offset">
+        <h1 className="t--alpha">Not found</h1>
+      </div>
+    </Fragment>
   );
 }

@@ -1,10 +1,5 @@
-import React, {createContext, Fragment, useMemo, useState} from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
+import React, {createContext, Fragment, useMemo, useEffect, useState} from "react";
+import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import Header from "./components/Navigation/Header";
 import {router} from "./router";
 import {Footer} from "./components/Footer/Footer";
@@ -22,6 +17,10 @@ export const Meta = ({title, description}) => {
   );
 };
 
+export const locationPath = (path) => {
+  return window.location.pathname.split("/")[1] + path;
+};
+
 export const AppContext = createContext({});
 
 const App = () => {
@@ -30,27 +29,18 @@ const App = () => {
   const [expiration, setExpiration] = usePersistentState("expiration", null);
 
   const [contentDisabled, disableContent] = useState(false);
-  const [appClassName, setAppClassName] = useState(null);
 
   const contextualizedPath = (path) => {
     return `/${currentLocation.url}${path}`
   };
 
-  const reset = () => {
-    setUser(null);
-    setCurrentLocation(null);
-    setExpiration(null);
-
-    localStorage.clear();
-  };
-
-  const authenticated = () => {
+  const authenticated = useMemo(() => {
     if (!user) {
       return false
     }
 
     return new Date().getTime() / 1000 <= expiration;
-  };
+  }, [user, expiration]);
 
   const isAdmin = useMemo(() => {
     if (!currentLocation) {
@@ -62,6 +52,17 @@ const App = () => {
     );
   }, []);
 
+  useEffect(() => {
+    if (!authenticated) {
+      setUser(null);
+      setCurrentLocation(null);
+      setExpiration(null);
+
+      localStorage.clear();
+    }
+
+  }, [authenticated]);
+
   const appContextValues = {
     user,
     setUser,
@@ -72,24 +73,21 @@ const App = () => {
     contentDisabled,
 
     contextualizedPath,
-    appClassName,
-    setAppClassName,
 
     disableContent,
     isAdmin,
     authenticated,
-    reset,
   };
 
   const PrivateRoute = ({children, ...rest}) => {
-    if (authenticated()) {
+    if (authenticated) {
       return <Route {...rest} />;
     }
 
     return (
       <Route
         {...rest}
-        render={() => (authenticated() ? children : <LoginRedirect/>)}
+        render={() => (authenticated ? children : <LoginRedirect/>)}
       />
     );
   };
@@ -112,17 +110,29 @@ const App = () => {
     return !(route.visibleOnly === true && user && !user.visible);
   });
 
+
   return (
     <Fragment>
       <Router>
         <AppContext.Provider value={appContextValues}>
-          <div className={classNames("app", `app--${appClassName}`)}>
+          <div className={classNames("app")}>
             <Header/>
 
             <Switch>
               {routes.map((route, i) => {
                 if (!route.public) {
                   return <PrivateRoute key={i} {...route} />;
+                }
+
+                if (authenticated && route.public && route.redirectAuthenticated && currentLocation) {
+
+                  return <Route key={i} {...route}>
+                    <Redirect
+                      to={{
+                        pathname: contextualizedPath("/dashboard"),
+                      }}
+                    />
+                  </Route>
                 }
 
                 return <Route key={i} {...route} />;

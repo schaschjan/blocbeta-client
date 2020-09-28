@@ -2,8 +2,6 @@ import React from "react";
 import "./Icon.css";
 import classnames from "classnames";
 
-import { ReactComponent as CloseSmall } from "./icons/close-small.svg";
-import { ReactComponent as MenuSmall } from "./icons/menu-small.svg";
 import { ReactComponent as Upward } from "./icons/upward.svg";
 import { ReactComponent as Downward } from "./icons/downward.svg";
 import { ReactComponent as Backward } from "./icons/backward.svg";
@@ -114,16 +112,6 @@ const Icon = ({ name, onClick, className, fill, ...rest }) => {
   if (name === "backward") {
     size = "small";
     icon = <Backward />;
-  }
-
-  if (name === "menu-small") {
-    size = "small";
-    icon = <MenuSmall />;
-  }
-
-  if (name === "close") {
-    size = "small";
-    icon = <CloseSmall />;
   }
 
   if (name === "open-filters") {

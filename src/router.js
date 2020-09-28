@@ -13,107 +13,118 @@ import Settings from "./views/Settings/Settings";
 import AllTime from "./views/Ranking/AllTime/AllTime";
 import ResetPassword from "./views/ResetPassword/ResetPassword";
 import Setup from "./views/Setup/Setup";
+import {Redirect} from "react-router-dom";
+import NotFound from "./views/NotFound/NotFound";
 
 export const router = [
   {
+    path: "/",
+    render: () => <Redirect
+      to={{
+        pathname: "/login",
+      }}
+    />,
+    exact: true,
+    redirectAuthenticated: true
+  },
+  {
     title: "Login",
     path: "/login",
-    render: () => <Login />,
-    exact: true,
+    render: () => <Login/>,
     public: true,
-    footer: false,
+    exact: true,
+    redirectAuthenticated: true
   },
   {
     title: "Register",
     path: "/register",
-    render: () => <Register />,
-    exact: true,
+    render: () => <Register/>,
     public: true,
-    footer: false,
+    redirectAuthenticated: true
   },
   {
     title: "Setup",
     path: "/setup",
-    render: () => <Setup />,
-    exact: true,
-    footer: false,
+    render: () => <Setup/>,
+    redirectAuthenticated: true
   },
   {
     title: "Reset Password",
     path: "/password-reset/request",
-    render: () => <RequestPasswordReset />,
-    exact: true,
+    render: () => <RequestPasswordReset/>,
     public: true,
-    footer: false,
+    redirectAuthenticated: true
   },
   {
     title: "Reset Password",
     path: "/password-reset/:hash",
-    render: () => <ResetPassword />,
-    exact: true,
+    render: () => <ResetPassword/>,
     public: true,
-    footer: false,
+    redirectAuthenticated: true
   },
   {
     title: "Dashboard",
     path: "/:locationSlug/dashboard",
-    render: () => <Dashboard />,
+    render: () => <Dashboard/>,
     exact: true,
-    footer: true,
   },
   {
     title: "Boulder index",
     path: "/:locationSlug/boulder",
-    render: () => <BoulderIndex />,
+    render: () => <BoulderIndex/>,
     exact: true,
-    footer: true,
   },
   {
     title: "Add boulder",
     path: "/:locationSlug/boulder/add",
-    render: () => <BoulderAdd />,
+    render: () => <BoulderAdd/>,
     exact: true,
     admin: true,
   },
   {
     title: "Edit boulder",
     path: "/:locationSlug/boulder/:boulderId",
-    render: () => <BoulderEdit />,
+    render: () => <BoulderEdit/>,
     exact: true,
     admin: true,
   },
   {
     title: "Current ranking",
     path: "/:locationSlug/ranking/current",
-    render: () => <CurrentRanking />,
+    render: () => <CurrentRanking/>,
     exact: true,
     visibleOnly: true,
   },
   {
     title: "All time ranking",
     path: "/:locationSlug/ranking/all-time",
-    render: () => <AllTime />,
+    render: () => <AllTime/>,
     exact: true,
     visibleOnly: true,
   },
   {
     title: "Compare current",
     path: "/:locationSlug/compare/:a/to/:b/at/current",
-    render: () => <CurrentComparison />,
+    render: () => <CurrentComparison/>,
     exact: true,
     visibleOnly: true,
   },
   {
     title: "Account",
     path: "/:locationSlug/account",
-    render: () => <Account />,
+    render: () => <Account/>,
     exact: true,
   },
   {
     title: "Settings",
     path: "/:locationSlug/settings",
-    render: () => <Settings />,
+    render: () => <Settings/>,
     exact: true,
     admin: true,
   },
+  {
+    title: "Not found",
+    path: "*",
+    render: () => <NotFound/>,
+}
 ];

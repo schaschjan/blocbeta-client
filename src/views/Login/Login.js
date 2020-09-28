@@ -7,13 +7,11 @@ import axios from "axios";
 import {FormRow} from "../../components/Form/Form";
 import useQueryParameters from "../../hooks/useQueryParameters";
 import {useHistory} from "react-router-dom";
-import "./Login.css";
 import {handleErrors} from "../../hooks/useApi";
+import "./Login.css";
 
 const Login = () => {
   const history = useHistory();
-
-  const {setAppClassName, contextualizedPath} = useContext(AppContext);
 
   const {handleSubmit, formData, submitting, observeField} = useForm({
     username: null,
@@ -23,7 +21,7 @@ const Login = () => {
   const {setUser, setCurrentLocation, setExpiration} = useContext(AppContext);
 
   const queryParameters = useQueryParameters();
-  let target = queryParameters.get("target");
+  const target = queryParameters.get("target");
 
   const getScheduleUrl = (location) => {
     return `https://schedule.blocbeta.com/${location.url}/schedule`
@@ -33,6 +31,8 @@ const Login = () => {
     try {
       const {data} = await axios.post(`/api/login`, payload, {params: target});
 
+      console.log(data);
+
       setExpiration(data.expiration);
       setUser(data.user);
 
@@ -41,22 +41,19 @@ const Login = () => {
         return;
       }
 
+
       setCurrentLocation(data.location);
 
       if (queryParameters.get("target") === "schedule") {
         window.location.href = getScheduleUrl(data.location);
       } else {
-        history.push(contextualizedPath("/dashboard"))
+        history.push(`/${data.location.url}/dashboard`)
       }
 
     } catch (error) {
       handleErrors(error);
     }
   };
-
-  useEffect(() => {
-    setAppClassName("login");
-  }, []);
 
   return (
     <Fragment>

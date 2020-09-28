@@ -12,6 +12,7 @@
     "match-sorter": "^4.1.0",
     "moment": "^2.26.0",
     "normalize.css": "^8.0.1",
+    "query-string": "^6.13.3",
     "react": "^16.13.1",
     "react-dates": "^21.8.0",
     "react-dom": "^16.13.1",

@@ -1,8 +1,14 @@
 import {useContext} from "react";
-import {AppContext} from "../App";
+import {AppContext, locationPath} from "../App";
 import axios from "axios";
 
 export const handleErrors = (error) => {
+
+  if (!error.response) {
+    console.error(error);
+    return
+  }
+
   if (error.response.data.code === 401) {
     alert("Invalid credentials");
   }
@@ -199,3 +205,57 @@ export default function useApi(method, path, contextualize = true, ...rest) {
     return axios.get(`/api/${currentLocation.url}${path}`);
   }
 }
+
+
+const resources = {
+  ping: async ({location}) => {
+    await axios.get(`/api/${location}/ping`);
+  },
+  me: async () => {
+    const {data} = await axios.get(`/api/me`);
+
+    return data;
+  },
+  updateMe: async ({payload}) => {
+    delete payload.id;
+    delete payload.username;
+
+    const {data} = await axios.put(`/api/me`, payload);
+
+    return data;
+  },
+  deleteMe: async () => {
+    await axios.delete(`/api/me`);
+  },
+  boulderStatistics: async ({location}) => {
+    const {data} = await axios.get(`/api/${location}/statistic/boulder`);
+
+    return data;
+  },
+  boulderCount: async ({location}) => {
+    const {data} = await axios.get(`/api/${location}/boulder/count`);
+
+    return data;
+  },
+  currentRanking: async ({location}) => {
+    const {data} = await axios.get(`/api/${location}/ranking/current`);
+
+    return data;
+  },
+  locations: async () => {
+    const {data} = await axios.get(`/api/location`);
+
+    return data;
+  }
+};
+
+export const useApiV2 = (key) => {
+  const {currentLocation} = useContext(AppContext);
+  const resource = resources[key];
+
+  if (!(key in resources)) {
+    throw new Error(`Resource ${key} not found`);
+  }
+
+  return ({...any} = {}) => resource({location: currentLocation.url, ...any})
+};

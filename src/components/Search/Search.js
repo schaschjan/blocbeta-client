@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
-import "./Search.css";
 import Icon from "../Icon/Icon";
 import Input from "../Input/Input";
 import { Tag } from "../TagInput/TagInput";
+import "./Search.css";
 
 const Search = ({
   placeholder,

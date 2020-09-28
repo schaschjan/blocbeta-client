@@ -21,3 +21,12 @@
     margin-left: calc(2 * var(--spacing-unit));
     cursor: pointer;
 }
+
+.location-select {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    outline: none;
+    font-weight: bold;
+    margin-left: var(--spacing-unit);
+}

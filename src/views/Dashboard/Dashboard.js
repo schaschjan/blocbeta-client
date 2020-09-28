@@ -1,19 +1,22 @@
-import React, {Fragment, useContext} from "react";
+import React, {Fragment, useContext, useEffect} from "react";
 import {useQuery} from "react-query";
 import "./Dashboard.css";
 import {PageHeader} from "../../components/PageHeader/PageHeader";
-import {AppContext, Meta} from "../../App";
+import {AppContext, locationPath, Meta} from "../../App";
 import {Link} from "react-router-dom";
 import axios from "axios";
+import {useApiV2} from "../../hooks/useApi";
 
 const Dashboard = () => {
-  const {user, contextualizedPath} = useContext(AppContext);
+  const {user} = useContext(AppContext);
 
-  const {status: boulderStatus, data: boulderStatistic} = useQuery("stat-boulders", async () => {
-    const {data} = await axios.get(`/api${contextualizedPath("/statistic/boulder")}`);
+  const {status: boulderStatus, data: boulderStatistic} = useQuery("boulderStatistics", useApiV2("boulderStatistics"));
 
-    return data;
-  });
+  const ping = useApiV2("ping");
+
+  useEffect(() => {
+    ping()
+  }, []);
 
   return (
     <Fragment>
@@ -21,11 +24,11 @@ const Dashboard = () => {
       <PageHeader title={`Hello ${user.username}!`}/>
 
       <Link to={{
-        pathname: contextualizedPath("/boulder"),
+        pathname: locationPath("/boulder"),
         search: "?ascent=todo"
       }}>
 
-        All boulders {(boulderStatus === "success") && (boulderStatistic.activeBoulders)}
+        All {(boulderStatus === "success") && (boulderStatistic.activeBoulders)} boulders
       </Link>
     </Fragment>
   );

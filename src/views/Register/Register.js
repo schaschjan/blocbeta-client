@@ -23,12 +23,10 @@ const Register = () => {
   });
 
   const onSubmit = async (payload) => {
-
     try {
       await axios.post(`/api/register`, payload);
       alert("Your account was created! You can now log in.");
       history.push("/login");
-
 
     } catch (error) {
       handleErrors(error);
@@ -147,7 +145,7 @@ const Register = () => {
 
             <Button
               type="submit"
-              primary="true"
+              variant="primary"
               loader={true}
               loading={submitting}
               disabled={submitting}>

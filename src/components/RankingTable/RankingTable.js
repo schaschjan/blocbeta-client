@@ -1,11 +1,12 @@
-import { useGlobalFilter, useSortBy, useTable } from "react-table";
-import classnames from "classnames";
+import {useGlobalFilter, useSortBy, useTable} from "react-table";
+import classNames from "classnames";
 import React from "react";
-import Search from "../Search/Search";
-import { TableCell, TableHeader, TableRow } from "../Table/Table";
+import {TableCell, TableHeader, TableRow} from "../Table/Table";
 import SwipeOut from "../SwipeOut/SwipeOut";
+import Input from "../Input/Input";
+import "./RankingTable.css";
 
-const RankingTable = ({ columns, data, Actions, className }) => {
+const RankingTable = ({columns, data, Actions, className}) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -22,53 +23,52 @@ const RankingTable = ({ columns, data, Actions, className }) => {
     useSortBy
   );
 
+  const Row = ({cells, ...rest}) => {
+    return (
+      <TableRow {...rest}>
+        {cells.map((cell) => {
+          return (
+            <TableCell
+              {...cell.getCellProps({
+                className: cell.column.className,
+              })}
+            >
+              {cell.render("Cell")}
+            </TableCell>
+          );
+        })}
+      </TableRow>
+    );
+  };
+
   return (
-    <div>
-      <Search
+    <div className="ranking-table-layout content-offset">
+      <Input
+        className="ranking-table-layout__search"
         placeholder="Search for member"
         onClear={() => setGlobalFilter(null)}
-        onInputChange={(e) => {
-          setGlobalFilter(e.target.value || undefined);
+        clearable={true}
+        onChange={event => {
+          setGlobalFilter(event.target.value);
         }}
       />
 
-      <div
-        className={classnames("table", `table--${className}`)}
-        {...getTableProps()}
-      >
-        <TableHeader headerGroups={headerGroups} />
+      <div className={classNames("ranking-table-layout__table", "table", `table--${className}`)}{...getTableProps()}>
+        <TableHeader headerGroups={headerGroups}/>
 
         <div className="table-content" {...getTableBodyProps()}>
           {rows.map((row, index) => {
             prepareRow(row);
 
-            const Row = ({ ...rest }) => {
-              return (
-                <TableRow {...rest}>
-                  {row.cells.map((cell) => {
-                    return (
-                      <TableCell
-                        {...cell.getCellProps({
-                          className: cell.column.className,
-                        })}
-                      >
-                        {cell.render("Cell")}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            };
-
             if (Actions) {
               return (
-                <SwipeOut actions={Actions}>
-                  <Row key={index} />
+                <SwipeOut actions={Actions} key={row.index}>
+                  <Row key={index} cells={row.cells}/>
                 </SwipeOut>
               );
             }
 
-            return <Row />;
+            return <Row cells={row.cells} key={row.index}/>;
           })}
         </div>
       </div>
