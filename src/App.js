@@ -52,6 +52,23 @@ const App = () => {
     );
   }, []);
 
+  const scheduleUrl = useMemo(() => {
+    let url = new URL(`${process.env.REACT_APP_SCHEDULE_HOST}/login`);
+
+    if (!user || !currentLocation || !expiration) {
+      return null
+    }
+
+    url.search = new URLSearchParams({
+      user: JSON.stringify(user),
+      location: JSON.stringify(currentLocation),
+      expiration: JSON.stringify(expiration),
+    });
+
+    return url.toString();
+
+  }, [user, currentLocation, expiration]);
+
   useEffect(() => {
     if (!authenticated) {
       setUser(null);
@@ -77,6 +94,8 @@ const App = () => {
     disableContent,
     isAdmin,
     authenticated,
+
+    scheduleUrl
   };
 
   const PrivateRoute = ({children, ...rest}) => {

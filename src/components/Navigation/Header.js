@@ -4,7 +4,6 @@ import {useApiV2} from "../../hooks/useApi";
 import {Link, NavLink} from "react-router-dom";
 import {useQuery} from "react-query";
 import {useHistory} from "react-router-dom";
-import {serialize} from "../../hooks/useQueryParameters";
 import "./Header.css";
 
 const NavItem = ({link, children}) => {
@@ -23,29 +22,24 @@ const Header = () => {
     isAdmin,
     currentLocation,
     setCurrentLocation,
-    expiration
+    scheduleUrl
   } = useContext(AppContext);
 
   const history = useHistory();
 
   const {data: locations} = useQuery("locations", useApiV2("locations"));
 
-  const scheduleUrl = useMemo(() => {
-    let url = new URL(`${process.env.REACT_APP_SCHEDULE_HOST}/login`);
 
-    if (!user || !currentLocation || !expiration) {
-      return null
+  const checkAccount = (event) => {
+    event.preventDefault();
+
+    if (localStorage.getItem("fullRegistration") !== "true") {
+      alert("Insufficient account details. Please extend them in the account settings.")
+      return
     }
 
-    url.search = new URLSearchParams({
-      user: JSON.stringify(user),
-      location: JSON.stringify(currentLocation),
-      expiration: JSON.stringify(expiration),
-    });
-
-    return url.toString();
-
-  }, [user, currentLocation, expiration]);
+    window.location.href = event.target.href;
+  };
 
   const switchLocation = (locationId) => {
     const newLocation = locations.find(location => location.id === parseInt(locationId));
@@ -84,9 +78,10 @@ const Header = () => {
       </NavLink>
 
       <nav className="header__nav header-nav">
-        <NavItem link={contextualizedPath("/boulder")}>
-          Boulder
-        </NavItem>
+        {/*<NavItem link={contextualizedPath("/boulder")}>*/}
+        {/*  Boulder*/}
+        {/*</NavItem>*/}
+
         <NavItem link={contextualizedPath("/ranking/current")}>
           Ranking
         </NavItem>
@@ -95,7 +90,10 @@ const Header = () => {
           [{user.username}]
         </NavItem>
 
-        <a href={scheduleUrl} className="header-nav__item" target="_blank" rel="noopener noreferrer">
+        <a href={scheduleUrl} className="header-nav__item" target="_blank" rel="noopener noreferrer"
+           onClick={(event) => {
+             checkAccount(event)
+           }}>
           Schedule
         </a>
 

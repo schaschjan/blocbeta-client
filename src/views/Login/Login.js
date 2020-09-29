@@ -18,34 +18,37 @@ const Login = () => {
     password: null
   });
 
-  const {setUser, setCurrentLocation, setExpiration} = useContext(AppContext);
+  const {setUser, setCurrentLocation, setExpiration, scheduleUrl} = useContext(AppContext);
 
   const queryParameters = useQueryParameters();
   const target = queryParameters.get("target");
-
-  const getScheduleUrl = (location) => {
-    return `https://schedule.blocbeta.com/${location.url}/schedule`
-  };
 
   const onSubmit = async (payload) => {
     try {
       const {data} = await axios.post(`/api/login`, payload, {params: target});
 
-      console.log(data);
-
       setExpiration(data.expiration);
       setUser(data.user);
+
+      localStorage.setItem("fullRegistration", data.fullRegistration);
 
       if (!data.location) {
         history.push("/setup");
         return;
       }
 
-
       setCurrentLocation(data.location);
 
       if (queryParameters.get("target") === "schedule") {
-        window.location.href = getScheduleUrl(data.location);
+
+        if (localStorage.getItem("fullRegistration") !== "true") {
+          alert("Insufficient account details. Please extend them in the account settings.");
+          history.push(`/${data.location.url}/dashboard`);
+
+          return
+        }
+
+        window.location.href = scheduleUrl
       } else {
         history.push(`/${data.location.url}/dashboard`)
       }
