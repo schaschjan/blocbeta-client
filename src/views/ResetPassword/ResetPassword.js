@@ -18,11 +18,6 @@ const ResetPassword = () => {
   const {hash} = useParams();
 
   const {handleSubmit, observeField, submitting, formData} = useForm({
-    username: null,
-    email: null,
-    firstName: null,
-    lastName: null,
-    gender: "",
     password: null
   });
 
