@@ -1,4 +1,4 @@
-import React, {useContext, useMemo} from "react";
+import React, {useContext} from "react";
 import {AppContext} from "../../App";
 import {useApiV2} from "../../hooks/useApi";
 import {Link, NavLink} from "react-router-dom";
@@ -14,7 +14,7 @@ const NavItem = ({link, children}) => {
   )
 };
 
-const Header = () => {
+const Header = ({children}) => {
   const {
     user,
     contextualizedPath,
@@ -28,7 +28,6 @@ const Header = () => {
   const history = useHistory();
 
   const {data: locations} = useQuery("locations", useApiV2("locations"));
-
 
   const checkAccount = (event) => {
     event.preventDefault();
@@ -102,6 +101,8 @@ const Header = () => {
             Settings
           </NavItem>
         )}
+
+        {children}
 
         <span onClick={() => setExpiration(null)} className="header-nav__item">
           Out!
