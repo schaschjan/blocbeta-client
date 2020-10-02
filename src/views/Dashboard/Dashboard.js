@@ -22,14 +22,6 @@ const Dashboard = () => {
     <Fragment>
       <Meta title="Dashboard"/>
       <PageHeader title={`Hello ${user.username}!`}/>
-
-      <Link to={{
-        pathname: locationPath("/boulder"),
-        search: "?ascent=todo"
-      }}>
-
-        All {(boulderStatus === "success") && (boulderStatistic.activeBoulders)} boulders
-      </Link>
     </Fragment>
   );
 

@@ -58,10 +58,24 @@
 .t--alpha {
     font-style: normal;
     font-weight: bold;
-    font-size: 48px;
-    line-height: 56px;
+    font-size: 28px;
+    line-height: 36px;
 }
 
 .t--eta {
     font-size: 1em;
+}
+
+@media (min-width: 600px) {
+    .t--alpha {
+        font-size: 38px;
+        line-height: 46px;
+    }
+}
+
+@media (min-width: 1140px) {
+    .t--alpha {
+        font-size: 48px;
+        line-height: 56px;
+    }
 }

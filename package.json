@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@sentry/react": "^5.24.2",
+    "@sentry/tracing": "^5.24.2",
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "framer": "^1.2.3",
