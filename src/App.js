@@ -47,6 +47,10 @@ const App = () => {
       return false;
     }
 
+    if (!user) {
+      return false;
+    }
+
     return user.roles.includes(
       `ROLE_ADMIN@${currentLocation.id}`
     );
