@@ -43,7 +43,7 @@ const App = () => {
   }, [user, expiration]);
 
   const isAdmin = useMemo(() => {
-    if (!currentLocation || !user || user.roles) {
+    if (!currentLocation || !user || !!user.roles) {
       return false;
     }
 
