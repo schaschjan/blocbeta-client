@@ -47,7 +47,7 @@ const Header = ({children}) => {
     history.push(`/${newLocation.url}/dashboard`)
   };
 
-  if (!currentLocation) {
+  if (!currentLocation || !user) {
     return (
       <header className="header">
         <Link className="header__logo" to="/login">BlocBeta</Link>

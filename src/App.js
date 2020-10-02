@@ -35,7 +35,7 @@ const App = () => {
   };
 
   const authenticated = useMemo(() => {
-    if (!user) {
+    if (!user || !currentLocation || !expiration) {
       return false
     }
 
