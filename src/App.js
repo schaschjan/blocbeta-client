@@ -40,7 +40,7 @@ const App = () => {
     }
 
     return new Date().getTime() / 1000 <= expiration;
-  }, [user, expiration]);
+  }, [user, expiration, currentLocation]);
 
   const isAdmin = useMemo(() => {
     if (!currentLocation || !user || !user.roles) {
@@ -50,7 +50,7 @@ const App = () => {
     return user.roles.includes(
       `ROLE_ADMIN@${currentLocation.id}`
     );
-  }, []);
+  }, [currentLocation, user]);
 
   const scheduleUrl = useMemo(() => {
     let url = new URL(`${process.env.REACT_APP_SCHEDULE_HOST}/login`);
