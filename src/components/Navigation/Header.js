@@ -22,23 +22,11 @@ const Header = ({children}) => {
     isAdmin,
     currentLocation,
     setCurrentLocation,
-    scheduleUrl
   } = useContext(AppContext);
 
   const history = useHistory();
 
   const {data: locations} = useQuery("locations", useApiV2("locations"));
-
-  const checkAccount = (event) => {
-    event.preventDefault();
-
-    if (localStorage.getItem("fullRegistration") !== "true") {
-      alert("Insufficient account details. Please extend them in the account settings.")
-      return
-    }
-
-    window.location.href = event.target.href;
-  };
 
   const switchLocation = (locationId) => {
     const newLocation = locations.find(location => location.id === parseInt(locationId));
@@ -77,10 +65,6 @@ const Header = ({children}) => {
       </NavLink>
 
       <nav className="header__nav header-nav">
-        {/*<NavItem link={contextualizedPath("/boulder")}>*/}
-        {/*  Boulder*/}
-        {/*</NavItem>*/}
-
         <NavItem link={contextualizedPath("/ranking/current")}>
           Ranking
         </NavItem>
@@ -88,13 +72,6 @@ const Header = ({children}) => {
         <NavItem link={contextualizedPath("/account")}>
           [{user.username}]
         </NavItem>
-
-        <a href={scheduleUrl} className="header-nav__item" target="_blank" rel="noopener noreferrer"
-           onClick={(event) => {
-             checkAccount(event)
-           }}>
-          Schedule
-        </a>
 
         {isAdmin && (
           <NavItem className="header-nav__item" link={contextualizedPath("/settings")}>

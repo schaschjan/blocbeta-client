@@ -1,6 +1,7 @@
 import {useContext} from "react";
 import {AppContext, locationPath} from "../App";
 import axios from "axios";
+import {BlocBetaUIContext} from "@blocbeta/ui-core";
 
 export const handleErrors = (error) => {
 
@@ -207,7 +208,7 @@ export default function useApi(method, path, contextualize = true, ...rest) {
 }
 
 
-const resources = {
+export const resources = {
   ping: async ({location}) => {
     await axios.get(`/api/${location}/ping`);
   },
@@ -250,12 +251,12 @@ const resources = {
 };
 
 export const useApiV2 = (key) => {
-  const {currentLocation} = useContext(AppContext);
+  const {location} = useContext(BlocBetaUIContext);
   const resource = resources[key];
 
   if (!(key in resources)) {
     throw new Error(`Resource ${key} not found`);
   }
 
-  return ({...any} = {}) => resource({location: currentLocation.url, ...any})
+  return ({...any} = {}) => resource({location: location.url, ...any})
 };

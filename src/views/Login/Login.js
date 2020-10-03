@@ -2,56 +2,28 @@ import React, {useContext, Fragment} from "react";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import useForm, {composeFormElement} from "../../hooks/useForm";
-import {AppContext, Meta} from "../../App";
+import {Meta} from "../../App";
 import axios from "axios";
 import {FormRow} from "../../components/Form/Form";
-import useQueryParameters from "../../hooks/useQueryParameters";
-import {useHistory} from "react-router-dom";
 import {handleErrors} from "../../hooks/useApi";
+import {BlocBetaUIContext} from "@blocbeta/ui-core";
 import "./Login.css";
 
 const Login = () => {
-  const history = useHistory();
-
   const {handleSubmit, formData, submitting, observeField} = useForm({
     username: null,
     password: null
   });
 
-  const {setUser, setCurrentLocation, setExpiration, scheduleUrl} = useContext(AppContext);
-
-  const queryParameters = useQueryParameters();
-  const target = queryParameters.get("target");
+  const {setUser, setLocation, setExpiration} = useContext(BlocBetaUIContext);
 
   const onSubmit = async (payload) => {
     try {
-      const {data} = await axios.post(`/api/login`, payload, {params: target});
+      const {data} = await axios.post(`/api/login`, payload);
 
       setExpiration(data.expiration);
       setUser(data.user);
-
-      localStorage.setItem("fullRegistration", data.fullRegistration);
-
-      if (!data.location) {
-        history.push("/setup");
-        return;
-      }
-
-      setCurrentLocation(data.location);
-
-      if (queryParameters.get("target") === "schedule") {
-
-        if (localStorage.getItem("fullRegistration") !== "true") {
-          alert("Insufficient account details. Please extend them in the account settings.");
-          history.push(`/${data.location.url}/dashboard`);
-
-          return
-        }
-
-        window.location.href = scheduleUrl
-      } else {
-        history.push(`/${data.location.url}/dashboard`)
-      }
+      setLocation(data.location);
 
     } catch (error) {
       handleErrors(error);
@@ -64,11 +36,7 @@ const Login = () => {
 
       <div className="side-title-layout">
         <h1 className="t--alpha side-title-layout__title">
-          {queryParameters.get("target") === "schedule" ? (
-            <Fragment>Please sign in to book a training slot.</Fragment>
-          ) : (
-            <Fragment>Please sign to access BlocBeta.</Fragment>
-          )}
+          Please sign to access BlocBeta.
         </h1>
 
         <div className="side-title-layout__content">

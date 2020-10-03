@@ -14,7 +14,6 @@ import AllTime from "./views/Ranking/AllTime/AllTime";
 import ResetPassword from "./views/ResetPassword/ResetPassword";
 import Setup from "./views/Setup/Setup";
 import {Redirect} from "react-router-dom";
-import NotFound from "./views/NotFound/NotFound";
 
 export const router = [
   {
@@ -93,21 +92,21 @@ export const router = [
     path: "/:locationSlug/ranking/current",
     render: () => <CurrentRanking/>,
     exact: true,
-    visibleOnly: true,
+    visibleUserOnly: true,
   },
   {
     title: "All time ranking",
     path: "/:locationSlug/ranking/all-time",
     render: () => <AllTime/>,
     exact: true,
-    visibleOnly: true,
+    visibleUserOnly: true,
   },
   {
     title: "Compare current",
     path: "/:locationSlug/compare/:a/to/:b/at/current",
     render: () => <CurrentComparison/>,
     exact: true,
-    visibleOnly: true,
+    visibleUserOnly: true,
   },
   {
     title: "Account",
@@ -121,10 +120,6 @@ export const router = [
     render: () => <Settings/>,
     exact: true,
     admin: true,
-  },
-  {
-    title: "Not found",
-    path: "*",
-    render: () => <NotFound/>,
-}
+  }
+
 ];
