@@ -79,7 +79,7 @@ const AppHeader = () => {
       Account
     </NavItem>
 
-    <NavItem to={`${process.env.REACT_APP_SCHEDULE_HOST}/schedule`} external={true}>
+    <NavItem to={`${process.env.REACT_APP_SCHEDULE_HOST}/${contextualizedPath("/schedule")}`} external={true}>
       <mark>Reservation</mark>
     </NavItem>
   </Header>
