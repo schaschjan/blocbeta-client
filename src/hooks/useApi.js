@@ -1,7 +1,7 @@
 import {useContext} from "react";
-import {AppContext, locationPath} from "../App";
+import {AppContext} from "../App";
 import axios from "axios";
-import {BlocBetaUIContext} from "@blocbeta/ui-core";
+import { useParams } from "react-router-dom";
 
 export const handleErrors = (error) => {
 
@@ -250,13 +250,14 @@ export const resources = {
   }
 };
 
-export const useApiV2 = (key) => {
-  const {location} = useContext(BlocBetaUIContext);
+
+export const useApiV2 = (key, anything = {}) => {
+  const {location} = useParams();
   const resource = resources[key];
 
   if (!(key in resources)) {
     throw new Error(`Resource ${key} not found`);
   }
 
-  return ({...any} = {}) => resource({location: location.url, ...any})
+  return ({...alsoAnything} = {}) => resource({location, ...anything, ...alsoAnything})
 };

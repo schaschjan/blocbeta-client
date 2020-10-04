@@ -1,7 +1,6 @@
-import React, {Fragment} from "react";
+import React, {Fragment, useContext} from "react";
 import {Loader} from "../../components/Loader/Loader";
-import {toast} from "react-toastify";
-import {FormRow} from "../../components/Form/Form";
+import {useHistory} from "react-router-dom";
 import Label from "../../components/Label/Label";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
@@ -9,7 +8,7 @@ import {handleErrors, useApiV2} from "../../hooks/useApi";
 import {useMutation, useQuery} from "react-query";
 import Switch from "../../components/Switch/Switch";
 import {Meta} from "../../App";
-import useForm, {composeFormElement} from "../../hooks/useForm";
+import {BlocBetaUIContext, composeFormElement, FormRow, useForm} from "@blocbeta/ui-core";
 
 const Form = ({defaults, onSubmit}) => {
   const {handleSubmit, submitting, formData, observeField} = useForm(defaults);
@@ -112,8 +111,9 @@ const Form = ({defaults, onSubmit}) => {
 const Account = () => {
   const {status, data} = useQuery("me", useApiV2("me"));
   const deleteMe = useApiV2("deleteMe");
-
   const [mutate] = useMutation(useApiV2("updateMe"), {throwOnError: true});
+  const {contextualizedPath} = useContext(BlocBetaUIContext);
+  const history = useHistory();
 
   const onSubmit = async (data) => {
     try {
@@ -127,8 +127,15 @@ const Account = () => {
 
   const scheduleAccountDeletion = async () => {
     if (window.confirm("Confirm account deletion")) {
-      deleteMe();
-      toast.warn(data.message);
+
+      try {
+        await deleteMe();
+        alert("Your account was scheduled for deletion and will be removed.");
+        history.push(contextualizedPath("/dashboard"))
+
+      } catch (error) {
+        handleErrors(error);
+      }
     }
   };
 

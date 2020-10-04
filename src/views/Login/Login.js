@@ -7,6 +7,7 @@ import axios from "axios";
 import {FormRow} from "../../components/Form/Form";
 import {handleErrors} from "../../hooks/useApi";
 import {BlocBetaUIContext} from "@blocbeta/ui-core";
+import {useHistory} from "react-router-dom";
 import "./Login.css";
 
 const Login = () => {
@@ -15,7 +16,9 @@ const Login = () => {
     password: null
   });
 
-  const {setUser, setLocation, setExpiration} = useContext(BlocBetaUIContext);
+  const history = useHistory();
+
+  const {setUser, setCurrentLocation, setExpiration} = useContext(BlocBetaUIContext);
 
   const onSubmit = async (payload) => {
     try {
@@ -23,7 +26,9 @@ const Login = () => {
 
       setExpiration(data.expiration);
       setUser(data.user);
-      setLocation(data.location);
+      setCurrentLocation(data.location);
+
+      history.push(`${data.targetLocation}/dashboard`);
 
     } catch (error) {
       handleErrors(error);

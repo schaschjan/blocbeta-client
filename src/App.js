@@ -3,7 +3,9 @@ import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom
 import {router} from "./router";
 import {Footer} from "./components/Footer/Footer";
 import {Helmet} from "react-helmet";
-import {BlocBetaUI, BlocBetaUIContext, Header} from "@blocbeta/ui-core";
+import {BlocBetaUI, BlocBetaUIContext, NavItem, Header} from "@blocbeta/ui-core";
+import axios from "axios";
+import {useQuery} from "react-query";
 
 export const Meta = ({title, description}) => {
   return (
@@ -17,62 +19,70 @@ export const Meta = ({title, description}) => {
 
 export const AppContext = createContext({});
 
-export const locationPath = (path) => {
-  return window.location.pathname.split("/")[1] + path;
-};
-
 const Routing = () => {
-  const {isAuthenticated, isAdmin, user, contextualizedPath} = useContext(BlocBetaUIContext);
-
-  const PrivateRoute = ({children, ...rest}) => {
-    if (isAuthenticated) {
-      return <Route {...rest} />;
-    }
-
-    return (
-      <Route
-        {...rest}
-        render={() => (isAuthenticated ? children : null)}
-      />
-    );
-  };
+  const {isAuthenticated, isAdmin} = useContext(BlocBetaUIContext);
 
   return <Switch>
-    {router.filter((route) => {
-      if (route.admin === true && !isAdmin) {
-        return false;
-      }
-
-      if (route.visibleUserOnly === true && user && !user.visible) {
-        return false
-      }
-
-      return true;
-
-    }).map((route, i) => {
+    {router.map((route, index) => {
 
       if (!route.public) {
-        return <PrivateRoute key={i} {...route} />;
-      }
 
-      if (isAuthenticated && route.public && route.redirectAuthenticated) {
-        return <Redirect
-          to={{
-            pathname: contextualizedPath("/dashboard")
-          }}/>
-      }
+        if (!isAuthenticated) {
+          return <Redirect to={{pathname: "/login"}}/>
+        }
 
-      if (!isAuthenticated) {
-        return <Redirect
-          to={{
-            pathname: "/login",
-          }}
+        if (route.admin && !isAdmin) {
+          return <Redirect to={{pathname: "/access-denied"}}/>
+        }
+
+        return <Route
+          key={index}
+          path={route.path}
+          exact={route.exact}
+          children={<route.main/>}
+        />
+
+      } else {
+
+        return <Route
+          key={index}
+          path={route.path}
+          exact={route.exact}
+          children={<route.main/>}
         />
       }
-
-      return <Route key={i} {...route} />;
     })}
   </Switch>
+};
+
+const AppHeader = () => {
+  const {contextualizedPath, user} = useContext(BlocBetaUIContext);
+
+  const {data: locations} = useQuery("locations", async () => {
+    const {data} = await axios.get(`/api/location`);
+
+    return data;
+  });
+
+  return <Header
+    locations={locations}
+    locationSwitchTargetPath={"/dashboard"}
+    logoLink={contextualizedPath("/dashboard")}>
+
+    {user && user.visible && (
+      <NavItem to={contextualizedPath("/ranking/current")}>
+        Ranking
+      </NavItem>
+    )}
+
+    <NavItem to={contextualizedPath("/account")}>
+      Account
+    </NavItem>
+
+    <NavItem to={process.env.REACT_APP_SCHEDULE_HOST} external={true}>
+      <mark>Reservation</mark>
+    </NavItem>
+  </Header>
 };
 
 const App = () => {
@@ -82,9 +92,7 @@ const App = () => {
       <Router>
         <BlocBetaUI>
           <div className="app">
-            <Header>
-
-            </Header>
+            <AppHeader/>
 
             <Routing/>
 

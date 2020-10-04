@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@blocbeta/ui-core": "^0.1.4",
+    "@blocbeta/ui-core": "^0.1.14",
     "@hapi/joi": "^17.1.1",
     "@sentry/react": "^5.24.2",
     "@sentry/tracing": "^5.24.2",
@@ -11,10 +11,8 @@
     "classnames": "^2.2.6",
     "framer": "^1.2.3",
     "framer-motion": "^1.11.0",
-    "jwt-decode": "^2.2.0",
     "match-sorter": "^4.1.0",
     "moment": "^2.26.0",
-    "normalize.css": "^8.0.1",
     "query-string": "^6.13.3",
     "react": "^16.13.1",
     "react-dates": "^21.8.0",
@@ -22,13 +20,11 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^5.7.2",
     "react-query": "^1.5.7",
-    "react-query-devtools": "^1.1.17",
     "react-responsive": "^8.1.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-select": "3.1.0",
     "react-table": "7.2.0",
-    "react-toastify": "^6.0.5",
     "sanitize.css": "^12.0.1"
   },
   "scripts": {

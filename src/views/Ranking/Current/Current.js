@@ -7,17 +7,17 @@ import EmptyState from "../../../components/EmptyState/EmptyState";
 import Emoji from "../../../components/Emoji/Emoji";
 import Progress from "../../../components/Progress/Progress";
 import {getPercentage} from "../../../helpers";
-import {AppContext, Meta} from "../../../App";
+import {Meta} from "../../../App";
 import Paragraph from "../../../components/Paragraph/Paragraph";
 import moment from "moment";
-import Icon from "../../../components/Icon/Icon";
 import Avatar from "../../../components/Avatar/Avatar";
 import "./Current.css";
 import Button from "../../../components/Button/Button";
 import {Female, Male} from "../../../components/Icon/Icons";
+import {BlocBetaUIContext} from "@blocbeta/ui-core";
 
 const Current = () => {
-  const {user, contextualizedPath} = useContext(AppContext);
+  const {user, contextualizedPath} = useContext(BlocBetaUIContext);
 
   const {
     status: rankingStatus,
