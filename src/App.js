@@ -65,7 +65,7 @@ const AppHeader = () => {
   });
 
   return <Fragment>
-    <ContextBuilder/>
+    <ContextBuilder authenticationFailureRedirect={`${process.env.REACT_APP_BLOCBETA_HOST}/login`}/>
 
     <Header
       locations={locations}
