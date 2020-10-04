@@ -195,7 +195,7 @@ export default function useApi(method, path, contextualize = true, ...rest) {
   const {currentLocation} = useContext(AppContext);
 
   if (!contextualize) {
-    return `${process.env.REACT_APP_API_HOST}/api${path}`;
+    return `${process.env.REACT_APP_BLOCBETA_HOST}/api${path}`;
   }
 
   if (!currentLocation) {

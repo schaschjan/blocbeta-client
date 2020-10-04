@@ -1,4 +1,4 @@
-import React, {useContext, Fragment} from "react";
+import React, {useContext, useEffect, Fragment} from "react";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import useForm, {composeFormElement} from "../../hooks/useForm";
@@ -19,8 +19,11 @@ const Login = () => {
   const history = useHistory();
   const queryParameters = new URLSearchParams(window.location.search);
   const target = queryParameters.get("target");
+  const {setUser, setCurrentLocation, setExpiration, reset} = useContext(BlocBetaUIContext);
 
-  const {setUser, setCurrentLocation, setExpiration} = useContext(BlocBetaUIContext);
+  useEffect(() => {
+    reset();
+  }, []);
 
   const onSubmit = async (payload) => {
     try {
