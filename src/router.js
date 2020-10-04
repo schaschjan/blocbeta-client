@@ -46,7 +46,6 @@ export const router = [
     title: "Reset Password",
     path: "/password-reset/:hash",
     public: true,
-    exact: true,
     redirectAuthenticated: true,
     main: () => <ResetPassword/>,
   },
