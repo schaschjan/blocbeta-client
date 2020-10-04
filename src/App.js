@@ -1,4 +1,4 @@
-import React, {createContext, useContext, Fragment} from "react";
+import React, {createContext, useEffect, useContext, Fragment} from "react";
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import {router} from "./router";
 import {Footer} from "./components/Footer/Footer";
@@ -56,13 +56,47 @@ const Routing = () => {
 };
 
 const AppHeader = () => {
-  const {contextualizedPath, user} = useContext(BlocBetaUIContext);
+  const {
+    contextualizedPath,
+    setExpiration,
+    setUser,
+    user,
+    setCurrentLocation,
+    currentLocation,
+  } = useContext(BlocBetaUIContext);
+
+  const locationUrlParameter = window.location.pathname.split("/")[1];
 
   const {data: locations} = useQuery("locations", async () => {
-    const {data} = await axios.get(`/api/location`);
+    const {data} = await axios.get(`${process.env.REACT_APP_BLOCBETA_HOST}/api/location`);
 
     return data;
   });
+
+  const initContext = async () => {
+    const {data} = await axios.get(`${process.env.REACT_APP_BLOCBETA_HOST}/api/context`);
+
+    setExpiration(data.expiration);
+    setUser(data.user);
+    setCurrentLocation(data.location);
+  };
+
+  const switchContext = async () => {
+    const {data: locations} = await axios.get(`${process.env.REACT_APP_BLOCBETA_HOST}/api/location`);
+
+    const newLocation = locations.find(location => location.url === locationUrlParameter);
+    setCurrentLocation(newLocation);
+  };
+
+  useEffect(() => {
+
+    if (!currentLocation) {
+      initContext();
+    } else {
+      switchContext()
+    }
+
+  }, [locationUrlParameter]);
 
   return <Header
     locations={locations}
@@ -79,7 +113,7 @@ const AppHeader = () => {
       Account
     </NavItem>
 
-    <NavItem to={`${process.env.REACT_APP_SCHEDULE_HOST}/${contextualizedPath("/schedule")}`} external={true}>
+    <NavItem to={`${process.env.REACT_APP_SCHEDULE_HOST}${contextualizedPath("/schedule")}`} external={true}>
       <mark>Reservation</mark>
     </NavItem>
   </Header>

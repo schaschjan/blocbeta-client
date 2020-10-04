@@ -36,7 +36,7 @@ export const router = [
   },
   {
     title: "Request Password Reset",
-    path: "/password-reset/request",
+    path: "/request-password-reset",
     public: true,
     exact: true,
     redirectAuthenticated: true,
