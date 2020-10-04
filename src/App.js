@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom
 import {router} from "./router";
 import {Footer} from "./components/Footer/Footer";
 import {Helmet} from "react-helmet";
-import {BlocBetaUI, BlocBetaUIContext, NavItem, Header} from "@blocbeta/ui-core";
+import {BlocBetaUI, BlocBetaUIContext, NavItem, ContextBuilder, Header} from "@blocbeta/ui-core";
 import axios from "axios";
 import {useQuery} from "react-query";
 
@@ -56,16 +56,7 @@ const Routing = () => {
 };
 
 const AppHeader = () => {
-  const {
-    contextualizedPath,
-    setExpiration,
-    setUser,
-    user,
-    setCurrentLocation,
-    currentLocation,
-  } = useContext(BlocBetaUIContext);
-
-  const locationUrlParameter = window.location.pathname.split("/")[1];
+  const {contextualizedPath, user} = useContext(BlocBetaUIContext);
 
   const {data: locations} = useQuery("locations", async () => {
     const {data} = await axios.get(`${process.env.REACT_APP_BLOCBETA_HOST}/api/location`);
@@ -73,50 +64,29 @@ const AppHeader = () => {
     return data;
   });
 
-  const initContext = async () => {
-    const {data} = await axios.get(`${process.env.REACT_APP_BLOCBETA_HOST}/api/context`);
+  return <Fragment>
+    <ContextBuilder/>
 
-    setExpiration(data.expiration);
-    setUser(data.user);
-    setCurrentLocation(data.location);
-  };
+    <Header
+      locations={locations}
+      locationSwitchTargetPath={"/dashboard"}
+      logoLink={contextualizedPath("/dashboard")}>
 
-  const switchContext = async () => {
-    const {data: locations} = await axios.get(`${process.env.REACT_APP_BLOCBETA_HOST}/api/location`);
+      {user && user.visible && (
+        <NavItem to={contextualizedPath("/ranking/current")}>
+          Ranking
+        </NavItem>
+      )}
 
-    const newLocation = locations.find(location => location.url === locationUrlParameter);
-    setCurrentLocation(newLocation);
-  };
-
-  useEffect(() => {
-
-    if (!currentLocation) {
-      initContext();
-    } else {
-      switchContext()
-    }
-
-  }, [locationUrlParameter]);
-
-  return <Header
-    locations={locations}
-    locationSwitchTargetPath={"/dashboard"}
-    logoLink={contextualizedPath("/dashboard")}>
-
-    {user && user.visible && (
-      <NavItem to={contextualizedPath("/ranking/current")}>
-        Ranking
+      <NavItem to={contextualizedPath("/account")}>
+        Account
       </NavItem>
-    )}
 
-    <NavItem to={contextualizedPath("/account")}>
-      Account
-    </NavItem>
-
-    <NavItem to={`${process.env.REACT_APP_SCHEDULE_HOST}${contextualizedPath("/schedule")}`} external={true}>
-      <mark>Reservation</mark>
-    </NavItem>
-  </Header>
+      <NavItem to={`${process.env.REACT_APP_SCHEDULE_HOST}${contextualizedPath("/schedule")}`} external={true}>
+        <mark>Reservation</mark>
+      </NavItem>
+    </Header>
+  </Fragment>
 };
 
 const App = () => {
