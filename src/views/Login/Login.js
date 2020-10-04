@@ -17,6 +17,8 @@ const Login = () => {
   });
 
   const history = useHistory();
+  const queryParameters = new URLSearchParams(window.location.search);
+  const target = queryParameters.get("target");
 
   const {setUser, setCurrentLocation, setExpiration} = useContext(BlocBetaUIContext);
 
@@ -28,7 +30,11 @@ const Login = () => {
       setUser(data.user);
       setCurrentLocation(data.location);
 
-      history.push(`${data.targetLocation}/dashboard`);
+      if (target) {
+        window.location.href = target;
+      } else {
+        history.push(`${data.targetLocation}/dashboard`);
+      }
 
     } catch (error) {
       handleErrors(error);
