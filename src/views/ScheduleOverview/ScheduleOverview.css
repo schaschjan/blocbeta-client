@@ -20,50 +20,65 @@
     margin-bottom: calc(2 * var(--spacing-unit));
 }
 
-.room-list-item-schedule__item {
-    display: grid;
-    border: 1px solid var(--color-black);
-    border-bottom: none;
-    grid-template-columns: 1fr 1fr 2fr;
-    padding: calc(2 * var(--spacing-unit));
-    transition: color ease-in 200ms, background ease-in 200ms;
-    box-sizing: border-box;
-    align-items: start;
+.schedule-accordion__item{
+
 }
 
-.room-list-item-schedule__item:last-child {
+.schedule-accordion-item__header:last-of-type {
     border-bottom: 1px solid var(--color-black);
 }
 
-.room-list-item-schedule-reservations {
-    list-style: none;
+.schedule-accordion__item .accordion-item__content--revealed {
+    border: 1px solid red;
 }
 
-.room-list-item-schedule-reservations__item {
-    border: 1px dashed var(--color-black);
-    padding: calc(2 * var(--spacing-unit));
-    position: relative;
-}
-
-.room-list-item-schedule-reservations__item--appeared {
-    background: var(--color-lila);
-    color: var(--color-white);
-}
-
-.room-list-item-schedule-reservations-item__detail {
-    margin: 0;
-    padding: 0;
-}
-
-.room-list-item-schedule-reservations-item__check-in {
-    cursor: pointer;
-    background: var(--color-lila);
-    color: var(--color-white);
-    width: 30px;
-    height: 30px;
-    position: absolute;
-    top: 0;
-    right: 0;
+.schedule-accordion__item,
+.schedule-accordion-item__header {
+    border: 1px solid var(--color-black);
+    border-bottom: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    height: 65px;
     align-items: center;
-    display: flex;
+    padding: 0 calc(2.5 * var(--spacing-unit));
 }
+
+.schedule-accordion-item__header:last-of-type {
+    border-bottom: 1px solid var(--color-black);
+}
+
+.schedule-accordion-item-header__toggle {
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.reservation-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    max-width: 800px;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+
+}
+
+.reservation-grid__item {
+    padding: calc(2.5 * var(--spacing-unit));
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+}
+
+/*.reservation-grid__item:nth-child(-n+3) {*/
+/*    border-bottom: 1px solid var(--color-black);*/
+/*}*/
+
+/*.reservation-grid__item:nth-child(3n+1) {*/
+/*    border-right: 1px solid var(--color-black);*/
+/*}*/
+
+/*.reservation-grid__item:nth-child(3n) {*/
+/*    border-left: 1px solid var(--color-black);*/
+/*}*/
+
+/*.reservation-grid__item:nth-child(n+7) {*/
+/*    border-top: 1px solid var(--color-black);*/
+/*}*/

@@ -38,11 +38,14 @@ export {default as Switch} from "./components/Switch/Switch"
 export {default as FormRow} from "./components/FormRow/FormRow"
 export {default as ContextBuilder} from "./components/ContextBuilder/ContextBuilder"
 export {default as DatePicker} from "./components/DatePicker/DatePicker"
+export {Accordion, AccordionItem} from "./components/Accordion/Accordion"
 
 // icons
 export {default as Burger} from "./components/Icon/Burger"
 export {default as Close} from "./components/Icon/Close"
 export {default as Forward} from "./components/Icon/Forward"
+export {default as Downward} from "./components/Icon/Downward"
+export {default as Upward} from "./components/Icon/Upward"
 
 // hooks
 export {default as useClickOutside} from "./hooks/useClickOutside"

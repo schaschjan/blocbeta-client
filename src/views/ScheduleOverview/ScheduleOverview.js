@@ -4,7 +4,8 @@ import {useParams} from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
 import "./ScheduleOverview.css";
-import {Loader, buildClassNames} from "./../../index";
+import {Loader, Downward, AccordionItem, Accordion} from "./../../index";
+
 
 export default () => {
   const {location} = useParams();
@@ -50,54 +51,42 @@ export default () => {
             return <div key={room.id} className="room-list__item room-list-item">
               <h2 className="t--gamma room-list-item__title">{room.name}</h2>
 
-              <ul className="room-list-item__schedule room-list-item-schedule">
+              <Accordion>
+                {room.schedule.map(timeSlot => {
+                  return (
+                    <AccordionItem
+                      itemId={timeSlot.hash}
+                      content={
+                        <table className="reservation-grid">
+                          {timeSlot.reservations.map(reservation => {
+                            return (
+                              <div className="reservation-grid__item" key={reservation.hash}>
+                                <strong>{reservation.first_name} {reservation.last_name}</strong>
+                                <p> {reservation.username}</p>
+                              </div>
+                            )
+                          })}
+                        </table>
+                      }
+                      header={
+                        <Fragment>
+                          <div className="t--zeta">
+                            {timeSlot.start_time} - {timeSlot.end_time}
+                          </div>
 
-                {room.schedule.map(item => {
-                  return <li key={item.hash} className={"room-list-item-schedule__item"}>
+                          <div className="t--zeta">
+                            {timeSlot.available} / {timeSlot.capacity}
+                          </div>
 
-                    <div className="room-list-item-schedule__time t--zeta">
-                      {item.start_time} - {item.end_time}
-                    </div>
-
-                    <div className="room-list-item-schedule__capacity t--zeta">
-                      {item.available} / {item.capacity}
-                    </div>
-
-                    <ul className="room-list-item-schedule__reservations room-list-item-schedule-reservations">
-                      {item.reservations.map(reservation => {
-                        return <li className={buildClassNames(
-                          "room-list-item-schedule-reservations__item",
-                          "room-list-item-schedule-reservations-item",
-                          reservation.appeared ? "room-list-item-schedule-reservations__item--appeared" : null
-                        )}>
-                          <p className="room-list-item-schedule-reservations-item__detail">First
-                            Name: {reservation.first_name}</p>
-                          <p className="room-list-item-schedule-reservations-item__detail">Last
-                            Name: {reservation.last_name}</p>
-                          <p
-                            className="room-list-item-schedule-reservations-item__detail">E-Mail: {reservation.email}</p>
-                          <p
-                            className="room-list-item-schedule-reservations-item__detail">Username: {reservation.username}</p>
-
-                          <button className="room-list-item-schedule-reservations-item__check-in"
-                                  onClick={async () => {
-                                    await mutateReservation({
-                                      id: reservation.id,
-                                      payload: {
-                                        appeared: reservation.appeared ? false : true
-                                      }
-                                    });
-                                  }}>
-                            {reservation.appeared ? "⇦" : "⇨"}
-                          </button>
-                        </li>
-                      })}
-                    </ul>
-                  </li>
+                        </Fragment>
+                      }
+                      defaultRevealed={false}
+                    />
+                  );
                 })}
-              </ul>
-            </div>
+              </Accordion>
 
+            </div>
           })}
         </div>
       ) : (

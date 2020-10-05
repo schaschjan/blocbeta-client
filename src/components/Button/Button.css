@@ -19,7 +19,7 @@
     position: absolute;
     top: 0;
     height: 100%;
-    right: 0;
+    right: var(--spacing-unit);
 }
 
 .button--primary {
@@ -51,7 +51,7 @@
 
 .button--disabled {
     pointer-events: none;
-    background: var(--color-grey);
+    background: var(--color-lightgrey);
     color: var(--color-grey);
 }
 
