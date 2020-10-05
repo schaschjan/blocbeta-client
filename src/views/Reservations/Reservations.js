@@ -5,6 +5,7 @@ import {Button, Loader} from "../../index";
 import "./Reservations.css";
 import {useApiV2} from "../../hooks/useApi";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
+import Emoji from "../../components/Emoji/Emoji";
 
 export default () => {
   const {status, data} = useQuery("reservations", useApiV2("reservations"));
@@ -32,7 +33,7 @@ export default () => {
         <Loader/>
       ) : (
         <ul className="blocked-time-slots">
-          {data.map(pending => {
+          {data.length ? data.map(pending => {
             const event = {
               title: "Bouldern",
               description: "",
@@ -54,7 +55,11 @@ export default () => {
                 }}>Cancel</Button>
               </li>
             )
-          })}
+          }) : (
+            <h2 className="t--gamma">
+              <Emoji>🤷</Emoji>
+            </h2>
+          )}
         </ul>
       )}
     </Fragment>

@@ -1,5 +1,5 @@
 import React, {useMemo, createContext} from "react";
-import {usePersistentState} from  "./../index.js"
+import {usePersistentState} from "./../index.js"
 
 export const BlocBetaUIContext = createContext({});
 
@@ -26,7 +26,16 @@ export const BlocBetaUI = ({children}) => {
   }, [user, expiration, currentLocation]);
 
   const isAdmin = useMemo(() => {
-    if (!currentLocation || !user || !user.roles) {
+    if (!currentLocation || !user) {
+      return false;
+    }
+
+    // legacy storage version checks
+    if (!user.roles) {
+      return false;
+    }
+
+    if (!Array.isArray(user.roles)) {
       return false;
     }
 

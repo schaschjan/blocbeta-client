@@ -147,8 +147,8 @@ export default () => {
         />
       ) : (
         <EmptyState>
-          <h2>
-            No one here… <Emoji>🤷</Emoji>
+          <h2 className="t--gamma">
+            <Emoji>🤷</Emoji>
           </h2>
         </EmptyState>
       )}

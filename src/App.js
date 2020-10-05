@@ -23,34 +23,42 @@ export const AppContext = createContext({});
 const Routing = () => {
   const {isAuthenticated} = useContext(BlocBetaUIContext);
 
+
+  const PrivateRoute = ({children, ...rest}) => {
+
+    return (
+      <Route
+        {...rest}
+        render={() => {
+
+          if (isAuthenticated) {
+            return children
+          }
+
+          return <Redirect to={{pathname: "/login"}}/>
+        }
+        }
+      />
+    );
+  };
+
   return <Switch>
     {router.map((route, index) => {
 
       if (!route.public) {
-        if (!isAuthenticated) {
-          return <Redirect to={{pathname: "/login"}} key={index}/>
-        }
 
-        // if (route.admin && !isAdmin) {
-        //   return <Redirect to={{pathname: "/access-denied"}}/>
-        // }
-
-        return <Route
+        return <PrivateRoute
           key={index}
           path={route.path}
           exact={route.exact}
           children={
             <Fragment>
               <route.main/>
-              <ContextBuilder/>
             </Fragment>
           }
         />
 
       } else {
-        // if (isAuthenticated && route.id !== "dashboard") {
-        //   return <Redirect to={{pathname: contextualizedPath("/dashboard")}}/>
-        // }
 
         return <Route
           key={index}

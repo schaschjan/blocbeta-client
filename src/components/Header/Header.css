@@ -24,6 +24,10 @@
     padding-left: calc(1 * var(--spacing-unit));
 }
 
+.header-logo__title {
+    text-decoration: none;
+}
+
 .header__mobile-toggle {
     grid-row: 1;
     grid-column: 2;

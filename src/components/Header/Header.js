@@ -1,16 +1,17 @@
 import React, {useContext, useState} from 'react'
-import {Link, NavLink} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import {useHistory} from "react-router-dom"
 import './Header.css'
 import {BlocBetaUIContext} from "../BlocBetaUI";
 import {buildClassNames, Burger, Close} from "../../index";
+import {useLocation} from "react-router-dom";
 
 export default ({children, locationSwitchTargetPath, locations, logoLink}) => {
   const {reset, setCurrentLocation, currentLocation} = useContext(BlocBetaUIContext);
 
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-
   const history = useHistory();
+  const location = useLocation();
 
   const switchLocation = (locationId) => {
     const newLocation = locations.find(location => location.id === parseInt(locationId));
@@ -19,9 +20,10 @@ export default ({children, locationSwitchTargetPath, locations, logoLink}) => {
       return
     }
 
-    setCurrentLocation(newLocation);
+    const oldLocation = currentLocation;
 
-    history.push(`/${newLocation.url}${locationSwitchTargetPath}`);
+    setCurrentLocation(newLocation);
+    history.push(location.pathname.replace(oldLocation.url, newLocation.url));
   };
 
   if (!currentLocation) {
@@ -34,8 +36,8 @@ export default ({children, locationSwitchTargetPath, locations, logoLink}) => {
 
   return (
     <header className="header">
-      <NavLink className="header__logo header-logo" to={logoLink}>
-        BlocBeta
+      <div className="header__logo header-logo">
+        <Link to={logoLink} className="header-logo__title t--eta">BlocBeta</Link>
 
         <select className="header-logo__location-select location-select t--eta"
                 onChange={(event) => switchLocation(event.target.value)}>
@@ -52,7 +54,7 @@ export default ({children, locationSwitchTargetPath, locations, logoLink}) => {
             </option>
           })}
         </select>
-      </NavLink>
+      </div>
 
       <nav className={buildClassNames("header__nav header-nav", mobileNavOpen ? "header-nav--open" : null)}
            onClick={() => setMobileNavOpen(false)}>

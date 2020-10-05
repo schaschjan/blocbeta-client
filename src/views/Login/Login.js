@@ -96,7 +96,7 @@ const Login = () => {
               Create Account
             </Button>
 
-            <Button variant="text" asLink={true} to="/request-password-reset">
+            <Button variant="text" asLink={true} to="/password-reset/request">
               Forgot Password
             </Button>
           </div>

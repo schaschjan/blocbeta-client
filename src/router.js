@@ -19,7 +19,6 @@ export const router = [
     path: "/login",
     public: true,
     exact: true,
-    redirectAuthenticated: true,
     main: () => <Login/>,
   },
   {
@@ -27,19 +26,17 @@ export const router = [
     path: "/register",
     public: true,
     exact: true,
-    redirectAuthenticated: true,
     main: () => <Register/>,
   },
   {
     title: "Setup",
     path: "/setup",
     exact: true,
-    redirectAuthenticated: true,
     main: () => <Setup/>,
   },
   {
     title: "Request Password Reset",
-    path: "/request-password-reset",
+    path: "/password-reset/request",
     public: true,
     exact: true,
     main: () => <RequestPasswordReset/>,
@@ -48,7 +45,6 @@ export const router = [
     title: "Reset Password",
     path: "/password-reset/:hash",
     public: true,
-    redirectAuthenticated: true,
     main: () => <ResetPassword/>,
   },
   {
