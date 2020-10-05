@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const useKeyDown = (targetKey, callback) => {
+export default (targetKey, callback) => {
   const [keyPressed, setKeyPressed] = useState(false);
 
   const onKeyDown = ({ key }) => {
@@ -27,5 +27,3 @@ const useKeyDown = (targetKey, callback) => {
 
   return keyPressed;
 };
-
-export default useKeyDown;

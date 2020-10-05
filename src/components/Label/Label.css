@@ -1,5 +1,3 @@
-label {
-    display: flex;
-    font-size: 0.75em;
-    line-height: 0.875em;
+.label {
+  font-size: 0.75em;
 }

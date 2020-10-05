@@ -1,11 +1,12 @@
-import React, {createContext, useEffect, useContext, Fragment} from "react";
+import React, {createContext, useContext, Fragment} from "react";
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import {router} from "./router";
 import {Footer} from "./components/Footer/Footer";
 import {Helmet} from "react-helmet";
-import {BlocBetaUI, BlocBetaUIContext, NavItem, ContextBuilder, Header} from "@blocbeta/ui-core";
+import {NavItem, ContextBuilder, Header} from "./index"
 import axios from "axios";
 import {useQuery} from "react-query";
+import {BlocBetaUI, BlocBetaUIContext} from "./components/BlocBetaUI";
 
 export const Meta = ({title, description}) => {
   return (
@@ -20,29 +21,36 @@ export const Meta = ({title, description}) => {
 export const AppContext = createContext({});
 
 const Routing = () => {
-  const {isAuthenticated, isAdmin} = useContext(BlocBetaUIContext);
+  const {isAuthenticated} = useContext(BlocBetaUIContext);
 
   return <Switch>
     {router.map((route, index) => {
 
       if (!route.public) {
-
         if (!isAuthenticated) {
-          return <Redirect to={{pathname: "/login"}}/>
+          return <Redirect to={{pathname: "/login"}} key={index}/>
         }
 
-        if (route.admin && !isAdmin) {
-          return <Redirect to={{pathname: "/access-denied"}}/>
-        }
+        // if (route.admin && !isAdmin) {
+        //   return <Redirect to={{pathname: "/access-denied"}}/>
+        // }
 
         return <Route
           key={index}
           path={route.path}
           exact={route.exact}
-          children={<route.main/>}
+          children={
+            <Fragment>
+              <route.main/>
+              <ContextBuilder/>
+            </Fragment>
+          }
         />
 
       } else {
+        // if (isAuthenticated && route.id !== "dashboard") {
+        //   return <Redirect to={{pathname: contextualizedPath("/dashboard")}}/>
+        // }
 
         return <Route
           key={index}
@@ -55,17 +63,32 @@ const Routing = () => {
   </Switch>
 };
 
+const ReservationNavItem = () => {
+  const {contextualizedPath, currentLocation} = useContext(BlocBetaUIContext);
+
+  const {status, data} = useQuery("reservations-count", async () => {
+    const {data} = await axios.get(`/api/${currentLocation.url}/reservation/pending/count`);
+
+    return data;
+  });
+
+  return (
+    <NavItem to={contextualizedPath("/reservations")}>
+      Reservations ({status === "loading" ? 0 : data})
+    </NavItem>
+  )
+};
+
 const AppHeader = () => {
   const {contextualizedPath, user} = useContext(BlocBetaUIContext);
 
   const {data: locations} = useQuery("locations", async () => {
-    const {data} = await axios.get(`${process.env.REACT_APP_BLOCBETA_HOST}/api/location`);
+    const {data} = await axios.get(`/api/location`);
 
     return data;
   });
 
   return <Fragment>
-    <ContextBuilder authenticationFailureRedirect={`${process.env.REACT_APP_BLOCBETA_HOST}/login`}/>
 
     <Header
       locations={locations}
@@ -78,13 +101,16 @@ const AppHeader = () => {
         </NavItem>
       )}
 
-      <NavItem to={contextualizedPath("/account")}>
-        Account
+      <NavItem to={contextualizedPath("/schedule")}>
+        Schedule
       </NavItem>
 
-      <NavItem to={`${process.env.REACT_APP_SCHEDULE_HOST}${contextualizedPath("/schedule")}`} external={true}>
-        <mark>Reservation</mark>
+      <ReservationNavItem/>
+
+      <NavItem to={contextualizedPath("/account")}>
+        [{user && user.username}]
       </NavItem>
+
     </Header>
   </Fragment>
 };
@@ -98,7 +124,9 @@ const App = () => {
           <div className="app">
             <AppHeader/>
 
-            <Routing/>
+            <div className="content">
+              <Routing/>
+            </div>
 
             <Footer/>
           </div>

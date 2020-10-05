@@ -1,7 +1,7 @@
 import React from "react";
 import "./Select.css";
 
-const Select = ({...rest}) => {
+export default ({...rest}) => {
 
   return (
     <div className="select">
@@ -10,5 +10,3 @@ const Select = ({...rest}) => {
     </div>
   );
 };
-
-export default Select;

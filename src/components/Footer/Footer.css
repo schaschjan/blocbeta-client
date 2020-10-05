@@ -3,6 +3,8 @@
     list-style: none;
     background: transparent;
     align-self: end;
+    align-items: center;
+    height: var(--footer-height);
 }
 
 

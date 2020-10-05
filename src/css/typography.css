@@ -1,3 +1,14 @@
+@import url("https://fonts.googleapis.com/css?family=Karla&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap");
+
+@font-face {
+    font-family: "Karla";
+    src: url("https://fonts.googleapis.com/css?family=Karla&display=swap");
+    font-weight: normal;
+}
+
+
 /*
 |--------------------------------------------------------------------------
 | Load fonts
@@ -56,24 +67,49 @@
 }
 
 .t--alpha {
-    font-style: normal;
-    font-weight: bold;
-    font-size: 28px;
-    line-height: 36px;
+    font-size: 48px;
+    line-height: 56px;
+}
+
+.t--beta {
+    font-size: var(--font-size-beta);
+    line-height: var(--line-height-beta);
+}
+
+.t--gamma {
+    font-size: var(--font-size-gamma);
+    line-height: var(--line-height-gamma);
+}
+
+.t--zeta {
+    font-size: var(--font-size-zeta);
+    line-height: var(--line-height-zeta);
 }
 
 .t--eta {
-    font-size: 1em;
+    font-size: var(--font-size-eta);
+    line-height: var(--line-height-eta);
+    letter-spacing: 0.05em;
 }
 
-@media (min-width: 600px) {
+mark {
+    padding: 2px 4px;
+    background: var(--color-lila);
+    color: var(--color-white);
+}
+
+span svg {
+    display: inline-flex;
+}
+
+@media (min-width: 768px) {
     .t--alpha {
         font-size: 38px;
         line-height: 46px;
     }
 }
 
-@media (min-width: 1140px) {
+@media (min-width: 1024px) {
     .t--alpha {
         font-size: 48px;
         line-height: 56px;

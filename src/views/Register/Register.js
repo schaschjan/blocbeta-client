@@ -3,7 +3,7 @@ import {Meta} from "../../App";
 import {FormRow} from "../../components/Form/Form";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
-import useForm, {composeFormElement} from "../../hooks/useForm";
+import {useForm, composeFormElement} from "../../index";
 import axios from "axios";
 import Select from "../../components/Select/Select";
 import {useHistory} from "react-router-dom";

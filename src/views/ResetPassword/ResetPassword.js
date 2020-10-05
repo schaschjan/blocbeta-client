@@ -6,7 +6,7 @@ import Button from "../../components/Button/Button";
 import {handleErrors} from "../../hooks/useApi";
 import {useParams} from "react-router-dom";
 import {useHistory} from "react-router-dom";
-import useForm, {composeFormElement} from "../../hooks/useForm";
+import {useForm, composeFormElement} from "../../index";
 import axios from "axios";
 import classNames from "classnames";
 import "./ResetPassword.css";

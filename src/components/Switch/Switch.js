@@ -1,7 +1,7 @@
-import React, {Fragment} from "react";
+import React from "react";
 import "./Switch.css";
 
-const Switch = ({value, ...rest}) => {
+export default ({value, ...rest}) => {
 
   let props = {...rest};
 
@@ -26,5 +26,3 @@ const Switch = ({value, ...rest}) => {
     </div>
   );
 };
-
-export default Switch;

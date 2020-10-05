@@ -1,18 +1,13 @@
 import React from "react";
-import Icon from "../Icon/Icon";
-import classnames from "classnames";
+import {buildClassNames} from "../../index";
 import "./Input.css";
 
-const Input = ({className, register, onClear, clearable, ref, prefix, type, ...rest}) => {
+export default ({className, prefix, type, ...rest}) => {
   return (
-    <div className={classnames(className, "input", `input--${type}`, onClear ? "input--clearable" : null)}>
+    <div className={buildClassNames(className, "input", `input--${type}`)}>
       {prefix && <span>{prefix}</span>}
 
-      <input ref={register || ref} type={type}{...rest} />
-
-      {(onClear && clearable) && <Icon name="close"/>}
+      <input type={type} {...rest} />
     </div>
   );
 };
-
-export default Input;

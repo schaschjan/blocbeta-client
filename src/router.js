@@ -8,7 +8,10 @@ import NotFound from "./views/NotFound/NotFound";
 import ResetPassword from "./views/ResetPassword/ResetPassword";
 import Setup from "./views/Setup/Setup";
 import AccessDenied from "./views/AccessDenied/AccessDenied";
-import CurrentRanking from "./views/Ranking/Current/Current";
+import Schedule from "./views/Schedule/Schedule";
+import ScheduleOverview from "./views/ScheduleOverview/ScheduleOverview";
+import Reservations from "./views/Reservations/Reservations";
+import CurrentRanking from "./views/CurrentRanking/CurrentRanking";
 
 export const router = [
   {
@@ -39,7 +42,6 @@ export const router = [
     path: "/request-password-reset",
     public: true,
     exact: true,
-    redirectAuthenticated: true,
     main: () => <RequestPasswordReset/>,
   },
   {
@@ -62,11 +64,6 @@ export const router = [
     main: () => <Account/>,
   },
   {
-    title: "Access Denied",
-    path: "/access-denied",
-    main: () => <AccessDenied/>,
-  },
-  {
     title: "Current ranking",
     path: "/:location/ranking/current",
     main: () => <CurrentRanking/>,
@@ -74,57 +71,35 @@ export const router = [
     visibleUserOnly: true,
   },
   {
+    title: "Schedule",
+    id: "schedule",
+    path: "/:location/schedule",
+    exact: true,
+    main: () => <Schedule/>,
+  },
+  {
+    title: "Schedule overview",
+    id: "scheduleOverview",
+    path: "/:location/schedule-overview",
+    exact: true,
+    admin: true,
+    main: () => <ScheduleOverview/>,
+  },
+  {
+    title: "Reservations",
+    id: "reservations",
+    path: "/:location/reservations",
+    exact: true,
+    main: () => <Reservations/>,
+  },
+  {
+    title: "Access Denied",
+    path: "/access-denied",
+    main: () => <AccessDenied/>,
+  },
+  {
     title: "Not Found",
     path: "*",
     main: () => <NotFound/>,
   },
-
-  // {
-  //   title: "Boulder index",
-  //   path: "/:location/boulder",
-  //   main: () => <BoulderIndex/>,
-  //   exact: true,
-  // },
-  // {
-  //   title: "Add boulder",
-  //   path: "/:location/boulder/add",
-  //   main: () => <BoulderAdd/>,
-  //   exact: true,
-  //   admin: true,
-  // },
-  // {
-  //   title: "Edit boulder",
-  //   path: "/:location/boulder/:boulderId",
-  //   render: () => <BoulderEdit/>,
-  //   exact: true,
-  //   admin: true,
-  // },
-  // {
-  //   title: "Current ranking",
-  //   path: "/:location/ranking/current",
-  //   render: () => <CurrentRanking/>,
-  //   exact: true,
-  //   visibleUserOnly: true,
-  // },
-  // {
-  //   title: "All time ranking",
-  //   path: "/:location/ranking/all-time",
-  //   render: () => <AllTime/>,
-  //   exact: true,
-  //   visibleUserOnly: true,
-  // },
-  // {
-  //   title: "Compare current",
-  //   path: "/:location/compare/:a/to/:b/at/current",
-  //   render: () => <CurrentComparison/>,
-  //   exact: true,
-  //   visibleUserOnly: true,
-  // },
-  // {
-  //   title: "Settings",
-  //   path: "/:location/settings",
-  //   render: () => <Settings/>,
-  //   exact: true,
-  //   admin: true,
-  // }
 ];

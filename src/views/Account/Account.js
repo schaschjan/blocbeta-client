@@ -1,5 +1,4 @@
 import React, {Fragment, useContext} from "react";
-import {Loader} from "../../components/Loader/Loader";
 import {useHistory} from "react-router-dom";
 import Label from "../../components/Label/Label";
 import Input from "../../components/Input/Input";
@@ -8,7 +7,8 @@ import {handleErrors, useApiV2} from "../../hooks/useApi";
 import {useMutation, useQuery} from "react-query";
 import Switch from "../../components/Switch/Switch";
 import {Meta} from "../../App";
-import {BlocBetaUIContext, composeFormElement, FormRow, useForm} from "@blocbeta/ui-core";
+import {composeFormElement, Loader, useForm, FormRow} from "../../index";
+import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 
 const Form = ({defaults, onSubmit}) => {
   const {handleSubmit, submitting, formData, observeField} = useForm(defaults);
@@ -144,6 +144,10 @@ const Account = () => {
   return (
     <Fragment>
       <Meta title="Account"/>
+
+      <h1 className="t--alpha page-title">
+        Account
+      </h1>
 
       <div className="account-layout content-offset">
         <Form defaults={data} onSubmit={onSubmit}/>

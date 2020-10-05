@@ -1,12 +1,11 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import classNames from "classnames";
-import {Loader} from "../Loader/Loader";
+import {buildClassNames, Loader} from "../../index";
 import "./Button.css";
 
-const Button = ({variant = "primary", disabled = false, asLink = false, loading = false, loader = false, children, ...rest}) => {
+export default ({variant = "primary", disabled = false, asLink = false, loading = false, loader = false, children, ...rest}) => {
 
-  const classes = classNames("button", `button--${variant}`, disabled === true ? "button--disabled" : null);
+  const classes = buildClassNames("button", `button--${variant}`, disabled === true ? "button--disabled" : null);
 
   if (asLink) {
     return <Link {...rest} className={classes}>
@@ -22,5 +21,3 @@ const Button = ({variant = "primary", disabled = false, asLink = false, loading 
     {loader && loading && <Loader/>}
   </button>
 };
-
-export default Button;

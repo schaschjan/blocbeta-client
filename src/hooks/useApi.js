@@ -1,7 +1,7 @@
 import {useContext} from "react";
 import {AppContext} from "../App";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 
 export const handleErrors = (error) => {
 
@@ -195,7 +195,7 @@ export default function useApi(method, path, contextualize = true, ...rest) {
   const {currentLocation} = useContext(AppContext);
 
   if (!contextualize) {
-    return `${process.env.REACT_APP_BLOCBETA_HOST}/api${path}`;
+    return `/api${path}`;
   }
 
   if (!currentLocation) {
@@ -245,6 +245,36 @@ export const resources = {
   },
   locations: async () => {
     const {data} = await axios.get(`/api/location`);
+
+    return data;
+  },
+  schedule: async ({location, roomId, ymdDate}) => {
+    const {data} = await axios.get(`/api/${location}/schedule/${roomId}/${ymdDate}`);
+
+    return data;
+  },
+  rooms: async ({location}) => {
+    const {data} = await axios.get(`/api/${location}/room`);
+
+    return data;
+  },
+  blockTimeSlot: async ({location, payload}) => {
+    const {data} = await axios.post(`/api/${location}/reservation`, payload);
+
+    return data;
+  },
+  unBlockTimeSlot: async ({location, id}) => {
+    const {data} = await axios.delete(`/api/${location}/reservation/${id}`);
+
+    return data;
+  },
+  reservations: async ({location}) => {
+    const {data} = await axios.get(`/api/${location}/reservation/pending`);
+
+    return data;
+  },
+  countReservations: async ({location}) => {
+    const {data} = await axios.get(`/api/${location}/reservation/pending/count`);
 
     return data;
   }

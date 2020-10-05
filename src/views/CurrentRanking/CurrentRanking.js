@@ -1,22 +1,22 @@
 import React, {Fragment, useContext, useMemo} from "react";
-import {useApiV2} from "../../../hooks/useApi";
+import {useApiV2} from "../../hooks/useApi";
 import {useQuery} from "react-query";
-import {Loader} from "../../../components/Loader/Loader";
-import RankingTable from "../../../components/RankingTable/RankingTable";
-import EmptyState from "../../../components/EmptyState/EmptyState";
-import Emoji from "../../../components/Emoji/Emoji";
-import Progress from "../../../components/Progress/Progress";
-import {getPercentage} from "../../../helpers";
-import {Meta} from "../../../App";
-import Paragraph from "../../../components/Paragraph/Paragraph";
+import RankingTable from "../../components/RankingTable/RankingTable";
+import EmptyState from "../../components/EmptyState/EmptyState";
+import Emoji from "../../components/Emoji/Emoji";
+import Progress from "../../components/Progress/Progress";
+import {getPercentage} from "../../helpers";
+import {Meta} from "../../App";
+import Paragraph from "../../components/Paragraph/Paragraph";
 import moment from "moment";
-import Avatar from "../../../components/Avatar/Avatar";
-import "./Current.css";
-import Button from "../../../components/Button/Button";
-import {Female, Male} from "../../../components/Icon/Icons";
-import {BlocBetaUIContext} from "@blocbeta/ui-core";
+import Avatar from "../../components/Avatar/Avatar";
+import "./CurrentRanking.css";
+import Button from "../../components/Button/Button";
+import {Female, Male} from "../../components/Icon/Icons";
+import {Loader} from "../../index";
+import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 
-const Current = () => {
+export default () => {
   const {user, contextualizedPath} = useContext(BlocBetaUIContext);
 
   const {
@@ -135,6 +135,10 @@ const Current = () => {
     <Fragment>
       <Meta title="Current Ranking"/>
 
+      <h1 className="t--alpha page-title">
+        Current Ranking
+      </h1>
+
       {ranking.list.length > 0 ? (
         <RankingTable
           data={ranking.list}
@@ -151,5 +155,3 @@ const Current = () => {
     </Fragment>
   );
 };
-
-export default Current;

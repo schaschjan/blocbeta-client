@@ -1,0 +1,133 @@
+.DateInput {
+    width: 100%;
+    display: none;
+}
+
+.SingleDatePickerInput,
+.SingleDatePicker_picker,
+.DateInput,
+.CalendarMonth,
+.CalendarMonthGrid,
+.CalendarDay,
+.DayPicker {
+    background: transparent;
+}
+
+.CalendarDay,
+.CalendarDay:hover {
+    border: 1px double var(--color-black);
+}
+
+.CalendarDay__default {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-zeta);
+    line-height: var(--line-height-zeta);
+    font-weight: var(--font-weight-bold);
+}
+
+.CalendarDay__selected,
+.CalendarDay__selected:active,
+.CalendarDay__selected:hover {
+    background: var(--color-lila);
+    border: 1px double var(--color-black);
+    color: var(--color-white);
+}
+
+.CalendarDay:hover {
+    background: var(--color-lila);
+    color: var(--color-white);
+}
+
+.CalendarDay__blocked_out_of_range,
+.CalendarDay__blocked_out_of_range:active,
+.CalendarDay__blocked_out_of_range:hover {
+    color: var(--color-lightgrey);
+    background: transparent;
+}
+
+.CalendarMonth_caption {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-gamma);
+    line-height: var(--line-height-gamma);
+    color: var(--color-black);
+    font-weight: var(--font-weight-bold);
+}
+
+.DateInput_input__focused,
+.SingleDatePickerInput {
+    border: none;
+    box-shadow: none;
+}
+
+.DayPicker__withBorder {
+    box-shadow: none
+}
+
+.DayPickerNavigation_button__default {
+    border: 0;
+    background: transparent;
+    color: var(--color-black);
+}
+
+.DayPickerNavigation_button__default:hover {
+    border: none;
+    outline: none;
+}
+
+.DayPickerNavigation_button__default:active {
+    background: transparent;
+}
+
+.SingleDatePicker_picker {
+    top: 0 !important;
+    position: relative;
+}
+
+.DayPicker_weekHeader {
+    top: 75px !important;
+}
+
+.DayPicker_weekHeader_li > * {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-zeta);
+    line-height: var(--line-height-zeta);
+    color: var(--color-black);
+}
+
+.DayPicker_weekHeader_ul {
+    margin-bottom: calc(2 * var(--spacing-unit));
+}
+
+.DayPickerNavigation_button__horizontalDefault {
+    top: 0;
+}
+
+.DayPickerNavigation_leftButton__horizontalDefault {
+    left: 0;
+}
+
+.DayPicker_transitionContainer {
+    padding-bottom: 85px;
+    box-sizing: content-box;
+}
+
+.CalendarMonthGrid {
+    left: 0;
+}
+
+.DayPicker_weekHeaders__horizontal,
+.DayPicker_weekHeader,
+.CalendarMonth {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.CalendarMonth_table {
+    margin-top: 85px;
+}
+
+.DayPicker_weekHeader {
+    top: 0;
+}

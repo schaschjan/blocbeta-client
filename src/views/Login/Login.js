@@ -1,12 +1,12 @@
 import React, {useContext, useEffect, Fragment} from "react";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
-import useForm, {composeFormElement} from "../../hooks/useForm";
 import {Meta} from "../../App";
 import axios from "axios";
 import {FormRow} from "../../components/Form/Form";
 import {handleErrors} from "../../hooks/useApi";
-import {BlocBetaUIContext} from "@blocbeta/ui-core";
+import {BlocBetaUIContext} from "../../components/BlocBetaUI";
+import {useForm, composeFormElement} from "../../index";
 import {useHistory} from "react-router-dom";
 import "./Login.css";
 

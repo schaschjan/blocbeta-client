@@ -1,7 +1,7 @@
 import React from "react";
 import "./Loader.css";
 
-export const Loader = () => {
+export default () => {
   return (
     <div className="loader">
       <svg

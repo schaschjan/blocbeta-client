@@ -1,3 +1,15 @@
-.content-offset {
-    margin-top: calc(12 * var(--spacing-unit));
+.page-title {
+    margin-bottom: calc(2 * var(--spacing-unit));
+}
+
+@media (min-width: 768px) {
+    .page-title {
+        margin-bottom: calc(4 * var(--spacing-unit));
+    }
+}
+
+@media (min-width: 1024px) {
+    .page-title {
+        margin-bottom: calc(8 * var(--spacing-unit));
+    }
 }

@@ -1,9 +1,15 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 
-const usePersistentState = (key, defaultValue) => {
-  const [state, setState] = useState(
-    JSON.parse(localStorage.getItem(key)) || defaultValue
-  );
+export default (key, defaultValue) => {
+
+  const storageValue = localStorage.getItem(key);
+  let current = null;
+
+  if (storageValue && storageValue !== "null" && storageValue !== "undefined") {
+    current = JSON.parse(localStorage.getItem(key));
+  }
+
+  const [state, setState] = useState(current || defaultValue);
 
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(state));
@@ -11,5 +17,3 @@ const usePersistentState = (key, defaultValue) => {
 
   return [state, setState];
 };
-
-export default usePersistentState;

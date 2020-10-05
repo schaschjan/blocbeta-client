@@ -25,8 +25,8 @@
 .button--primary {
     font-size: 1em;
     letter-spacing: 0.1em;
-    background: var(--color-dark);
-    color: var(--color-light);
+    background: var(--color-black);
+    color: var(--color-white);
     text-transform: uppercase;
     font-weight: bold;
     width: 100%;
@@ -37,8 +37,8 @@
 .button--danger {
     font-size: 1em;
     letter-spacing: 0.1em;
-    background: var(--color-error);
-    color: var(--color-light);
+    background: var(--color-red);
+    color: var(--color-white);
     text-transform: uppercase;
     font-weight: bold;
     padding: 16px 128px;
@@ -51,25 +51,26 @@
 
 .button--disabled {
     pointer-events: none;
-    background: var(--color-lightgrey);
+    background: var(--color-grey);
     color: var(--color-grey);
 }
 
 .button--text {
     font-size: 0.875em;
     display: inline-flex;
-    color: var(--color-blue);
+    color: var(--color-lila);
     padding: 7px 16px;
     border-radius: 8px;
     font-weight: bold
 }
 
 .button--text:hover {
-    background: var(--color-lightblue);
+    background: var(--color-lila);
+    color: var(--color-white);
 }
 
 .button--secondary {
-    color: var(--color-light);
+    color: var(--color-white);
     font-size: 1em;
     letter-spacing: 0.1em;
     background: var(--color-grey);

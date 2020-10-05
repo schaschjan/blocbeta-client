@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "react";
-import {set} from "lodash";
-import {FormElement} from "../components/Form/Form";
+import React, { useState } from 'react'
+import { set } from 'lodash'
+import { FormElement } from './../index'
 
 export const composeFormElement = (
   name,
@@ -13,20 +13,20 @@ export const composeFormElement = (
   const inputProps = {
     name: name,
     id: name,
-    value: value ? value : "",
+    value: value ? value : '',
     onChange: observe,
 
-    ...additionalInputProps,
+    ...additionalInputProps
   };
 
   return (
     <FormElement name={name} label={label}>
       {React.createElement(Component, inputProps, additionalInputProps.children)}
     </FormElement>
-  );
+  )
 };
 
-const useForm = (defaults) => {
+export const useForm = (defaults) => {
   const [formData, setFormData] = useState(defaults);
   const [submitting, setSubmitting] = useState(false);
 
@@ -36,18 +36,16 @@ const useForm = (defaults) => {
     event.preventDefault();
     await callback(formData);
 
-    setSubmitting(false);
+    setSubmitting(false)
   };
 
   const observeField = (event) => {
-    const {name, value} = event.target;
-    const current = {...formData};
+    const { name, value } = event.target;
+    const current = { ...formData };
 
     set(current, name, value);
-    setFormData({...current});
+    setFormData({ ...current })
   };
 
-  return {formData, setFormData, handleSubmit, submitting, setSubmitting, observeField};
+  return { formData, setFormData, handleSubmit, submitting, setSubmitting, observeField }
 };
-
-export default useForm;

@@ -1,13 +1,12 @@
 import React, {Fragment, useContext} from "react";
-import Container from "../../components/Container/Container";
 import {AppContext, Meta} from "../../App";
 import {PageHeader} from "../../components/PageHeader/PageHeader";
 import Wrapper from "../../components/Wrapper/Wrapper";
-import {Loader} from "../../components/Loader/Loader";
 import {alphaSort} from "../../helpers";
 import {useHistory} from "react-router-dom";
 import {useQuery} from "react-query";
 import axios from "axios";
+import {Loader} from "../../index";
 
 const Setup = () => {
   let history = useHistory();

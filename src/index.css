@@ -4,7 +4,6 @@
 @import "./css/typography.css";
 @import "./css/utils.css";
 @import "./css/layouts.css";
-
 @import url("https://fonts.googleapis.com/css?family=Karla&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap");
@@ -44,6 +43,9 @@ body {
 
     --font-family-default: "IBM Plex Sans", sans-serif;
     --font-family-tech: "IBM Plex Mono", monospace;
+
+    --header-height: 40px;
+    --footer-height: 40px;
 }
 
 @keyframes rainbow {
@@ -60,7 +62,8 @@ body {
 
 .app {
     min-height: 100vh;
-    padding: calc(3 * var(--spacing-unit));
+    padding: calc(1 * var(--spacing-unit));
+    padding-bottom: 0;
     background: linear-gradient(49.93deg, rgba(255, 230, 0, 0.39) 18.88%, rgba(255, 230, 0, 0) 66.41%),
     linear-gradient(30deg, rgba(216, 210, 254, 0), transparent 80%),
     radial-gradient(28.63% 28.63% at 45.43% 50%, rgba(251, 87, 87, 0.6) 0%, rgba(216, 210, 254, 0) 100%),
@@ -68,5 +71,33 @@ body {
     background-size: 200% 200%;
     animation: rainbow 20s linear infinite;
     display: grid;
-    grid-template-rows: 60px auto 60px;
+    grid-template-rows: var(--header-height) 1 var(--footer-height);
+}
+
+.content {
+    margin-top: calc(var(--header-height) + (4 * var(--spacing-unit)));
+}
+
+@media (min-width: 768px) {
+    .app {
+        padding: calc(2 * var(--spacing-unit));
+        padding-bottom: 0;
+    }
+
+    :root {
+        --header-height: 60px;
+        --footer-height: 60px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .app {
+        padding: calc(3 * var(--spacing-unit));
+        padding-bottom: 0;
+    }
+
+    :root {
+        --header-height: 80px;
+        --footer-height: 80px;
+    }
 }
