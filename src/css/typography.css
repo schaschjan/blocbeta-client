@@ -98,7 +98,13 @@ mark {
     color: var(--color-white);
 }
 
-span svg {
+a svg,
+p svg,
+span svg,
+h1,
+h2,
+h3,
+h4 {
     display: inline-flex;
 }
 

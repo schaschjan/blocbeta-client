@@ -23,13 +23,22 @@ const Dashboard = () => {
         Hello {user.username}!
       </h1>
 
-      {isAdmin && (
-        <Link to={contextualizedPath("/schedule-overview")} className="t--beta">
-          <span>
-            Schedule Admin <Forward/>
-          </span>
-        </Link>
-      )}
+      <ul className="dashboard-links">
+        <li className="dashboard-links__item">
+          <Link to={contextualizedPath("/schedule")} className="t--beta">
+            Book a timeslot <Forward/>
+          </Link>
+        </li>
+
+        {isAdmin && (
+          <li className="dashboard-links__item">
+            <Link to={contextualizedPath("/schedule-overview")} className="t--beta">
+              Schedule Admin <Forward/>
+            </Link>
+          </li>
+        )}
+      </ul>
+
 
     </Fragment>
   );

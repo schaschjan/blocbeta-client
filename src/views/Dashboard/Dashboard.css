@@ -1,4 +1,7 @@
-.tiles {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.dashboard-links {
+    list-style: none;
+}
+
+.dashboard-links__item {
+    margin-bottom: calc(4 * var(--spacing-unit));
 }
