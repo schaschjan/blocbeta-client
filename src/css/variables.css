@@ -7,6 +7,7 @@
     --color-red: rgba(255, 0, 79, 0.98);
     --color-grey: rgba(51, 51, 51, 0.5);
     --color-lightgrey: rgba(51, 51, 51, 0.25);
+    --color-ice: #CFFFF6;
 
     /* Typography */
     --font-family-sans: Karla, Helvetica, sans-serif;

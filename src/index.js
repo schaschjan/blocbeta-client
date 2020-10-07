@@ -39,6 +39,7 @@ export {default as FormRow} from "./components/FormRow/FormRow"
 export {default as ContextBuilder} from "./components/ContextBuilder/ContextBuilder"
 export {default as DatePicker} from "./components/DatePicker/DatePicker"
 export {Accordion, AccordionItem} from "./components/Accordion/Accordion"
+export {default as RoomSelect} from "./components/RoomSelect/RoomSelect";
 
 // icons
 export {default as Burger} from "./components/Icon/Burger"

@@ -3,15 +3,6 @@
     grid-template-columns: repeat(12, 1fr);
 }
 
-.room-select {
-    margin-bottom: calc(4 * var(--spacing-unit));
-    display: flex;
-}
-
-.room-select__label {
-    margin-right: calc(2 * var(--spacing-unit));
-}
-
 .schedule__datepicker {
     display: grid;
     grid-column: 1 / span 5;

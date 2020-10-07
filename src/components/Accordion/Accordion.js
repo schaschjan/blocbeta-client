@@ -10,6 +10,7 @@ export const AccordionItem = ({
                                 content,
                                 itemId,
                                 defaultRevealed = false,
+                                disabled = false
                               }) => {
   const {revealedItem, setRevealedItem} = useContext(AccordionContext);
   const isRevealed = revealedItem === itemId;
@@ -40,11 +41,13 @@ export const AccordionItem = ({
   };
 
   return (
-    <div className={buildClassNames("accordion__item accordion-item", isRevealed ? "accordion__item--revealed" : null)}
-         onClick={() => toggle()}>
-      <div className="accordion-item__header accordion-item-header">
+    <div className={buildClassNames("accordion__item accordion-item", isRevealed ? "accordion__item--revealed" : null, disabled ? "accordion__item--disabled" : null)}>
+
+      <div
+        onClick={() => !disabled ? toggle() : null}
+        className={buildClassNames("accordion-item__header accordion-item-header", disabled ? "accordion-item__header--disabled" : null)}>
         <span className="accordion-item-header__content">{header}</span>
-        <ToggleButton/>
+        {!disabled && <ToggleButton/>}
       </div>
 
       <div

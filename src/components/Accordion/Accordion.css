@@ -1,9 +1,10 @@
 .accordion__item {
-      border-bottom: none;
+    border-bottom: none;
 }
 
-.accordion__item:last-child {
-    border-bottom: 1px solid var(--color-black);
+.accordion-item__header--disabled > * {
+    opacity: .25;
+    cursor: not-allowed;
 }
 
 .accordion-item-header {
@@ -12,6 +13,12 @@
     grid-template-columns: auto 24px;
     padding: calc(2.5 * var(--spacing-unit));
     border: 1px solid var(--color-black);
+    border-bottom: none;
+    cursor: pointer;
+}
+
+.accordion__item:last-child .accordion-item-header {
+    border-bottom: 1px solid var(--color-black);
 }
 
 .accordion-item-header__content {

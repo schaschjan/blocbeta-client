@@ -1,0 +1,8 @@
+.room-select {
+  margin-bottom: calc(4 * var(--spacing-unit));
+  display: flex;
+}
+
+.room-select__label {
+  margin-right: calc(2 * var(--spacing-unit));
+}
