@@ -13,7 +13,7 @@ export default () => {
   const currentDate = moment();
 
   const {status, data, isFetching} = useQuery("reservation-rooms", async () => {
-    const {data} = await axios.get(`/api/${location}/reservation/rooms`);
+    const {data} = await axios.get(`/api/${location}/reservation/overview`);
 
     return data;
   }, {

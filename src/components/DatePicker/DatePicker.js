@@ -4,13 +4,13 @@ import 'react-dates/lib/css/_datepicker.css';
 import "./DatePicker.css"
 import {useMediaQuery} from "react-responsive/src";
 
-export default ({focused = false, onChange, ...rest}) => {
+export default ({onChange, ...rest}) => {
 
   const isSmall = useMediaQuery({
     query: '(max-width: 1280px)'
   });
 
-  const [selectFocused, setSelectFocused] = useState(focused);
+  const [selectFocused, setSelectFocused] = useState(false);
 
   return (
     <SingleDatePicker

@@ -3,9 +3,27 @@ import {Link} from "react-router-dom";
 import {buildClassNames, Loader} from "../../index";
 import "./Button.css";
 
-export default ({variant = "primary", disabled = false, asLink = false, loading = false, loader = false, children, ...rest}) => {
+export default ({
+                  variant = "primary",
+                  size = "default",
+                  modifier = null,
+                  disabled = false,
+                  asLink = false,
+                  loading = false,
+                  loader = false,
+                  children,
+                  ...rest
+                }) => {
 
-  const classes = buildClassNames("button", `button--${variant}`, disabled === true ? "button--disabled" : null);
+  let loaderVariant = "default";
+
+  const classes = buildClassNames(
+    "button",
+    `button--${variant}`,
+    `button--${size}`,
+    modifier ? `button--${modifier}` : null,
+    disabled === true ? "button--disabled" : null
+  );
 
   if (asLink) {
     return <Link {...rest} className={classes}>
@@ -18,6 +36,6 @@ export default ({variant = "primary", disabled = false, asLink = false, loading 
   return <button className={classes} {...rest}>
     {children}
 
-    {loader && loading && <Loader/>}
+    {loader && loading && <Loader variant={loaderVariant}/>}
   </button>
 };

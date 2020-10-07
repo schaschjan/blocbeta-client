@@ -20,6 +20,7 @@ export default () => {
     onSuccess: () => {
       queryCache.invalidateQueries("schedule");
       queryCache.invalidateQueries("reservations");
+      queryCache.invalidateQueries("reservations-count");
     },
   });
 
@@ -50,7 +51,7 @@ export default () => {
                   <AddToCalendar event={event} buttonLabel="Add to Calendar"/>
                 </div>
 
-                <Button variant="text" onClick={async () => {
+                <Button variant="danger" size="small" onClick={async () => {
                   await mutateDeletion({id: pending.id});
                 }}>Cancel</Button>
               </li>

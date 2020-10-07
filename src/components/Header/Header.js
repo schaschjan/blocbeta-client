@@ -6,7 +6,7 @@ import {BlocBetaUIContext} from "../BlocBetaUI";
 import {buildClassNames, Burger, Close} from "../../index";
 import {useLocation} from "react-router-dom";
 
-export default ({children, locationSwitchTargetPath, locations, logoLink}) => {
+export default ({children, locations, logoLink}) => {
   const {reset, setCurrentLocation, currentLocation} = useContext(BlocBetaUIContext);
 
   const [mobileNavOpen, setMobileNavOpen] = useState(false);

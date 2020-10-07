@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom
 import {router} from "./router";
 import {Footer} from "./components/Footer/Footer";
 import {Helmet} from "react-helmet";
-import {NavItem, ContextBuilder, Header} from "./index"
+import {NavItem, Header} from "./index"
 import axios from "axios";
 import {useQuery} from "react-query";
 import {BlocBetaUI, BlocBetaUIContext} from "./components/BlocBetaUI";
@@ -22,7 +22,6 @@ export const AppContext = createContext({});
 
 const Routing = () => {
   const {isAuthenticated} = useContext(BlocBetaUIContext);
-
 
   const PrivateRoute = ({children, ...rest}) => {
 

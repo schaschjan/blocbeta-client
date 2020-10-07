@@ -9,6 +9,7 @@ import Switch from "../../components/Switch/Switch";
 import {Meta} from "../../App";
 import {composeFormElement, Loader, useForm, FormRow} from "../../index";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
+import "./Account.css";
 
 const Form = ({defaults, onSubmit}) => {
   const {handleSubmit, submitting, formData, observeField} = useForm(defaults);
@@ -71,32 +72,6 @@ const Form = ({defaults, onSubmit}) => {
       )}
     </FormRow>
 
-    <FormRow>
-      {composeFormElement(
-        "armSpan",
-        "Arm span",
-        formData.armSpan,
-        Input,
-        observeField,
-        {
-          type: "text"
-        }
-      )}
-    </FormRow>
-
-    <FormRow>
-      {composeFormElement(
-        "height",
-        "Height",
-        formData.height,
-        Input,
-        observeField,
-        {
-          type: "number"
-        }
-      )}
-    </FormRow>
-
     <Button
       type="submit"
       variant="primary"
@@ -152,7 +127,7 @@ const Account = () => {
       <div className="account-layout content-offset">
         <Form defaults={data} onSubmit={onSubmit}/>
 
-        <div>
+        <div className="account-layout__actions">
           <Button variant="danger" onClick={() => scheduleAccountDeletion()}>
             Delete Account
           </Button>
