@@ -1,13 +1,14 @@
 .button {
     cursor: pointer;
     outline: none;
-    display: flex;
+    display: inline-flex;
     position: relative;
+    text-decoration: none;
 }
 
 .button .loader {
     position: absolute;
-    right: calc(var(--spacing-unit) * 1.25);
+    right: calc(var(--spacing-unit) * 1.5);
 }
 
 /* default */
@@ -33,7 +34,8 @@
 .button--small {
     font-size: var(--font-size-eta);
     font-weight: var(--font-weight-bold);
-    padding: calc(var(--spacing-unit) / 2) calc(var(--spacing-unit));
+    padding: calc(var(--spacing-unit) / 2) calc(var(--spacing-unit) * 2);
+    border-radius: calc(var(--spacing-unit));
 }
 
 /* danger */

@@ -92,11 +92,11 @@ const Login = () => {
           </form>
 
           <div className="login-extra">
-            <Button variant="text" asLink={true} to="/register">
+            <Button variant="primary" size="small" asLink={true} to="/register">
               Create Account
             </Button>
 
-            <Button variant="text" asLink={true} to="/password-reset/request">
+            <Button variant="primary" size="small" asLink={true} to="/password-reset/request">
               Forgot Password
             </Button>
           </div>

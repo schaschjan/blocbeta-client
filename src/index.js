@@ -27,7 +27,7 @@ serviceWorker.unregister();
 
 // components
 export {default as Label} from "./components/Label/Label"
-export {default as Loader} from "./components/Loader/Loader"
+export {default as Loader, LoadedContent} from "./components/Loader/Loader"
 export {default as Header} from "./components/Header/Header"
 export {default as NavItem} from "./components/NavItem/NavItem"
 export {default as FormElement} from "./components/FormElement/FormElement"

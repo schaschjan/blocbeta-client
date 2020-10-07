@@ -1,5 +1,5 @@
 .login-extra {
-    margin-top: calc(4 * var(--spacing-unit));
+    margin-top: calc(12 * var(--spacing-unit));
 }
 
 .login-extra .button:first-child {

@@ -12,6 +12,7 @@ import Schedule from "./views/Schedule/Schedule";
 import ScheduleOverview from "./views/ScheduleOverview/ScheduleOverview";
 import Reservations from "./views/Reservations/Reservations";
 import CurrentRanking from "./views/CurrentRanking/CurrentRanking";
+import CancelReservation from "./views/CancelReservation/CancelReservation";
 
 export const router = [
   {
@@ -87,6 +88,13 @@ export const router = [
     path: "/:location/reservations",
     exact: true,
     main: () => <Reservations/>,
+  },
+  {
+    title: "Cancel reservation",
+    id: "cancelReservation",
+    path: "/cancel-reservation/:hash",
+    public: true,
+    main: () => <CancelReservation/>,
   },
   {
     title: "Access Denied",

@@ -1,6 +1,6 @@
 import React from "react";
 import "./Loader.css";
-import {buildClassNames} from "../../index";
+import {buildClassNames, Loader} from "../../index";
 
 export default ({variant = "primary"}) => {
   return (
@@ -13,4 +13,8 @@ export default ({variant = "primary"}) => {
         </div>
       </span>
   );
+};
+
+export const LoadedContent = ({loading, children}) => {
+  return loading ? <Loader/> : children;
 };

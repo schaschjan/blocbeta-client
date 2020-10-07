@@ -1,4 +1,4 @@
-export default (error) => {
+export default (error, logOnly = false) => {
 
   if (!error.response) {
     console.error(error);
