@@ -102,7 +102,7 @@ const TimeSlotList = ({date, roomId}) => {
                     </Fragment>
 
                   ) : (
-                    <Button variant="primary" size="small" modifier="inverted" onClick={() => unblockTimeSlot(<timeSlot className="reservation"></timeSlot>)}>
+                    <Button variant="primary" size="small" modifier="inverted" onClick={() => unblockTimeSlot(timeSlot.reservation)}>
                       Cancel!
                     </Button>
                   )}
