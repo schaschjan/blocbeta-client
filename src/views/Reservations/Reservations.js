@@ -6,6 +6,7 @@ import "./Reservations.css";
 import {useApiV2} from "../../hooks/useApi";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import Emoji from "../../components/Emoji/Emoji";
+import {LoadedContent} from "../../components/Loader/Loader";
 
 export default () => {
   const {status, data} = useQuery("reservations", useApiV2("reservations"));
@@ -30,11 +31,9 @@ export default () => {
         Reservations
       </h1>
 
-      {status === "loading" ? (
-        <Loader/>
-      ) : (
+      <LoadedContent loading={status === "loading"}>
         <ul className="blocked-time-slots">
-          {data.length ? data.map(pending => {
+          {data && data.length ? data.map(pending => {
             const event = {
               title: "Bouldern",
               description: "",
@@ -62,7 +61,8 @@ export default () => {
             </h2>
           )}
         </ul>
-      )}
+      </LoadedContent>
+
     </Fragment>
   )
 }

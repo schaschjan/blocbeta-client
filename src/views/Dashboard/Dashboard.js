@@ -4,7 +4,6 @@ import {useApiV2} from "../../hooks/useApi";
 import "./Dashboard.css";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import {Link} from "react-router-dom";
-import {Forward} from "../../index";
 
 const Dashboard = () => {
   const {user, isAdmin, contextualizedPath} = useContext(BlocBetaUIContext);
@@ -19,25 +18,45 @@ const Dashboard = () => {
     <Fragment>
       <Meta title="Dashboard"/>
 
-      <h1 className="t--alpha page-title">
-        Hello {user.username}!
-      </h1>
+      <div className="dashboard-section">
+        <h2 className="t--beta dashboard-section__title">
+          Hello {user.username}!
+        </h2>
 
-      <ul className="dashboard-links">
-        <li className="dashboard-links__item">
-          <Link to={contextualizedPath("/schedule")} className="t--beta">
-            Book a timeslot <Forward/>
-          </Link>
-        </li>
-
-        {isAdmin && (
+        <ul className="dashboard-links">
           <li className="dashboard-links__item">
-            <Link to={contextualizedPath("/schedule-overview")} className="t--beta">
-              Schedule Admin <Forward/>
+            <Link to={contextualizedPath("/schedule")} className="t--gamma">
+              Book a timeslot
             </Link>
           </li>
-        )}
-      </ul>
+        </ul>
+      </div>
+
+      {isAdmin && (
+        <div className="dashboard-section">
+          <h2 className="t--beta dashboard-section__title">Admin</h2>
+
+          <ul className="dashboard-links dashboard-links--admin">
+            <li className="dashboard-links__item">
+              <Link to={contextualizedPath("/admin/schedule-ticker")} className="t--gamma">
+                Schedule Ticker
+              </Link>
+            </li>
+
+            <li className="dashboard-links__item">
+              <Link to={contextualizedPath("/admin/time-slot-blocker/add")} className="t--gamma">
+                Block a time slot
+              </Link>
+            </li>
+
+            <li className="dashboard-links__item">
+              <Link to={contextualizedPath("/admin/time-slot-blocker")} className="t--gamma">
+                List currently blocked time slots
+              </Link>
+            </li>
+          </ul>
+        </div>
+      )}
     </Fragment>
   );
 };

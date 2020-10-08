@@ -2,7 +2,8 @@ import React, {Fragment, useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {Meta} from "../../App";
 import axios from "axios";
-import {Button, Loader, LoadedContent} from "../../index";
+import {Button} from "../../index";
+import {LoadedContent} from "../../components/Loader/Loader";
 
 export default () => {
   const {hash} = useParams();

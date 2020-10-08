@@ -13,8 +13,8 @@ import Avatar from "../../components/Avatar/Avatar";
 import "./CurrentRanking.css";
 import Button from "../../components/Button/Button";
 import {Female, Male} from "../../components/Icon/Icons";
-import {Loader} from "../../index";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
+import {LoadedContent} from "../../components/Loader/Loader";
 
 export default () => {
   const {user, contextualizedPath} = useContext(BlocBetaUIContext);
@@ -128,9 +128,6 @@ export default () => {
     ];
   }, [user.id, boulderCount]);
 
-  if ([rankingStatus, boulderCountStatus].includes("loading")) return <Loader/>;
-
-
   return (
     <Fragment>
       <Meta title="Current Ranking"/>
@@ -139,19 +136,23 @@ export default () => {
         Current Ranking
       </h1>
 
-      {ranking.list.length > 0 ? (
-        <RankingTable
-          data={ranking.list}
-          columns={columns}
-          className={"current"}
-        />
-      ) : (
-        <EmptyState>
-          <h2 className="t--gamma">
-            <Emoji>🤷</Emoji>
-          </h2>
-        </EmptyState>
-      )}
+      <LoadedContent loading={[rankingStatus, boulderCountStatus].includes("loading")}>
+
+        {ranking.list.length > 0 ? (
+          <RankingTable
+            data={ranking.list}
+            columns={columns}
+            className={"current"}
+          />
+        ) : (
+          <EmptyState>
+            <h2 className="t--gamma">
+              <Emoji>🤷</Emoji>
+            </h2>
+          </EmptyState>
+        )}
+
+      </LoadedContent>
     </Fragment>
   );
 };

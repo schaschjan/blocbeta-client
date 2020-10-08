@@ -1,8 +1,8 @@
 import React from "react";
 import "./Loader.css";
-import {buildClassNames, Loader} from "../../index";
+import {buildClassNames} from "../../index";
 
-export default ({variant = "primary"}) => {
+export const Loader = ({variant = "primary"}) => {
   return (
     <span className={buildClassNames("loader", `loader--${variant}`)}>
         <div className="sk-folding-cube">

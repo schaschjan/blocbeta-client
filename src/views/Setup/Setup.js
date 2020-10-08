@@ -7,6 +7,7 @@ import {useHistory} from "react-router-dom";
 import {useQuery} from "react-query";
 import axios from "axios";
 import {Loader} from "../../index";
+import {LoadedContent} from "../../components/Loader/Loader";
 
 const Setup = () => {
   let history = useHistory();
@@ -24,27 +25,34 @@ const Setup = () => {
     history.push(`${location.url}/dashboard`);
   };
 
-  if (status === "loading") return <Loader/>;
-
   return (
     <Fragment>
       <Meta title="Setup your account"/>
       <PageHeader title="Setup your account"/>
 
-      <Wrapper>
-        Choose your gym:
-        <ul>
-          {alphaSort(locations, "name").map((location) => {
-            return (
-              <li onClick={() => switchLocation(location)}>
-                {location.name}
-              </li>
-            );
-          })}
-        </ul>
+      <div className="side-title-layout">
+        <h1 className="t--alpha side-title-layout__title">
+          Please provide some information for your account.
+        </h1>
 
-        Want to track your progress in privacy? You can edit your visibility settings in the account page.
-      </Wrapper>
+        <div className="side-title-layout__content">
+
+          <LoadedContent loading={status === "loading"}>
+            Choose your gym:
+            <ul>
+              {alphaSort(locations, "name").map((location) => {
+                return (
+                  <li onClick={() => switchLocation(location)}>
+                    {location.name}
+                  </li>
+                );
+              })}
+            </ul>
+
+            Want to track your progress in privacy? You can edit your visibility settings in the account page.
+          </LoadedContent>
+        </div>
+      </div>
     </Fragment>
   );
 };

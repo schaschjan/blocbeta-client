@@ -5,3 +5,11 @@
 .dashboard-links__item {
     margin-bottom: calc(4 * var(--spacing-unit));
 }
+
+.dashboard-section {
+    margin-bottom: calc(12 * var(--spacing-unit));
+}
+
+.dashboard-section__title {
+    margin-bottom: calc(2 * var(--spacing-unit));
+}

@@ -13,8 +13,35 @@ import ScheduleOverview from "./views/ScheduleOverview/ScheduleOverview";
 import Reservations from "./views/Reservations/Reservations";
 import CurrentRanking from "./views/CurrentRanking/CurrentRanking";
 import CancelReservation from "./views/CancelReservation/CancelReservation";
+import AddTimeSlotBlocker from "./views/TimeSlotBlocker/Add";
+import IndexTimeSlotBlocker from "./views/TimeSlotBlocker/Index";
+
+const adminRoutes = [
+  {
+    title: "Schedule overview",
+    path: "/:location/admin/schedule-ticker",
+    exact: true,
+    admin: true,
+    main: () => <ScheduleOverview/>,
+  },
+  {
+    title: "Time slot blockers",
+    path: "/:location/admin/time-slot-blocker",
+    exact: true,
+    admin: true,
+    main: () => <IndexTimeSlotBlocker/>,
+  },
+  {
+    title: "Add time slot blocker",
+    path: "/:location/admin/time-slot-blocker/add",
+    exact: true,
+    admin: true,
+    main: () => <AddTimeSlotBlocker/>,
+  },
+];
 
 export const router = [
+  ...adminRoutes,
   {
     title: "Login",
     path: "/login",
@@ -73,14 +100,6 @@ export const router = [
     path: "/:location/schedule",
     exact: true,
     main: () => <Schedule/>,
-  },
-  {
-    title: "Schedule overview",
-    id: "scheduleOverview",
-    path: "/:location/schedule-overview",
-    exact: true,
-    admin: true,
-    main: () => <ScheduleOverview/>,
   },
   {
     title: "Reservations",

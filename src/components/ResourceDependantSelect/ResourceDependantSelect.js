@@ -1,22 +1,17 @@
 import React, {Fragment} from "react";
 import {useQuery} from "react-query";
 import Select from "../Select/Select";
-import axios from "axios";
 
-const ResourceDependantSelect = ({
-                                   cacheKey,
-                                   apiResource,
-                                   labelProperty,
-                                   valueProperty = "id",
-                                   ...rest
-                                 }) => {
-  const {status, data} = useQuery(cacheKey, () => axios.get(apiResource));
+const ResourceDependantSelect = ({cacheKey, api, labelProperty, valueProperty = "id", ...rest}) => {
+  const {status, data} = useQuery(cacheKey, api);
 
   if (status === "loading") {
     return (
-      <Select selected="">
-        <option value="">Loading options…</option>
-      </Select>
+      <Fragment>
+        <Select selected="loading">
+          <option value="loading">Fetching options…</option>
+        </Select>
+      </Fragment>
     );
   }
 

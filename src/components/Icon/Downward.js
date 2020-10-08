@@ -1,6 +1,6 @@
 import * as React from "react"
 
-export default (props) => {
+const Downward = (props) => {
   return (
     <svg width={24} height={24} viewBox="0 0 24 24" fill="none" {...props}>
       <path fill="#fff" fillOpacity={0.01} d="M0 0h24v24H0z" />
@@ -12,6 +12,6 @@ export default (props) => {
       />
     </svg>
   )
-}
+};
 
-
+export default Downward;

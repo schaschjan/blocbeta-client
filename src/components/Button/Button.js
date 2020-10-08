@@ -1,7 +1,8 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {buildClassNames, Loader} from "../../index";
+import {buildClassNames} from "../../index";
 import "./Button.css";
+import {Loader} from "../Loader/Loader";
 
 export default ({
                   variant = "primary",

@@ -102,11 +102,11 @@ const AppHeader = () => {
       locationSwitchTargetPath={"/dashboard"}
       logoLink={contextualizedPath("/dashboard")}>
 
-      {user && user.visible && (
-        <NavItem to={contextualizedPath("/ranking/current")}>
-          Ranking
-        </NavItem>
-      )}
+      {/*{user && user.visible && (*/}
+      {/*  <NavItem to={contextualizedPath("/ranking/current")}>*/}
+      {/*    Ranking*/}
+      {/*  </NavItem>*/}
+      {/*)}*/}
 
       <NavItem to={contextualizedPath("/schedule")}>
         Schedule

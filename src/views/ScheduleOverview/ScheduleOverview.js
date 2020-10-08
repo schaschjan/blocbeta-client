@@ -1,152 +1,227 @@
-import React, {Fragment, useEffect, useState} from "react";
-import {queryCache, useMutation, useQuery} from "react-query";
-import {useParams} from "react-router-dom";
-import axios from "axios";
-import moment from "moment";
+import React, {Fragment, useCallback, useMemo} from "react";
+import {queryCache, useQuery, useMutation} from "react-query";
 import "./ScheduleOverview.css";
-import {Button, LoadedContent, AccordionItem, Accordion, buildClassNames, Select} from "./../../index";
-import {useApiV2} from "../../hooks/useApi";
+import {LoadedContent} from "../../components/Loader/Loader";
+import {api} from "../../helper/api";
+import {useTable, useExpanded, useGlobalFilter} from 'react-table'
+import Forward from "../../components/Icon/Forward";
+import Downward from "../../components/Icon/Downward";
+import {buildClassNames} from "../../index";
+import Input from "../../components/Input/Input";
 
-const ReservationsTicker = ({location, rooms, selectedRoom, handleRoomChange}) => {
-  const currentDate = moment();
-  const [updated, setUpdated] = useState(currentDate.format("LTS"));
-
-  const {status, data, isFetching} = useQuery(["schedule-admin", {selectedRoom}], async () => {
-    const {data} = await axios.get(`/api/${location}/schedule/${selectedRoom}?admin=true`);
-
-    return data;
-  }, {
-    refetchInterval: (1000 * 20) // 10 seconds
-  });
-
-  useEffect(() => {
-    setUpdated(moment().format("LTS"));
-  }, [isFetching]);
-
-  const [mutateAppearance, {status: mutateAppearanceStatus, error: mutateAppearanceError}] = useMutation(async ({id, appeared}) => {
-    await axios.put(`/api/${location}/reservation/${id}`, {appeared});
-  }, {
-    throwOnError: true,
-    onSuccess: () => {
-      queryCache.invalidateQueries(["schedule-admin", {selectedRoom}]);
+const Table = ({columns, data, renderRowSubComponent}) => {
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    setGlobalFilter
+  } = useTable(
+    {
+      columns,
+      data,
+      autoResetFilters: false,
+      autoResetSortBy: false,
+      autoResetPage: false,
     },
-  });
+    useGlobalFilter,
+    useExpanded
+  );
 
   return (
-    <Fragment>
-      <div className="overview-header">
+    <>
+      <Input
+        className="ticker-search"
+        placeholder="Search"
+        onClear={() => setGlobalFilter(null)}
+        clearable={true}
+        onChange={event => {
+          setGlobalFilter(event.target.value);
+        }}
+      />
 
-        <div className="overview-header__title">
-          <h1 className="t--alpha page-title">
-            Schedule for &nbsp;
-            <mark> {currentDate.format("ll")}</mark>
-          </h1>
+      <table {...getTableProps()} className="ticker-table">
+        <thead className="ticker-table__head ticker-table-head">
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()} className="ticker-table-head__row">
+            {headerGroup.headers.map(column => (
+              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+            ))}
+          </tr>
+        ))}
+        </thead>
 
-          <em>Updated: {updated}</em>
-        </div>
+        <tbody {...getTableBodyProps()} className="ticker-table__body ticker-table-body">
+        {rows.map((row) => {
+          prepareRow(row);
 
-        <div className="overview-header__room-select room-select">
-          <h2 className="t--gamma room-select__label">Room:</h2>
-          <Select
-            value={selectedRoom}
-            onChange={(event) => handleRoomChange(event.target.value)}>
-
-            <Fragment>
-              {rooms.map(room => <option value={room.id} key={room.id}>{room.name}</option>)}
-            </Fragment>
-          </Select>
-        </div>
-      </div>
-
-      <Accordion>
-        {data && data.map(timeSlot => {
           return (
-            <AccordionItem
-              itemId={timeSlot.hash}
-              header={
-                <div className="overview__time-slot">
-                  <div className="t--zeta">
-                    {timeSlot.start_time} - {timeSlot.end_time}
-                  </div>
+            <Fragment {...row.getRowProps()}>
+              <tr
+                className={buildClassNames("ticker-table-body__row", row.isExpanded ? "ticker-table-body__row--expanded" : null)}>
+                {row.cells.map(cell => {
+                  return (
+                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  )
+                })}
+              </tr>
 
-                  <div className="t--zeta">
-                    {timeSlot.available} / {timeSlot.capacity}
-                  </div>
-
-                </div>
-              }
-              content={
-                <table className="overview__reservations overview-reservations">
-                  {timeSlot.reservations.map(reservation => {
-
-                    return (
-                      <div
-                        className={buildClassNames("overview-reservations__item overview-reservations-item", reservation.appeared ? "overview-reservations-item--appeared" : null)}
-                        key={reservation.hash}>
-                        <p
-                          className="t--eta overview-reservations-item--detail overview-reservations-item--detail__name">
-                          {reservation.first_name} {reservation.last_name}
-                        </p>
-
-                        <p className="t--eta overview-reservations-item--detail">
-                          {reservation.username}
-                        </p>
-
-                        <p className="t--eta overview-reservations-item--detail">
-                          {reservation.email}
-                        </p>
-
-                        <div className="overview-reservations-item--actions">
-                          {!reservation.appeared ? (
-                            <Button variant="primary" size="small" onClick={() => mutateAppearance({
-                              id: reservation.id,
-                              appeared: true
-                            })}>
-                              Check-In
-                            </Button>
-                          ) : (
-                            <Button variant="primary" size="small" onClick={() => mutateAppearance({
-                              id: reservation.id,
-                              appeared: false
-                            })}>
-                              Cancel Check-In
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    )
-                  })}
-                </table>
-              }
-              disabled={timeSlot.reservations.length === 0}
-              defaultRevealed={false}
-            />
-          );
+              {row.isExpanded ? (
+                <tr>
+                  <td colSpan={4}>{renderRowSubComponent({row})}</td>
+                </tr>
+              ) : null}
+            </Fragment>
+          )
         })}
-      </Accordion>
-    </Fragment>
-  );
+        </tbody>
+      </table>
+    </>
+  )
 };
 
 export default () => {
-  const {location} = useParams();
-  const [selectedRoom, setSelectedRoom] = useState(null);
-  const {status, data: rooms} = useQuery("rooms", useApiV2("rooms"));
+  const {status, data} = useQuery(caches.schedule, async () => {
+    const {data: rooms} = await api.schedule.rooms();
 
-  useEffect(() => {
-    if (rooms) {
-      setSelectedRoom(rooms[0].id)
-    }
+    const data = [];
 
-  }, [status]);
+    rooms.forEach(room => {
+      room.schedule.forEach(timeSlot => {
+
+        data.push({
+          start_time: timeSlot.start_time,
+          end_time: timeSlot.end_time,
+          available: timeSlot.available,
+          capacity: timeSlot.capacity,
+          room: room,
+          hash: timeSlot.hash,
+          reservations: timeSlot.reservations
+        });
+      });
+    });
+
+    return data;
+  });
+
+  const [mutateAppearance, {status: mutateAppearanceStatus, error: mutateAppearanceError}] = useMutation(async ({id, appeared}) => {
+    await api.reservation.update(id, {appeared})
+  }, {
+    throwOnError: true,
+    onSuccess: () => {
+      queryCache.invalidateQueries(caches.schedule);
+    },
+  });
+
+  const columns = useMemo(() => [
+    {
+      Header: "Reservation",
+      accessor: (row) => {
+        return `${row.start_time} – ${row.end_time}`
+      },
+      Cell: ({cell}) => (
+        <strong>{cell.value}</strong>
+      ),
+    },
+    {
+      Header: 'Time',
+      accessor: (row) => {
+        return `${row.start_time} – ${row.end_time}`
+      },
+      Cell: ({cell}) => (
+        <strong>{cell.value}</strong>
+      ),
+    },
+    {
+      Header: 'Capacity',
+      accessor: (row) => {
+        return `${row.available} / ${row.capacity}`
+      },
+    },
+    {
+      Header: 'Room',
+      accessor: 'room.name',
+    },
+    {
+      Header: ({getToggleAllRowsExpandedProps, isAllRowsExpanded}) => (
+        <span {...getToggleAllRowsExpandedProps()} className="expander">
+            {isAllRowsExpanded ? <Downward/> : <Forward/>}
+          </span>
+      ),
+      id: 'expander',
+      Cell: ({row}) => {
+        return (
+          <span {...row.getToggleRowExpandedProps()} className="expander">
+            {row.isExpanded ? <Downward/> : <Forward/>}
+        </span>
+        )
+      }
+    },
+
+  ], []);
+
+  const renderRowSubComponent = useCallback(
+    ({row}) => {
+
+      return (
+        <table className="ticker-reservation-table">
+          <tbody className="ticker-reservation-table__body ticker-reservation-table-body">
+          {row.original.reservations.map(reservation => (
+              <tr className={
+                buildClassNames(
+                  "ticker-reservation-table-body__row",
+                  reservation.appeared ? "ticker-reservation-table-body__row--appeared" : null,
+                  "ticker-reservation-table-body-row"
+                )}>
+
+                <td
+                  className="ticker-reservation-table-body-row-item__detail ticker-reservation-table-body-row-item__detail--name">
+                  {reservation.first_name} {reservation.last_name} {reservation.quantity > 1 && (
+                  <>(+{reservation.quantity})</>
+                )}
+                </td>
+
+                <td className="ticker-reservation-table-body-row-item__detail">
+                  {reservation.username}
+                </td>
+
+                <td
+                  className="ticker-reservation-table-body-row-item__detail ticker-reservation-table-body-row-item__detail--action">
+                  {!reservation.appeared ? (
+                    <button onClick={() => mutateAppearance({
+                      id: reservation.id,
+                      appeared: true
+                    })}>
+                      Check-In
+                    </button>
+                  ) : (
+                    <button onClick={() => mutateAppearance({
+                      id: reservation.id,
+                      appeared: false
+                    })}>
+                      Cancel Check-In
+                    </button>
+                  )}
+                </td>
+              </tr>
+            )
+          )}
+          </tbody>
+        </table>
+      )
+    },
+    []
+  );
 
   return (
     <Fragment>
-      <LoadedContent loading={status !== "success" || !selectedRoom}>
-        <ReservationsTicker location={location}
-                            rooms={rooms}
-                            handleRoomChange={(roomId) => setSelectedRoom(roomId)}
-                            selectedRoom={selectedRoom}/>
+      <LoadedContent loading={status === "loading"}>
+        <Table
+          columns={columns}
+          data={data}
+          renderRowSubComponent={renderRowSubComponent}
+        />
       </LoadedContent>
     </Fragment>
   )

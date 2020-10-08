@@ -4,9 +4,10 @@ import DatePicker from "../../components/DatePicker/DatePicker";
 import moment from "moment";
 import {queryCache, useMutation, useQuery} from "react-query";
 import classNames from 'classnames';
-import {Button, Loader, Select, buildClassNames} from "./../../index";
+import {Button, Select, buildClassNames} from "./../../index";
 import "./Schedule.css";
 import {useApiV2} from "../../hooks/useApi";
+import {Loader} from "../../components/Loader/Loader";
 
 const TimeSlotList = ({date, roomId}) => {
 

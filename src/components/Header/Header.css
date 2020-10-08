@@ -40,6 +40,7 @@
     grid-column: 1 / span 2;
     display: none;
     background: var(--color-white);
+    padding: calc(1 * var(--spacing-unit));
 }
 
 .header-nav {

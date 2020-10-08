@@ -7,9 +7,10 @@ import {handleErrors, useApiV2} from "../../hooks/useApi";
 import {useMutation, useQuery} from "react-query";
 import Switch from "../../components/Switch/Switch";
 import {Meta} from "../../App";
-import {composeFormElement, Loader, useForm, FormRow} from "../../index";
+import {composeFormElement, useForm, FormRow} from "../../index";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import "./Account.css";
+import {LoadedContent} from "../../components/Loader/Loader";
 
 const Form = ({defaults, onSubmit}) => {
   const {handleSubmit, submitting, formData, observeField} = useForm(defaults);
@@ -114,8 +115,6 @@ const Account = () => {
     }
   };
 
-  if (status !== "success") return <Loader/>;
-
   return (
     <Fragment>
       <Meta title="Account"/>
@@ -124,15 +123,18 @@ const Account = () => {
         Account
       </h1>
 
-      <div className="account-layout content-offset">
-        <Form defaults={data} onSubmit={onSubmit}/>
 
-        <div className="account-layout__actions">
-          <Button variant="danger" onClick={() => scheduleAccountDeletion()}>
-            Delete Account
-          </Button>
+      <LoadedContent loading={status !== "success"}>
+        <div className="account-layout content-offset">
+          <Form defaults={data} onSubmit={onSubmit}/>
+
+          <div className="account-layout__actions">
+            <Button variant="danger" onClick={() => scheduleAccountDeletion()}>
+              Delete Account
+            </Button>
+          </div>
         </div>
-      </div>
+      </LoadedContent>
 
     </Fragment>
   );
