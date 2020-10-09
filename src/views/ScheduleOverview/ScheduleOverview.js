@@ -8,6 +8,8 @@ import Input from "../../components/Input/Input";
 import "./ScheduleOverview.css";
 import Forward from "../../components/Icon/Forward";
 import Downward from "../../components/Icon/Downward";
+import axios from "axios";
+import {useParams} from "react-router-dom";
 
 const Table = ({columns, data, renderRowSubComponent}) => {
   const {
@@ -90,10 +92,12 @@ const Table = ({columns, data, renderRowSubComponent}) => {
 export default () => {
   const [fetched, setFetched] = useState(Date.now());
   const [schedule, setSchedule] = useState([]);
+  const {location} = useParams();
 
   const {status, data} = useQuery("ticker", async () => {
-      const {data: rooms} = await api.schedule.rooms();
-      const flat = [];
+      const {data: rooms} = await axios.get(`/api/${location}/schedule/rooms`);
+
+      let flat = [];
 
       rooms.forEach(room => {
         room.schedule.forEach(timeSlot => {
@@ -104,6 +108,7 @@ export default () => {
       });
 
       setSchedule(flat);
+
       return flat;
     },
     {
@@ -113,6 +118,8 @@ export default () => {
       refetchOnWindowFocus: false
     }
   );
+
+  console.log(data);
 
   const [mutateAppearance, {status: mutateAppearanceStatus, error: mutateAppearanceError}] = useMutation(async ({id, appeared}) => {
     await api.reservation.update(id, {appeared})

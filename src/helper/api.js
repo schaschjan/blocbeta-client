@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const location = window.location.pathname.split("/")[1];
+const getLocation = () => window.location.pathname.split("/")[1];
 
 const cache = {
   timeSlotExclusion: "time-slot-exclusion",
@@ -10,25 +10,28 @@ const cache = {
 const api = {
   timeSlotExclusion: {
     add: (payload) => {
-      return axios.post(`/api/${location}/time-slot-exclusion`, payload);
+      return axios.post(`/api/${getLocation()}/time-slot-exclusion`, payload);
     },
     index: () => {
-      return axios.get(`/api/${location}/time-slot-exclusion`);
+      return axios.get(`/api/${getLocation()}/time-slot-exclusion`);
     }
   },
   rooms: {
-    index: () => {
-      return axios.get(`/api/${location}/room`);
+    index: async () => {
+      return axios.get(`/api/${getLocation()}/room`);
     }
   },
   schedule: {
     rooms: () => {
-      return axios.get(`/api/${location}/schedule/rooms`);
+      const {data} = axios.get(`/api/${getLocation()}/schedule/rooms`);
+
+      return data;
     }
   },
   reservation: {
     update: (id, payload) => {
-      return axios.put(`/api/${location}/reservation/${id}`, payload);
+
+      return axios.put(`/api/${getLocation()}/reservation/${id}`, payload);
     }
   }
 };

@@ -277,7 +277,12 @@ export const resources = {
     const {data} = await axios.get(`/api/${location}/reservation/pending/count`);
 
     return data;
-  }
+  },
+  ticker: async ({location}) => {
+    const {data} = await axios.get(`/api/${location}/schedule/rooms`);
+
+    return data;
+  },
 };
 
 
