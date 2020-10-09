@@ -60,6 +60,7 @@ export const router = [
     title: "Setup",
     path: "/setup",
     exact: true,
+    public: true,
     main: () => <Setup/>,
   },
   {

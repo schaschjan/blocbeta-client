@@ -9,10 +9,44 @@ import "./Schedule.css";
 import {useApiV2} from "../../hooks/useApi";
 import {Loader} from "../../components/Loader/Loader";
 
+const BookButton = ({isFull, isBlocked, timeSlot, blockHandler, unBlockHandler}) => {
+
+  const [quantity, setQuantity] = useState(1);
+
+  if (isBlocked) {
+    return <Button variant="primary" size="small" modifier="inverted"
+                   onClick={() => unBlockHandler(timeSlot.reservation)}>
+      Cancel!
+    </Button>;
+  }
+
+  if (isFull) {
+    return <Button variant="text">
+      Fully booked
+    </Button>
+  }
+
+  return (
+    <Fragment>
+      <input type="number" min={1}
+             max={timeSlot.allow_quantity}
+             value={quantity}
+             onChange={(event) => setQuantity(event.target.value)}/>
+
+      <Button variant="primary" size="small" onClick={() => blockHandler(timeSlot, quantity)}>
+        Book!
+      </Button>
+    </Fragment>
+  )
+};
+
 const TimeSlotList = ({date, roomId}) => {
 
   const ymdDate = date.format("Y-MM-DD");
-  const {status: scheduleStatus, data: schedule} = useQuery(["schedule", {ymdDate, roomId}], useApiV2("schedule", {ymdDate, roomId}));
+  const {status: scheduleStatus, data: schedule} = useQuery(["schedule", {
+    ymdDate,
+    roomId
+  }], useApiV2("schedule", {ymdDate, roomId}));
 
   const [mutateDeletion, {status: deletionMutationStatus, error: deletionMutationError}] = useMutation(useApiV2("unBlockTimeSlot"), {
     throwOnError: true,
@@ -30,13 +64,14 @@ const TimeSlotList = ({date, roomId}) => {
     },
   });
 
-  const blockTimeSlot = async (timeSlot) => {
+  const blockTimeSlot = async (timeSlot, quantity) => {
     await mutateCreation({
       payload: {
         "start_time": timeSlot.start_time,
         "end_time": timeSlot.end_time,
         "date": ymdDate,
-        "room": roomId
+        "room": roomId,
+        "quantity": quantity
       }
     });
   };
@@ -69,14 +104,14 @@ const TimeSlotList = ({date, roomId}) => {
 
             const dayHasBlockedTimeSlot = findPendingReservation();
             const timeSlotIsBlocked = timeSlot.reservation;
-            const timeSlotIsFullyBlocked = timeSlot.available === 0;
+            const timeSlotIsFull = timeSlot.available === 0;
 
             return (
               <li key={timeSlot.hash}
                   className={buildClassNames(
                     "time-slot-list__item time-slot-list-item",
                     timeSlotIsBlocked ? "time-slot-list-item--blocked" : null,
-                    ((dayHasBlockedTimeSlot || timeSlotIsFullyBlocked) && !timeSlotIsBlocked) ? "time-slot-list-item--disabled" : null
+                    ((dayHasBlockedTimeSlot || timeSlotIsFull) && !timeSlotIsBlocked) ? "time-slot-list-item--disabled" : null
                   )}>
 
                 <div className="time-slot-list-item__time t--zeta">
@@ -88,25 +123,11 @@ const TimeSlotList = ({date, roomId}) => {
                 </div>
 
                 <div className="time-slot-list-item__action">
-                  {!timeSlotIsBlocked ? (
-
-                    <Fragment>
-                      {timeSlotIsFullyBlocked ? (
-                        <Button variant="text">
-                          Fully booked
-                        </Button>
-                      ) : (
-                        <Button variant="primary" size="small" onClick={() => blockTimeSlot(timeSlot)}>
-                          Book!
-                        </Button>
-                      )}
-                    </Fragment>
-
-                  ) : (
-                    <Button variant="primary" size="small" modifier="inverted" onClick={() => unblockTimeSlot(timeSlot.reservation)}>
-                      Cancel!
-                    </Button>
-                  )}
+                  <BookButton blockHandler={blockTimeSlot}
+                              timeSlot={timeSlot}
+                              unBlockHandler={unblockTimeSlot}
+                              isBlocked={timeSlotIsBlocked}
+                              isFull={timeSlotIsFull}/>
                 </div>
               </li>
             )

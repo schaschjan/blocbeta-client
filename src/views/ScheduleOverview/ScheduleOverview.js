@@ -179,7 +179,12 @@ export default () => {
           }>
 
               <span className="ticker-reservation-table-item__details">
-                <strong>{reservation.first_name} {reservation.last_name}</strong>
+                <strong>
+                  {reservation.first_name} {reservation.last_name}
+                  {reservation.quantity > 1 && (
+                    <span>(+{reservation.quantity})</span>
+                  )}
+                </strong>
                 <span>{reservation.username}</span>
               </span>
 

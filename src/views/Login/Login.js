@@ -17,8 +17,6 @@ const Login = () => {
   });
 
   const history = useHistory();
-  const queryParameters = new URLSearchParams(window.location.search);
-  const target = queryParameters.get("target");
   const {setUser, setCurrentLocation, setExpiration, reset} = useContext(BlocBetaUIContext);
 
   useEffect(() => {
@@ -33,8 +31,8 @@ const Login = () => {
       setUser(data.user);
       setCurrentLocation(data.location);
 
-      if (target) {
-        window.location.href = target;
+      if (!data.targetLocation) {
+        history.push(`/setup`);
       } else {
         history.push(`${data.targetLocation}/dashboard`);
       }

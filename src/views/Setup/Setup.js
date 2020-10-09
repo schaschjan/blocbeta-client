@@ -1,17 +1,16 @@
 import React, {Fragment, useContext} from "react";
 import {AppContext, Meta} from "../../App";
 import {PageHeader} from "../../components/PageHeader/PageHeader";
-import Wrapper from "../../components/Wrapper/Wrapper";
-import {alphaSort} from "../../helpers";
 import {useHistory} from "react-router-dom";
 import {useQuery} from "react-query";
 import axios from "axios";
-import {Loader} from "../../index";
 import {LoadedContent} from "../../components/Loader/Loader";
+import "./Setup.css"
+import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 
 const Setup = () => {
   let history = useHistory();
-  const {setCurrentLocation} = useContext(AppContext);
+  const {setCurrentLocation} = useContext(BlocBetaUIContext);
 
   const {status, data: locations} = useQuery("stat-boulders", async () => {
     const {data} = await axios.get(`/api/location`);
@@ -21,7 +20,6 @@ const Setup = () => {
 
   const switchLocation = (location) => {
     setCurrentLocation(location);
-
     history.push(`${location.url}/dashboard`);
   };
 
@@ -32,24 +30,24 @@ const Setup = () => {
 
       <div className="side-title-layout">
         <h1 className="t--alpha side-title-layout__title">
-          Please provide some information for your account.
+          Please choose your default gym:
         </h1>
 
         <div className="side-title-layout__content">
-
           <LoadedContent loading={status === "loading"}>
-            Choose your gym:
-            <ul>
-              {alphaSort(locations, "name").map((location) => {
+            <ul className="setup-location-list">
+              {locations && locations.map((location) => {
                 return (
-                  <li onClick={() => switchLocation(location)}>
-                    {location.name}
+                  <li onClick={() => switchLocation(location)} className="setup-location-list__item">
+                    <h2 className="t--beta">{location.name}</h2>
                   </li>
                 );
               })}
             </ul>
 
-            Want to track your progress in privacy? You can edit your visibility settings in the account page.
+            {/*<em>*/}
+            {/*  Want to track your progress in privacy? You can edit your visibility settings in the account page.*/}
+            {/*</em>*/}
           </LoadedContent>
         </div>
       </div>
