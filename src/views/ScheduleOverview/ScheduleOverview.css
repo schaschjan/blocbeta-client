@@ -63,7 +63,7 @@
 
 .ticker-reservation-table {
     width: 100%;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--color-black);
 }
 
 .ticker-reservation-table__item {

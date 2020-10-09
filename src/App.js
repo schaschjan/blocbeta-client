@@ -5,8 +5,8 @@ import {Footer} from "./components/Footer/Footer";
 import {Helmet} from "react-helmet";
 import {NavItem, Header} from "./index"
 import axios from "axios";
-import {useQuery} from "react-query";
 import {BlocBetaUI, BlocBetaUIContext} from "./components/BlocBetaUI";
+import {useQuery} from 'react-query'
 
 export const Meta = ({title, description}) => {
   return (
@@ -140,6 +140,7 @@ const App = () => {
         </BlocBetaUI>
       </Router>
 
+      {/*{process.env.NODE_ENV === "development" && <ReactQueryDevtools initialIsOpen/>}*/}
     </Fragment>
   );
 };

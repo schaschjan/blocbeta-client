@@ -1,4 +1,4 @@
-import React, {Fragment} from "react";
+import React, {Fragment, useContext} from "react";
 import {Meta} from "../../../App";
 import {composeFormElement, useForm} from "../../..";
 import {handleErrors} from "../../../hooks/useApi";
@@ -8,7 +8,8 @@ import {FormRow} from "../../../components/Form/Form";
 import Button from "../../../components/Button/Button";
 import {Textarea} from "../../../components/Textarea/Textarea";
 import ResourceDependantSelect from "../../../components/ResourceDependantSelect/ResourceDependantSelect";
-import {api, cache} from "../../../helper/api";
+import {api} from "../../../helper/api";
+import {BlocBetaUIContext} from "../../../components/BlocBetaUI";
 
 const AddTimeSlotBlocker = () => {
   const history = useHistory();
@@ -20,10 +21,13 @@ const AddTimeSlotBlocker = () => {
     room: null
   });
 
+  const {contextualizedPath} = useContext(BlocBetaUIContext);
+
   const onSubmit = async (payload) => {
     try {
       await api.timeSlotExclusion.add(payload);
-      history.push("/login");
+      alert("blocker added!");
+      history.push(contextualizedPath("/dashboard"));
 
     } catch (error) {
       handleErrors(error);

@@ -9,6 +9,7 @@
     "classnames": "^2.2.6",
     "framer": "^1.2.3",
     "framer-motion": "^1.11.0",
+    "lodash": "^4.17.20",
     "moment": "^2.26.0",
     "react": "^16.13.1",
     "react-add-to-calendar": "^0.1.5",
