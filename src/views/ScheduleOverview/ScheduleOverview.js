@@ -1,4 +1,4 @@
-import React, {Fragment} from "react";
+import React, {Fragment, useEffect, useState} from "react";
 import {queryCache, useQuery, useMutation} from "react-query";
 import {LoadedContent} from "../../components/Loader/Loader";
 import {api} from "../../helper/api";
@@ -6,6 +6,8 @@ import {useTable, useExpanded, useGlobalFilter} from "react-table"
 import {buildClassNames, Button} from "../../index";
 import Input from "../../components/Input/Input";
 import "./ScheduleOverview.css";
+import Forward from "../../components/Icon/Forward";
+import Downward from "../../components/Icon/Downward";
 
 const Table = ({columns, data, renderRowSubComponent}) => {
   const {
@@ -40,9 +42,13 @@ const Table = ({columns, data, renderRowSubComponent}) => {
         <thead className="ticker-table__head ticker-table-head">
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()} className="ticker-table-head__row">
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>{column.render("Header")}</th>
-            ))}
+            {headerGroup.headers.map(column => {
+              if (!column.hidden) {
+                return <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+              } else {
+                return null;
+              }
+            })}
           </tr>
         ))}
         </thead>
@@ -56,15 +62,18 @@ const Table = ({columns, data, renderRowSubComponent}) => {
               <tr
                 className={buildClassNames("ticker-table-body__row", row.original.appeared ? "ticker-table-body__row--appeared" : null)}>
                 {row.cells.map(cell => {
-                  return (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                  )
+                  if (!cell.column.hidden) {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    )
+                  } else {
+                    return null
+                  }
                 })}
               </tr>
-
               {row.isExpanded ? (
                 <tr>
-                  <td colSpan={4}>{renderRowSubComponent({row})}</td>
+                  <td colSpan={5}>{renderRowSubComponent({row})}</td>
                 </tr>
               ) : null}
             </Fragment>
@@ -79,24 +88,28 @@ const Table = ({columns, data, renderRowSubComponent}) => {
 export default () => {
   const {status, data} = useQuery(caches.schedule, async () => {
     const {data: rooms} = await api.schedule.rooms();
-
     const flat = [];
 
     rooms.forEach(room => {
       room.schedule.forEach(timeSlot => {
         timeSlot.room = room;
 
-        timeSlot.reservations.forEach(reservation => {
-          flat.push({
-            ...reservation,
-            timeSlot: timeSlot
-          });
-        });
+        flat.push(timeSlot);
       });
     });
 
     return flat;
   });
+
+  const [tableData, setTableData] = useState([]);
+
+  useEffect(() => {
+    if (status === "success") {
+      console.log("update data")
+      setTableData([...data]);
+    }
+
+  }, [status]);
 
   const [mutateAppearance, {status: mutateAppearanceStatus, error: mutateAppearanceError}] = useMutation(async ({id, appeared}) => {
     await api.reservation.update(id, {appeared})
@@ -109,22 +122,9 @@ export default () => {
 
   const columns = [
     {
-      Header: "Name",
-      accessor: (row) => {
-        return `${row.first_name} ${row.last_name}`
-      },
-      Cell: ({cell}) => (
-        <strong>{cell.value}</strong>
-      ),
-    },
-    {
-      Header: "Username",
-      accessor: "username"
-    },
-    {
       Header: "Time",
       accessor: (row) => {
-        return `${row.timeSlot.start_time} – ${row.timeSlot.end_time}`
+        return `${row.start_time} – ${row.end_time}`
       },
       Cell: ({cell}) => (
         <strong>{cell.value}</strong>
@@ -132,43 +132,84 @@ export default () => {
     },
     {
       Header: "Room",
-      accessor: "timeSlot.room.name",
+      accessor: "room.name",
     },
     {
-      Header: "Quantity",
-      accessor: "quantity",
+      Header: "Available",
+      accessor: (row) => {
+        return `${row.available} / ${row.capacity}`
+      },
     },
     {
-      Header: "",
-      accessor: "appeared",
-      Cell: ({row, value}) => {
-        return (
-          <div className="actions-cell">
-            {!value ? (
-              <Button size="small" onClick={() => mutateAppearance({
-                id: row.original.id,
-                appeared: true
-              })}>
-                Check-In
-              </Button>
-            ) : (
-              <Button size="small" modifier="inverted" onClick={() => mutateAppearance({
-                id: row.original.id,
-                appeared: false
-              })}>
-                Cancel Check-In
-              </Button>
-            )}
-          </div>
-        )
-      }
-    }
+      Header: "Appeared",
+      accessor: (row) => {
+        return `${row.reservations.filter(reservation => reservation.appeared === true).length} / ${row.capacity}`
+      },
+    },
+    {
+      Header: () => null,
+      id: 'expander',
+      Cell: ({row}) => (
+        <span {...row.getToggleRowExpandedProps()} className="expander">
+            {row.isExpanded ? <Downward/> : <Forward/>}
+          </span>
+      ),
+    },
+    {
+      hidden: true,
+      Header: 'Reservations',
+      id: 'reservations',
+      accessor: (row) => {
+        return row.reservations.map(reservation => {
+          return `${reservation.first_name} ${reservation.last_name} ${reservation.username}`
+        })
+      },
+    },
   ];
+
+  const Reservations = ({row}) => {
+    return (
+      <div className="ticker-reservation-table">
+        {row.original.reservations.map(reservation => {
+          return <div className={
+            buildClassNames(
+              "ticker-reservation-table__item ticker-reservation-table-item",
+              reservation.appeared ? "ticker-reservation-table__item--appeared" : null
+            )
+          }>
+
+              <span className="ticker-reservation-table-item__details">
+                <strong>{reservation.first_name} {reservation.last_name}</strong>
+                <span>{reservation.username}</span>
+              </span>
+
+            <span className="ticker-reservation-table-item__actions">
+                {!reservation.appeared ? (
+                  <Button variant="primary" size="small" onClick={() => mutateAppearance({
+                    id: reservation.id,
+                    appeared: true
+                  })}>
+                    Check-In
+                  </Button>
+                ) : (
+                  <Button variant="primary" size="small" onClick={() => mutateAppearance({
+                    id: reservation.id,
+                    appeared: false
+                  })}>
+                    Cancel Check-In
+                  </Button>
+                )}
+              </span>
+          </div>
+        })}
+      </div>
+    )
+  };
 
   return (
     <Fragment>
       <LoadedContent loading={status === "loading"}>
-        <Table columns={columns} data={data}/>
+        <Table columns={columns} data={tableData} renderRowSubComponent={Reservations}/>
       </LoadedContent>
     </Fragment>
   )
