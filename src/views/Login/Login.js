@@ -31,6 +31,10 @@ const Login = () => {
       setUser(data.user);
       setCurrentLocation(data.location);
 
+      if (!data.user.username || !data.user.first_name || !data.user.last_name) {
+        alert("Account details missing. Please add them in your account settings!");
+      }
+
       if (!data.targetLocation) {
         history.push(`/setup`);
       } else {
