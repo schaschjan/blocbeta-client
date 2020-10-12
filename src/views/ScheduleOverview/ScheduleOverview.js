@@ -8,8 +8,8 @@ import Input from "../../components/Input/Input";
 import "./ScheduleOverview.css";
 import Forward from "../../components/Icon/Forward";
 import Downward from "../../components/Icon/Downward";
-import axios from "axios";
-import {useParams} from "react-router-dom";
+import moment from "moment";
+import {useApiV2} from "../../hooks/useApi";
 
 const Table = ({columns, data, renderRowSubComponent}) => {
   const {
@@ -31,15 +31,17 @@ const Table = ({columns, data, renderRowSubComponent}) => {
 
   return (
     <>
-      <Input
-        className="ticker-search"
-        placeholder="Search"
-        onClear={() => setGlobalFilter(null)}
-        clearable={true}
-        onChange={event => {
-          setGlobalFilter(event.target.value);
-        }}
-      />
+      <div className="ticker-header">
+        <Input
+          className="ticker-header__search"
+          placeholder="Search"
+          onClear={() => setGlobalFilter(null)}
+          clearable={true}
+          onChange={event => {
+            setGlobalFilter(event.target.value);
+          }}
+        />
+      </div>
 
       <table {...getTableProps()} className="ticker-table">
         <thead className="ticker-table__head ticker-table-head">
@@ -90,36 +92,17 @@ const Table = ({columns, data, renderRowSubComponent}) => {
 };
 
 export default () => {
-  const [fetched, setFetched] = useState(Date.now());
-  const [schedule, setSchedule] = useState([]);
-  const {location} = useParams();
+  const [fetched, setFetched] = useState(moment());
 
-  const {status, data} = useQuery("ticker", async () => {
-      const {data: rooms} = await axios.get(`/api/${location}/schedule/rooms`);
-
-      let flat = [];
-
-      rooms.forEach(room => {
-        room.schedule.forEach(timeSlot => {
-          timeSlot.room = room;
-
-          flat.push(timeSlot);
-        });
-      });
-
-      setSchedule(flat);
-
-      return flat;
-    },
+  const {status, data} = useQuery("ticker", useApiV2("ticker"),
     {
       onSuccess: () => {
-        setFetched(Date.now());
+        setFetched(moment());
       },
-      refetchOnWindowFocus: false
+      refetchOnWindowFocus: false,
+      refetchInterval: 1000 * 30
     }
   );
-
-  console.log(data);
 
   const [mutateAppearance, {status: mutateAppearanceStatus, error: mutateAppearanceError}] = useMutation(async ({id, appeared}) => {
     await api.reservation.update(id, {appeared})
@@ -159,7 +142,11 @@ export default () => {
         },
       },
       {
-        Header: () => null,
+        Header: ({getToggleAllRowsExpandedProps, isAllRowsExpanded}) => (
+          <span {...getToggleAllRowsExpandedProps()} className="expander">
+            {isAllRowsExpanded ? <Downward/> : <Forward/>}
+          </span>
+        ),
         id: 'expander',
         Cell: ({row}) => (
           <span {...row.getToggleRowExpandedProps()} className="expander">
@@ -238,8 +225,13 @@ export default () => {
 
   return (
     <Fragment>
+      <h1 className="t--alpha page-title">
+        Ticker – Updated:&nbsp;
+        <mark>{fetched.format("H:mm:s")}</mark>
+      </h1>
+
       <LoadedContent loading={status === "loading"}>
-        <Table columns={columns} data={schedule} renderRowSubComponent={renderRowSubComponent}/>
+        <Table columns={columns} data={data} renderRowSubComponent={renderRowSubComponent}/>
       </LoadedContent>
     </Fragment>
   )

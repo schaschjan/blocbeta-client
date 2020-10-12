@@ -281,7 +281,19 @@ export const resources = {
   ticker: async ({location}) => {
     const {data} = await axios.get(`/api/${location}/schedule/rooms`);
 
-    return data;
+    let flat = [];
+
+    data.forEach(room => {
+      room.schedule.forEach(timeSlot => {
+
+        delete room.schedule;
+        timeSlot.room = room;
+
+        flat.push(timeSlot);
+      });
+    });
+
+    return flat;
   },
 };
 

@@ -33,29 +33,57 @@ const Dashboard = () => {
       </div>
 
       {isAdmin && (
-        <div className="dashboard-section">
-          <h2 className="t--beta dashboard-section__title">Admin</h2>
+        <Fragment>
+          <div className="dashboard-section">
+            <h3 className="t--beta dashboard-section__title">Schedule</h3>
 
-          <ul className="dashboard-links dashboard-links--admin">
-            <li className="dashboard-links__item">
-              <Link to={contextualizedPath("/admin/schedule-ticker")} className="t--gamma">
-                Schedule Ticker
-              </Link>
-            </li>
+            <ul className="dashboard-links">
+              <li className="dashboard-links__item">
+                <Link to={contextualizedPath("/admin/schedule-ticker")} className="t--gamma">
+                  Live Ticker
+                </Link>
+              </li>
+            </ul>
 
-            <li className="dashboard-links__item">
-              <Link to={contextualizedPath("/admin/time-slot-blocker/add")} className="t--gamma">
-                Block a time slot
-              </Link>
-            </li>
+          </div>
 
-            <li className="dashboard-links__item">
-              <Link to={contextualizedPath("/admin/time-slot-blocker")} className="t--gamma">
-                List currently blocked time slots
-              </Link>
-            </li>
-          </ul>
-        </div>
+          <div className="dashboard-section">
+            <h3 className="t--beta dashboard-section__title">Schedule Overrides</h3>
+
+            <ul className="dashboard-links">
+              <li className="dashboard-links__item">
+                <Link to={contextualizedPath("/admin/time-slot-blocker")} className="t--gamma">
+                  List
+                </Link>
+              </li>
+
+              <li className="dashboard-links__item">
+                <Link to={contextualizedPath("/admin/time-slot-blocker/add")} className="t--gamma">
+                  Add
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div className="dashboard-section">
+            <h3 className="t--beta dashboard-section__title">Rooms</h3>
+
+            <ul className="dashboard-links">
+              <li className="dashboard-links__item">
+                <Link to={contextualizedPath("/admin/rooms")} className="t--gamma">
+                 List
+                </Link>
+              </li>
+
+              <li className="dashboard-links__item">
+                <Link to={contextualizedPath("/admin/rooms/add")} className="t--gamma">
+                  Add
+                </Link>
+              </li>
+            </ul>
+
+          </div>
+        </Fragment>
       )}
     </Fragment>
   );

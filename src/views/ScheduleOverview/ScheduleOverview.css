@@ -1,5 +1,6 @@
-.ticker-search {
-    max-width: 50%;
+.ticker-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     margin-bottom: calc(5 * var(--spacing-unit));
 }
 

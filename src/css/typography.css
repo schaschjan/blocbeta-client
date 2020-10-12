@@ -80,6 +80,11 @@
     line-height: var(--line-height-gamma);
 }
 
+.t--delta{
+    font-size: var(--font-size-delta);
+    line-height: var(--line-height-delta);
+}
+
 .t--zeta {
     font-size: var(--font-size-zeta);
     line-height: var(--line-height-zeta);
