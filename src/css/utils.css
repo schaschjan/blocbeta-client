@@ -1,5 +1,6 @@
 .page-title {
     margin-bottom: calc(2 * var(--spacing-unit));
+    width: 100%;
 }
 
 @media (min-width: 768px) {

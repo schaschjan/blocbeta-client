@@ -4,7 +4,7 @@ import 'react-dates/lib/css/_datepicker.css';
 import "./DatePicker.css"
 import {useMediaQuery} from "react-responsive/src";
 
-export default ({onChange, ...rest}) => {
+export const DatePicker = ({onChange, ...rest}) => {
 
   const isSmall = useMediaQuery({
     query: '(max-width: 1280px)'

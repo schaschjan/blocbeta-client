@@ -3,8 +3,9 @@ import {Link} from 'react-router-dom'
 import {useHistory} from "react-router-dom"
 import './Header.css'
 import {BlocBetaUIContext} from "../BlocBetaUI";
-import {buildClassNames, Burger, Close} from "../../index";
+import {buildClassNames, Burger} from "../../index";
 import {useLocation} from "react-router-dom";
+import {Close} from "../Icon/Close";
 
 export default ({children, locations, logoLink}) => {
   const {reset, setCurrentLocation, currentLocation} = useContext(BlocBetaUIContext);

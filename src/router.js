@@ -9,7 +9,7 @@ import ResetPassword from "./views/ResetPassword/ResetPassword";
 import Setup from "./views/Setup/Setup";
 import AccessDenied from "./views/AccessDenied/AccessDenied";
 import Schedule from "./views/Schedule/Schedule";
-import ScheduleOverview from "./views/ScheduleOverview/ScheduleOverview";
+import Ticker from "./views/Ticker/Ticker";
 import Reservations from "./views/Reservations/Reservations";
 import CurrentRanking from "./views/CurrentRanking/CurrentRanking";
 import CancelReservation from "./views/CancelReservation/CancelReservation";
@@ -22,7 +22,7 @@ const adminRoutes = [
     path: "/:location/admin/schedule-ticker",
     exact: true,
     admin: true,
-    main: () => <ScheduleOverview/>,
+    main: () => <Ticker/>,
   },
   {
     title: "Time slot blockers",

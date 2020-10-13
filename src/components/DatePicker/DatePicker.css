@@ -41,7 +41,7 @@
 .CalendarDay__blocked_out_of_range,
 .CalendarDay__blocked_out_of_range:active,
 .CalendarDay__blocked_out_of_range:hover {
-    color: var(--color-lightgrey);
+    color: var(--color-grey);
     background: transparent;
 }
 

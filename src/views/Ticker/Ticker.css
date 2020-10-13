@@ -1,6 +1,7 @@
 .ticker-header {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-gap: calc(4.25 * var(--spacing-unit));
     margin-bottom: calc(5 * var(--spacing-unit));
 }
 
@@ -33,8 +34,8 @@
 
 .ticker-table__body {
     border-left: 1px solid var(--color-black);
-    border-right: 1px solid var(--color-black);;
-    border-bottom: 1px solid var(--color-black);;
+    border-right: 1px solid var(--color-black);
+    border-bottom: 1px solid var(--color-black);
 }
 
 .ticker-table-body__row--appeared {
@@ -59,12 +60,18 @@
 
 .ticker-table-body__row td {
     padding: calc(2 * var(--spacing-unit));
-    border-bottom: 1px solid var(--color-black);
+}
+
+.ticker-table-body__row {
+    border-top: 1px solid var(--color-black);
 }
 
 .ticker-reservation-table {
     width: 100%;
-    border-bottom: 1px solid var(--color-black);
+}
+
+.ticker-reservation-table:last-child {
+    border-bottom: none;
 }
 
 .ticker-reservation-table__item {
@@ -73,6 +80,10 @@
     line-height: var(--line-height-eta);
     display: grid;
     grid-template-columns: 1fr 1fr;
+}
+
+.ticker-reservation-table__item:hover {
+    background: rgba(207, 255, 255, .5);
 }
 
 .ticker-reservation-table-item__details {

@@ -5,20 +5,25 @@ import {api} from "../../helper/api";
 import {useTable, useExpanded, useGlobalFilter} from "react-table"
 import {buildClassNames, Button} from "../../index";
 import Input from "../../components/Input/Input";
-import "./ScheduleOverview.css";
+import "./Ticker.css";
 import Forward from "../../components/Icon/Forward";
 import Downward from "../../components/Icon/Downward";
 import moment from "moment";
 import {useApiV2} from "../../hooks/useApi";
 
-const Table = ({columns, data, renderRowSubComponent}) => {
+const Table = ({columns, ymd, setYmd, data, renderRowSubComponent}) => {
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     rows,
     prepareRow,
-    setGlobalFilter
+    state: {
+      globalFilter
+    },
+    setGlobalFilter,
+    isAllRowsExpanded,
+    toggleAllRowsExpanded
   } = useTable(
     {
       autoResetExpanded: false,
@@ -32,12 +37,23 @@ const Table = ({columns, data, renderRowSubComponent}) => {
   return (
     <>
       <div className="ticker-header">
+        <Input type="date" value={ymd} className="ticker-header__date" onChange={(event) => {
+          setYmd(event.target.value);
+        }}/>
+
         <Input
           className="ticker-header__search"
           placeholder="Search"
-          onClear={() => setGlobalFilter(null)}
+          value={globalFilter}
+          onClear={(event) => {
+            setGlobalFilter(" ");
+          }}
           clearable={true}
           onChange={event => {
+            if (!isAllRowsExpanded) {
+              toggleAllRowsExpanded();
+            }
+
             setGlobalFilter(event.target.value);
           }}
         />
@@ -93,8 +109,12 @@ const Table = ({columns, data, renderRowSubComponent}) => {
 
 export default () => {
   const [fetched, setFetched] = useState(moment());
+  const [selectedDate, setSelectedDate] = useState(moment().format("Y-MM-DD"));
 
-  const {status, data} = useQuery("ticker", useApiV2("ticker"),
+  const {status, data} = useQuery(["ticker", {
+      ymd: selectedDate
+    }], useApiV2("ticker", {ymd: selectedDate}),
+
     {
       onSuccess: () => {
         setFetched(moment());
@@ -167,10 +187,7 @@ export default () => {
         hidden: true,
         Header: 'Reservations',
         id: 'reservations',
-        accessor: "reservations",
-        // filter: (rows, id, filterValue) => {
-        //   console.log(rows, id, filterValue);
-        // }
+        accessor: "reservations"
       },
     ];
   }, []);
@@ -231,7 +248,11 @@ export default () => {
       </h1>
 
       <LoadedContent loading={status === "loading"}>
-        <Table columns={columns} data={data} renderRowSubComponent={renderRowSubComponent}/>
+        <Table columns={columns}
+               data={data}
+               setYmd={setSelectedDate}
+               ymd={selectedDate}
+               renderRowSubComponent={renderRowSubComponent}/>
       </LoadedContent>
     </Fragment>
   )

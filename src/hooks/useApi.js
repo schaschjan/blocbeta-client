@@ -248,8 +248,8 @@ export const resources = {
 
     return data;
   },
-  schedule: async ({location, roomId, ymdDate}) => {
-    const {data} = await axios.get(`/api/${location}/schedule/${roomId}/${ymdDate}`);
+  schedule: async ({location, roomId, ymd}) => {
+    const {data} = await axios.get(`/api/${location}/schedule/${roomId}/${ymd}`);
 
     return data;
   },
@@ -278,8 +278,8 @@ export const resources = {
 
     return data;
   },
-  ticker: async ({location}) => {
-    const {data} = await axios.get(`/api/${location}/schedule/rooms`);
+  ticker: async ({location, ymd}) => {
+    const {data} = await axios.get(`/api/${location}/schedule/rooms/${ymd}`);
 
     let flat = [];
 

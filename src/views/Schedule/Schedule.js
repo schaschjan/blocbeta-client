@@ -1,13 +1,13 @@
 import React, {Fragment, useEffect, useState} from "react";
 import 'react-dates/initialize';
-import DatePicker from "../../components/DatePicker/DatePicker";
 import moment from "moment";
 import {queryCache, useMutation, useQuery} from "react-query";
 import classNames from 'classnames';
-import {Button, Select, buildClassNames} from "./../../index";
+import {Button, Select, buildClassNames, handleApiErrors} from "./../../index";
 import "./Schedule.css";
 import {useApiV2} from "../../hooks/useApi";
 import {Loader} from "../../components/Loader/Loader";
+import {DatePicker} from "../../components/DatePicker/DatePicker";
 
 const BookButton = ({isFull, isBlocked, timeSlot, blockHandler, unBlockHandler}) => {
 
@@ -42,16 +42,16 @@ const BookButton = ({isFull, isBlocked, timeSlot, blockHandler, unBlockHandler})
 
 const TimeSlotList = ({date, roomId}) => {
 
-  const ymdDate = date.format("Y-MM-DD");
+  const ymd = date.format("Y-MM-DD");
   const {status: scheduleStatus, data: schedule} = useQuery(["schedule", {
-    ymdDate,
+    ymd,
     roomId
-  }], useApiV2("schedule", {ymdDate, roomId}));
+  }], useApiV2("schedule", {ymd, roomId}));
 
   const [mutateDeletion, {status: deletionMutationStatus, error: deletionMutationError}] = useMutation(useApiV2("unBlockTimeSlot"), {
     throwOnError: true,
     onSuccess: () => {
-      queryCache.invalidateQueries(["schedule", {ymdDate, roomId}]);
+      queryCache.invalidateQueries(["schedule", {ymd, roomId}]);
       queryCache.invalidateQueries("reservations-count");
     },
   });
@@ -59,25 +59,33 @@ const TimeSlotList = ({date, roomId}) => {
   const [mutateCreation, {status: creationMutationStatus, error: creationMutationError}] = useMutation(useApiV2("blockTimeSlot"), {
     throwOnError: true,
     onSuccess: () => {
-      queryCache.invalidateQueries(["schedule", {ymdDate, roomId}]);
+      queryCache.invalidateQueries(["schedule", {ymd, roomId}]);
       queryCache.invalidateQueries("reservations-count");
     },
   });
 
   const blockTimeSlot = async (timeSlot, quantity) => {
-    await mutateCreation({
-      payload: {
-        "start_time": timeSlot.start_time,
-        "end_time": timeSlot.end_time,
-        "date": ymdDate,
-        "room": roomId,
-        "quantity": quantity
-      }
-    });
+    try {
+      await mutateCreation({
+        payload: {
+          "start_time": timeSlot.start_time,
+          "end_time": timeSlot.end_time,
+          "date": ymd,
+          "room": roomId,
+          "quantity": quantity
+        }
+      });
+    } catch (e) {
+      handleApiErrors(e)
+    }
   };
 
   const unblockTimeSlot = async (id) => {
-    await mutateDeletion({id});
+    try {
+      await mutateDeletion({id});
+    } catch (e) {
+      handleApiErrors(e)
+    }
   };
 
   const findPendingReservation = () => {
@@ -105,12 +113,14 @@ const TimeSlotList = ({date, roomId}) => {
             const dayHasBlockedTimeSlot = findPendingReservation();
             const timeSlotIsBlocked = timeSlot.reservation;
             const timeSlotIsFull = timeSlot.available === 0;
+            const isPassed = moment() > moment(ymd + ' ' + timeSlot.end_time);
 
             return (
               <li key={timeSlot.hash}
                   className={buildClassNames(
                     "time-slot-list__item time-slot-list-item",
                     timeSlotIsBlocked ? "time-slot-list-item--blocked" : null,
+                    isPassed ? "time-slot-list-item--disabled" : null,
                     ((dayHasBlockedTimeSlot || timeSlotIsFull) && !timeSlotIsBlocked) ? "time-slot-list-item--disabled" : null
                   )}>
 

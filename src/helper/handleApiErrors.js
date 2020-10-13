@@ -20,4 +20,6 @@ export default (error, logOnly = false) => {
   if (error.response.data.type === "formError") {
     alert(Object.values(error.response.data.errors).map(message => `⚠️ ${message}`).join('\n'));
   }
+
+  alert(error.response.data.message);
 };
