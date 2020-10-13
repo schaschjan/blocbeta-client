@@ -15,6 +15,7 @@ import CurrentRanking from "./views/CurrentRanking/CurrentRanking";
 import CancelReservation from "./views/CancelReservation/CancelReservation";
 import AddTimeSlotBlocker from "./views/TimeSlotBlocker/Add";
 import IndexTimeSlotBlocker from "./views/TimeSlotBlocker/Index";
+import RoomsIndex from "./views/Room/Index";
 
 const adminRoutes = [
   {
@@ -37,6 +38,13 @@ const adminRoutes = [
     exact: true,
     admin: true,
     main: () => <AddTimeSlotBlocker/>,
+  },
+  {
+    title: "List rooms",
+    path: "/:location/admin/rooms",
+    exact: true,
+    admin: true,
+    main: () => <RoomsIndex/>,
   },
 ];
 
