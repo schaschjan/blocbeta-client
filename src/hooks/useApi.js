@@ -47,6 +47,7 @@ const assignRanks = (ranking) => {
 };
 
 export const cacheKeys = {
+  roomSchedule: "roomSchedule",
   boulders: "boulders",
   compare: "compare",
   ascents: "ascents",
@@ -253,6 +254,11 @@ export const resources = {
 
     return data;
   },
+  roomSchedule: async ({location, room}) => {
+    const {data} = await axios.get(`/api/${location}/time-slot?roomId=${room}`);
+
+    return data;
+  },
   rooms: async ({location}) => {
     const {data} = await axios.get(`/api/${location}/room`);
 
@@ -294,6 +300,11 @@ export const resources = {
     });
 
     return flat;
+  },
+  updateTimeSlot: async ({location, id, payload}) => {
+    const {data} = await axios.put(`/api/${location}/time-slot/${id}`, payload);
+
+    return data;
   },
 };
 

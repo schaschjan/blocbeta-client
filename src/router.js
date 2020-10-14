@@ -16,6 +16,7 @@ import CancelReservation from "./views/CancelReservation/CancelReservation";
 import AddTimeSlotBlocker from "./views/TimeSlotBlocker/Add";
 import IndexTimeSlotBlocker from "./views/TimeSlotBlocker/Index";
 import RoomsIndex from "./views/Room/Index";
+import RoomsDetail from "./views/Room/Detail";
 
 const adminRoutes = [
   {
@@ -45,6 +46,12 @@ const adminRoutes = [
     exact: true,
     admin: true,
     main: () => <RoomsIndex/>,
+  },
+  {
+    title: "Room Detail",
+    path: "/:location/admin/rooms/:room",
+    admin: true,
+    main: () => <RoomsDetail/>,
   },
 ];
 

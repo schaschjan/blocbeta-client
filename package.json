@@ -1,6 +1,6 @@
 {
   "name": "blocbeta-client",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@sentry/react": "^5.24.2",
@@ -29,7 +29,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prettier": "prettier --write src"
+    "prettier": "prettier --write src",
+    "generate-build-version": "node generate-build-version",
+    "prebuild": "npm run generate-build-version"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -1,5 +1,6 @@
-import React, {useMemo, createContext} from "react";
+import React, {useMemo, createContext, useEffect, useState} from "react";
 import {usePersistentState} from "./../index.js"
+import packageJson from '../../package.json';
 
 export const BlocBetaUIContext = createContext({});
 
@@ -8,6 +9,8 @@ export const BlocBetaUI = ({children}) => {
   const [user, setUser] = usePersistentState("user", null);
   const [currentLocation, setCurrentLocation] = usePersistentState("location", null);
   const [expiration, setExpiration] = usePersistentState("expiration", null);
+
+  const [version, setVersion] = usePersistentState("version", packageJson.version);
 
   const contextualizedPath = (path) => {
     if (!currentLocation) {
@@ -51,6 +54,34 @@ export const BlocBetaUI = ({children}) => {
 
     localStorage.clear();
   };
+
+  useEffect(() => {
+
+    fetch("/meta.json")
+      .then((response) => response.json())
+      .then((meta) => {
+        const latestVersion = meta.version;
+
+        if (latestVersion === version) {
+          return;
+        }
+
+        console.log("💣💣💣 PRUNING CACHES 💣💣💣");
+
+        if (caches) {
+          caches.keys().then(function (names) {
+            for (let name of names) caches.delete(name);
+          });
+        }
+
+        setVersion(latestVersion);
+
+        if (typeof window !== "undefined") {
+          window.location.reload();
+        }
+      })
+
+  }, [version]);
 
   return (
     <BlocBetaUIContext.Provider value={{
