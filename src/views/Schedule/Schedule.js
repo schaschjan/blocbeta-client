@@ -10,9 +10,15 @@ import {Loader} from "../../components/Loader/Loader";
 import {DatePicker} from "../../components/DatePicker/DatePicker";
 import {Counter} from "../../components/Counter/Counter";
 
-const BookButton = ({isFull, isBlocked, timeSlot, blockHandler, unBlockHandler}) => {
+const BookButton = ({isFull, isDisabled, isBlocked, timeSlot, blockHandler, unBlockHandler}) => {
 
   const [quantity, setQuantity] = useState(1);
+
+  if (isDisabled) {
+    return <Button variant="text">
+      Time Slot disabled
+    </Button>
+  }
 
   if (isBlocked) {
     return <Button variant="primary" size="small" modifier="inverted"
@@ -136,6 +142,7 @@ const TimeSlotList = ({date, roomId}) => {
                               timeSlot={timeSlot}
                               unBlockHandler={unblockTimeSlot}
                               isBlocked={timeSlotIsBlocked}
+                              isDisabled={timeSlot.capacity === 0}
                               isFull={timeSlotIsFull}/>
                 </div>
               </li>
