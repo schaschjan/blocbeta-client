@@ -65,6 +65,8 @@
 
 .time-slot-list-item__action {
     margin-left: auto;
+    display: flex;
+    align-items: center;
 }
 
 @media (max-width: 1280px) {

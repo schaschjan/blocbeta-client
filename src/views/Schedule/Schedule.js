@@ -8,6 +8,7 @@ import "./Schedule.css";
 import {useApiV2} from "../../hooks/useApi";
 import {Loader} from "../../components/Loader/Loader";
 import {DatePicker} from "../../components/DatePicker/DatePicker";
+import {Counter} from "../../components/Counter/Counter";
 
 const BookButton = ({isFull, isBlocked, timeSlot, blockHandler, unBlockHandler}) => {
 
@@ -28,10 +29,8 @@ const BookButton = ({isFull, isBlocked, timeSlot, blockHandler, unBlockHandler})
 
   return (
     <Fragment>
-      <input type="number" min={1}
-             max={timeSlot.allow_quantity}
-             value={quantity}
-             onChange={(event) => setQuantity(event.target.value)}/>
+      <Counter max={timeSlot.allow_quantity}
+               onChange={(count) => setQuantity(count)}/>
 
       <Button variant="primary" size="small" onClick={() => blockHandler(timeSlot, quantity)}>
         Book!
