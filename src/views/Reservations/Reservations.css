@@ -13,3 +13,16 @@
 .blocked-time-slots__item:last-child {
     border-bottom: 1px solid var(--color-black);
 }
+
+.react-add-to-calendar__dropdown ul {
+    list-style: none;
+}
+
+
+.react-add-to-calendar__dropdown ul a {
+    text-decoration: none;
+}
+
+.react-add-to-calendar__dropdown {
+    margin-top: var(--spacing-unit);
+}

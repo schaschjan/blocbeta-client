@@ -4,7 +4,8 @@ const getLocation = () => window.location.pathname.split("/")[1];
 
 const cache = {
   timeSlotExclusion: "time-slot-exclusion",
-  schedule: "schedule"
+  schedule: "schedule",
+  location: "location"
 };
 
 const api = {

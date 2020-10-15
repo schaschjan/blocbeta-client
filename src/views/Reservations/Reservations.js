@@ -1,17 +1,19 @@
 import React, {Fragment, useContext} from "react";
 import {queryCache, useMutation, useQuery} from "react-query";
 import AddToCalendar from "react-add-to-calendar"
-import {Button, Loader} from "../../index";
+import {Button} from "../../index";
 import "./Reservations.css";
 import {useApiV2} from "../../hooks/useApi";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import Emoji from "../../components/Emoji/Emoji";
 import {LoadedContent} from "../../components/Loader/Loader";
+import {cache} from "../../helper/api";
 
 export default () => {
-  const {status, data} = useQuery("reservations", useApiV2("reservations"));
+  const {currentLocation: {id: locationId}} = useContext(BlocBetaUIContext);
 
-  const {currentLocation} = useContext(BlocBetaUIContext);
+  const {status: reservationStatus, data:reservations} = useQuery("reservations", useApiV2("reservations"));
+  const {status: locationStatus, data: location} = useQuery([cache.location, {locationId}], useApiV2("location", {id: locationId}));
 
   const [mutateDeletion, {
     status: deletionMutationStatus,
@@ -31,13 +33,13 @@ export default () => {
         Reservations
       </h1>
 
-      <LoadedContent loading={status === "loading"}>
+      <LoadedContent loading={[locationStatus, reservationStatus].includes("loading")}>
         <ul className="blocked-time-slots">
-          {data && data.length ? data.map(pending => {
+          {(reservations && location) ? reservations.map(pending => {
             const event = {
-              title: "Bouldern",
+              title: `Bouldern (+ ${pending.quantity - 1})`,
               description: "",
-              location: `${currentLocation.address_line_one} ${currentLocation.zip}, ${currentLocation.city}`,
+              location: `${location.address_line_one} ${location.zip}, ${location.city}`,
               startTime: `${pending.date} ${pending.start_time}`,
               endTime: `${pending.date} ${pending.end_time}`
             };
@@ -46,8 +48,10 @@ export default () => {
               <li className="blocked-time-slots__item blocked-time-slots-item" key={pending.id}>
                 <span>On {pending.date} • From {pending.start_time} to {pending.end_time}</span>
 
+                <span>You +{pending.quantity - 1}</span>
+
                 <div className="blocked-time-slots-item__calendar">
-                  <AddToCalendar event={event} buttonLabel="Add to Calendar"/>
+                  <AddToCalendar event={event} buttonLabel="Copy to Calendar"/>
                 </div>
 
                 <Button variant="danger" size="small" onClick={async () => {

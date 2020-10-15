@@ -207,7 +207,7 @@ export default () => {
             <strong>
               {reservation.first_name} {reservation.last_name}
               {reservation.quantity > 1 && (
-                <span>(+{reservation.quantity})</span>
+                <span>(+{reservation.quantity - 1})</span>
               )}
             </strong>
             <span>{reservation.username}</span>

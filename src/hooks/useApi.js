@@ -249,6 +249,11 @@ export const resources = {
 
     return data;
   },
+  location: async ({id}) => {
+    const {data} = await axios.get(`/api/location/${id}`);
+
+    return data;
+  },
   schedule: async ({location, roomId, ymd}) => {
     const {data} = await axios.get(`/api/${location}/schedule/${roomId}/${ymd}`);
 
