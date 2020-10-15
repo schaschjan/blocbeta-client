@@ -16,7 +16,7 @@ const BookButton = ({isFull, isDisabled, isBlocked, timeSlot, blockHandler, unBl
 
   if (isDisabled) {
     return <Button variant="text">
-      Time Slot disabled
+      disabled
     </Button>
   }
 
@@ -119,6 +119,7 @@ const TimeSlotList = ({date, roomId}) => {
             const timeSlotIsBlocked = timeSlot.reservation;
             const timeSlotIsFull = timeSlot.available === 0;
             const isPassed = moment() > moment(ymd + ' ' + timeSlot.end_time);
+            const isDisabled = timeSlot.capacity === 0;
 
             return (
               <li key={timeSlot.hash}
@@ -126,7 +127,7 @@ const TimeSlotList = ({date, roomId}) => {
                     "time-slot-list__item time-slot-list-item",
                     timeSlotIsBlocked ? "time-slot-list-item--blocked" : null,
                     isPassed ? "time-slot-list-item--disabled" : null,
-                    ((dayHasBlockedTimeSlot || timeSlotIsFull) && !timeSlotIsBlocked) ? "time-slot-list-item--disabled" : null
+                    ((dayHasBlockedTimeSlot || timeSlotIsFull || isDisabled) && !timeSlotIsBlocked) ? "time-slot-list-item--disabled" : null
                   )}>
 
                 <div className="time-slot-list-item__time t--zeta">
@@ -142,7 +143,7 @@ const TimeSlotList = ({date, roomId}) => {
                               timeSlot={timeSlot}
                               unBlockHandler={unblockTimeSlot}
                               isBlocked={timeSlotIsBlocked}
-                              isDisabled={timeSlot.capacity === 0}
+                              isDisabled={isDisabled}
                               isFull={timeSlotIsFull}/>
                 </div>
               </li>
