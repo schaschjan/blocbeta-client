@@ -51,9 +51,17 @@ const Login = () => {
       <Meta title="Log in"/>
 
       <div className="side-title-layout">
-        <h1 className="t--alpha side-title-layout__title">
-          Please sign to access BlocBeta.
-        </h1>
+        <div className="side-title-layout__title">
+          <h1 className="t--alpha">
+            Please sign to access BlocBeta.
+          </h1>
+          <br/>
+          <br/>
+
+          <h2 className="t--gamma">
+            If you have an existing boulderdb.de account use it to sign in.
+          </h2>
+        </div>
 
         <div className="side-title-layout__content">
           <form onSubmit={(event) => handleSubmit(event, onSubmit)}>
