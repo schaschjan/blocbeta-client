@@ -60,7 +60,7 @@ const Login = () => {
             <FormRow>
               {composeFormElement(
                 "username",
-                "Username",
+                "Username / Email",
                 formData.username,
                 Input,
                 observeField,
