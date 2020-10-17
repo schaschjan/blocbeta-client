@@ -135,7 +135,6 @@ const TimeSlotList = ({ymd, roomId, user}) => {
 };
 
 export default () => {
-  const [quantity, setQuantity] = useState(1);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedDate, setSelectedDate] = useState(moment());
 
@@ -182,22 +181,6 @@ export default () => {
               cacheKey: "room",
               api: () => api.rooms.index(),
               labelProperty: "name"
-            }
-          )}
-        </FormRow>
-
-        <FormRow>
-          {composeFormElement(
-            "quantity",
-            "Quantity",
-            quantity,
-            Input,
-            (event) => setQuantity(event.target.value),
-            {
-              required: "required",
-              type: "number",
-              min: 1,
-              max: 200
             }
           )}
         </FormRow>
@@ -250,7 +233,6 @@ export default () => {
             }),
             {
               type: "email",
-              required: "required",
             }
           )}
         </FormRow>
