@@ -17,6 +17,7 @@ import AddTimeSlotBlocker from "./views/TimeSlotBlocker/Add";
 import IndexTimeSlotBlocker from "./views/TimeSlotBlocker/Index";
 import RoomsIndex from "./views/Room/Index";
 import RoomsDetail from "./views/Room/Detail";
+import GuestAdd from "./views/Reservation/AddGuest";
 
 const adminRoutes = [
   {
@@ -52,6 +53,12 @@ const adminRoutes = [
     path: "/:location/admin/rooms/:room",
     admin: true,
     main: () => <RoomsDetail/>,
+  },
+  {
+    title: "Add Guest Reservation",
+    path: "/:location/admin/reservations/add-guest",
+    admin: true,
+    main: () => <GuestAdd/>,
   },
 ];
 

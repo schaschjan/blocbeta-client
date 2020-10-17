@@ -81,7 +81,18 @@ const Dashboard = () => {
                 </Link>
               </li>
             </ul>
+          </div>
 
+          <div className="dashboard-section">
+            <h3 className="t--beta dashboard-section__title">Guest Reservation</h3>
+
+            <ul className="dashboard-links">
+              <li className="dashboard-links__item">
+                <Link to={contextualizedPath("/admin/reservations/add-guest")} className="t--gamma">
+                  Add
+                </Link>
+              </li>
+            </ul>
           </div>
         </Fragment>
       )}

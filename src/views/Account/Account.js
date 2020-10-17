@@ -135,7 +135,6 @@ const Account = () => {
           </div>
         </div>
       </LoadedContent>
-
     </Fragment>
   );
 };

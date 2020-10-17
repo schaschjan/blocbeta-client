@@ -274,6 +274,11 @@ export const resources = {
 
     return data;
   },
+  blockGuestTimeSlot: async ({location, payload}) => {
+    const {data} = await axios.post(`/api/${location}/reservation/guest`, payload);
+
+    return data;
+  },
   unBlockTimeSlot: async ({location, id}) => {
     const {data} = await axios.delete(`/api/${location}/reservation/${id}`);
 

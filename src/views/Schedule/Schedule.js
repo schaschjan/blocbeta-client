@@ -2,7 +2,6 @@ import React, {Fragment, useEffect, useState} from "react";
 import 'react-dates/initialize';
 import moment from "moment";
 import {queryCache, useMutation, useQuery} from "react-query";
-import classNames from 'classnames';
 import {Button, Select, buildClassNames, handleApiErrors} from "./../../index";
 import "./Schedule.css";
 import {useApiV2} from "../../hooks/useApi";
@@ -10,7 +9,7 @@ import {Loader} from "../../components/Loader/Loader";
 import {DatePicker} from "../../components/DatePicker/DatePicker";
 import {Counter} from "../../components/Counter/Counter";
 
-const BookButton = ({isFull, isDisabled, isBlocked, timeSlot, blockHandler, unBlockHandler}) => {
+export const BookButton = ({isFull, isDisabled, isBlocked, timeSlot, blockHandler, unBlockHandler}) => {
 
   const [quantity, setQuantity] = useState(1);
 
@@ -45,9 +44,8 @@ const BookButton = ({isFull, isDisabled, isBlocked, timeSlot, blockHandler, unBl
   )
 };
 
-const TimeSlotList = ({date, roomId}) => {
+const TimeSlotList = ({ymd, roomId}) => {
 
-  const ymd = date.format("Y-MM-DD");
   const {status: scheduleStatus, data: schedule} = useQuery(["schedule", {
     ymd,
     roomId
@@ -112,7 +110,7 @@ const TimeSlotList = ({date, roomId}) => {
       </ul>
 
       {(schedule.length ? (
-        <ul className={classNames("schedule-list__time-slot-list", "time-slot-list")}>
+        <ul className={buildClassNames("schedule-list__time-slot-list", "time-slot-list")}>
           {schedule.map(timeSlot => {
 
             const dayHasBlockedTimeSlot = findPendingReservation();
@@ -216,7 +214,7 @@ export default () => {
         <div className="schedule__list schedule-list">
           <h2 className="schedule-list__title t--gamma">Available Time Slots</h2>
 
-          <TimeSlotList date={selectedDate} roomId={selectedRoom}/>
+          <TimeSlotList ymd={selectedDate.format("Y-MM-DD")} roomId={selectedRoom}/>
         </div>
       </div>
     </Fragment>

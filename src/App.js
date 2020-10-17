@@ -7,6 +7,7 @@ import {NavItem, Header} from "./index"
 import axios from "axios";
 import {BlocBetaUI, BlocBetaUIContext} from "./components/BlocBetaUI";
 import {useQuery} from 'react-query'
+import ScrollToTop from "./components/ScrollToTop";
 
 export const Meta = ({title, description}) => {
   return (
@@ -127,6 +128,7 @@ const App = () => {
   return (
     <Fragment>
       <Router>
+        <ScrollToTop/>
         <BlocBetaUI>
           <div className="app">
             <AppHeader/>

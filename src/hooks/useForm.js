@@ -7,14 +7,14 @@ export const composeFormElement = (
   label,
   value,
   Component,
-  observe,
+  onChange,
   additionalInputProps = {}
 ) => {
   const inputProps = {
     name: name,
     id: name,
     value: value ? value : '',
-    onChange: observe,
+    onChange: onChange,
 
     ...additionalInputProps
   };

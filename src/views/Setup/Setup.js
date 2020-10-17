@@ -1,5 +1,5 @@
 import React, {Fragment, useContext} from "react";
-import {AppContext, Meta} from "../../App";
+import {Meta} from "../../App";
 import {PageHeader} from "../../components/PageHeader/PageHeader";
 import {useHistory} from "react-router-dom";
 import {useQuery} from "react-query";
