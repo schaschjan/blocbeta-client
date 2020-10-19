@@ -135,62 +135,81 @@ export default () => {
 
   const columns = useMemo(() => {
 
-    return [
-      {
-        Header: "Time",
-        accessor: (row) => {
-          return `${row.start_time} – ${row.end_time}`
+      return [
+        {
+          Header: "Time",
+          accessor: (row) => {
+            return `${row.start_time} – ${row.end_time}`
+          },
+          Cell: ({cell}) => (
+            <strong>{cell.value}</strong>
+          ),
         },
-        Cell: ({cell}) => (
-          <strong>{cell.value}</strong>
-        ),
-      },
-      {
-        Header: "Room",
-        accessor: "room.name",
-      },
-      {
-        Header: "Available",
-        accessor: (row) => {
-          return `${row.available} / ${row.capacity}`
+        {
+          Header: "Room",
+          accessor: "room.name",
         },
-      },
-      {
-        Header: "Appeared",
-        accessor: (row) => {
-          return `${row.reservations.filter(reservation => reservation.appeared === true).length} / ${row.capacity}`
+        {
+          Header: "Available",
+          accessor: (row) => {
+            return `${row.available} / ${row.capacity}`
+          },
         },
-      },
-      {
-        Header: ({getToggleAllRowsExpandedProps, isAllRowsExpanded}) => (
-          <span {...getToggleAllRowsExpandedProps()} className="expander">
+        {
+          Header: "Appeared",
+          accessor: (row) => {
+            return `${row.reservations.filter(reservation => reservation.appeared === true).length} / ${row.capacity}`
+          },
+        },
+        {
+          Header: ({getToggleAllRowsExpandedProps, isAllRowsExpanded}) => (
+            <span {...getToggleAllRowsExpandedProps()} className="expander">
             {isAllRowsExpanded ? <Downward/> : <Forward/>}
           </span>
-        ),
-        id: 'expander',
-        Cell: ({row}) => (
-          <span {...row.getToggleRowExpandedProps()} className="expander">
+          ),
+          id: 'expander',
+          Cell: ({row}) => (
+            <span {...row.getToggleRowExpandedProps()} className="expander">
           {row.isExpanded ? <Downward/> : <Forward/>}
         </span>
-        ),
-      },
-      {
-        hidden: true,
-        Header: 'User',
-        accessor: (row) => {
-          return row.reservations.map(reservation => {
-            return `${reservation.first_name} ${reservation.last_name} ${reservation.username}`;
-          })
+          ),
         },
-      },
-      {
-        hidden: true,
-        Header: 'Reservations',
-        id: 'reservations',
-        accessor: "reservations"
-      },
-    ];
-  }, []);
+        {
+          hidden: true,
+          Header: 'User',
+          accessor: (row) => {
+            return row.reservations.sort((a, b) => {
+              if (a.first_name < b.first_name) {
+                return -1
+              }
+
+              if (a.first_name > b.first_name) {
+                return 1
+              }
+
+              return 0;
+
+            }).map(reservation => {
+              return `${reservation.first_name} ${reservation.last_name} ${reservation.username}`;
+            })
+          },
+        },
+        {
+          hidden: true,
+          Header:
+            'Reservations',
+          id:
+            'reservations',
+          accessor:
+            "reservations"
+        }
+        ,
+      ]
+        ;
+    },
+    []
+    )
+  ;
 
   const renderRowSubComponent = useCallback(({row}) => {
     return (

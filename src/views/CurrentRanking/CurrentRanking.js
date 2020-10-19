@@ -10,11 +10,11 @@ import {Meta} from "../../App";
 import Paragraph from "../../components/Paragraph/Paragraph";
 import moment from "moment";
 import Avatar from "../../components/Avatar/Avatar";
-import "./CurrentRanking.css";
 import Button from "../../components/Button/Button";
 import {Female, Male} from "../../components/Icon/Icons";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import {LoadedContent} from "../../components/Loader/Loader";
+import "./CurrentRanking.css";
 
 export default () => {
   const {user, contextualizedPath} = useContext(BlocBetaUIContext);
@@ -36,8 +36,8 @@ export default () => {
         Header: "Rank",
         accessor: "rank",
         className: `table-cell--rank`,
-        Cell: ({row}) => {
-          return <strong>{row.index++}</strong>;
+        Cell: ({value}) => {
+          return <strong>{value}</strong>;
         },
       },
       {
@@ -118,7 +118,8 @@ export default () => {
 
           return (
             <Button asLink={true}
-                    variant="text"
+                    variant="primary"
+                    size="small"
                     to={contextualizedPath(`/compare/${user.id}/to/${cell.value}/at/current`)}>
               Compare
             </Button>
@@ -138,7 +139,7 @@ export default () => {
 
       <LoadedContent loading={[rankingStatus, boulderCountStatus].includes("loading")}>
 
-        {ranking.list.length > 0 ? (
+        {ranking && ranking.list.length > 0 ? (
           <RankingTable
             data={ranking.list}
             columns={columns}
