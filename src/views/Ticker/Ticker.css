@@ -79,7 +79,7 @@
     font-size: var(--font-size-eta);
     line-height: var(--line-height-eta);
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: auto max-content max-content;
 }
 
 .ticker-reservation-table__item:hover {
@@ -94,7 +94,8 @@
     background: var(--color-ice);
 }
 
-.ticker-reservation-table-item__actions {
+.ticker-reservation-table-item__cancel,
+.ticker-reservation-table-item__check-in {
     margin-left: auto;
     align-self: center;
 }

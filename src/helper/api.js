@@ -34,8 +34,10 @@ const api = {
       return axios.post(`/api/${getLocation()}/reservation/guest`, payload);
     },
     update: (id, payload) => {
-
       return axios.put(`/api/${getLocation()}/reservation/${id}`, payload);
+    },
+    delete: (id) => {
+      return axios.delete(`/api/${getLocation()}/reservation/${id}`);
     }
   }
 };

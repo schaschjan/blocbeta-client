@@ -124,6 +124,15 @@ export default () => {
     }
   );
 
+  const [mutateCancellation, {status: mutateCancellationStatus, error: mutateCancellationError}] = useMutation(async ({id}) => {
+    await api.reservation.delete(id)
+  }, {
+    throwOnError: true,
+    onSuccess: () => {
+      queryCache.invalidateQueries("ticker");
+    },
+  });
+
   const [mutateAppearance, {status: mutateAppearanceStatus, error: mutateAppearanceError}] = useMutation(async ({id, appeared}) => {
     await api.reservation.update(id, {appeared})
   }, {
@@ -232,7 +241,17 @@ export default () => {
             <span>{reservation.username}</span>
           </span>
 
-            <span className="ticker-reservation-table-item__actions">
+            <span className="ticker-reservation-table-item__cancel">
+              {!reservation.appeared && (
+                <Button variant="danger" size="small" onClick={() => mutateCancellation({
+                  id: reservation.id
+                })}>
+                  Cancel
+                </Button>
+              )}
+            </span>
+
+            <span className="ticker-reservation-table-item__check-in">
                 {!reservation.appeared ? (
                   <Button variant="primary" size="small" onClick={() => mutateAppearance({
                     id: reservation.id,
