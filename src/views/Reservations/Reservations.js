@@ -12,7 +12,7 @@ import {cache} from "../../helper/api";
 export default () => {
   const {currentLocation: {id: locationId}} = useContext(BlocBetaUIContext);
 
-  const {status: reservationStatus, data:reservations} = useQuery("reservations", useApiV2("reservations"));
+  const {status: reservationStatus, data: reservations} = useQuery("reservations", useApiV2("reservations"));
   const {status: locationStatus, data: location} = useQuery([cache.location, {locationId}], useApiV2("location", {id: locationId}));
 
   const [mutateDeletion, {
@@ -48,7 +48,9 @@ export default () => {
               <li className="blocked-time-slots__item blocked-time-slots-item" key={pending.id}>
                 <span>On {pending.date} • From {pending.start_time} to {pending.end_time}</span>
 
-                <span>You +{pending.quantity - 1}</span>
+                {pending.quantity > 1 && (
+                  <span>You +{pending.quantity - 1}</span>
+                )}
 
                 <div className="blocked-time-slots-item__calendar">
                   <AddToCalendar event={event} buttonLabel="Copy to Calendar"/>
