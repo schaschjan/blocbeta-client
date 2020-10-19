@@ -1,4 +1,4 @@
-import React, {useMemo, createContext, useEffect, useState} from "react";
+import React, {useMemo, createContext, useEffect} from "react";
 import {usePersistentState} from "./../index.js"
 import packageJson from '../../package.json';
 

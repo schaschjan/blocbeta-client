@@ -3,6 +3,14 @@ import {AppContext} from "../App";
 import axios from "axios";
 import {useParams} from "react-router-dom";
 
+export const extractErrorMessage = (error) => {
+  if (!error.response) {
+    return null
+  }
+
+  return error.response.data.message
+};
+
 export const handleErrors = (error) => {
 
   if (!error.response) {

@@ -8,6 +8,7 @@ import axios from "axios";
 import {BlocBetaUI, BlocBetaUIContext} from "./components/BlocBetaUI";
 import {useQuery} from 'react-query'
 import ScrollToTop from "./components/ScrollToTop";
+import {ToastContainer} from "./components/Toaster/Toaster";
 
 export const Meta = ({title, description}) => {
   return (
@@ -22,7 +23,7 @@ export const Meta = ({title, description}) => {
 export const AppContext = createContext({});
 
 const Routing = () => {
-  const {isAuthenticated} = useContext(BlocBetaUIContext);
+  const {isAuthenticated, contextualizedPath} = useContext(BlocBetaUIContext);
 
   const PrivateRoute = ({children, ...rest}) => {
 
@@ -30,23 +31,28 @@ const Routing = () => {
       <Route
         {...rest}
         render={() => {
-
           if (isAuthenticated) {
             return children
           }
 
           return <Redirect to={{pathname: "/login"}}/>
-        }
-        }
+        }}
       />
     );
   };
 
   return <Switch>
+    <Route path="/" exact>
+      {isAuthenticated ? (
+        <Redirect to={contextualizedPath("/dashboard")}/>
+      ) : (
+        <Redirect to="/login"/>
+      )}
+    </Route>
+
     {router.map((route, index) => {
 
       if (!route.public) {
-
         return <PrivateRoute
           key={index}
           path={route.path}
@@ -130,19 +136,19 @@ const App = () => {
       <Router>
         <ScrollToTop/>
         <BlocBetaUI>
-          <div className="app">
-            <AppHeader/>
+          <ToastContainer>
+            <div className="app">
+              <AppHeader/>
 
-            <div className="content">
-              <Routing/>
+              <div className="content">
+                <Routing/>
+              </div>
+
+              <Footer/>
             </div>
-
-            <Footer/>
-          </div>
+          </ToastContainer>
         </BlocBetaUI>
       </Router>
-
-      {/*{process.env.NODE_ENV === "development" && <ReactQueryDevtools initialIsOpen/>}*/}
     </Fragment>
   );
 };

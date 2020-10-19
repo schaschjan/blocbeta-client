@@ -4,11 +4,12 @@ import Button from "../../components/Button/Button";
 import {Meta} from "../../App";
 import axios from "axios";
 import {FormRow} from "../../components/Form/Form";
-import {handleErrors} from "../../hooks/useApi";
+import {extractErrorMessage, handleErrors} from "../../hooks/useApi";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import {useForm, composeFormElement} from "../../index";
 import {useHistory} from "react-router-dom";
 import "./Login.css";
+import {toast, ToastContext} from "../../components/Toaster/Toaster";
 
 const Login = () => {
   const {handleSubmit, formData, submitting, observeField} = useForm({
@@ -18,6 +19,8 @@ const Login = () => {
 
   const history = useHistory();
   const {setUser, setCurrentLocation, setExpiration, reset} = useContext(BlocBetaUIContext);
+
+  const {dispatch} = useContext(ToastContext);
 
   useEffect(() => {
     reset();
@@ -42,7 +45,14 @@ const Login = () => {
       }
 
     } catch (error) {
-      handleErrors(error);
+
+      dispatch(
+        toast(
+          "Error",
+          extractErrorMessage(error),
+          "danger"
+        )
+      );
     }
   };
 
