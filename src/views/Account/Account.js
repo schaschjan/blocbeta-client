@@ -3,7 +3,7 @@ import {useHistory} from "react-router-dom";
 import Label from "../../components/Label/Label";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
-import {handleErrors, useApiV2} from "../../hooks/useApi";
+import {extractErrorMessage, handleErrors, useApiV2} from "../../hooks/useApi";
 import {useMutation, useQuery} from "react-query";
 import Switch from "../../components/Switch/Switch";
 import {Meta} from "../../App";
@@ -11,6 +11,7 @@ import {composeFormElement, useForm, FormRow} from "../../index";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import "./Account.css";
 import {LoadedContent} from "../../components/Loader/Loader";
+import {toast, ToastContext} from "../../components/Toaster/Toaster";
 
 const Form = ({defaults, onSubmit}) => {
   const {handleSubmit, submitting, formData, observeField} = useForm(defaults);
@@ -91,13 +92,32 @@ const Account = () => {
   const {contextualizedPath} = useContext(BlocBetaUIContext);
   const history = useHistory();
 
+  const {dispatch} = useContext(ToastContext);
+
   const onSubmit = async (data) => {
+
+    delete data.media;
+
     try {
       await mutate({payload: data});
-      alert("Your account was updated!");
+
+      dispatch(
+        toast(
+          "Success",
+          "Account updated!",
+          "success"
+        )
+      );
 
     } catch (error) {
-      handleErrors(error);
+
+      dispatch(
+        toast(
+          "Error",
+          extractErrorMessage(error),
+          "danger"
+        )
+      );
     }
   };
 

@@ -4,7 +4,7 @@
     justify-content: space-between;
     align-self: start;
     position: fixed;
-    z-index: 999;
+    z-index: 200;
     top: 0;
     display: grid;
     left: 0;

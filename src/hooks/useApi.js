@@ -8,7 +8,13 @@ export const extractErrorMessage = (error) => {
     return null
   }
 
-  return error.response.data.message
+  const {data} = error.response;
+
+  if (data.type === "formError") {
+    return Object.values(error.response.data.errors).map(message => `⚠️ ${message}`).join('\n');
+  }
+
+  return data.message
 };
 
 export const handleErrors = (error) => {

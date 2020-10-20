@@ -7,6 +7,7 @@
     position: fixed;
     top: calc(2 * var(--spacing-unit));
     right: calc(2 * var(--spacing-unit));
+    z-index: 400;
 }
 
 .toast__title,
@@ -18,6 +19,7 @@
     margin-bottom: calc(1 * var(--spacing-unit));
 }
 
+.toast--success,
 .toast--info {
     background: var(--color-lila);
     color: var(--color-white);

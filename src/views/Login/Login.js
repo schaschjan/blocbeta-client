@@ -4,7 +4,7 @@ import Button from "../../components/Button/Button";
 import {Meta} from "../../App";
 import axios from "axios";
 import {FormRow} from "../../components/Form/Form";
-import {extractErrorMessage, handleErrors} from "../../hooks/useApi";
+import {extractErrorMessage} from "../../hooks/useApi";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import {useForm, composeFormElement} from "../../index";
 import {useHistory} from "react-router-dom";
