@@ -6,21 +6,21 @@ import Emoji from "../../../../components/Emoji/Emoji";
 import Grade from "../../../../components/Grade/Grade";
 import Icon from "../../../../components/Icon/Icon";
 import classnames from "classnames";
-import useApi, { api, cacheKeys } from "../../../../hooks/useApi";
+import useApi, { api, cache } from "../../../../hooks/useApi";
 import { store } from "../../../../store";
 import { alphaSort } from "../../../../helpers";
 
 export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
   const [activeTab, setActiveTab] = useState("holdStyle");
 
-  const { data: walls } = useApi(cacheKeys.walls, api.walls.all);
-  const { data: grades } = useApi(cacheKeys.grades, api.grades.all);
-  const { data: holdStyles } = useApi(cacheKeys.holdStyles, api.holdStyles.all);
-  const { data: tags } = useApi(cacheKeys.tags, api.tags.all);
-  const { data: labels } = useApi(cacheKeys.labels, api.labels.all);
+  const { data: walls } = useApi(cache.walls, api.walls.all);
+  const { data: grades } = useApi(cache.grades, api.grades.all);
+  const { data: holdStyles } = useApi(cache.holdStyles, api.holdStyles.all);
+  const { data: tags } = useApi(cache.tags, api.tags.all);
+  const { data: labels } = useApi(cache.labels, api.labels.all);
 
   const { data: setters } = useApi(
-    [cacheKeys.setters, "withActiveBoulders"],
+    [cache.setters, "withActiveBoulders"],
     api.setters.withActiveBoulders
   );
 

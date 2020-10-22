@@ -1,19 +1,17 @@
 .holdstyle {
-  border-radius: 50%;
-  overflow: hidden;
+    border-radius: 50%;
+    overflow: hidden;
+    width: 40px;
+    height: 40px;
 }
 
-.holdstyle > div {
-  width: 40px;
-  height: 40px;
-  background-size: 100%;
+.holdstyle__inner {
+    width: 100%;
+    height: 100%;
+    background-size: 100%;
 }
 
-.holdstyle.holdstyle--small {
-  margin: 0.5rem;
-}
-
-.holdstyle.holdstyle--small > div {
-  width: 24px;
-  height: 24px;
+.holdstyle--small {
+  width: 20px;
+  height: 20px;
 }

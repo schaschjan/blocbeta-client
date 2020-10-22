@@ -1,13 +1,14 @@
-import React, {Fragment, useEffect, useState} from "react";
+import React, {Fragment, useContext, useEffect, useState} from "react";
 import 'react-dates/initialize';
 import moment from "moment";
 import {queryCache, useMutation, useQuery} from "react-query";
-import {Button, Select, buildClassNames, handleApiErrors} from "./../../index";
+import {Button, Select, buildClassNames} from "./../../index";
 import "./Schedule.css";
-import {useApiV2} from "../../hooks/useApi";
+import {extractErrorMessage, useApi} from "../../hooks/useApi";
 import {Loader} from "../../components/Loader/Loader";
 import {DatePicker} from "../../components/DatePicker/DatePicker";
 import {Counter} from "../../components/Counter/Counter";
+import {toast, ToastContext} from "../../components/Toaster/Toaster";
 
 export const BookButton = ({isFull, isDisabled, isBlocked, timeSlot, blockHandler, unBlockHandler}) => {
 
@@ -45,13 +46,14 @@ export const BookButton = ({isFull, isDisabled, isBlocked, timeSlot, blockHandle
 };
 
 const TimeSlotList = ({ymd, roomId}) => {
+  const {dispatch} = useContext(ToastContext);
 
   const {status: scheduleStatus, data: schedule} = useQuery(["schedule", {
     ymd,
     roomId
-  }], useApiV2("schedule", {ymd, roomId}));
+  }], useApi("schedule", {ymd, roomId}));
 
-  const [mutateDeletion, {status: deletionMutationStatus, error: deletionMutationError}] = useMutation(useApiV2("unBlockTimeSlot"), {
+  const [mutateDeletion, {status: deletionMutationStatus, error: deletionMutationError}] = useMutation(useApi("unBlockTimeSlot"), {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries(["schedule", {ymd, roomId}]);
@@ -59,7 +61,7 @@ const TimeSlotList = ({ymd, roomId}) => {
     },
   });
 
-  const [mutateCreation, {status: creationMutationStatus, error: creationMutationError}] = useMutation(useApiV2("blockTimeSlot"), {
+  const [mutateCreation, {status: creationMutationStatus, error: creationMutationError}] = useMutation(useApi("blockTimeSlot"), {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries(["schedule", {ymd, roomId}]);
@@ -68,6 +70,7 @@ const TimeSlotList = ({ymd, roomId}) => {
   });
 
   const blockTimeSlot = async (timeSlot, quantity) => {
+
     try {
       await mutateCreation({
         payload: {
@@ -78,16 +81,31 @@ const TimeSlotList = ({ymd, roomId}) => {
           "quantity": quantity
         }
       });
-    } catch (e) {
-      handleApiErrors(e)
+    } catch (error) {
+
+      dispatch(
+        toast(
+          "Error",
+          extractErrorMessage(error),
+          "danger"
+        )
+      );
     }
   };
 
   const unblockTimeSlot = async (id) => {
+
     try {
       await mutateDeletion({id});
-    } catch (e) {
-      handleApiErrors(e)
+    } catch (error) {
+
+      dispatch(
+        toast(
+          "Error",
+          extractErrorMessage(error),
+          "danger"
+        )
+      );
     }
   };
 
@@ -159,7 +177,7 @@ export default () => {
   const [selectedDate, setSelectedDate] = useState(moment());
   const [selectedRoom, setSelectedRoom] = useState(null);
 
-  const {status: roomsStatus, data: rooms} = useQuery("rooms", useApiV2("rooms"));
+  const {status: roomsStatus, data: rooms} = useQuery("rooms", useApi("rooms"));
 
   useEffect(() => {
     if (!rooms) {

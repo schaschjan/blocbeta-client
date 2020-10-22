@@ -1,36 +1,41 @@
 .ascent {
-  width: 40px;
-  height: 40px;
-  box-sizing: border-box;
-  border: 1px solid #333;
-  display: flex;
-  margin: 12px 6px;
-  overflow: hidden;
-  align-items: center;
+    width: 40px;
+    height: 40px;
+    box-sizing: border-box;
+    border: 1px solid #333;
+    display: flex;
+    margin: 12px 6px;
+    overflow: hidden;
+    align-items: center;
 }
 
-.ascent .icon {
-  margin: 0 auto;
-  align-items: center;
+.ascent:hover svg {
+    transform: scale(1.2);
+}
+
+.ascent svg {
+    margin: 0 auto;
+    align-items: center;
+    transition: transform 80ms ease-in-out;
 }
 
 .ascent--disabled {
-  opacity: 0.3;
-  pointer-events: none;
+    opacity: 0.3;
+    pointer-events: none;
 }
 
 .ascent--flash.ascent--checked {
-  border: 1px solid var(--color-flash);
+    border: 1px solid var(--color-flash);
 }
 
 .ascent--top.ascent--checked {
-  border: 1px solid var(--color-top);
+    border: 1px solid var(--color-top);
 }
 
 .ascent--resign.ascent--checked {
-  border: 1px solid var(--color-resign);
+    border: 1px solid var(--color-resign);
 }
 
 .ascent:hover {
-  cursor: pointer;
+    cursor: pointer;
 }

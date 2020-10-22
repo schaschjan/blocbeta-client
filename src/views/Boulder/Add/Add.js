@@ -3,7 +3,7 @@ import Container from "../../../components/Container/Container";
 import { PageHeader } from "../../../components/PageHeader/PageHeader";
 import { messages } from "../../../messages";
 import { getOption } from "../../../helpers";
-import { api, cacheKeys } from "../../../hooks/useApi";
+import { api, cache } from "../../../hooks/useApi";
 import Wrapper from "../../../components/Wrapper/Wrapper";
 import { store } from "../../../store";
 import { queryCache, useMutation } from "react-query";
@@ -30,8 +30,8 @@ const Add = () => {
   const [mutateOnAddBoulder] = useMutation(api.boulder.add, {
     throwOnError: true,
     onSuccess: () => {
-      queryCache.refetchQueries(cacheKeys.boulders);
-      queryCache.refetchQueries(cacheKeys.ascents);
+      queryCache.refetchQueries(cache.boulder);
+      queryCache.refetchQueries(cache.ascents);
     },
   });
 

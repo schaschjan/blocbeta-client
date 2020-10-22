@@ -9,7 +9,7 @@ import "./Ticker.css";
 import Forward from "../../components/Icon/Forward";
 import Downward from "../../components/Icon/Downward";
 import moment from "moment";
-import {useApiV2} from "../../hooks/useApi";
+import {useApi} from "../../hooks/useApi";
 
 const Table = ({columns, ymd, setYmd, data, renderRowSubComponent}) => {
   const {
@@ -113,7 +113,7 @@ export default () => {
 
   const {status, data} = useQuery(["ticker", {
       ymd: selectedDate
-    }], useApiV2("ticker", {ymd: selectedDate}),
+    }], useApi("ticker", {ymd: selectedDate}),
 
     {
       onSuccess: () => {
@@ -143,82 +143,77 @@ export default () => {
   });
 
   const columns = useMemo(() => {
-
-      return [
-        {
-          Header: "Time",
-          accessor: (row) => {
-            return `${row.start_time} – ${row.end_time}`
-          },
-          Cell: ({cell}) => (
-            <strong>{cell.value}</strong>
-          ),
+    return [
+      {
+        Header: "Time",
+        accessor: (row) => {
+          return `${row.start_time} – ${row.end_time}`
         },
-        {
-          Header: "Room",
-          accessor: "room.name",
+        Cell: ({cell}) => (
+          <strong>{cell.value}</strong>
+        ),
+      },
+      {
+        Header: "Room",
+        accessor: "room.name",
+      },
+      {
+        Header: "Available",
+        accessor: (row) => {
+          return `${row.available} / ${row.capacity}`
         },
-        {
-          Header: "Available",
-          accessor: (row) => {
-            return `${row.available} / ${row.capacity}`
-          },
+      },
+      {
+        Header: "Appeared",
+        accessor: (row) => {
+          return `${row.reservations.filter(reservation => reservation.appeared === true).length} / ${row.capacity}`
         },
-        {
-          Header: "Appeared",
-          accessor: (row) => {
-            return `${row.reservations.filter(reservation => reservation.appeared === true).length} / ${row.capacity}`
-          },
-        },
-        {
-          Header: ({getToggleAllRowsExpandedProps, isAllRowsExpanded}) => (
-            <span {...getToggleAllRowsExpandedProps()} className="expander">
+      },
+      {
+        Header: ({getToggleAllRowsExpandedProps, isAllRowsExpanded}) => (
+          <span {...getToggleAllRowsExpandedProps()} className="expander">
             {isAllRowsExpanded ? <Downward/> : <Forward/>}
           </span>
-          ),
-          id: 'expander',
-          Cell: ({row}) => (
-            <span {...row.getToggleRowExpandedProps()} className="expander">
+        ),
+        id: 'expander',
+        Cell: ({row}) => (
+          <span {...row.getToggleRowExpandedProps()} className="expander">
           {row.isExpanded ? <Downward/> : <Forward/>}
         </span>
-          ),
+        ),
+      },
+      {
+        hidden: true,
+        Header: 'User',
+        accessor: (row) => {
+          return row.reservations.sort((a, b) => {
+            if (a.first_name < b.first_name) {
+              return -1
+            }
+
+            if (a.first_name > b.first_name) {
+              return 1
+            }
+
+            return 0;
+
+          }).map(reservation => {
+            return `${reservation.first_name} ${reservation.last_name} ${reservation.username}`;
+          })
         },
-        {
-          hidden: true,
-          Header: 'User',
-          accessor: (row) => {
-            return row.reservations.sort((a, b) => {
-              if (a.first_name < b.first_name) {
-                return -1
-              }
-
-              if (a.first_name > b.first_name) {
-                return 1
-              }
-
-              return 0;
-
-            }).map(reservation => {
-              return `${reservation.first_name} ${reservation.last_name} ${reservation.username}`;
-            })
-          },
-        },
-        {
-          hidden: true,
-          Header:
-            'Reservations',
-          id:
-            'reservations',
-          accessor:
-            "reservations"
-        }
-        ,
-      ]
-        ;
-    },
-    []
-    )
-  ;
+      },
+      {
+        hidden: true,
+        Header:
+          'Reservations',
+        id:
+          'reservations',
+        accessor:
+          "reservations"
+      }
+      ,
+    ];
+  }, []);
 
   const renderRowSubComponent = useCallback(({row}) => {
     return (

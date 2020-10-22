@@ -8,7 +8,7 @@ import { useHistory } from "react-router-dom";
 import { messages } from "../../messages";
 import { AppContext } from "../../App";
 import useApiResourceSelectOptions from "../../hooks/useApiResourceSelectOptions";
-import { api, cacheKeys } from "../../hooks/useApi";
+import { api, cache } from "../../hooks/useApi";
 import { getOptions } from "../../helpers";
 import { store } from "../../store";
 import "./BoulderForm.css";
@@ -17,17 +17,17 @@ const BoulderForm = ({ submitting, submitLabel, onSubmit, ...rest }) => {
   const { locationPath } = useContext(AppContext);
   let history = useHistory();
 
-  const grades = useApiResourceSelectOptions(cacheKeys.grades, api.grades.all);
+  const grades = useApiResourceSelectOptions(cache.grades, api.grades.all);
   const holdStyles = useApiResourceSelectOptions(
-    cacheKeys.holdStyles,
+    cache.holdStyles,
     api.holdStyles.all
   );
-  const walls = useApiResourceSelectOptions(cacheKeys.walls, api.walls.all);
+  const walls = useApiResourceSelectOptions(cache.walls, api.walls.all);
   const setters = useApiResourceSelectOptions(
-    cacheKeys.setters,
+    cache.setters,
     api.setters.all
   );
-  const tags = useApiResourceSelectOptions(cacheKeys.tags, api.tags.all);
+  const tags = useApiResourceSelectOptions(cache.tags, api.tags.all);
   const states = getOptions(store.states);
 
   return (

@@ -18,6 +18,7 @@ import IndexTimeSlotBlocker from "./views/TimeSlotBlocker/Index";
 import RoomsIndex from "./views/Room/Index";
 import RoomsDetail from "./views/Room/Detail";
 import GuestAdd from "./views/Reservation/AddGuest";
+import BoulderIndex from "./views/Boulder/Index";
 
 const adminRoutes = [
   {
@@ -114,6 +115,13 @@ export const router = [
     title: "Current ranking",
     path: "/:location/ranking/current",
     main: () => <CurrentRanking/>,
+    exact: true,
+    visibleUserOnly: true,
+  },
+  {
+    title: "Boulder",
+    path: "/:location/boulder",
+    main: () => <BoulderIndex/>,
     exact: true,
     visibleUserOnly: true,
   },

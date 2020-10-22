@@ -1,7 +1,7 @@
 import React, {Fragment, useContext} from "react";
 import {Meta} from "../../../App";
 import {composeFormElement, useForm} from "../../..";
-import {handleErrors} from "../../../hooks/useApi";
+import {extractErrorMessage} from "../../../hooks/useApi";
 import {useHistory} from "react-router-dom";
 import Input from "../../../components/Input/Input";
 import {FormRow} from "../../../components/Form/Form";
@@ -10,9 +10,11 @@ import {Textarea} from "../../../components/Textarea/Textarea";
 import ResourceDependantSelect from "../../../components/ResourceDependantSelect/ResourceDependantSelect";
 import {api} from "../../../helper/api";
 import {BlocBetaUIContext} from "../../../components/BlocBetaUI";
+import {toast, ToastContext} from "../../../components/Toaster/Toaster";
 
 const AddTimeSlotBlocker = () => {
   const history = useHistory();
+  const {dispatch} = useContext(ToastContext);
 
   const {handleSubmit, observeField, submitting, formData} = useForm({
     start_date: null,
@@ -30,7 +32,14 @@ const AddTimeSlotBlocker = () => {
       history.push(contextualizedPath("/dashboard"));
 
     } catch (error) {
-      handleErrors(error);
+
+      dispatch(
+        toast(
+          "Error",
+          extractErrorMessage(error),
+          "danger"
+        )
+      );
     }
   };
 

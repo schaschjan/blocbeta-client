@@ -1,18 +1,20 @@
-import React, {useState, useEffect, Fragment} from "react";
+import React, {useState, useContext, useEffect, Fragment} from "react";
 import {Meta} from "../../App";
 import {FormRow} from "../../components/Form/Form";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
-import {handleErrors} from "../../hooks/useApi";
+import {extractErrorMessage} from "../../hooks/useApi";
 import {useParams} from "react-router-dom";
 import {useHistory} from "react-router-dom";
 import {useForm, composeFormElement} from "../../index";
 import axios from "axios";
 import classNames from "classnames";
 import "./ResetPassword.css";
+import {toast, ToastContext} from "../../components/Toaster/Toaster";
 
 const ResetPassword = () => {
   const [hashFound, setHashFound] = useState(false);
+  const {dispatch} = useContext(ToastContext);
 
   const history = useHistory();
   const {hash} = useParams();
@@ -26,7 +28,14 @@ const ResetPassword = () => {
       await axios.get(`/api/reset/${hash}`, false);
       setHashFound(true);
     } catch (error) {
-      handleErrors(error);
+
+      dispatch(
+        toast(
+          "Error",
+          extractErrorMessage(error),
+          "danger"
+        )
+      );
     }
   };
 
@@ -41,7 +50,14 @@ const ResetPassword = () => {
       history.push("/login");
 
     } catch (error) {
-      handleErrors(error);
+
+      dispatch(
+        toast(
+          "Error",
+          extractErrorMessage(error),
+          "danger"
+        )
+      );
     }
   };
 

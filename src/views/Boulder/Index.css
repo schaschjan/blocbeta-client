@@ -1,0 +1,8 @@
+.boulder-list {
+
+}
+
+.boulder-list__item {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(40px, 1fr));
+}

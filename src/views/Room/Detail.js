@@ -2,7 +2,7 @@ import React, {Fragment, useMemo} from "react";
 import {queryCache, useQuery, useMutation} from "react-query";
 import {LoadedContent} from "../../components/Loader/Loader";
 import EmptyState from "../../components/EmptyState/EmptyState";
-import {cacheKeys, useApiV2} from "../../hooks/useApi";
+import {cache, useApi} from "../../hooks/useApi";
 import {useParams} from "react-router-dom";
 import {CrudTable, EditableCell} from "../../components/CrudTable/CrudTable";
 import "./Detail.css";
@@ -10,12 +10,12 @@ import {handleApiErrors} from "../../index";
 
 export default () => {
   const {room} = useParams();
-  const {status, data} = useQuery([cacheKeys.roomSchedule, {room}], useApiV2("roomSchedule", {room}));
+  const {status, data} = useQuery([cache.roomSchedule, {room}], useApi("roomSchedule", {room}));
 
-  const [mutateUpdate, {status: mutateUpdateStatus, error: mutateUpdateError}] = useMutation(useApiV2("updateTimeSlot"), {
+  const [mutateUpdate, {status: mutateUpdateStatus, error: mutateUpdateError}] = useMutation(useApi("updateTimeSlot"), {
     throwOnError: true,
     onSuccess: () => {
-      queryCache.invalidateQueries([cacheKeys.roomSchedule, {room}]);
+      queryCache.invalidateQueries([cache.roomSchedule, {room}]);
     },
   });
 

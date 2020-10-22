@@ -1,5 +1,5 @@
 import React, {Fragment, useContext, useMemo} from "react";
-import {useApiV2} from "../../hooks/useApi";
+import {useApi} from "../../hooks/useApi";
 import {useQuery} from "react-query";
 import RankingTable from "../../components/RankingTable/RankingTable";
 import EmptyState from "../../components/EmptyState/EmptyState";
@@ -22,12 +22,12 @@ export default () => {
   const {
     status: rankingStatus,
     data: ranking
-  } = useQuery("currentRanking", useApiV2("currentRanking"));
+  } = useQuery("currentRanking", useApi("currentRanking"));
 
   const {
     status: boulderCountStatus,
     data: boulderCount
-  } = useQuery("boulderCount", useApiV2("boulderCount"));
+  } = useQuery("boulderCount", useApi("boulderCount"));
 
   const columns = useMemo(() => {
 
@@ -138,7 +138,6 @@ export default () => {
       </h1>
 
       <LoadedContent loading={[rankingStatus, boulderCountStatus].includes("loading")}>
-
         {ranking && ranking.list.length > 0 ? (
           <RankingTable
             data={ranking.list}

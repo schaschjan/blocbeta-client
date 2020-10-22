@@ -1,4 +1,4 @@
-import React, {Fragment} from "react";
+import React, {Fragment, useContext} from "react";
 import {Meta} from "../../App";
 import {FormRow} from "../../components/Form/Form";
 import Input from "../../components/Input/Input";
@@ -6,10 +6,12 @@ import Button from "../../components/Button/Button";
 import {useForm, composeFormElement} from "../../index";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
-import {handleErrors} from "../../hooks/useApi";
+import {extractErrorMessage} from "../../hooks/useApi";
+import {toast, ToastContext} from "../../components/Toaster/Toaster";
 
 const RequestPasswordReset = () => {
   const history = useHistory();
+  const {dispatch} = useContext(ToastContext);
 
   const {handleSubmit, observeField, submitting, formData} = useForm({
     email: null
@@ -23,7 +25,14 @@ const RequestPasswordReset = () => {
       history.push("/login");
 
     } catch (error) {
-      handleErrors(error);
+
+      dispatch(
+        toast(
+          "Error",
+          extractErrorMessage(error),
+          "danger"
+        )
+      );
     }
   };
 

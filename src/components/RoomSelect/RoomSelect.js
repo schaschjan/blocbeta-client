@@ -1,12 +1,12 @@
 import React, {Fragment, useEffect, useState} from "react";
 import {Select} from "../../index";
-import {useApiV2} from "../../hooks/useApi";
+import {useApi} from "../../hooks/useApi";
 import {useQuery} from "react-query";
 import "./RoomSelect.css";
 
 export default ({changeHandler}) => {
   const [selectedRoom, setSelectedRoom] = useState(null);
-  const {status: roomsStatus, data: rooms} = useQuery("rooms", useApiV2("rooms"));
+  const {status: roomsStatus, data: rooms} = useQuery("rooms", useApi("rooms"));
 
   useEffect(() => {
     if (!rooms) {

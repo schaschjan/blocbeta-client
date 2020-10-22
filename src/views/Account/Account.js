@@ -3,7 +3,7 @@ import {useHistory} from "react-router-dom";
 import Label from "../../components/Label/Label";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
-import {extractErrorMessage, handleErrors, useApiV2} from "../../hooks/useApi";
+import {extractErrorMessage, useApi} from "../../hooks/useApi";
 import {useMutation, useQuery} from "react-query";
 import Switch from "../../components/Switch/Switch";
 import {Meta} from "../../App";
@@ -86,9 +86,9 @@ const Form = ({defaults, onSubmit}) => {
 };
 
 const Account = () => {
-  const {status, data} = useQuery("me", useApiV2("me"));
-  const deleteMe = useApiV2("deleteMe");
-  const [mutate] = useMutation(useApiV2("updateMe"), {throwOnError: true});
+  const {status, data} = useQuery("me", useApi("me"));
+  const deleteMe = useApi("deleteMe");
+  const [mutate] = useMutation(useApi("updateMe"), {throwOnError: true});
   const {contextualizedPath} = useContext(BlocBetaUIContext);
   const history = useHistory();
 
@@ -130,7 +130,14 @@ const Account = () => {
         history.push(contextualizedPath("/dashboard"))
 
       } catch (error) {
-        handleErrors(error);
+
+        dispatch(
+          toast(
+            "Error",
+            extractErrorMessage(error),
+            "danger"
+          )
+        );
       }
     }
   };

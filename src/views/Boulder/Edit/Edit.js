@@ -3,7 +3,7 @@ import { Loader } from "../../../components/Loader/Loader";
 import { useParams } from "react-router-dom";
 import Container from "../../../components/Container/Container";
 import { PageHeader } from "../../../components/PageHeader/PageHeader";
-import { api, cacheKeys } from "../../../hooks/useApi";
+import { api, cache } from "../../../hooks/useApi";
 import Wrapper from "../../../components/Wrapper/Wrapper";
 import { toast } from "react-toastify";
 import { queryCache, useMutation } from "react-query";
@@ -24,7 +24,7 @@ const Edit = () => {
   const [mutateOnUpdateBoulder] = useMutation(api.boulder.update, {
     throwOnError: true,
     onSuccess: () => {
-      queryCache.refetchQueries(cacheKeys.boulders);
+      queryCache.refetchQueries(cache.boulder);
     },
   });
 

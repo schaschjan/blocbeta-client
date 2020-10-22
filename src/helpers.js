@@ -100,8 +100,7 @@ export const resolveBoulder = (
   }
 
   if (ascents) {
-    const ascentData = ascents.find(
-      (ascent) => ascent.boulderId === boulder.id
+    const ascentData = ascents.find(ascent=> ascent.boulderId === boulder.id
     );
 
     boulder.points = ascentData.points;

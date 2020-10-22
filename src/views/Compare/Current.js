@@ -2,7 +2,7 @@ import React, { useContext, useMemo } from "react";
 import { Loader } from "../../components/Loader/Loader";
 import "./Current.css";
 import Container from "../../components/Container/Container";
-import useApi, { api, cacheKeys } from "../../hooks/useApi";
+import useApi, { api, cache } from "../../hooks/useApi";
 import { PageHeader } from "../../components/PageHeader/PageHeader";
 import EmptyState from "../../components/EmptyState/EmptyState";
 import Emoji from "../../components/Emoji/Emoji";
@@ -21,27 +21,27 @@ const Current = () => {
   const { user } = useContext(AppContext);
 
   const { status: comparisonStatus, data: comparisons } = useApi(
-    [cacheKeys.compare, b],
+    [cache.compare, b],
     () => api.compare.current(a, b)
   );
   const { status: compareUserStatus, data: compareUser } = useApi(
-    [cacheKeys.user, b],
+    [cache.user, b],
     () => api.user.show(b)
   );
   const { status: bouldersStatus, data: boulders } = useApi(
-    cacheKeys.boulders,
+    cache.boulder,
     api.boulder.active
   );
   const { status: wallsStatus, data: walls } = useApi(
-    cacheKeys.walls,
+    cache.walls,
     api.walls.all
   );
   const { status: gradesStatus, data: grades } = useApi(
-    cacheKeys.grades,
+    cache.grades,
     api.grades.all
   );
   const { status: holdStylesStatus, data: holdStyles } = useApi(
-    cacheKeys.holdStyles,
+    cache.holdStyles,
     api.holdStyles.all
   );
 

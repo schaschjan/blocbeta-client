@@ -24,14 +24,7 @@ import {
   TableFooter,
 } from "../../../components/Table/Table";
 
-import {
-  usePagination,
-  useTable,
-  useGlobalFilter,
-  useSortBy,
-  useRowSelect,
-  useFilters,
-} from "react-table";
+import {usePagination, useTable, useGlobalFilter, useSortBy, useRowSelect, useFilters} from "react-table";
 import { Link } from "react-router-dom";
 import { messages } from "../../../messages";
 import { toast } from "react-toastify";
@@ -39,7 +32,7 @@ import { FilterDropdown } from "./FilterDropdown/FilterDropdown";
 import { PageHeader } from "../../../components/PageHeader/PageHeader";
 import Container from "../../../components/Container/Container";
 import Bar from "./Bar/Bar";
-import useApi, { api, cacheKeys } from "../../../hooks/useApi";
+import useApi, { api, cache } from "../../../hooks/useApi";
 import { useMutation, queryCache } from "react-query";
 import { AppContext, Meta } from "../../../App";
 import { Drawer } from "../../../components/Drawer/Drawer";
@@ -112,7 +105,7 @@ const Table = ({ columns, data, editable = false }) => {
 
   const [mutateOnMassDeactivation] = useMutation(api.boulder.mass, {
     onSuccess: () => {
-      queryCache.refetchQueries(cacheKeys.boulders);
+      queryCache.refetchQueries(cache.boulder);
     },
   });
 
@@ -378,31 +371,31 @@ const Index = () => {
   } = useDrawer("details");
 
   const { status: bouldersStatus, data: boulders } = useApi(
-    cacheKeys.boulders,
+    cache.boulder,
     api.boulder.active
   );
   const { status: ascentsStatus, data: ascents } = useApi(
-    cacheKeys.ascents,
+    cache.ascents,
     api.ascents.active
   );
   const { status: wallsStatus, data: walls } = useApi(
-    cacheKeys.walls,
+    cache.walls,
     api.walls.all
   );
   const { status: gradesStatus, data: grades } = useApi(
-    cacheKeys.grades,
+    cache.grades,
     api.grades.all
   );
   const { status: holdStylesStatus, data: holdStyles } = useApi(
-    cacheKeys.holdStyles,
+    cache.holdStyles,
     api.holdStyles.all
   );
   const { status: tagsStatus, data: tags } = useApi(
-    cacheKeys.tags,
+    cache.tags,
     api.tags.all
   );
   const { status: settersStatus, data: setters } = useApi(
-    cacheKeys.setters,
+    cache.setters,
     api.setters.all
   );
 
@@ -418,13 +411,13 @@ const Index = () => {
 
   const [mutateOnAddAscent] = useMutation(api.ascents.add, {
     onSuccess: () => {
-      queryCache.refetchQueries(cacheKeys.ascents);
+      queryCache.refetchQueries(cache.ascents);
     },
   });
 
   const [mutateOnRemoveAscent] = useMutation(api.ascents.remove, {
     onSuccess: () => {
-      queryCache.refetchQueries(cacheKeys.ascents);
+      queryCache.refetchQueries(cache.ascents);
     },
   });
 
@@ -733,8 +726,8 @@ const Index = () => {
 
     const [mutateOnAddLabel] = useMutation(api.labels.add, {
       onSuccess: () => {
-        queryCache.refetchQueries(cacheKeys.boulders);
-        queryCache.refetchQueries(cacheKeys.labels);
+        queryCache.refetchQueries(cache.boulder);
+        queryCache.refetchQueries(cache.labels);
       },
     });
 

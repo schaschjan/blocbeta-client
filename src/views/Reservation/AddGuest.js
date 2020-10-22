@@ -5,7 +5,7 @@ import {buildClassNames, composeFormElement, handleApiErrors} from "../..";
 import Input from "../../components/Input/Input";
 import ResourceDependantSelect from "../../components/ResourceDependantSelect/ResourceDependantSelect";
 import {api} from "../../helper/api";
-import {useApiV2} from "../../hooks/useApi";
+import {useApi} from "../../hooks/useApi";
 import "./AddGuest.css";
 import moment from "moment";
 import {Loader} from "../../components/Loader/Loader";
@@ -22,9 +22,9 @@ const TimeSlotList = ({ymd, roomId, user}) => {
   const {status: scheduleStatus, data: schedule} = useQuery(["schedule", {
     ymd,
     roomId
-  }], useApiV2("schedule", {ymd, roomId}));
+  }], useApi("schedule", {ymd, roomId}));
 
-  const [mutateDeletion, {status: deletionMutationStatus, error: deletionMutationError}] = useMutation(useApiV2("unBlockTimeSlot"), {
+  const [mutateDeletion, {status: deletionMutationStatus, error: deletionMutationError}] = useMutation(useApi("unBlockTimeSlot"), {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries(["schedule", {ymd, roomId}]);
@@ -32,7 +32,7 @@ const TimeSlotList = ({ymd, roomId, user}) => {
     },
   });
 
-  const [mutateCreation, {status: creationMutationStatus, error: creationMutationError}] = useMutation(useApiV2("blockGuestTimeSlot"), {
+  const [mutateCreation, {status: creationMutationStatus, error: creationMutationError}] = useMutation(useApi("blockGuestTimeSlot"), {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries(["schedule", {ymd, roomId}]);

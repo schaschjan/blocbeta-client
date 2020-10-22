@@ -1,13 +1,15 @@
 import React from "react";
 import "./HoldStyle.css";
-import classnames from "classnames";
+import {buildClassNames} from "../../index";
 
-const HoldStyle = ({ name, small, icon }) => {
+const HoldStyle = ({icon, small = false}) => {
+
   return (
-    <div
-      className={classnames("holdstyle", ``, small ? "holdstyle--small" : null)}
-    >
-      <div style={{ backgroundImage: `url(${icon})` }} />
+    <div className={buildClassNames(
+      "holdstyle",
+      small ? "holdstyle--small" : null
+    )}>
+      <div style={{backgroundImage: `url(${icon})`}} className="holdstyle__inner"/>
     </div>
   );
 };

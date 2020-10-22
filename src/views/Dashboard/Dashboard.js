@@ -1,6 +1,6 @@
 import React, {Fragment, useContext, useEffect} from "react";
 import {Meta} from "../../App";
-import {useApiV2} from "../../hooks/useApi";
+import {useApi} from "../../hooks/useApi";
 import "./Dashboard.css";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import {Link} from "react-router-dom";
@@ -11,7 +11,7 @@ const Dashboard = () => {
 
   const {dispatch} = useContext(ToastContext);
 
-  const ping = useApiV2("ping");
+  const ping = useApi("ping");
 
   useEffect(() => {
     ping()

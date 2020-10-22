@@ -1,4 +1,4 @@
-import useApi, { api, cacheKeys } from "../../../hooks/useApi";
+import useApi, { api, cache } from "../../../hooks/useApi";
 import Container from "../../../components/Container/Container";
 import { PageHeader } from "../../../components/PageHeader/PageHeader";
 import Wrapper from "../../../components/Wrapper/Wrapper";
@@ -18,12 +18,12 @@ import { Meta } from "../../../App";
 
 const AllTime = () => {
   const { status: rankingStatus, data: ranking } = useApi(
-    cacheKeys.ranking.allTime,
+    cache.ranking.allTime,
     api.ranking.allTime
   );
 
   const { status: bouldersStatus, data: boulders } = useApi(
-    cacheKeys.boulders,
+    cache.boulder,
     api.boulder.active
   );
 

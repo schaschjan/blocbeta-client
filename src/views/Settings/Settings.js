@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import Container from "../../components/Container/Container";
 import { PageHeader } from "../../components/PageHeader/PageHeader";
-import useApi, { api, cacheKeys } from "../../hooks/useApi";
+import useApi, { api, cache } from "../../hooks/useApi";
 import { Loader } from "../../components/Loader/Loader";
 import "./Settings.css";
 import Button from "../../components/Button/Button";
@@ -11,12 +11,12 @@ import { toast } from "react-toastify";
 import { alphaSort } from "../../helpers";
 
 const Setters = () => {
-  const { status, data } = useApi(cacheKeys.setters, api.setters.all);
+  const { status, data } = useApi(cache.setters, api.setters.all);
 
   const [revokeSetter] = useMutation(api.setters.revoke, {
     throwOnError: true,
     onSuccess: () => {
-      queryCache.refetchQueries(cacheKeys.setters);
+      queryCache.refetchQueries(cache.setters);
     },
   });
 

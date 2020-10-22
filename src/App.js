@@ -4,11 +4,12 @@ import {router} from "./router";
 import {Footer} from "./components/Footer/Footer";
 import {Helmet} from "react-helmet";
 import {NavItem, Header} from "./index"
-import axios from "axios";
 import {BlocBetaUI, BlocBetaUIContext} from "./components/BlocBetaUI";
 import {useQuery} from 'react-query'
 import ScrollToTop from "./components/ScrollToTop";
 import {ToastContainer} from "./components/Toaster/Toaster";
+import {queryDefaults, useApi} from "./hooks/useApi";
+import {cache} from "./helper/api";
 
 export const Meta = ({title, description}) => {
   return (
@@ -78,13 +79,9 @@ const Routing = () => {
 };
 
 const ReservationNavItem = () => {
-  const {contextualizedPath, currentLocation} = useContext(BlocBetaUIContext);
+  const {contextualizedPath} = useContext(BlocBetaUIContext);
 
-  const {status, data} = useQuery("reservations-count", async () => {
-    const {data} = await axios.get(`/api/${currentLocation.url}/reservation/pending/count`);
-
-    return data;
-  });
+  const {status, data} = useQuery(cache.reservationCount, useApi("reservationCount"), queryDefaults);
 
   return (
     <NavItem to={contextualizedPath("/reservations")}>
@@ -94,13 +91,9 @@ const ReservationNavItem = () => {
 };
 
 const AppHeader = () => {
-  const {contextualizedPath, user} = useContext(BlocBetaUIContext);
+  const {contextualizedPath, user, isAdmin} = useContext(BlocBetaUIContext);
 
-  const {data: locations} = useQuery("locations", async () => {
-    const {data} = await axios.get(`/api/location`);
-
-    return data;
-  });
+  const {data: locations} = useQuery(cache.locations, useApi("locations"), queryDefaults);
 
   return <Fragment>
 
@@ -109,11 +102,17 @@ const AppHeader = () => {
       locationSwitchTargetPath={"/dashboard"}
       logoLink={contextualizedPath("/dashboard")}>
 
-      {/*{user && user.visible && (*/}
-      {/*  <NavItem to={contextualizedPath("/ranking/current")}>*/}
-      {/*    Ranking*/}
-      {/*  </NavItem>*/}
-      {/*)}*/}
+      {isAdmin && (
+        <NavItem to={contextualizedPath("/boulder")}>
+          Boulder
+        </NavItem>
+      )}
+
+      {user && user.visible && isAdmin && (
+        <NavItem to={contextualizedPath("/ranking/current")}>
+          Ranking
+        </NavItem>
+      )}
 
       <NavItem to={contextualizedPath("/schedule")}>
         Schedule

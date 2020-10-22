@@ -1,21 +1,29 @@
 import React from "react";
 import "./Ascent.css";
-import Icon from "../Icon/Icon";
-import classnames from "classnames";
+import {buildClassNames} from "../../index";
+import Flash from "../Icon/Flash";
+import Top from "../Icon/Top";
+import Resignation from "../Icon/Resignation";
 
-const Ascent = ({ type, checked, disabled, ...rest }) => {
-  const classNames = classnames(
+const icons = {
+  top: Top,
+  flash: Flash,
+  resignation: Resignation
+};
+
+const Ascent = ({type, checked, disabled, ...rest}) => {
+  const classNames = buildClassNames(
     "ascent",
     type ? `ascent--${type}` : null,
     checked ? "ascent--checked" : null,
     disabled ? "ascent--disabled" : null
   );
 
-  const icon = <Icon name={type} fill={checked ? null : "#333"} />;
-
   return (
     <div className={classNames} {...rest}>
-      {icon}
+      {React.createElement(icons[type], {
+        fill: checked
+      })}
     </div>
   );
 };

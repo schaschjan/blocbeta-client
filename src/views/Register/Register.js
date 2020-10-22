@@ -1,4 +1,4 @@
-import React, {Fragment} from "react";
+import React, {useContext, Fragment} from "react";
 import {Meta} from "../../App";
 import {FormRow} from "../../components/Form/Form";
 import Input from "../../components/Input/Input";
@@ -8,10 +8,12 @@ import axios from "axios";
 import Select from "../../components/Select/Select";
 import {useHistory} from "react-router-dom";
 import "./Register.css"
-import {handleErrors} from "../../hooks/useApi";
+import {extractErrorMessage} from "../../hooks/useApi";
+import {toast, ToastContext} from "../../components/Toaster/Toaster";
 
 const Register = () => {
   const history = useHistory();
+  const {dispatch} = useContext(ToastContext);
 
   const {handleSubmit, observeField, submitting, formData} = useForm({
     username: null,
@@ -29,7 +31,14 @@ const Register = () => {
       history.push("/login");
 
     } catch (error) {
-      handleErrors(error);
+
+      dispatch(
+        toast(
+          "Error",
+          extractErrorMessage(error),
+          "danger"
+        )
+      );
     }
   };
 

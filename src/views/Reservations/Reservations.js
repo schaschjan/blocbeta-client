@@ -3,7 +3,7 @@ import {queryCache, useMutation, useQuery} from "react-query";
 import AddToCalendar from "react-add-to-calendar"
 import {Button} from "../../index";
 import "./Reservations.css";
-import {useApiV2} from "../../hooks/useApi";
+import {useApi} from "../../hooks/useApi";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import Emoji from "../../components/Emoji/Emoji";
 import {LoadedContent} from "../../components/Loader/Loader";
@@ -12,13 +12,13 @@ import {cache} from "../../helper/api";
 export default () => {
   const {currentLocation: {id: locationId}} = useContext(BlocBetaUIContext);
 
-  const {status: reservationStatus, data: reservations} = useQuery("reservations", useApiV2("reservations"));
-  const {status: locationStatus, data: location} = useQuery([cache.location, {locationId}], useApiV2("location", {id: locationId}));
+  const {status: reservationStatus, data: reservations} = useQuery("reservations", useApi("reservations"));
+  const {status: locationStatus, data: location} = useQuery([cache.location, {locationId}], useApi("location", {id: locationId}));
 
   const [mutateDeletion, {
     status: deletionMutationStatus,
     error: deletionMutationError
-  }] = useMutation(useApiV2("unBlockTimeSlot"), {
+  }] = useMutation(useApi("unBlockTimeSlot"), {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries("schedule");
