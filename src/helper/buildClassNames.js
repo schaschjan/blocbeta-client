@@ -1,3 +1,3 @@
-export default (...classes) => {
+export const classNames = (...classes) => {
   return [...classes].join(" ");
 };

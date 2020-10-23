@@ -47,6 +47,7 @@ export const CrudTable = ({columns, data, updateHandler, defaultColumn = {canGro
         groupBy: defaultGroupBy
       },
       autoResetExpanded: false,
+      autoResetSortBy: false,
       columns,
       data,
       defaultColumn,

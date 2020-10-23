@@ -1,7 +1,7 @@
 import React, {Fragment, useContext} from "react";
 import {Meta} from "../../../App";
 import {composeFormElement, useForm} from "../../..";
-import {extractErrorMessage} from "../../../hooks/useApi";
+import {extractErrorMessage, useApi} from "../../../hooks/useApi";
 import {useHistory} from "react-router-dom";
 import Input from "../../../components/Input/Input";
 import {FormRow} from "../../../components/Form/Form";
@@ -24,6 +24,7 @@ const AddTimeSlotBlocker = () => {
   });
 
   const {contextualizedPath} = useContext(BlocBetaUIContext);
+  const roomResource = useApi("rooms");
 
   const onSubmit = async (payload) => {
     try {
@@ -79,7 +80,7 @@ const AddTimeSlotBlocker = () => {
                 observeField,
                 {
                   cacheKey: "room",
-                  api: () => api.rooms.index(),
+                  api: () => roomResource,
                   labelProperty: "name"
                 }
               )}

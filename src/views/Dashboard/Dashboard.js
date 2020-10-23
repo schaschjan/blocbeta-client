@@ -4,12 +4,9 @@ import {useApi} from "../../hooks/useApi";
 import "./Dashboard.css";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import {Link} from "react-router-dom";
-import {ToastContext} from "../../components/Toaster/Toaster";
 
 const Dashboard = () => {
   const {user, isAdmin, contextualizedPath} = useContext(BlocBetaUIContext);
-
-  const {dispatch} = useContext(ToastContext);
 
   const ping = useApi("ping");
 

@@ -1,16 +1,17 @@
-import React, {Fragment, useMemo} from "react";
+import React, {Fragment, useMemo, useContext} from "react";
 import {queryCache, useQuery, useMutation} from "react-query";
 import {LoadedContent} from "../../components/Loader/Loader";
 import EmptyState from "../../components/EmptyState/EmptyState";
-import {cache, useApi} from "../../hooks/useApi";
+import {cache, extractErrorMessage, useApi} from "../../hooks/useApi";
 import {useParams} from "react-router-dom";
 import {CrudTable, EditableCell} from "../../components/CrudTable/CrudTable";
 import "./Detail.css";
-import {handleApiErrors} from "../../index";
+import {toast, ToastContext} from "../../components/Toaster/Toaster";
 
 export default () => {
   const {room} = useParams();
   const {status, data} = useQuery([cache.roomSchedule, {room}], useApi("roomSchedule", {room}));
+  const {dispatch} = useContext(ToastContext);
 
   const [mutateUpdate, {status: mutateUpdateStatus, error: mutateUpdateError}] = useMutation(useApi("updateTimeSlot"), {
     throwOnError: true,
@@ -52,8 +53,15 @@ export default () => {
         Aggregated: ({value}) => `${value} time slots`,
       },
       {
-        Header: "Allow quantity",
-        accessor: "allow_quantity",
+        Header: "Min quantity",
+        accessor: "min_quantity",
+        canGroupBy: false,
+        aggregate: 'count',
+        Aggregated: ({value}) => `${value} time slots`,
+      },
+      {
+        Header: "Max quantity",
+        accessor: "max_quantity",
         canGroupBy: false,
         aggregate: 'count',
         Aggregated: ({value}) => `${value} time slots`,
@@ -78,8 +86,24 @@ export default () => {
         id,
         payload
       });
-    } catch (e) {
-      handleApiErrors(e)
+
+      dispatch(
+        toast(
+          "Update successful",
+          null,
+          "success"
+        )
+      );
+
+    } catch (error) {
+
+      dispatch(
+        toast(
+          "Error",
+          extractErrorMessage(error),
+          "danger"
+        )
+      );
     }
   };
 

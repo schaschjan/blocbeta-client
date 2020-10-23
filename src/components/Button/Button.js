@@ -1,8 +1,8 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {buildClassNames} from "../../index";
 import "./Button.css";
 import {Loader} from "../Loader/Loader";
+import {classNames} from "../../helper/buildClassNames";
 
 export default ({
                   variant = "primary",
@@ -18,7 +18,7 @@ export default ({
 
   let loaderVariant = "default";
 
-  const classes = buildClassNames(
+  const classes = classNames(
     "button",
     `button--${variant}`,
     `button--${size}`,

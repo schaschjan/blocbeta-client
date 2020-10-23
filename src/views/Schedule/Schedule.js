@@ -2,13 +2,14 @@ import React, {Fragment, useContext, useEffect, useState} from "react";
 import 'react-dates/initialize';
 import moment from "moment";
 import {queryCache, useMutation, useQuery} from "react-query";
-import {Button, Select, buildClassNames} from "./../../index";
+import {Button, Select} from "./../../index";
 import "./Schedule.css";
-import {extractErrorMessage, useApi} from "../../hooks/useApi";
+import {cache, extractErrorMessage, useApi} from "../../hooks/useApi";
 import {Loader} from "../../components/Loader/Loader";
 import {DatePicker} from "../../components/DatePicker/DatePicker";
 import {Counter} from "../../components/Counter/Counter";
 import {toast, ToastContext} from "../../components/Toaster/Toaster";
+import {classNames} from "../../helper/buildClassNames";
 
 export const BookButton = ({isFull, isDisabled, isBlocked, timeSlot, blockHandler, unBlockHandler}) => {
 
@@ -53,19 +54,19 @@ const TimeSlotList = ({ymd, roomId}) => {
     roomId
   }], useApi("schedule", {ymd, roomId}));
 
-  const [mutateDeletion, {status: deletionMutationStatus, error: deletionMutationError}] = useMutation(useApi("unBlockTimeSlot"), {
+  const [mutateDeletion, {status: deletionMutationStatus, error: deletionMutationError}] = useMutation(useApi("deleteReservation"), {
     throwOnError: true,
     onSuccess: () => {
-      queryCache.invalidateQueries(["schedule", {ymd, roomId}]);
-      queryCache.invalidateQueries("reservations-count");
+      queryCache.invalidateQueries([cache.schedule, {ymd, roomId}]);
+      queryCache.invalidateQueries(cache.reservationCount);
     },
   });
 
-  const [mutateCreation, {status: creationMutationStatus, error: creationMutationError}] = useMutation(useApi("blockTimeSlot"), {
+  const [mutateCreation, {status: creationMutationStatus, error: creationMutationError}] = useMutation(useApi("createReservation"), {
     throwOnError: true,
     onSuccess: () => {
-      queryCache.invalidateQueries(["schedule", {ymd, roomId}]);
-      queryCache.invalidateQueries("reservations-count");
+      queryCache.invalidateQueries([cache.schedule, {ymd, roomId}]);
+      queryCache.invalidateQueries(cache.reservationCount);
     },
   });
 
@@ -128,7 +129,7 @@ const TimeSlotList = ({ymd, roomId}) => {
       </ul>
 
       {(schedule.length ? (
-        <ul className={buildClassNames("schedule-list__time-slot-list", "time-slot-list")}>
+        <ul className={classNames("schedule-list__time-slot-list", "time-slot-list")}>
           {schedule.map(timeSlot => {
 
             const dayHasBlockedTimeSlot = findPendingReservation();
@@ -139,7 +140,7 @@ const TimeSlotList = ({ymd, roomId}) => {
 
             return (
               <li key={timeSlot.hash}
-                  className={buildClassNames(
+                  className={classNames(
                     "time-slot-list__item time-slot-list-item",
                     timeSlotIsBlocked ? "time-slot-list-item--blocked" : null,
                     isPassed ? "time-slot-list-item--disabled" : null,

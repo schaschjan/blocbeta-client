@@ -1,14 +1,14 @@
-import React, { useState, useRef } from "react";
+import React, {useState, useRef} from "react";
 import "./SwipeOut.css";
-import { motion, useAnimation, useMotionValue } from "framer-motion";
+import {motion, useAnimation, useMotionValue} from "framer-motion";
 import useClickOutside from "../../hooks/useClickOutside";
-import classnames from "classnames";
+import {classNames} from "../../helper/buildClassNames";
 
-const SwipeOut = ({ children, actions, width, closeOnClick = true }) => {
+const SwipeOut = ({children, actions, width, closeOnClick = true}) => {
   const wrapper = useRef();
   const dragWidth = -width;
-  const dragFull = { x: dragWidth };
-  const dragReset = { x: 0 };
+  const dragFull = {x: dragWidth};
+  const dragReset = {x: 0};
   const contentOffsetX = useMotionValue(0);
   const animation = useAnimation();
   const [revealed, setRevealed] = useState(false);
@@ -20,7 +20,7 @@ const SwipeOut = ({ children, actions, width, closeOnClick = true }) => {
 
   return (
     <div
-      className={classnames(
+      className={classNames(
         "swipe-out",
         revealed ? "swipe-out--revealed" : null
       )}
@@ -29,7 +29,7 @@ const SwipeOut = ({ children, actions, width, closeOnClick = true }) => {
       <motion.div
         drag={"x"}
         x={contentOffsetX}
-        dragConstraints={{ left: dragWidth, right: 0 }}
+        dragConstraints={{left: dragWidth, right: 0}}
         dragElastic={0}
         onDrag={() => {
           setRevealed(false);

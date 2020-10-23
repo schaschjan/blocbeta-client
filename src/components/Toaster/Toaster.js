@@ -1,16 +1,26 @@
 import React, {createContext, useEffect, useState} from "react";
 import {motion, AnimatePresence} from "framer-motion"
 import "./Toaster.css";
+import {extractErrorMessage} from "../../hooks/useApi";
 
 export const ToastContext = createContext({});
 
-export const toast = (title, description, type = "info", timeout = 2000) => {
+export const toast = (title, description = null, type = "info", timeout = 2000) => {
   return {
     title,
     description,
     type,
     timeout
   }
+};
+
+export const errorToast = (error) => {
+
+  return toast(
+    "A error occurred",
+    extractErrorMessage(error),
+    "danger"
+  )
 };
 
 export const ToastContainer = ({children}) => {

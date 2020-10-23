@@ -1,11 +1,11 @@
 import React from "react";
 import "./HoldStyle.css";
-import {buildClassNames} from "../../index";
+import {classNames} from "../../helper/buildClassNames";
 
 const HoldStyle = ({icon, small = false}) => {
 
   return (
-    <div className={buildClassNames(
+    <div className={classNames(
       "holdstyle",
       small ? "holdstyle--small" : null
     )}>

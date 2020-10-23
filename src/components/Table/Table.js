@@ -1,10 +1,10 @@
-import React, { useRef, forwardRef } from "react";
+import React, {useRef, forwardRef} from "react";
 import "./Table.css";
 import Paragraph from "../Paragraph/Paragraph";
 import Icon from "../Icon/Icon";
-import classnames from "classnames";
+import {classNames} from "../../helper/buildClassNames";
 
-export const TableRow = ({ children, ...rest }) => {
+export const TableRow = ({children, ...rest}) => {
   return (
     <div className="table-row" {...rest}>
       {children}
@@ -12,11 +12,11 @@ export const TableRow = ({ children, ...rest }) => {
   );
 };
 
-export const TableCell = ({ children, className }) => {
-  return <div className={classnames("table-cell", className)}>{children}</div>;
+export const TableCell = ({children, className}) => {
+  return <div className={classNames("table-cell", className)}>{children}</div>;
 };
 
-export const TableHeader = ({ headerGroups }) => {
+export const TableHeader = ({headerGroups}) => {
   return (
     <div className="table-header">
       {headerGroups.map((headerGroup) => {
@@ -29,9 +29,9 @@ export const TableHeader = ({ headerGroups }) => {
             <span className="sort-indicator">
               {column.isSorted ? (
                 column.isSortedDesc ? (
-                  <Icon name="downward" />
+                  <Icon name="downward"/>
                 ) : (
-                  <Icon name="upward" />
+                  <Icon name="upward"/>
                 )
               ) : (
                 ""
@@ -44,7 +44,7 @@ export const TableHeader = ({ headerGroups }) => {
   );
 };
 
-export const TableHeaderCell = ({ children, ...rest }) => {
+export const TableHeaderCell = ({children, ...rest}) => {
   return (
     <div className="table-header-cell" {...rest}>
       {children}
@@ -53,14 +53,14 @@ export const TableHeaderCell = ({ children, ...rest }) => {
 };
 
 export const TableFooter = ({
-  pageIndex,
-  pageSize,
-  pageOptions,
-  canPreviousPage,
-  canNextPage,
-  previousPage,
-  nextPage,
-}) => {
+                              pageIndex,
+                              pageSize,
+                              pageOptions,
+                              canPreviousPage,
+                              canNextPage,
+                              previousPage,
+                              nextPage,
+                            }) => {
   return (
     <div className="table-footer">
       <div className="pager">
@@ -71,22 +71,22 @@ export const TableFooter = ({
 
         <span
           onClick={() => previousPage()}
-          className={classnames(
+          className={classNames(
             "toggle-previous",
             !canPreviousPage ? "toggle-previous--disabled" : null
           )}
         >
-          <Icon name="backward" />
+          <Icon name="backward"/>
         </span>
 
         <span
           onClick={() => nextPage()}
-          className={classnames(
+          className={classNames(
             "toggle-next",
             !canNextPage ? "toggle-next--disabled" : null
           )}
         >
-          <Icon name="forward" />
+          <Icon name="forward"/>
         </span>
       </div>
     </div>
@@ -94,7 +94,7 @@ export const TableFooter = ({
 };
 
 export const IndeterminateCheckbox = forwardRef(
-  ({ indeterminate, ...rest }, ref) => {
+  ({indeterminate, ...rest}, ref) => {
     const defaultRef = useRef();
     const resolvedRef = ref || defaultRef;
 

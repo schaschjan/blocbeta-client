@@ -1,7 +1,7 @@
 import React from "react";
-import {buildClassNames} from "../../index";
 import {Close} from "../Icon/Close";
 import "./Input.css";
+import {classNames} from "../../helper/buildClassNames";
 
 export default ({
                   className,
@@ -15,7 +15,7 @@ export default ({
                   ...rest
                 }) => {
 
-  const classes = buildClassNames(
+  const classes = classNames(
     className,
     "input",
     `input--${type}`,

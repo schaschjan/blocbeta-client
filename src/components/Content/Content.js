@@ -1,13 +1,13 @@
 import React, { Fragment } from "react";
 import "./Content.css";
-import classnames from "classnames";
+import {classNames} from "../../helper/buildClassNames";
 
 export const Content = ({ children, disabled, ...rest }) => {
   return (
     <Fragment>
       <div
         id="content"
-        className={classnames(
+        className={classNames(
           "content",
           disabled ? "content--disabled" : false
         )}

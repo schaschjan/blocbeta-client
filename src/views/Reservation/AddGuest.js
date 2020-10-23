@@ -1,11 +1,10 @@
 import React, {useContext, Fragment, useState} from "react";
 import {Meta} from "../../App";
 import {FormRow} from "../../components/Form/Form";
-import {buildClassNames, composeFormElement, handleApiErrors} from "../..";
+import {composeFormElement} from "../..";
 import Input from "../../components/Input/Input";
 import ResourceDependantSelect from "../../components/ResourceDependantSelect/ResourceDependantSelect";
-import {api} from "../../helper/api";
-import {useApi} from "../../hooks/useApi";
+import {extractErrorMessage, useApi} from "../../hooks/useApi";
 import "./AddGuest.css";
 import moment from "moment";
 import {Loader} from "../../components/Loader/Loader";
@@ -13,18 +12,21 @@ import {queryCache, useMutation, useQuery} from "react-query";
 import {BookButton} from "../Schedule/Schedule";
 import {useHistory} from "react-router-dom";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
+import {classNames} from "../../helper/buildClassNames";
+import {toast, ToastContext} from "../../components/Toaster/Toaster";
 
 const TimeSlotList = ({ymd, roomId, user}) => {
 
   const history = useHistory();
   const {contextualizedPath} = useContext(BlocBetaUIContext);
+  const {dispatch} = useContext(ToastContext);
 
   const {status: scheduleStatus, data: schedule} = useQuery(["schedule", {
     ymd,
     roomId
   }], useApi("schedule", {ymd, roomId}));
 
-  const [mutateDeletion, {status: deletionMutationStatus, error: deletionMutationError}] = useMutation(useApi("unBlockTimeSlot"), {
+  const [mutateDeletion, {status: deletionMutationStatus, error: deletionMutationError}] = useMutation(useApi("deleteReservation"), {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries(["schedule", {ymd, roomId}]);
@@ -32,7 +34,7 @@ const TimeSlotList = ({ymd, roomId, user}) => {
     },
   });
 
-  const [mutateCreation, {status: creationMutationStatus, error: creationMutationError}] = useMutation(useApi("blockGuestTimeSlot"), {
+  const [mutateCreation, {status: creationMutationStatus, error: creationMutationError}] = useMutation(useApi("createGuestReservation"), {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries(["schedule", {ymd, roomId}]);
@@ -57,16 +59,30 @@ const TimeSlotList = ({ymd, roomId, user}) => {
       history.push(contextualizedPath("/dashboard"));
 
 
-    } catch (e) {
-      handleApiErrors(e)
+    } catch (error) {
+      dispatch(
+        toast(
+          "Error",
+          extractErrorMessage(error),
+          "danger"
+        )
+      );
     }
   };
 
   const unblockTimeSlot = async (id) => {
+
     try {
       await mutateDeletion({id});
-    } catch (e) {
-      handleApiErrors(e)
+
+    } catch (error) {
+      dispatch(
+        toast(
+          "Error",
+          extractErrorMessage(error),
+          "danger"
+        )
+      );
     }
   };
 
@@ -89,7 +105,7 @@ const TimeSlotList = ({ymd, roomId, user}) => {
       </ul>
 
       {(schedule.length ? (
-        <ul className={buildClassNames("schedule-list__time-slot-list", "time-slot-list")}>
+        <ul className={classNames("schedule-list__time-slot-list", "time-slot-list")}>
           {schedule.map(timeSlot => {
 
             const dayHasBlockedTimeSlot = findPendingReservation();
@@ -100,7 +116,7 @@ const TimeSlotList = ({ymd, roomId, user}) => {
 
             return (
               <li key={timeSlot.hash}
-                  className={buildClassNames(
+                  className={classNames(
                     "time-slot-list__item time-slot-list-item",
                     timeSlotIsBlocked ? "time-slot-list-item--blocked" : null,
                     isPassed ? "time-slot-list-item--disabled" : null,
@@ -137,6 +153,8 @@ const TimeSlotList = ({ymd, roomId, user}) => {
 export default () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedDate, setSelectedDate] = useState(moment());
+
+  const roomResource = useApi("rooms");
 
   const [user, setUser] = useState({
     first_name: null,
@@ -179,7 +197,7 @@ export default () => {
             {
               required: "required",
               cacheKey: "room",
-              api: () => api.rooms.index(),
+              api: () => roomResource,
               labelProperty: "name"
             }
           )}

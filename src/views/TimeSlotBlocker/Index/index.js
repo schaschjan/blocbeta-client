@@ -1,13 +1,16 @@
 import React, {Fragment} from "react";
 import {useQuery} from "react-query";
-import {api, cache} from "../../../helper/api";
+import {api} from "../../../helper/api";
 import {LoadedContent} from "../../../components/Loader/Loader";
 import EmptyState from "../../../components/EmptyState/EmptyState";
+import {cache, useApi} from "../../../hooks/useApi";
 
 const IndexTimeSlotBlocker = () => {
+  const roomResource = useApi("rooms");
+
   const {status, data} = useQuery(cache.timeSlotExclusion, async () => {
     const {data: exclusions} = await api.timeSlotExclusion.index();
-    const {data: rooms} = await api.rooms.index();
+    const {data: rooms} = await roomResource();
 
     return exclusions.map(exclusion => {
       return {
