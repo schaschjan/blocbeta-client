@@ -24,7 +24,6 @@ const AddTimeSlotBlocker = () => {
   });
 
   const {contextualizedPath} = useContext(BlocBetaUIContext);
-  const roomResource = useApi("rooms");
 
   const onSubmit = async (payload) => {
     try {
@@ -80,7 +79,7 @@ const AddTimeSlotBlocker = () => {
                 observeField,
                 {
                   cacheKey: "room",
-                  api: () => roomResource,
+                  api: "rooms",
                   labelProperty: "name"
                 }
               )}

@@ -28,6 +28,7 @@ export const mutationDefaults = {
 };
 
 export const cache = {
+  rooms: "rooms",
   roomSchedule: "roomSchedule",
   boulder: "boulder",
   compare: "compare",

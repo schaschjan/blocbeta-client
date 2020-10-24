@@ -1,9 +1,11 @@
 import React, {Fragment} from "react";
 import {useQuery} from "react-query";
 import Select from "../Select/Select";
+import {useApi} from "../../hooks/useApi";
 
 const ResourceDependantSelect = ({cacheKey, api, labelProperty, valueProperty = "id", ...rest}) => {
-  const {status, data} = useQuery(cacheKey, api);
+  const resource = useApi(api);
+  const {status, data} = useQuery(cacheKey, resource);
 
   if (status === "loading") {
     return (
@@ -19,7 +21,7 @@ const ResourceDependantSelect = ({cacheKey, api, labelProperty, valueProperty = 
     <Fragment>
       <Select {...rest}>
         <option value="">--</option>
-        {data.data.map((item) => {
+        {data && data.map((item) => {
           if (item instanceof Object) {
             return (
               <option value={item[valueProperty]} key={item[valueProperty]}>
