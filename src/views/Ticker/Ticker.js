@@ -111,7 +111,6 @@ const Table = ({columns, ymd, setYmd, data, renderRowSubComponent}) => {
 export default () => {
   const [fetched, setFetched] = useState(moment());
   const [selectedDate, setSelectedDate] = useState(moment().format("Y-MM-DD"));
-
   const {dispatch} = useContext(ToastContext);
 
   const {status, data} = useQuery([cache.ticker, {
@@ -126,6 +125,8 @@ export default () => {
       refetchInterval: 1000 * 30
     }
   );
+
+  console.log(data);
 
   const [mutateDeletion, {status: mutateCancellationStatus, error: mutateCancellationError}] = useMutation(useApi("deleteReservation"), {
     ...mutationDefaults,
@@ -282,14 +283,24 @@ export default () => {
 
   return (
     <Fragment>
-      <h1 className="t--alpha page-title">
-        Ticker – Updated:&nbsp;
-        <mark>{fetched.format("H:mm:s")}</mark>
-      </h1>
+
+      <div className="page-title">
+        <h1 className="t--alpha">
+          Ticker – Updated:&nbsp;
+          <mark>{fetched.format("H:mm:s")}</mark>
+        </h1>
+
+        {data && (
+          <h2 className="t--gamma">
+            Currently checked in:&nbsp;
+            <mark>{data.pendingCheckIns}</mark>
+          </h2>
+        )}
+      </div>
 
       <LoadedContent loading={status === "loading"}>
         <Table columns={columns}
-               data={data}
+               data={data && data.schedule}
                setYmd={setSelectedDate}
                ymd={selectedDate}
                renderRowSubComponent={renderRowSubComponent}/>

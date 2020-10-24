@@ -198,6 +198,7 @@ export const resources = {
     const {data} = await axios.get(`/api/${location}/schedule/rooms/${ymd}`);
 
     let flat = [];
+    let pendingCheckIns = 0;
 
     data.forEach(room => {
       room.schedule.forEach(timeSlot => {
@@ -207,9 +208,14 @@ export const resources = {
 
         flat.push(timeSlot);
       });
+
+      pendingCheckIns += room.pending_check_ins;
     });
 
-    return flat;
+    return {
+      pendingCheckIns,
+      schedule: flat
+    };
   },
   updateTimeSlot: async ({location, id, payload}) => {
 
