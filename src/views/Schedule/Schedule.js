@@ -4,7 +4,7 @@ import moment from "moment";
 import {queryCache, useMutation, useQuery} from "react-query";
 import {Button, Select} from "./../../index";
 import "./Schedule.css";
-import {cache, extractErrorMessage, useApi} from "../../hooks/useApi";
+import {cache, extractErrorMessage, queryDefaults, useApi} from "../../hooks/useApi";
 import {Loader} from "../../components/Loader/Loader";
 import {DatePicker} from "../../components/DatePicker/DatePicker";
 import {Counter} from "../../components/Counter/Counter";
@@ -13,7 +13,7 @@ import {classNames} from "../../helper/buildClassNames";
 
 export const BookButton = ({isFull, isDisabled, isBlocked, timeSlot, blockHandler, unBlockHandler}) => {
 
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(timeSlot.min_quantity);
 
   if (isDisabled) {
     return <Button variant="text">
@@ -36,7 +36,9 @@ export const BookButton = ({isFull, isDisabled, isBlocked, timeSlot, blockHandle
 
   return (
     <Fragment>
-      <Counter max={timeSlot.allow_quantity}
+      <Counter max={timeSlot.max_quantity}
+               min={timeSlot.min_quantity}
+               value={quantity}
                onChange={(count) => setQuantity(count)}/>
 
       <Button variant="primary" size="small" onClick={() => blockHandler(timeSlot, quantity)}>
@@ -49,10 +51,11 @@ export const BookButton = ({isFull, isDisabled, isBlocked, timeSlot, blockHandle
 const TimeSlotList = ({ymd, roomId}) => {
   const {dispatch} = useContext(ToastContext);
 
-  const {status: scheduleStatus, data: schedule} = useQuery(["schedule", {
-    ymd,
-    roomId
-  }], useApi("schedule", {ymd, roomId}));
+  const {status: scheduleStatus, data: schedule} = useQuery(
+    ["schedule", {ymd, roomId}],
+    useApi("schedule", {ymd, roomId}),
+    queryDefaults
+  );
 
   const [mutateDeletion, {status: deletionMutationStatus, error: deletionMutationError}] = useMutation(useApi("deleteReservation"), {
     throwOnError: true,
@@ -176,9 +179,13 @@ const TimeSlotList = ({ymd, roomId}) => {
 
 export default () => {
   const [selectedDate, setSelectedDate] = useState(moment());
-  const [selectedRoom, setSelectedRoom] = useState(null);
+  const [selectedRoomId, setSelectedRoom] = useState(null);
 
-  const {status: roomsStatus, data: rooms} = useQuery("rooms", useApi("rooms"));
+  const {status: roomsStatus, data: rooms} = useQuery(
+    "rooms",
+    useApi("rooms"),
+    queryDefaults
+  );
 
   useEffect(() => {
     if (!rooms) {
@@ -196,7 +203,7 @@ export default () => {
     return <div className="room-select">
       <h2 className="t--gamma room-select__label">Room:</h2>
       <Select onChange={(event) => setSelectedRoom(event.target.value)}
-              value={selectedRoom}>
+              value={selectedRoomId}>
         {roomsStatus === "success" && (
           <Fragment>
             {rooms.map((room, index) => <option value={room.id} key={room.id}>{room.name}</option>)}
@@ -206,9 +213,11 @@ export default () => {
     </div>
   };
 
-  if (!selectedRoom) {
+  if (!selectedRoomId) {
     return <Loader/>
   }
+
+  const selectedRoom = rooms.find(room => room.id === parseInt(selectedRoomId));
 
   return (
     <Fragment>
@@ -216,7 +225,18 @@ export default () => {
         Schedule
       </h1>
 
-      <RoomSelect/>
+      <div className="schedule-header">
+        {rooms.length > 1 && (
+          <RoomSelect/>
+        )}
+
+        {selectedRoom && selectedRoom.instructions && (
+          <span>
+            <strong className="t--eta">Note: </strong>
+            <em className="t--eta">{selectedRoom.instructions}</em>
+          </span>
+        )}
+      </div>
 
       <div className="schedule">
         <div className="schedule__datepicker">
@@ -233,7 +253,7 @@ export default () => {
         <div className="schedule__list schedule-list">
           <h2 className="schedule-list__title t--gamma">Available Time Slots</h2>
 
-          <TimeSlotList ymd={selectedDate.format("Y-MM-DD")} roomId={selectedRoom}/>
+          <TimeSlotList ymd={selectedDate.format("Y-MM-DD")} roomId={selectedRoomId}/>
         </div>
       </div>
     </Fragment>

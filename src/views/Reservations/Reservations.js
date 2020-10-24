@@ -47,9 +47,11 @@ export default () => {
               <li className="blocked-time-slots__item blocked-time-slots-item" key={pending.id}>
                 <span>On {pending.date} • From {pending.start_time} to {pending.end_time}</span>
 
-                {pending.quantity > 1 && (
-                  <span>You +{pending.quantity - 1}</span>
-                )}
+                <span>
+                   {pending.quantity > 1 && (
+                     <Fragment>+{pending.quantity - 1}</Fragment>
+                   )}
+                </span>
 
                 <div className="blocked-time-slots-item__calendar">
                   <AddToCalendar event={event} buttonLabel="Copy to Calendar"/>
