@@ -137,7 +137,7 @@ const TimeSlotList = ({ymd, roomId}) => {
 
             const dayHasBlockedTimeSlot = findPendingReservation();
             const timeSlotIsBlocked = timeSlot.reservation;
-            const timeSlotIsFull = timeSlot.available === 0;
+            const timeSlotIsFull = timeSlot.available <= 0;
             const isPassed = moment() > moment(ymd + ' ' + timeSlot.end_time);
             const isDisabled = timeSlot.capacity === 0;
 
