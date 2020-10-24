@@ -69,6 +69,20 @@
     align-items: center;
 }
 
+.room-select {
+    margin-bottom: calc(4 * var(--spacing-unit));
+    display: flex;
+}
+
+.room-select__label {
+    margin-right: calc(2 * var(--spacing-unit));
+}
+
+.schedule-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
 @media (max-width: 1280px) {
 
     .schedule {

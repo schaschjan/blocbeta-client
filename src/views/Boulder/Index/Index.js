@@ -14,7 +14,6 @@ import Icon from "../../../components/Icon/Icon";
 import Ascent from "../../../components/Ascent/Ascent";
 import "./Index.css";
 import Button from "../../../components/Button/Button";
-import classnames from "classnames";
 
 import {
   IndeterminateCheckbox,
@@ -50,6 +49,7 @@ import {
 } from "../../../helpers";
 import { Tag } from "../../../components/TagInput/TagInput";
 import Wrapper from "../../../components/Wrapper/Wrapper";
+import {classNames} from "../../../helper/buildClassNames";
 
 const Table = ({ columns, data, editable = false }) => {
   const isMedium = useMediaQuery(mediumQuery);
@@ -163,7 +163,7 @@ const Table = ({ columns, data, editable = false }) => {
       <FilterDropdown addFilter={addFilter} dropped={filtersDropped} />
 
       <div
-        className={classnames(
+        className={classNames(
           "table",
           "table--boulder",
           editable ? "table--editable" : null

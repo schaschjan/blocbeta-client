@@ -1,15 +1,16 @@
-import React, {Fragment, useMemo, useCallback, useState} from "react";
+import React, {Fragment, useMemo, useCallback, useState, useContext} from "react";
 import {useQuery, queryCache, useMutation} from "react-query";
 import {LoadedContent} from "../../components/Loader/Loader";
-import {api} from "../../helper/api";
 import {useTable, useExpanded, useGlobalFilter} from "react-table"
-import {buildClassNames, Button} from "../../index";
+import {Button} from "../../index";
 import Input from "../../components/Input/Input";
 import "./Ticker.css";
 import Forward from "../../components/Icon/Forward";
 import Downward from "../../components/Icon/Downward";
 import moment from "moment";
-import {useApi} from "../../hooks/useApi";
+import {cache, mutationDefaults, useApi} from "../../hooks/useApi";
+import {classNames} from "../../helper/buildClassNames";
+import {errorToast, ToastContext} from "../../components/Toaster/Toaster";
 
 const Table = ({columns, ymd, setYmd, data, renderRowSubComponent}) => {
   const {
@@ -82,7 +83,7 @@ const Table = ({columns, ymd, setYmd, data, renderRowSubComponent}) => {
             <Fragment key={i}>
               <tr
                 {...row.getRowProps()}
-                className={buildClassNames("ticker-table-body__row", row.original.appeared ? "ticker-table-body__row--appeared" : null)}>
+                className={classNames("ticker-table-body__row", row.original.checked_in ? "ticker-table-body__row--active" : null)}>
                 {row.cells.map(cell => {
                   if (!cell.column.hidden) {
                     return (
@@ -111,7 +112,9 @@ export default () => {
   const [fetched, setFetched] = useState(moment());
   const [selectedDate, setSelectedDate] = useState(moment().format("Y-MM-DD"));
 
-  const {status, data} = useQuery(["ticker", {
+  const {dispatch} = useContext(ToastContext);
+
+  const {status, data} = useQuery([cache.ticker, {
       ymd: selectedDate
     }], useApi("ticker", {ymd: selectedDate}),
 
@@ -124,23 +127,37 @@ export default () => {
     }
   );
 
-  const [mutateCancellation, {status: mutateCancellationStatus, error: mutateCancellationError}] = useMutation(async ({id}) => {
-    await api.reservation.delete(id)
-  }, {
-    throwOnError: true,
+  const [mutateDeletion, {status: mutateCancellationStatus, error: mutateCancellationError}] = useMutation(useApi("deleteReservation"), {
+    ...mutationDefaults,
     onSuccess: () => {
-      queryCache.invalidateQueries("ticker");
+      queryCache.invalidateQueries(cache.ticker);
     },
   });
 
-  const [mutateAppearance, {status: mutateAppearanceStatus, error: mutateAppearanceError}] = useMutation(async ({id, appeared}) => {
-    await api.reservation.update(id, {appeared})
-  }, {
-    throwOnError: true,
+  const [mutateUpdate, {status: mutateAppearanceStatus, error: mutateAppearanceError}] = useMutation(useApi("updateReservation"), {
+    ...mutationDefaults,
     onSuccess: () => {
-      queryCache.invalidateQueries("ticker");
+      queryCache.invalidateQueries(cache.ticker);
     },
   });
+
+  const handleDeletion = (id) => {
+
+    try {
+      mutateDeletion({id})
+    } catch (error) {
+      dispatch(errorToast(error))
+    }
+  };
+
+  const handleUpdate = (id, checkedIn) => {
+
+    try {
+      mutateUpdate({id, payload: {checkedIn}})
+    } catch (error) {
+      dispatch(errorToast(error))
+    }
+  };
 
   const columns = useMemo(() => {
     return [
@@ -164,9 +181,9 @@ export default () => {
         },
       },
       {
-        Header: "Appeared",
+        Header: "Checked in",
         accessor: (row) => {
-          return `${row.reservations.filter(reservation => reservation.appeared === true).length} / ${row.capacity}`
+          return `${row.reservations.filter(reservation => reservation.checked_in === true).length} / ${row.capacity}`
         },
       },
       {
@@ -220,9 +237,9 @@ export default () => {
       <div className="ticker-reservation-table">
         {row.values.reservations.length > 0 ? row.values.reservations.map(reservation => {
 
-          const classes = buildClassNames(
+          const classes = classNames(
             "ticker-reservation-table__item ticker-reservation-table-item",
-            reservation.appeared ? "ticker-reservation-table__item--appeared" : null
+            reservation.checked_in ? "ticker-reservation-table__item--active" : null
           );
 
           return <div className={classes} key={reservation.id}>
@@ -237,29 +254,19 @@ export default () => {
           </span>
 
             <span className="ticker-reservation-table-item__cancel">
-              {!reservation.appeared && (
-                <Button variant="danger" size="small" onClick={() => mutateCancellation({
-                  id: reservation.id
-                })}>
-                  Cancel
+               <Button variant="danger" size="small" onClick={() => handleDeletion(reservation.id)}>
+                  Delete
                 </Button>
-              )}
             </span>
 
             <span className="ticker-reservation-table-item__check-in">
-                {!reservation.appeared ? (
-                  <Button variant="primary" size="small" onClick={() => mutateAppearance({
-                    id: reservation.id,
-                    appeared: true
-                  })}>
-                    Check-In
+                {!reservation.checked_in ? (
+                  <Button variant="primary" size="small" onClick={() => handleUpdate(reservation.id, true)}>
+                    Check in
                   </Button>
                 ) : (
-                  <Button variant="primary" size="small" onClick={() => mutateAppearance({
-                    id: reservation.id,
-                    appeared: false
-                  })}>
-                    Cancel Check-In
+                  <Button variant="primary" size="small" onClick={() => handleUpdate(reservation.id, false)}>
+                    Check out
                   </Button>
                 )}
               </span>

@@ -1,7 +1,7 @@
 import React from "react";
 import "./Modal.css";
 import { motion } from "framer-motion";
-import classnames from "classnames";
+import {classNames} from "../../helper/buildClassNames";
 
 const Modal = ({ children, contentRef, open = false }) => {
   const variants = {
@@ -23,7 +23,7 @@ const Modal = ({ children, contentRef, open = false }) => {
     <motion.div
       animate={open ? "open" : "closed"}
       variants={variants}
-      className={classnames("modal", open ? "modal--open" : null)}
+      className={classNames("modal", open ? "modal--open" : null)}
     >
       <div className={"modal__content"} ref={contentRef}>
         {children}

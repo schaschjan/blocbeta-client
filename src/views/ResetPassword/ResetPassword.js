@@ -8,9 +8,9 @@ import {useParams} from "react-router-dom";
 import {useHistory} from "react-router-dom";
 import {useForm, composeFormElement} from "../../index";
 import axios from "axios";
-import classNames from "classnames";
 import "./ResetPassword.css";
 import {toast, ToastContext} from "../../components/Toaster/Toaster";
+import {classNames} from "../../helper/buildClassNames";
 
 const ResetPassword = () => {
   const [hashFound, setHashFound] = useState(false);

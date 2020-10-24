@@ -3,11 +3,10 @@ import {queryCache, useMutation, useQuery} from "react-query";
 import AddToCalendar from "react-add-to-calendar"
 import {Button} from "../../index";
 import "./Reservations.css";
-import {useApi} from "../../hooks/useApi";
+import {cache, useApi} from "../../hooks/useApi";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import Emoji from "../../components/Emoji/Emoji";
 import {LoadedContent} from "../../components/Loader/Loader";
-import {cache} from "../../helper/api";
 
 export default () => {
   const {currentLocation: {id: locationId}} = useContext(BlocBetaUIContext);
@@ -18,7 +17,7 @@ export default () => {
   const [mutateDeletion, {
     status: deletionMutationStatus,
     error: deletionMutationError
-  }] = useMutation(useApi("unBlockTimeSlot"), {
+  }] = useMutation(useApi("deleteReservation"), {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries("schedule");
@@ -48,9 +47,11 @@ export default () => {
               <li className="blocked-time-slots__item blocked-time-slots-item" key={pending.id}>
                 <span>On {pending.date} • From {pending.start_time} to {pending.end_time}</span>
 
-                {pending.quantity > 1 && (
-                  <span>You +{pending.quantity - 1}</span>
-                )}
+                <span>
+                   {pending.quantity > 1 && (
+                     <Fragment>+{pending.quantity - 1}</Fragment>
+                   )}
+                </span>
 
                 <div className="blocked-time-slots-item__calendar">
                   <AddToCalendar event={event} buttonLabel="Copy to Calendar"/>

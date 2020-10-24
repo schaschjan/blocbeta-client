@@ -3,16 +3,38 @@ import {Link} from 'react-router-dom'
 import {useHistory} from "react-router-dom"
 import './Header.css'
 import {BlocBetaUIContext} from "../BlocBetaUI";
-import {buildClassNames, Burger} from "../../index";
+import {Burger, NavItem} from "../../index";
 import {useLocation} from "react-router-dom";
 import {Close} from "../Icon/Close";
+import {cache, queryDefaults, useApi} from "../../hooks/useApi";
+import {useQuery} from "react-query";
+import {classNames} from "../../helper/buildClassNames";
 
-export default ({children, locations, logoLink}) => {
-  const {reset, setCurrentLocation, currentLocation} = useContext(BlocBetaUIContext);
+export default () => {
+  const {
+    contextualizedPath,
+    user,
+    isAdmin,
+    reset,
+    setCurrentLocation,
+    currentLocation
+  } = useContext(BlocBetaUIContext);
 
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const history = useHistory();
   const location = useLocation();
+
+  const {data: locations} = useQuery(
+    cache.locations,
+    useApi("locations", {location: "poop"}),
+    queryDefaults
+  );
+
+  const {status: reservationCountStatus, data: reservationCount} = useQuery(
+    cache.reservationCount,
+    useApi("reservationCount"),
+    queryDefaults
+  );
 
   const switchLocation = (locationId) => {
     const newLocation = locations.find(location => location.id === parseInt(locationId));
@@ -38,7 +60,7 @@ export default ({children, locations, logoLink}) => {
   return (
     <header className="header">
       <div className="header__logo header-logo">
-        <Link to={logoLink} className="header-logo__title t--eta">BlocBeta</Link>
+        <Link to={contextualizedPath("/dashboard")} className="header-logo__title t--eta">BlocBeta</Link>
 
         <select className="header-logo__location-select location-select t--eta"
                 onChange={(event) => switchLocation(event.target.value)}>
@@ -57,9 +79,32 @@ export default ({children, locations, logoLink}) => {
         </select>
       </div>
 
-      <nav className={buildClassNames("header__nav header-nav", mobileNavOpen ? "header-nav--open" : null)}
+      <nav className={classNames("header__nav header-nav", mobileNavOpen ? "header-nav--open" : null)}
            onClick={() => setMobileNavOpen(false)}>
-        {children}
+
+        {isAdmin && (
+          <NavItem to={contextualizedPath("/boulder")}>
+            Boulder
+          </NavItem>
+        )}
+
+        {user && user.visible && isAdmin && (
+          <NavItem to={contextualizedPath("/ranking/current")}>
+            Ranking
+          </NavItem>
+        )}
+
+        <NavItem to={contextualizedPath("/schedule")}>
+          Schedule
+        </NavItem>
+
+        <NavItem to={contextualizedPath("/reservations")}>
+          Reservations ({reservationCountStatus === "loading" ? 0 : reservationCount})
+        </NavItem>
+
+        <NavItem to={contextualizedPath("/account")}>
+          [{user && user.username}]
+        </NavItem>
 
         <span onClick={() => reset()} className="header-nav__item">
           Out!

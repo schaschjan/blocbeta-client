@@ -1,6 +1,8 @@
 import axios from "axios";
 import {useParams} from "react-router-dom";
 
+export const getLocationFromGlobals = () => window.location.pathname.split("/")[1];
+
 export const extractErrorMessage = (error) => {
   if (!error.response) {
     return null
@@ -21,6 +23,10 @@ export const queryDefaults = {
   refetchOnWindowFocus: false,
 };
 
+export const mutationDefaults = {
+  throwOnError: true
+};
+
 export const cache = {
   roomSchedule: "roomSchedule",
   boulder: "boulder",
@@ -34,7 +40,11 @@ export const cache = {
   labels: "labels",
   locations: "locations",
   reservationCount: "reservationCount",
+  timeSlotExclusion: "time-slot-exclusion",
+  schedule: "schedule",
+  location: "location",
   user: "user",
+  ticker: "ticker",
   ranking: {
     current: "currentRanking",
     allTime: "allTimeRanking",
@@ -128,7 +138,7 @@ export const resources = {
 
     return data;
   },
-  locations: async () => {
+  locations: async ({location}) => {
     const {data} = await axios.get(`/api/location`);
 
     return data;
@@ -153,17 +163,22 @@ export const resources = {
 
     return data;
   },
-  blockTimeSlot: async ({location, payload}) => {
+  createReservation: async ({location, payload}) => {
     const {data} = await axios.post(`/api/${location}/reservation`, payload);
 
     return data;
   },
-  blockGuestTimeSlot: async ({location, payload}) => {
+  createGuestReservation: async ({location, payload}) => {
     const {data} = await axios.post(`/api/${location}/reservation/guest`, payload);
 
     return data;
   },
-  unBlockTimeSlot: async ({location, id}) => {
+  updateReservation: async ({location, id, payload}) => {
+    const {data} = await axios.put(`/api/${location}/reservation/${id}`, payload);
+
+    return data;
+  },
+  deleteReservation: async ({location, id}) => {
     const {data} = await axios.delete(`/api/${location}/reservation/${id}`);
 
     return data;
@@ -196,19 +211,34 @@ export const resources = {
     return flat;
   },
   updateTimeSlot: async ({location, id, payload}) => {
+
     const {data} = await axios.put(`/api/${location}/time-slot/${id}`, payload);
 
     return data;
   },
 };
 
-export const useApi = (key, anything = {}) => {
-  const {location} = useParams();
+export const useApi = (key, args = {}) => {
+  const params = useParams();
+  const location = params.location ? params.location : getLocationFromGlobals();
   const resource = resources[key];
 
   if (!(key in resources)) {
     throw new Error(`Resource ${key} not found`);
   }
 
-  return ({...alsoAnything} = {}) => resource({location, ...anything, ...alsoAnything})
+  return (payload) => {
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`Called resource ${key}`);
+      console.log("Args:", {args});
+      console.log("Payload:", {payload});
+      console.log("");
+    }
+
+    return resource({
+      location,
+      ...args,
+      ...payload
+    })
+  }
 };

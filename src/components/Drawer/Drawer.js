@@ -1,6 +1,5 @@
 import React, { Fragment, useRef } from "react";
 import "./Drawer.css";
-import classnames from "classnames";
 import { Loader } from "../Loader/Loader";
 import Button from "../Button/Button";
 import Icon from "../Icon/Icon";

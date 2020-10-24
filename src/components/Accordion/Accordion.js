@@ -1,7 +1,7 @@
 import React, {useState, createContext, useContext, useEffect} from "react";
 import "./Accordion.css";
-import {buildClassNames} from "../../index";
 import {Upward, Downward} from "./../../index";
+import {classNames} from "../../helper/buildClassNames";
 
 const AccordionContext = createContext(null);
 
@@ -28,7 +28,7 @@ export const AccordionItem = ({
     return (
       <button
         onClick={() => toggle()}
-        className={buildClassNames(
+        className={classNames(
           "accordion-item-header__toggle",
           isRevealed
             ? "accordion-item-header__toggle--revealed"
@@ -41,17 +41,17 @@ export const AccordionItem = ({
   };
 
   return (
-    <div className={buildClassNames("accordion__item accordion-item", isRevealed ? "accordion__item--revealed" : null, disabled ? "accordion__item--disabled" : null)}>
+    <div className={classNames("accordion__item accordion-item", isRevealed ? "accordion__item--revealed" : null, disabled ? "accordion__item--disabled" : null)}>
 
       <div
         onClick={() => !disabled ? toggle() : null}
-        className={buildClassNames("accordion-item__header accordion-item-header", disabled ? "accordion-item__header--disabled" : null)}>
+        className={classNames("accordion-item__header accordion-item-header", disabled ? "accordion-item__header--disabled" : null)}>
         <span className="accordion-item-header__content">{header}</span>
         {!disabled && <ToggleButton/>}
       </div>
 
       <div
-        className={buildClassNames(
+        className={classNames(
           "accordion-item__content",
           isRevealed
             ? "accordion-item__content--revealed"
@@ -74,7 +74,7 @@ export const Accordion = ({children, className}) => {
         setRevealedItem,
       }}
     >
-      <div className={buildClassNames("accordion t--eta")}>{children}</div>
+      <div className={classNames("accordion t--eta")}>{children}</div>
     </AccordionContext.Provider>
   );
 };

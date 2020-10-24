@@ -12,7 +12,7 @@
 .ticker-reservations-item {
 }
 
-.ticker-reservations-item--appeared {
+.ticker-reservations-item--active {
 
 }
 
@@ -38,7 +38,7 @@
     border-bottom: 1px solid var(--color-black);
 }
 
-.ticker-table-body__row--appeared {
+.ticker-table-body__row--active {
     background: var(--color-lila);
     color: var(--color-white);
 }
@@ -90,7 +90,7 @@
     display: grid;
 }
 
-.ticker-reservation-table__item--appeared {
+.ticker-reservation-table__item--active {
     background: var(--color-ice);
 }
 

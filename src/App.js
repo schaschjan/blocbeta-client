@@ -3,13 +3,10 @@ import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom
 import {router} from "./router";
 import {Footer} from "./components/Footer/Footer";
 import {Helmet} from "react-helmet";
-import {NavItem, Header} from "./index"
+import {Header} from "./index"
 import {BlocBetaUI, BlocBetaUIContext} from "./components/BlocBetaUI";
-import {useQuery} from 'react-query'
 import ScrollToTop from "./components/ScrollToTop";
 import {ToastContainer} from "./components/Toaster/Toaster";
-import {queryDefaults, useApi} from "./hooks/useApi";
-import {cache} from "./helper/api";
 
 export const Meta = ({title, description}) => {
   return (
@@ -78,56 +75,6 @@ const Routing = () => {
   </Switch>
 };
 
-const ReservationNavItem = () => {
-  const {contextualizedPath} = useContext(BlocBetaUIContext);
-
-  const {status, data} = useQuery(cache.reservationCount, useApi("reservationCount"), queryDefaults);
-
-  return (
-    <NavItem to={contextualizedPath("/reservations")}>
-      Reservations ({status === "loading" ? 0 : data})
-    </NavItem>
-  )
-};
-
-const AppHeader = () => {
-  const {contextualizedPath, user, isAdmin} = useContext(BlocBetaUIContext);
-
-  const {data: locations} = useQuery(cache.locations, useApi("locations"), queryDefaults);
-
-  return <Fragment>
-
-    <Header
-      locations={locations}
-      locationSwitchTargetPath={"/dashboard"}
-      logoLink={contextualizedPath("/dashboard")}>
-
-      {isAdmin && (
-        <NavItem to={contextualizedPath("/boulder")}>
-          Boulder
-        </NavItem>
-      )}
-
-      {user && user.visible && isAdmin && (
-        <NavItem to={contextualizedPath("/ranking/current")}>
-          Ranking
-        </NavItem>
-      )}
-
-      <NavItem to={contextualizedPath("/schedule")}>
-        Schedule
-      </NavItem>
-
-      <ReservationNavItem/>
-
-      <NavItem to={contextualizedPath("/account")}>
-        [{user && user.username}]
-      </NavItem>
-
-    </Header>
-  </Fragment>
-};
-
 const App = () => {
 
   return (
@@ -135,9 +82,10 @@ const App = () => {
       <Router>
         <ScrollToTop/>
         <BlocBetaUI>
+
           <ToastContainer>
             <div className="app">
-              <AppHeader/>
+              <Header/>
 
               <div className="content">
                 <Routing/>

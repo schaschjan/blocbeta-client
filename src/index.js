@@ -33,25 +33,14 @@ export {default as FormElement} from "./components/FormElement/FormElement"
 export {default as Button} from "./components/Button/Button"
 export {default as Input} from "./components/Input/Input"
 export {default as Select} from "./components/Select/Select"
-export {default as Switch} from "./components/Switch/Switch"
 export {default as FormRow} from "./components/FormRow/FormRow"
-export {default as ContextBuilder} from "./components/ContextBuilder/ContextBuilder"
 export {Accordion, AccordionItem} from "./components/Accordion/Accordion"
-export {default as RoomSelect} from "./components/RoomSelect/RoomSelect";
 
 // icons
 export {default as Burger} from "./components/Icon/Burger"
-export {default as Forward} from "./components/Icon/Forward"
 export {default as Downward} from "./components/Icon/Downward"
 export {default as Upward} from "./components/Icon/Upward"
 
 // hooks
-export {default as useClickOutside} from "./hooks/useClickOutside"
 export {useForm, composeFormElement} from "./hooks/useForm"
-export {default as useKeyDown} from "./hooks/useKeyDown"
 export {default as usePersistentState} from "./hooks/usePersistentState"
-export {default as useQueryParameters} from "./hooks/useQueryParameters"
-
-// helper
-export {default as buildClassNames} from "./helper/buildClassNames"
-export {default as handleApiErrors} from "./helper/handleApiErrors"
