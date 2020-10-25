@@ -65,6 +65,11 @@ export const resources = {
 
     return data;
   },
+  boulderDetail: async ({location, id}) => {
+    const {data} = await axios.get(`/api/${location}/boulder/${id}`);
+
+    return data;
+  },
   ascents: async ({location}) => {
     const {data} = await axios.get(`/api/${location}/ascent`);
 

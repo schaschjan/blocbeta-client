@@ -1,74 +1,40 @@
-import React, { Fragment, useRef } from "react";
+import React, {Fragment, useContext, useRef, createContext, useState} from "react";
 import "./Drawer.css";
-import { Loader } from "../Loader/Loader";
+import {Loader} from "../Loader/Loader";
 import Button from "../Button/Button";
 import Icon from "../Icon/Icon";
 import useClickOutside from "../../hooks/useClickOutside";
-import { motion } from "framer-motion";
+import {motion} from "framer-motion"
 
-export const Drawer = ({
-  open,
-  closeHandler,
-  data,
-  pages,
-  activePage = null,
-  loading = true,
-}) => {
-  const classes = classnames(
-    "drawer",
-    open ? "drawer--open" : "drawer--closed",
-    loading ? "drawer--loading" : null
-  );
+export const DrawerContext = createContext({});
 
-  const drawerRef = useRef();
-  useClickOutside(drawerRef, () => closeHandler());
-
-  if (!pages) {
-    return new Error("No pages passed to drawer");
-  }
-
-  let page = pages[0];
-
-  if (activePage) {
-    page = pages.find((page) => page.id === activePage);
-  }
-
-  const onKeyDown = [
-    "keydown",
-    (event) => {
-      if (open && event.key === "Escape") {
-        closeHandler();
-      }
-    },
-  ];
-
-  if (open) {
-    window.addEventListener(...onKeyDown);
-  } else {
-    window.removeEventListener(...onKeyDown);
-  }
+export const DrawerContainer = ({children}) => {
+  const [isOpen, setOpen] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   return (
-    <motion.div className={classes} ref={drawerRef} positionTransition>
-      {loading ? (
-        <Loader />
-      ) : (
-        <Fragment>
-          <div className="drawer__header">
-            {page.header(data)}
+    <DrawerContext.Provider value={{
+      isLoading,
+      setLoading,
+      isOpen,
+      toggle: (open) => setOpen(open),
+    }}>
+      {children}
+    </DrawerContext.Provider>
+  )
+};
 
-            <Button
-              type="text"
-              onClick={() => closeHandler()}
-              className="close-drawer"
-            >
-              <Icon name="close" />
-            </Button>
-          </div>
+export const Drawer = ({children}) => {
+  const drawerRef = useRef();
+  const {toggle} = useContext(DrawerContext);
 
-          <div className="drawer__content">{page.content(data)}</div>
-        </Fragment>
-      )}
+  useClickOutside(drawerRef, () => {
+    toggle(false)
+  });
+
+  return (
+    <motion.div className="drawer" ref={drawerRef} positionTransition>
+      {children}
     </motion.div>
   );
 };
