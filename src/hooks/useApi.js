@@ -28,6 +28,7 @@ export const mutationDefaults = {
 };
 
 export const cache = {
+  rooms: "rooms",
   roomSchedule: "roomSchedule",
   boulder: "boulder",
   compare: "compare",
@@ -61,6 +62,11 @@ export const cache = {
 export const resources = {
   boulder: async ({location}) => {
     const {data} = await axios.get(`/api/${location}/boulder`);
+
+    return data;
+  },
+  boulderDetail: async ({location, id}) => {
+    const {data} = await axios.get(`/api/${location}/boulder/${id}`);
 
     return data;
   },
@@ -197,6 +203,7 @@ export const resources = {
     const {data} = await axios.get(`/api/${location}/schedule/rooms/${ymd}`);
 
     let flat = [];
+    let pendingCheckIns = 0;
 
     data.forEach(room => {
       room.schedule.forEach(timeSlot => {
@@ -206,9 +213,14 @@ export const resources = {
 
         flat.push(timeSlot);
       });
+
+      pendingCheckIns += room.pending_check_ins;
     });
 
-    return flat;
+    return {
+      pendingCheckIns,
+      schedule: flat
+    };
   },
   updateTimeSlot: async ({location, id, payload}) => {
 

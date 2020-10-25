@@ -5,7 +5,7 @@ const Grade = ({ color, name }) => {
 
   return (
     <div className="grade" style={{ color: color }}>
-      {name}
+      Grade {name}
     </div>
   );
 };

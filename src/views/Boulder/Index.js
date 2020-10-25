@@ -11,6 +11,26 @@ import moment from "moment";
 import Ascent from "../../components/Ascent/Ascent";
 import "./Index.css"
 import {toast, ToastContext} from "../../components/Toaster/Toaster";
+import {classNames} from "../../helper/buildClassNames";
+import Forward from "../../components/Icon/Forward";
+import Paragraph from "../../components/Paragraph/Paragraph";
+import Icon from "../../components/Icon/Icon";
+import {Drawer, DrawerContext} from "../../components/Drawer/Drawer";
+
+const Details = ({id}) => {
+  const {status, data} = useQuery([cache.boulder, {id}], useApi("boulderDetail", {id}));
+  console.log(data);
+
+  return (
+    <div className="details">
+      <LoadedContent loading={status === "loading"}>
+        {data ? (
+          <span>{data.name}</span>
+        ) : null}
+      </LoadedContent>
+    </div>
+  )
+};
 
 const Ascents = ({boulderId, ascent, removeHandler, addHandler}) => {
 
@@ -81,34 +101,73 @@ const Table = ({columns, data}) => {
   );
 
   return (
-    <div className="boulder-list">
-      {page.map((row, index) => {
-        prepareRow(row);
-
-        return (
-          <div className="boulder-list__item boulder-list-item" key={index}>
-            {row.cells.map(cell => {
-              return (
-                <div className="boulder-list-item__cell"
-                     {...cell.getCellProps({
-                       className: cell.column.className,
-                     })}>
-                  {cell.render("Cell")}
-                </div>
-              );
-            })}
+    <Fragment>
+      <div className="boulder-list">
+        {headerGroups.map(headerGroup => (
+          <div className="boulder-list__header boulder-list-header" {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+              <div {...column.getHeaderProps()} className="boulder-list-header__item t--eta">
+                {column.render('Header')}
+              </div>
+            ))}
           </div>
-        )
-      })}
-    </div>
+        ))}
+
+        <div className="boulder-list__content boulder-list-content">
+          {page.map((row, index) => {
+            prepareRow(row);
+
+            return (
+              <div className="boulder-list-content__item boulder-list-content-item" key={index}>
+                {row.cells.map(cell => {
+                  return (
+                    <div
+                      className={`t--eta boulder-list-content-item__cell boulder-list-content-item__cell--${cell.column.id}`} {...cell.getCellProps()}>
+                      {cell.render("Cell")}
+                    </div>
+                  );
+                })}
+              </div>
+            )
+          })}
+        </div>
+
+        <div className="boulder-list__footer boulder-list-footer">
+          <div className="boulder-list-footer__pager boulder-list-footer-pager ">
+            <Paragraph className="boulder-list-footer-pager__info">
+              {pageIndex * pageSize} - {(pageIndex + 1) * pageSize} of{" "}
+              {pageOptions.length * pageSize}
+            </Paragraph>
+
+            <span onClick={() => previousPage()} className={classNames(
+              "boulder-list-footer-pager__prev",
+              !canPreviousPage ? "boulder-list-footer-pager__prev--disabled" : null
+            )}
+            >
+          <Icon name="backward"/>
+        </span>
+            <span onClick={() => nextPage()}
+                  className={classNames(
+                    "boulder-list-footer-pager__next",
+                    !canNextPage ? "boulder-list-footer-pager__next--disabled" : null
+                  )}>
+            <Icon name="forward"/>
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </Fragment>
   )
 };
 
 const Index = () => {
   const {isAdmin} = useContext(BlocBetaUIContext);
   const {dispatch} = useContext(ToastContext);
+  const {isOpen, toggle} = useContext(DrawerContext);
 
   const [data, setData] = useState([]);
+  const [boulder, setBoulder] = useState(null);
 
   const boulderQuery = useQuery(
     cache.boulder,
@@ -177,7 +236,7 @@ const Index = () => {
   );
 
   const toggleDetails = async (id) => {
-    alert(id);
+    toggle();
   };
 
   const addHandler = async (boulderId, type) => {
@@ -218,7 +277,6 @@ const Index = () => {
   };
 
   const renderAscents = useCallback(ascent => {
-
     return <Ascents boulderId={ascent.boulderId}
                     addHandler={addHandler}
                     removeHandler={removeHandler}
@@ -271,8 +329,8 @@ const Index = () => {
         Header: "Name",
         accessor: "name",
         Cell: ({value, row}) => (
-          <span onClick={() => toggleDetails(row.original.id)}>
-            {value}
+          <span onClick={() => setBoulder(row.original.id)} className="toggle-details">
+            {value} <Forward/>
           </span>
         )
       },
@@ -362,8 +420,6 @@ const Index = () => {
     settersQuery
   ]);
 
-  console.log(mergedData);
-
   return (
     <Fragment>
       <Meta title={"Boulder"}/>
@@ -376,21 +432,12 @@ const Index = () => {
         <Table columns={columns} data={mergedData}/>
       </LoadedContent>
 
-      {/*<Container>*/}
-      {/*  <PageHeader title={`Boulder (${data.length})`}>*/}
-      {/*    {isAdmin && (*/}
-      {/*      <Link to={locationPath(`/boulder/add`)}>*/}
-      {/*        <Button primary={true} size={"small"}>*/}
-      {/*          Add*/}
-      {/*        </Button>*/}
-      {/*      </Link>*/}
-      {/*    )}*/}
-      {/*  </PageHeader>*/}
+      <Drawer>
+        {boulder && (
+          <Details id={boulder}/>
+        )}
+      </Drawer>
 
-      {/*  <Wrapper>*/}
-      {/*    <Table columns={columns} data={data} editable={isAdmin} />*/}
-      {/*  </Wrapper>*/}
-      {/*</Container>*/}
     </Fragment>
   );
 };

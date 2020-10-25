@@ -36,7 +36,7 @@ export const BookButton = ({isFull, isDisabled, isBlocked, timeSlot, blockHandle
 
   return (
     <Fragment>
-      <Counter max={timeSlot.max_quantity}
+      <Counter max={timeSlot.available < timeSlot.max_quantity ? timeSlot.available : timeSlot.max_quantity}
                min={timeSlot.min_quantity}
                value={quantity}
                onChange={(count) => setQuantity(count)}/>

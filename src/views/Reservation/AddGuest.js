@@ -4,7 +4,7 @@ import {FormRow} from "../../components/Form/Form";
 import {composeFormElement} from "../..";
 import Input from "../../components/Input/Input";
 import ResourceDependantSelect from "../../components/ResourceDependantSelect/ResourceDependantSelect";
-import {extractErrorMessage, useApi} from "../../hooks/useApi";
+import {cache, extractErrorMessage, useApi} from "../../hooks/useApi";
 import "./AddGuest.css";
 import moment from "moment";
 import {Loader} from "../../components/Loader/Loader";
@@ -55,7 +55,14 @@ const TimeSlotList = ({ymd, roomId, user}) => {
         }
       });
 
-      alert("Reservation created!");
+      dispatch(
+        toast(
+          "Success",
+          "Resevervation added!",
+          "success"
+        )
+      );
+
       history.push(contextualizedPath("/dashboard"));
 
 
@@ -108,19 +115,16 @@ const TimeSlotList = ({ymd, roomId, user}) => {
         <ul className={classNames("schedule-list__time-slot-list", "time-slot-list")}>
           {schedule.map(timeSlot => {
 
-            const dayHasBlockedTimeSlot = findPendingReservation();
-            const timeSlotIsBlocked = timeSlot.reservation;
-            const timeSlotIsFull = timeSlot.available === 0;
+            const timeSlotIsFull = timeSlot.available <= 0;
             const isPassed = moment() > moment(ymd + ' ' + timeSlot.end_time);
-            const isDisabled = timeSlot.capacity === 0;
+            const isDisabled = timeSlot.capacity <= 0;
 
             return (
               <li key={timeSlot.hash}
                   className={classNames(
                     "time-slot-list__item time-slot-list-item",
-                    timeSlotIsBlocked ? "time-slot-list-item--blocked" : null,
                     isPassed ? "time-slot-list-item--disabled" : null,
-                    ((dayHasBlockedTimeSlot || timeSlotIsFull || isDisabled) && !timeSlotIsBlocked) ? "time-slot-list-item--disabled" : null
+                    (( timeSlotIsFull || isDisabled)) ? "time-slot-list-item--disabled" : null
                   )}>
 
                 <div className="time-slot-list-item__time t--zeta">
@@ -135,7 +139,7 @@ const TimeSlotList = ({ymd, roomId, user}) => {
                   <BookButton blockHandler={blockTimeSlot}
                               timeSlot={timeSlot}
                               unBlockHandler={unblockTimeSlot}
-                              isBlocked={timeSlotIsBlocked}
+                              isBlocked={false}
                               isDisabled={isDisabled}
                               isFull={timeSlotIsFull}/>
                 </div>
@@ -153,8 +157,6 @@ const TimeSlotList = ({ymd, roomId, user}) => {
 export default () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedDate, setSelectedDate] = useState(moment());
-
-  const roomResource = useApi("rooms");
 
   const [user, setUser] = useState({
     first_name: null,
@@ -196,8 +198,8 @@ export default () => {
             (event) => setSelectedRoom(event.target.value),
             {
               required: "required",
-              cacheKey: "room",
-              api: () => roomResource,
+              cacheKey: cache.rooms,
+              api: "rooms",
               labelProperty: "name"
             }
           )}

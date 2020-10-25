@@ -27,7 +27,6 @@ export const ToastContainer = ({children}) => {
   const [toast, dispatch] = useState(null);
 
   useEffect(() => {
-
     if (!toast) {
       return
     }

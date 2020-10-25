@@ -10,6 +10,22 @@ import {cache, queryDefaults, useApi} from "../../hooks/useApi";
 import {useQuery} from "react-query";
 import {classNames} from "../../helper/buildClassNames";
 
+const ReservationCountItem = () => {
+  const {contextualizedPath} = useContext(BlocBetaUIContext);
+
+  const {status: reservationCountStatus, data: reservationCount} = useQuery(
+    cache.reservationCount,
+    useApi("reservationCount"),
+    queryDefaults
+  );
+
+  return (
+    <NavItem to={contextualizedPath("/reservations")}>
+      Reservations ({reservationCountStatus === "loading" ? 0 : reservationCount})
+    </NavItem>
+  )
+};
+
 export default () => {
   const {
     contextualizedPath,
@@ -17,7 +33,8 @@ export default () => {
     isAdmin,
     reset,
     setCurrentLocation,
-    currentLocation
+    currentLocation,
+    isAuthenticated
   } = useContext(BlocBetaUIContext);
 
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -27,12 +44,6 @@ export default () => {
   const {data: locations} = useQuery(
     cache.locations,
     useApi("locations", {location: "poop"}),
-    queryDefaults
-  );
-
-  const {status: reservationCountStatus, data: reservationCount} = useQuery(
-    cache.reservationCount,
-    useApi("reservationCount"),
     queryDefaults
   );
 
@@ -98,9 +109,9 @@ export default () => {
           Schedule
         </NavItem>
 
-        <NavItem to={contextualizedPath("/reservations")}>
-          Reservations ({reservationCountStatus === "loading" ? 0 : reservationCount})
-        </NavItem>
+        {(isAuthenticated && currentLocation) && (
+          <ReservationCountItem/>
+        )}
 
         <NavItem to={contextualizedPath("/account")}>
           [{user && user.username}]
