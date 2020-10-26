@@ -231,8 +231,7 @@ export const resources = {
 };
 
 export const useApi = (key, args = {}) => {
-  const params = useParams();
-  const location = params.location ? params.location : getLocationFromGlobals();
+  const {location} = useParams();
   const resource = resources[key];
 
   if (!(key in resources)) {

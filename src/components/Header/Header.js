@@ -9,6 +9,7 @@ import {Close} from "../Icon/Close";
 import {cache, queryDefaults, useApi} from "../../hooks/useApi";
 import {useQuery} from "react-query";
 import {classNames} from "../../helper/buildClassNames";
+import {useParams} from "react-router-dom";
 
 const ReservationCountItem = () => {
   const {contextualizedPath} = useContext(BlocBetaUIContext);
@@ -40,6 +41,7 @@ export default () => {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const history = useHistory();
   const location = useLocation();
+  const params = useParams();
 
   const {data: locations} = useQuery(
     cache.locations,
@@ -109,7 +111,7 @@ export default () => {
           Schedule
         </NavItem>
 
-        {(isAuthenticated && currentLocation) && (
+        {(isAuthenticated && params.location) && (
           <ReservationCountItem/>
         )}
 
