@@ -8,6 +8,7 @@ import {BlocBetaUI, BlocBetaUIContext} from "./components/BlocBetaUI";
 import ScrollToTop from "./components/ScrollToTop";
 import {ToastContainer} from "./components/Toaster/Toaster";
 import {DrawerContainer} from "./components/Drawer/Drawer";
+import {Link} from 'react-router-dom'
 
 export const Meta = ({title, description}) => {
   return (
@@ -58,6 +59,7 @@ const Routing = () => {
           exact={route.exact}
           children={
             <Fragment>
+              <Header/>
               <route.main/>
             </Fragment>
           }
@@ -69,7 +71,13 @@ const Routing = () => {
           key={index}
           path={route.path}
           exact={route.exact}
-          children={<route.main/>}
+          children={<Fragment>
+            <header className="header">
+              <Link className="header__logo" to="/login">BlocBeta</Link>
+            </header>
+
+            <route.main/>
+          </Fragment>}
         />
       }
     })}
@@ -87,8 +95,6 @@ const App = () => {
           <DrawerContainer>
             <ToastContainer>
               <div className="app">
-                <Header/>
-
                 <div className="content">
                   <Routing/>
                 </div>

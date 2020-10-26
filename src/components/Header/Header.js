@@ -14,6 +14,8 @@ import {useParams} from "react-router-dom";
 const ReservationCountItem = () => {
   const {contextualizedPath} = useContext(BlocBetaUIContext);
 
+  console.log(useParams());
+
   const {status: reservationCountStatus, data: reservationCount} = useQuery(
     cache.reservationCount,
     useApi("reservationCount"),
@@ -35,7 +37,6 @@ export default () => {
     reset,
     setCurrentLocation,
     currentLocation,
-    isAuthenticated
   } = useContext(BlocBetaUIContext);
 
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -60,14 +61,6 @@ export default () => {
     setCurrentLocation(newLocation);
     history.push(location.pathname.replace(oldLocation.url, newLocation.url));
   };
-
-  if (!currentLocation) {
-    return (
-      <header className="header">
-        <Link className="header__logo" to="/login">BlocBeta</Link>
-      </header>
-    )
-  }
 
   return (
     <header className="header">
@@ -110,13 +103,7 @@ export default () => {
           Schedule
         </NavItem>
 
-        {(isAuthenticated && currentLocation) ? (
-          <ReservationCountItem/>
-        ) : (
-          <NavItem to={contextualizedPath("/reservations")}>
-            Reservations
-          </NavItem>
-        )}
+        <ReservationCountItem/>
 
         <NavItem to={contextualizedPath("/account")}>
           [{user && user.username}]
