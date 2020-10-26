@@ -41,7 +41,6 @@ export default () => {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const history = useHistory();
   const location = useLocation();
-  const params = useParams();
 
   const {data: locations} = useQuery(
     cache.locations,
@@ -111,8 +110,12 @@ export default () => {
           Schedule
         </NavItem>
 
-        {(isAuthenticated && params.location) && (
+        {(isAuthenticated && currentLocation) ? (
           <ReservationCountItem/>
+        ) : (
+          <NavItem to={contextualizedPath("/reservations")}>
+            Reservations
+          </NavItem>
         )}
 
         <NavItem to={contextualizedPath("/account")}>
