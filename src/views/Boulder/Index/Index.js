@@ -204,7 +204,7 @@ const Table = ({ columns, data, editable = false }) => {
                   key={index}
                 >
                   <TableRow>
-                    <div>{renderCell("holdStyle")}</div>
+                    <div>{renderCell("holdType")}</div>
 
                     <div>
                       {renderCell("name")}
@@ -229,7 +229,7 @@ const Table = ({ columns, data, editable = false }) => {
             if (isMedium) {
               return (
                 <TableRow key={index}>
-                  <div>{renderCell("holdStyle")}</div>
+                  <div>{renderCell("holdType")}</div>
 
                   <div>
                     {renderCell("name")}
@@ -386,9 +386,9 @@ const Index = () => {
     cache.grades,
     api.grades.all
   );
-  const { status: holdStylesStatus, data: holdStyles } = useApi(
-    cache.holdStyles,
-    api.holdStyles.all
+  const { status: holdTypesStatus, data: holdTypes } = useApi(
+    cache.holdTypes,
+    api.holdTypes.all
   );
   const { status: tagsStatus, data: tags } = useApi(
     cache.tags,
@@ -404,7 +404,7 @@ const Index = () => {
     ascentsStatus,
     wallsStatus,
     gradesStatus,
-    holdStylesStatus,
+    holdTypesStatus,
     tagsStatus,
     settersStatus,
   ].includes("loading");
@@ -460,9 +460,9 @@ const Index = () => {
 
   useEffect(() => {
     setData(
-      resolveBoulders(boulders, ascents, grades, walls, holdStyles, setters)
+      resolveBoulders(boulders, ascents, grades, walls, holdTypes, setters)
     );
-  }, [boulders, ascents, grades, walls, holdStyles, setters]);
+  }, [boulders, ascents, grades, walls, holdTypes, setters]);
 
   if (loading || !data) return <Loader />;
 
@@ -472,7 +472,7 @@ const Index = () => {
     const details = await api.boulder.get(boulderId);
 
     setDrawerData(
-      resolveBoulder(details, null, grades, walls, holdStyles, setters, tags)
+      resolveBoulder(details, null, grades, walls, holdTypes, setters, tags)
     );
 
     setLoading(false);
@@ -530,15 +530,15 @@ const Index = () => {
 
   const columns = [
     {
-      id: "holdStyle",
-      Header: "holdStyle",
-      accessor: "holdStyle.name",
-      className: `table-cell--holdStyle`,
+      id: "holdType",
+      Header: "holdType",
+      accessor: "holdType.name",
+      className: `table-cell--holdType`,
       Cell: ({ row }) => {
         return (
           <HoldStyle
-            name={row.original.holdStyle.name}
-            icon={row.original.holdStyle.icon}
+            name={row.original.holdType.name}
+            icon={row.original.holdType.icon}
           />
         );
       },
@@ -787,8 +787,8 @@ const Index = () => {
         return (
           <div className="header-detail">
             <HoldStyle
-              name={data.holdStyle.name}
-              icon={data.holdStyle.icon}
+              name={data.holdType.name}
+              icon={data.holdType.icon}
               small={true}
             />
             <h3>{data.name}</h3>

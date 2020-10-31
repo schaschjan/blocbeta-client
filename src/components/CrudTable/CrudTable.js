@@ -4,14 +4,9 @@ import "./CrudTable.css";
 import Downward from "../Icon/Downward";
 import Forward from "../Icon/Forward";
 import Input from "../../components/Input/Input";
+import Switch from "../Switch/Switch";
 
-export const EditableCell = ({
-                               value: initialValue,
-                               row: {index},
-                               column: {id},
-                               updateHandler,
-                             }) => {
-
+const useEditableCell = (initialValue, updateHandler, id, index) => {
   const [value, setValue] = useState(initialValue);
 
   const onChange = e => {
@@ -26,7 +21,47 @@ export const EditableCell = ({
     setValue(initialValue)
   }, [initialValue]);
 
+  return {onChange, onBlur, value};
+};
+
+export const EditableCellSwitch = ({
+                                     value: initialValue,
+                                     row: {index},
+                                     column: {id},
+                                     updateHandler,
+                                   }) => {
+
+  const {value, onChange, onBlur} = useEditableCell(
+    initialValue,
+    updateHandler,
+    id,
+    index
+  );
+
+  return <Switch
+    key={`${index}-${id}`}
+    value={value}
+    onChange={onChange}
+    onBlur={onBlur}/>
+};
+
+export const EditableCellInput = ({
+                                    value: initialValue,
+                                    row: {index},
+                                    column: {id},
+                                    updateHandler,
+                                    inputType,
+                                  }) => {
+
+  const {value, onChange, onBlur} = useEditableCell(
+    initialValue,
+    updateHandler,
+    id,
+    index
+  );
+
   return <Input value={value}
+                type={inputType}
                 onChange={onChange}
                 onBlur={onBlur}
                 filled={true}

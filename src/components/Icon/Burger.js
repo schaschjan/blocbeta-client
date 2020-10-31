@@ -1,6 +1,6 @@
 import * as React from "react"
 
-export default (props) => {
+const Burger = (props) => {
   return (
     <svg width={24} height={24} viewBox="0 0 24 17" fill="none" {...props}>
       <path
@@ -10,4 +10,6 @@ export default (props) => {
       />
     </svg>
   )
-}
+};
+
+export default Burger

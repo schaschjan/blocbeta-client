@@ -1,10 +1,7 @@
-import React, {Fragment, useContext, useRef, createContext, useState} from "react";
-import "./Drawer.css";
-import {Loader} from "../Loader/Loader";
-import Button from "../Button/Button";
-import Icon from "../Icon/Icon";
+import React, {Fragment, useRef, createContext, useState} from "react";
 import useClickOutside from "../../hooks/useClickOutside";
-import {motion} from "framer-motion"
+import {classNames} from "../../helper/buildClassNames";
+import "./Drawer.css";
 
 export const DrawerContext = createContext({});
 
@@ -24,17 +21,30 @@ export const DrawerContainer = ({children}) => {
   )
 };
 
-export const Drawer = ({children}) => {
-  const drawerRef = useRef();
-  const {toggle} = useContext(DrawerContext);
+export const useDrawer = () => {
+  const [isOpen, setOpen] = useState(false);
 
-  useClickOutside(drawerRef, () => {
-    toggle(false)
-  });
+  const Drawer = ({children}) => {
+    const drawerRef = useRef();
 
-  return (
-    <motion.div className="drawer" ref={drawerRef} positionTransition>
-      {children}
-    </motion.div>
-  );
+    useClickOutside(drawerRef, () => {
+      setOpen(false);
+    });
+
+    return (
+      <Fragment>
+        <div className={classNames(`drawer`, isOpen ? "drawer--open" : null)} ref={drawerRef}>
+          {children}
+        </div>
+
+        <div className={classNames("drawer-overlay", isOpen ? "drawer-overlay--visible" : null)}/>
+      </Fragment>
+    );
+  };
+
+  return {
+    openDrawer: () => setOpen(true),
+    closeDrawer: () => setOpen(false),
+    Drawer
+  };
 };

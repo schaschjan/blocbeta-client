@@ -18,9 +18,9 @@ const BoulderForm = ({ submitting, submitLabel, onSubmit, ...rest }) => {
   let history = useHistory();
 
   const grades = useApiResourceSelectOptions(cache.grades, api.grades.all);
-  const holdStyles = useApiResourceSelectOptions(
-    cache.holdStyles,
-    api.holdStyles.all
+  const holdTypes = useApiResourceSelectOptions(
+    cache.holdTypes,
+    api.holdTypes.all
   );
   const walls = useApiResourceSelectOptions(cache.walls, api.walls.all);
   const setters = useApiResourceSelectOptions(
@@ -59,9 +59,9 @@ const BoulderForm = ({ submitting, submitLabel, onSubmit, ...rest }) => {
       {/*<FormRow>*/}
       {/*  <Label>Hold Style</Label>*/}
       {/*  <Select*/}
-      {/*    name="holdStyle"*/}
+      {/*    name="holdType"*/}
       {/*    validate={{ required: messages.requiredOption }}*/}
-      {/*    options={holdStyles}*/}
+      {/*    options={holdTypes}*/}
       {/*  />*/}
       {/*</FormRow>*/}
 

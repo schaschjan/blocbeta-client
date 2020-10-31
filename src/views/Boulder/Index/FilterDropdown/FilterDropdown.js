@@ -10,11 +10,11 @@ import { store } from "../../../../store";
 import { alphaSort } from "../../../../helpers";
 
 export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
-  const [activeTab, setActiveTab] = useState("holdStyle");
+  const [activeTab, setActiveTab] = useState("holdType");
 
   const { data: walls } = useApi(cache.walls, api.walls.all);
   const { data: grades } = useApi(cache.grades, api.grades.all);
-  const { data: holdStyles } = useApi(cache.holdStyles, api.holdStyles.all);
+  const { data: holdTypes } = useApi(cache.holdTypes, api.holdTypes.all);
   const { data: tags } = useApi(cache.tags, api.tags.all);
   const { data: labels } = useApi(cache.labels, api.labels.all);
 
@@ -29,21 +29,21 @@ export const FilterDropdown = ({ addFilter, dropped, ...rest }) => {
 
   const tabs = [
     {
-      id: "holdStyle",
+      id: "holdType",
       label: "Hold Style",
       render: () => {
         return (
           <ul className="filter-values">
-            {alphaSort(holdStyles, "name").map((holdStyle, index) => {
+            {alphaSort(holdTypes, "name").map((holdType, index) => {
               return (
                 <li className="filter-option" key={index}>
-                  <span onClick={() => addFilter("holdStyle", holdStyle.name)}>
+                  <span onClick={() => addFilter("holdType", holdType.name)}>
                     <HoldStyle
-                      name={holdStyle.name}
-                      icon={holdStyle.icon}
+                      name={holdType.name}
+                      icon={holdType.icon}
                       small={true}
                     />
-                    <span>{holdStyle.name}</span>
+                    <span>{holdType.name}</span>
                   </span>
                 </li>
               );

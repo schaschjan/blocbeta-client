@@ -40,14 +40,14 @@ const Current = () => {
     cache.grades,
     api.grades.all
   );
-  const { status: holdStylesStatus, data: holdStyles } = useApi(
-    cache.holdStyles,
-    api.holdStyles.all
+  const { status: holdTypesStatus, data: holdTypes } = useApi(
+    cache.holdTypes,
+    api.holdTypes.all
   );
 
   const resolvedBoulders = useMemo(() => {
-    return resolveBoulders(boulders, null, grades, walls, holdStyles, null);
-  }, [boulders, grades, walls, holdStyles]);
+    return resolveBoulders(boulders, null, grades, walls, holdTypes, null);
+  }, [boulders, grades, walls, holdTypes]);
 
   const data = useMemo(() => {
     if (!comparisons || !resolvedBoulders) {
@@ -67,15 +67,15 @@ const Current = () => {
 
   const columns = [
     // {
-    //   id: "holdStyle",
-    //   Header: "holdStyle",
-    //   accessor: "holdStyle.name",
-    //   className: `table-cell--holdStyle`,
+    //   id: "holdType",
+    //   Header: "holdType",
+    //   accessor: "holdType.name",
+    //   className: `table-cell--holdType`,
     //   Cell: ({ row }) => {
     //     return (
     //         <HoldStyle
-    //             name={row.original.holdStyle.name}
-    //             icon={row.original.holdStyle.icon}
+    //             name={row.original.holdType.name}
+    //             icon={row.original.holdType.icon}
     //         />
     //     );
     //   },

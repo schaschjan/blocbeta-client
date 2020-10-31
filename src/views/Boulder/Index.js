@@ -15,22 +15,10 @@ import {classNames} from "../../helper/buildClassNames";
 import Forward from "../../components/Icon/Forward";
 import Paragraph from "../../components/Paragraph/Paragraph";
 import Icon from "../../components/Icon/Icon";
-import {Drawer, DrawerContext} from "../../components/Drawer/Drawer";
-
-const Details = ({id}) => {
-  const {status, data} = useQuery([cache.boulder, {id}], useApi("boulderDetail", {id}));
-  console.log(data);
-
-  return (
-    <div className="details">
-      <LoadedContent loading={status === "loading"}>
-        {data ? (
-          <span>{data.name}</span>
-        ) : null}
-      </LoadedContent>
-    </div>
-  )
-};
+import Downward from "../../components/Icon/Downward";
+import Upward from "../../components/Icon/Upward";
+import {useDrawer} from "../../components/Drawer/Drawer";
+import BoulderDetails from "../../components/BoulderDetails/BoulderDetails";
 
 const Ascents = ({boulderId, ascent, removeHandler, addHandler}) => {
 
@@ -106,8 +94,15 @@ const Table = ({columns, data}) => {
         {headerGroups.map(headerGroup => (
           <div className="boulder-list__header boulder-list-header" {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
-              <div {...column.getHeaderProps()} className="boulder-list-header__item t--eta">
+              <div {...column.getHeaderProps(column.getSortByToggleProps())}
+                   className="boulder-list-header__item t--eta">
                 {column.render('Header')}
+
+                {column.isSorted
+                  ? column.isSortedDesc
+                    ? <Downward/>
+                    : <Upward/>
+                  : ''}
               </div>
             ))}
           </div>
@@ -164,10 +159,9 @@ const Table = ({columns, data}) => {
 const Index = () => {
   const {isAdmin} = useContext(BlocBetaUIContext);
   const {dispatch} = useContext(ToastContext);
-  const {isOpen, toggle} = useContext(DrawerContext);
-
-  const [data, setData] = useState([]);
   const [boulder, setBoulder] = useState(null);
+
+  const {openDrawer, closeDrawer, Drawer} = useDrawer();
 
   const boulderQuery = useQuery(
     cache.boulder,
@@ -193,9 +187,9 @@ const Index = () => {
     queryDefaults
   );
 
-  const holdStylesQuery = useQuery(
-    cache.holdStyles,
-    useApi("holdStyles"),
+  const holdTypesQuery = useQuery(
+    cache.holdTypes,
+    useApi("holdTypes"),
     queryDefaults
   );
 
@@ -230,14 +224,10 @@ const Index = () => {
     ascentsQuery,
     wallsQuery,
     gradesQuery,
-    holdStylesQuery,
+    holdTypesQuery,
     tagsQuery,
     settersQuery
   );
-
-  const toggleDetails = async (id) => {
-    toggle();
-  };
 
   const addHandler = async (boulderId, type) => {
 
@@ -284,18 +274,18 @@ const Index = () => {
 
   }, []);
 
+  const toggleDetails = (id) => {
+    setBoulder(id);
+    openDrawer();
+  };
+
   const columns = useMemo(() => {
     return [
       {
-        id: "holdStyle",
-        Header: "holdStyle",
-        accessor: "holdStyle",
-        Cell: ({value}) => (
-          <HoldStyle
-            name={value.name}
-            icon={value.icon}
-          />
-        )
+        id: "hold",
+        Header: "Hold",
+        accessor: "holdType",
+        Cell: ({value}) => <HoldStyle image={value.image}/>
       },
       isAdmin ? {
         id: "grade",
@@ -329,7 +319,7 @@ const Index = () => {
         Header: "Name",
         accessor: "name",
         Cell: ({value, row}) => (
-          <span onClick={() => setBoulder(row.original.id)} className="toggle-details">
+          <span onClick={() => toggleDetails(row.original.id)} className="toggle-details">
             {value} <Forward/>
           </span>
         )
@@ -364,7 +354,7 @@ const Index = () => {
 
   const mergedData = useMemo(() => {
 
-    if (!boulderQuery.data || !gradesQuery.data || !holdStylesQuery.data || !wallsQuery.data || !settersQuery.data || !tagsQuery.data) {
+    if (!boulderQuery.data || !gradesQuery.data || !holdTypesQuery.data || !wallsQuery.data || !settersQuery.data || !tagsQuery.data) {
       return [];
     }
 
@@ -384,8 +374,8 @@ const Index = () => {
         internalGrade: gradesQuery.data.find(grade => {
           return grade.id === boulder.internalGrade.id
         }),
-        holdStyle: holdStylesQuery.data.find(holdStyle => {
-          return holdStyle.id === boulder.holdStyle.id
+        holdType: holdTypesQuery.data.find(holdType => {
+          return holdType.id === boulder.holdType.id
         }),
         startWall: wallsQuery.data.find(wall => {
           return wall.id === boulder.startWall.id
@@ -415,7 +405,7 @@ const Index = () => {
     boulderQuery,
     wallsQuery,
     gradesQuery,
-    holdStylesQuery,
+    holdTypesQuery,
     tagsQuery,
     settersQuery
   ]);
@@ -434,7 +424,7 @@ const Index = () => {
 
       <Drawer>
         {boulder && (
-          <Details id={boulder}/>
+          <BoulderDetails id={boulder}/>
         )}
       </Drawer>
 

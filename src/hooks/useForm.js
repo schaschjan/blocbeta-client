@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { set } from 'lodash'
-import { FormElement } from './../index'
+import React, {useState} from 'react'
+import {set} from 'lodash'
+import {FormElement} from './../index'
 
 export const composeFormElement = (
   name,
@@ -40,12 +40,17 @@ export const useForm = (defaults) => {
   };
 
   const observeField = (event) => {
-    const { name, value } = event.target;
-    const current = { ...formData };
+    const {name, value, checked} = event.target;
+    const current = {...formData};
 
-    set(current, name, value);
-    setFormData({ ...current })
+    if (event.target.type === "checkbox") {
+      set(current, name, checked);
+    } else {
+      set(current, name, value);
+    }
+
+    setFormData({...current})
   };
 
-  return { formData, setFormData, handleSubmit, submitting, setSubmitting, observeField }
+  return {formData, setFormData, handleSubmit, submitting, setSubmitting, observeField}
 };

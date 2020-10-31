@@ -12,15 +12,13 @@ const icons = {
 };
 
 const Ascent = ({type, checked, disabled, ...rest}) => {
-  const classes = classNames(
-    "ascent",
-    type ? `ascent--${type}` : null,
-    checked ? "ascent--checked" : null,
-    disabled ? "ascent--disabled" : null
-  );
-
   return (
-    <div className={classes} {...rest}>
+    <div className={classNames(
+      "ascent",
+      type ? `ascent--${type}` : null,
+      checked ? "ascent--checked" : null,
+      disabled ? "ascent--disabled" : null
+    )} {...rest}>
       {React.createElement(icons[type], {
         fill: checked
       })}

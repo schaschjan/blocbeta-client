@@ -3,12 +3,13 @@ import {Link} from 'react-router-dom'
 import {useHistory} from "react-router-dom"
 import './Header.css'
 import {BlocBetaUIContext} from "../BlocBetaUI";
-import {Burger, NavItem} from "../../index";
+import {NavItem} from "../../index";
 import {useLocation} from "react-router-dom";
 import {Close} from "../Icon/Close";
 import {cache, queryDefaults, useApi} from "../../hooks/useApi";
 import {useQuery} from "react-query";
 import {classNames} from "../../helper/buildClassNames";
+import Burger from "../Icon/Burger";
 
 const ReservationCountItem = () => {
   const {contextualizedPath} = useContext(BlocBetaUIContext);

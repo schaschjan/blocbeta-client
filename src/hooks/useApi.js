@@ -35,7 +35,7 @@ export const cache = {
   ascents: "ascents",
   walls: "walls",
   grades: "grades",
-  holdStyles: "holdStyles",
+  holdTypes: "holdTypes",
   setters: "setters",
   tags: "tags",
   labels: "labels",
@@ -95,7 +95,7 @@ export const resources = {
 
     return data;
   },
-  holdStyles: async ({location}) => {
+  holdTypes: async ({location}) => {
     const {data} = await axios.get(`/api/${location}/holdstyle`);
 
     return data;

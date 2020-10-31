@@ -22,6 +22,9 @@
     --font-size-delta: 21px;
     --line-height-delta: 25px;
 
+    --font-size-epsilon: 16px;
+    --line-height-epsilon: 18px;
+
     --font-size-zeta: 18px;
     --line-height-zeta: 21px;
 

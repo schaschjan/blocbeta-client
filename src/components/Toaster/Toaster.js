@@ -58,7 +58,7 @@ const Toast = (toast) => {
       animate={{opacity: 1}}
       exit={{opacity: 0}}
       className={`toast toast--${toast.type}`}>
-      <h3 className="toast__title t--zeta">{toast.title}</h3>
+      <h3 className="toast__title t--epsilon">{toast.title}</h3>
 
       {toast.description && (
         <p className="toast__description t--eta">{toast.description}</p>

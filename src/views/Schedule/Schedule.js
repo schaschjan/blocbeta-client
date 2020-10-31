@@ -122,11 +122,11 @@ const TimeSlotList = ({ymd, roomId}) => {
   return (
     <div className="schedule-list">
       <ul className="schedule-list__header">
-        <li className="t--zeta">
+        <li className="t--epsilon">
           Time
         </li>
 
-        <li className="t--zeta">
+        <li className="t--epsilon">
           Capacity
         </li>
       </ul>
@@ -150,11 +150,11 @@ const TimeSlotList = ({ymd, roomId}) => {
                     ((dayHasBlockedTimeSlot || timeSlotIsFull || isDisabled) && !timeSlotIsBlocked) ? "time-slot-list-item--disabled" : null
                   )}>
 
-                <div className="time-slot-list-item__time t--zeta">
+                <div className="time-slot-list-item__time t--epsilon">
                   {timeSlot.start_time} - {timeSlot.end_time}
                 </div>
 
-                <div className="time-slot-list-item__capacity t--zeta">
+                <div className="time-slot-list-item__capacity t--epsilon">
                   {timeSlot.available} / {timeSlot.capacity}
                 </div>
 

@@ -5,13 +5,13 @@
     height: 40px;
 }
 
-.holdstyle__inner {
+.holdstyle--small {
+    width: 20px;
+    height: 20px;
+}
+
+.holdstyle__image {
     width: 100%;
     height: 100%;
     background-size: 100%;
-}
-
-.holdstyle--small {
-  width: 20px;
-  height: 20px;
 }

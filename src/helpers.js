@@ -71,7 +71,7 @@ export const resolveBoulders = (
   ascents,
   grades,
   walls,
-  holdStyles,
+  holdTypes,
   setters
 ) => {
   if (!boulders) {
@@ -80,7 +80,7 @@ export const resolveBoulders = (
 
   // map ascent data to boulder array, resolve linked ids
   for (let boulder of boulders) {
-    resolveBoulder(boulder, ascents, grades, walls, holdStyles, setters);
+    resolveBoulder(boulder, ascents, grades, walls, holdTypes, setters);
   }
 
   return boulders;
@@ -91,7 +91,7 @@ export const resolveBoulder = (
   ascents,
   grades,
   walls,
-  holdStyles,
+  holdTypes,
   setters,
   tags
 ) => {
@@ -127,9 +127,9 @@ export const resolveBoulder = (
     });
   }
 
-  if (holdStyles) {
-    boulder.holdStyle = holdStyles.find(
-      (holdStyle) => holdStyle.id === boulder.holdStyle.id
+  if (holdTypes) {
+    boulder.holdType = holdTypes.find(
+      (holdType) => holdType.id === boulder.holdType.id
     );
   }
 

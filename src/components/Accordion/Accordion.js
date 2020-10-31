@@ -1,7 +1,8 @@
 import React, {useState, createContext, useContext, useEffect} from "react";
 import "./Accordion.css";
-import {Upward, Downward} from "./../../index";
 import {classNames} from "../../helper/buildClassNames";
+import Downward from "../Icon/Downward";
+import Upward from "../Icon/Upward";
 
 const AccordionContext = createContext(null);
 

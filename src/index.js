@@ -36,11 +36,6 @@ export {default as Select} from "./components/Select/Select"
 export {default as FormRow} from "./components/FormRow/FormRow"
 export {Accordion, AccordionItem} from "./components/Accordion/Accordion"
 
-// icons
-export {default as Burger} from "./components/Icon/Burger"
-export {default as Downward} from "./components/Icon/Downward"
-export {default as Upward} from "./components/Icon/Upward"
-
 // hooks
 export {useForm, composeFormElement} from "./hooks/useForm"
 export {default as usePersistentState} from "./hooks/usePersistentState"

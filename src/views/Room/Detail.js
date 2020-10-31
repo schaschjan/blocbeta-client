@@ -4,7 +4,7 @@ import {LoadedContent} from "../../components/Loader/Loader";
 import EmptyState from "../../components/EmptyState/EmptyState";
 import {cache, extractErrorMessage, useApi} from "../../hooks/useApi";
 import {useParams} from "react-router-dom";
-import {CrudTable, EditableCell} from "../../components/CrudTable/CrudTable";
+import {CrudTable, EditableCellInput, EditableCellSwitch} from "../../components/CrudTable/CrudTable";
 import "./Detail.css";
 import {toast, ToastContext} from "../../components/Toaster/Toaster";
 
@@ -22,6 +22,40 @@ export default () => {
 
   const columns = useMemo(() => {
     return [
+      {
+        Header: "Enabled",
+        accessor: "enabled",
+        canGroupBy: false,
+        aggregate: 'count',
+        Aggregated: ({value}) => `${value} items`,
+        Cell: EditableCellSwitch
+      },
+      {
+        Header: "Auto destroy",
+        accessor: "auto_destroy",
+        canGroupBy: false,
+        aggregate: 'count',
+        Aggregated: ({value}) => `${value} items`,
+        Cell: EditableCellSwitch
+      },
+      {
+        Header: "Enable after",
+        accessor: "enable_after",
+        aggregate: 'count',
+        Aggregated: ({value}) => `${value} items`,
+        Cell: ({...cellProps}) => {
+          return <EditableCellInput inputType="date" {...cellProps}/>
+        }
+      },
+      {
+        Header: "Disable after",
+        accessor: "disable_after",
+        aggregate: 'count',
+        Aggregated: ({value}) => `${value} items`,
+        Cell: ({...cellProps}) => {
+          return <EditableCellInput inputType="date" {...cellProps}/>
+        }
+      },
       {
         Header: "Day",
         accessor: "day_name",
@@ -119,7 +153,7 @@ export default () => {
                    columns={columns}
                    updateHandler={handleUpdate}
                    defaultColumn={{
-                     Cell: EditableCell
+                     Cell: EditableCellInput
                    }}
                    defaultGroupBy={["day_name"]}
         />

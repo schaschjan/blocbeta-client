@@ -15,7 +15,7 @@ const Add = () => {
   const initial = {
     grade: null,
     internalGrade: null,
-    holdStyle: null,
+    holdType: null,
     startWall: null,
     endWall: null,
     setters: null,
