@@ -21,7 +21,7 @@ export const DrawerContainer = ({children}) => {
   )
 };
 
-export const useDrawer = () => {
+export const useDrawer = (onClose, onOpen) => {
   const [isOpen, setOpen] = useState(false);
 
   const Drawer = ({children}) => {
@@ -29,6 +29,7 @@ export const useDrawer = () => {
 
     useClickOutside(drawerRef, () => {
       setOpen(false);
+      onClose();
     });
 
     return (
@@ -43,8 +44,15 @@ export const useDrawer = () => {
   };
 
   return {
-    openDrawer: () => setOpen(true),
-    closeDrawer: () => setOpen(false),
+    openDrawer: () =>{
+      setOpen(true);
+      onOpen();
+    },
+
+    closeDrawer: () => {
+      setOpen(false);
+      onClose();
+    },
     Drawer
   };
 };

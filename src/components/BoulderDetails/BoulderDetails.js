@@ -7,8 +7,9 @@ import {classNames} from "../../helper/buildClassNames";
 import Icon from "../../components/Icon/Icon";
 import Button from "../../components/Button/Button";
 import "./BoulderDetails.css";
+import {Close} from "../Icon/Close";
 
-const BoulderDetails = ({id}) => {
+const BoulderDetails = ({id, closeDrawer}) => {
   const {status, data} = useQuery([cache.boulder, {id}], useApi("boulderDetail", {id}));
 
   return (
@@ -27,6 +28,8 @@ const BoulderDetails = ({id}) => {
               <h3 className="details-header__name t--epsilon">
                 {data.name}
               </h3>
+
+              <Close className="details-header__close" onClick={() => closeDrawer()}/>
             </div>
 
             <h3 className="t--epsilon details__section-title">

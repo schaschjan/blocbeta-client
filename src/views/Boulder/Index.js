@@ -161,7 +161,7 @@ const Index = () => {
   const {dispatch} = useContext(ToastContext);
   const [boulder, setBoulder] = useState(null);
 
-  const {openDrawer, closeDrawer, Drawer} = useDrawer();
+  const {openDrawer, closeDrawer, Drawer} = useDrawer(() => setBoulder(null));
 
   const boulderQuery = useQuery(
     cache.boulder,
@@ -318,11 +318,16 @@ const Index = () => {
         id: "name",
         Header: "Name",
         accessor: "name",
-        Cell: ({value, row}) => (
-          <span onClick={() => toggleDetails(row.original.id)} className="toggle-details">
+        Cell: ({value, row}) => {
+          const active = boulder === row.original.id;
+
+          return (
+            <span onClick={() => toggleDetails(row.original.id)}
+                  className={classNames("toggle-details", active ? "toggle-details__active" : null)}>
             {value} <Forward/>
           </span>
-        )
+          )
+        }
       },
       {
         id: "start",
@@ -350,7 +355,7 @@ const Index = () => {
       }
     ];
 
-  }, [isAdmin]);
+  }, [isAdmin, boulder]);
 
   const mergedData = useMemo(() => {
 
@@ -424,7 +429,7 @@ const Index = () => {
 
       <Drawer>
         {boulder && (
-          <BoulderDetails id={boulder}/>
+          <BoulderDetails id={boulder} closeDrawer={closeDrawer}/>
         )}
       </Drawer>
 

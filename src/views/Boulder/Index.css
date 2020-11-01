@@ -48,6 +48,12 @@
     margin-left: auto;
     position: absolute;
     right: 0;
+    transform: rotate(0);
+    transition: transform 200ms ease-in-out;
+}
+
+.toggle-details__active svg {
+    transform: rotate(90deg);
 }
 
 .details {

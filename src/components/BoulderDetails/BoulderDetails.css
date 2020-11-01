@@ -20,6 +20,11 @@
     margin-left: var(--spacing-unit);
 }
 
+.details-header__close {
+    margin-left: auto;
+    cursor: pointer;
+}
+
 .details-setters__item,
 .details-tags__item,
 .details-ascents__item {
