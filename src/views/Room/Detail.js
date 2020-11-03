@@ -5,7 +5,6 @@ import EmptyState from "../../components/EmptyState/EmptyState";
 import {cache, extractErrorMessage, useApi} from "../../hooks/useApi";
 import {useParams} from "react-router-dom";
 import {CrudTable, EditableCellInput, EditableCellSwitch} from "../../components/CrudTable/CrudTable";
-import "./Detail.css";
 import {toast, ToastContext} from "../../components/Toaster/Toaster";
 
 export default () => {

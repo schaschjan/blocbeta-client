@@ -110,6 +110,14 @@ export const resources = {
 
     return data;
   },
+  updateSetter: async ({location, id, payload}) => {
+    const {data} = await axios.put(`/api/${location}/setter/${id}`, payload);
+
+    return data;
+  },
+  deleteSetter: async ({location, id}) => {
+    await axios.get(`/api/${location}/setter/${id}`);
+  },
   ping: async ({location}) => {
     await axios.get(`/api/${location}/ping`);
   },

@@ -4,7 +4,6 @@ import {LoadedContent} from "../../components/Loader/Loader";
 import EmptyState from "../../components/EmptyState/EmptyState";
 import {useApi} from "../../hooks/useApi";
 import {Button} from "../../index";
-import "./Index.css";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import {CrudTable} from "../../components/CrudTable/CrudTable";
 

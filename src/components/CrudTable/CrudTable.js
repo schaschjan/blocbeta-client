@@ -6,15 +6,33 @@ import Forward from "../Icon/Forward";
 import Input from "../../components/Input/Input";
 import Switch from "../Switch/Switch";
 
-const useEditableCell = (initialValue, updateHandler, id, index) => {
+const useEditableCell = (
+  initialValue,
+  updateHandler,
+  id,
+  index,
+  updateEvent = "blur",
+  eventTargetValue = "value"
+) => {
   const [value, setValue] = useState(initialValue);
 
-  const onChange = e => {
-    setValue(e.target.value)
+
+  const onChange = event => {
+    const eventValue = event.target[eventTargetValue];
+
+    setValue(eventValue);
+
+    if (updateEvent === "change") {
+      updateHandler(index, id, eventValue)
+    }
   };
 
-  const onBlur = () => {
-    updateHandler(index, id, value)
+  const onBlur = (event) => {
+    const eventValue = event.target[eventTargetValue];
+
+    if (updateEvent === "blur") {
+      updateHandler(index, id, eventValue)
+    }
   };
 
   useEffect(() => {
@@ -35,10 +53,13 @@ export const EditableCellSwitch = ({
     initialValue,
     updateHandler,
     id,
-    index
+    index,
+    "change",
+    "checked"
   );
 
   return <Switch
+    id={`${index}-${id}`}
     key={`${index}-${id}`}
     value={value}
     onChange={onChange}

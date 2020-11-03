@@ -20,3 +20,8 @@
 .crud-table td {
     padding: calc(2 * var(--spacing-unit));
 }
+
+
+.crud-table td:last-child {
+    text-align: right;
+}

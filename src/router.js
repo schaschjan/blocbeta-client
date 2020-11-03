@@ -17,6 +17,7 @@ import AddTimeSlotBlocker from "./views/TimeSlotBlocker/Add";
 import IndexTimeSlotBlocker from "./views/TimeSlotBlocker/Index";
 import RoomsIndex from "./views/Room/Index";
 import RoomsDetail from "./views/Room/Detail";
+import SetterIndex from "./views/Setter/Index";
 import GuestAdd from "./views/Reservation/AddGuest";
 import BoulderIndex from "./views/Boulder/Index";
 
@@ -48,6 +49,13 @@ const adminRoutes = [
     exact: true,
     admin: true,
     main: () => <RoomsIndex/>,
+  },
+  {
+    title: "List setters",
+    path: "/:location/admin/setters",
+    exact: true,
+    admin: true,
+    main: () => <SetterIndex/>,
   },
   {
     title: "Room Detail",

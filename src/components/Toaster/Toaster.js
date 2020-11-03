@@ -14,6 +14,16 @@ export const toast = (title, description = null, type = "info", timeout = 2000) 
   }
 };
 
+export const successToast = (message) => {
+
+  return toast(
+    "Success",
+    message,
+    "success"
+  )
+};
+
+
 export const errorToast = (error) => {
 
   return toast(
