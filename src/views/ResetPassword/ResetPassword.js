@@ -2,15 +2,15 @@ import React, {useState, useContext, useEffect, Fragment} from "react";
 import {Meta} from "../../App";
 import {FormRow} from "../../components/Form/Form";
 import Input from "../../components/Input/Input";
-import Button from "../../components/Button/Button";
 import {extractErrorMessage} from "../../hooks/useApi";
 import {useParams} from "react-router-dom";
 import {useHistory} from "react-router-dom";
-import {useForm, composeFormElement} from "../../index";
 import axios from "axios";
 import "./ResetPassword.css";
 import {toast, ToastContext} from "../../components/Toaster/Toaster";
 import {classNames} from "../../helper/buildClassNames";
+import {composeFormElement, useForm} from "../../hooks/useForm";
+import {Button} from "../../components/Button/Button";
 
 const ResetPassword = () => {
   const [hashFound, setHashFound] = useState(false);

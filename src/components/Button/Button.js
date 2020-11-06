@@ -4,7 +4,7 @@ import "./Button.css";
 import {Loader} from "../Loader/Loader";
 import {classNames} from "../../helper/buildClassNames";
 
-export default ({
+const Button = ({
                   variant = "primary",
                   size = "default",
                   modifier = null,
@@ -40,3 +40,5 @@ export default ({
     {loader && loading && <Loader variant={loaderVariant}/>}
   </button>
 };
+
+export {Button}

@@ -1,10 +1,9 @@
 import React from "react";
 import "./Avatar.css";
-import { resolveMedia } from "../../helpers";
 import Icon from "../Icon/Icon";
 
-const Avatar = ({ user }) => {
-  if (!user.media) {
+const Avatar = ({ image }) => {
+  if (!image) {
     return (
       <div className="avatar avatar--fallback">
         <Icon name="avatar" />
@@ -15,7 +14,7 @@ const Avatar = ({ user }) => {
   return (
     <div
       className="avatar"
-      style={{ backgroundImage: `url(${resolveMedia(user.media)})` }}
+      style={{ backgroundImage: `url(${image}?w=80&h=80&fit=crop)` }}
     />
   );
 };

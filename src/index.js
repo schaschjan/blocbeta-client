@@ -24,18 +24,3 @@ ReactDOM.render(<App/>, document.getElementById("root"));
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
-
-// components
-export {default as Label} from "./components/Label/Label"
-export {default as Header} from "./components/Header/Header"
-export {default as NavItem} from "./components/NavItem/NavItem"
-export {default as FormElement} from "./components/FormElement/FormElement"
-export {default as Button} from "./components/Button/Button"
-export {default as Input} from "./components/Input/Input"
-export {default as Select} from "./components/Select/Select"
-export {default as FormRow} from "./components/FormRow/FormRow"
-export {Accordion, AccordionItem} from "./components/Accordion/Accordion"
-
-// hooks
-export {useForm, composeFormElement} from "./hooks/useForm"
-export {default as usePersistentState} from "./hooks/usePersistentState"

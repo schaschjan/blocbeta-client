@@ -2,7 +2,6 @@ import React, {Fragment, useMemo, useCallback, useState, useContext} from "react
 import {useQuery, queryCache, useMutation} from "react-query";
 import {LoadedContent} from "../../components/Loader/Loader";
 import {useTable, useExpanded, useGlobalFilter} from "react-table"
-import {Button} from "../../index";
 import Input from "../../components/Input/Input";
 import "./Ticker.css";
 import Forward from "../../components/Icon/Forward";
@@ -11,6 +10,7 @@ import moment from "moment";
 import {cache, mutationDefaults, useApi} from "../../hooks/useApi";
 import {classNames} from "../../helper/buildClassNames";
 import {errorToast, ToastContext} from "../../components/Toaster/Toaster";
+import {Button} from "../../components/Button/Button";
 
 const Table = ({columns, ymd, setYmd, data, renderRowSubComponent}) => {
   const {

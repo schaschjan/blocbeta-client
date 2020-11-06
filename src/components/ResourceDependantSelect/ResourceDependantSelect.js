@@ -1,7 +1,7 @@
 import React, {Fragment} from "react";
 import {useQuery} from "react-query";
-import Select from "../Select/Select";
 import {useApi} from "../../hooks/useApi";
+import {Select} from "../Select/Select";
 
 const ResourceDependantSelect = ({cacheKey, api, labelProperty, valueProperty = "id", ...rest}) => {
   const resource = useApi(api);

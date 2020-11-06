@@ -10,11 +10,11 @@ import {Meta} from "../../App";
 import Paragraph from "../../components/Paragraph/Paragraph";
 import moment from "moment";
 import Avatar from "../../components/Avatar/Avatar";
-import Button from "../../components/Button/Button";
 import {Female, Male} from "../../components/Icon/Icons";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import {LoadedContent} from "../../components/Loader/Loader";
 import "./CurrentRanking.css";
+import {Button} from "../../components/Button/Button";
 
 export default () => {
   const {user, contextualizedPath} = useContext(BlocBetaUIContext);
@@ -45,9 +45,10 @@ export default () => {
         accessor: "user.username",
         className: "table-cell--user",
         Cell: ({cell, row}) => {
+
           return (
             <Fragment>
-              <Avatar user={row.original.user}/>
+              <Avatar image={row.original.user.image}/>
               {cell.value}
 
               {row.original.boulder === boulderCount && <span className='rank-badge'>🥋</span>}

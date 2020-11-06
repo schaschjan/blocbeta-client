@@ -1,7 +1,6 @@
 import React, {useContext, Fragment, useState} from "react";
 import {Meta} from "../../App";
 import {FormRow} from "../../components/Form/Form";
-import {composeFormElement} from "../..";
 import Input from "../../components/Input/Input";
 import ResourceDependantSelect from "../../components/ResourceDependantSelect/ResourceDependantSelect";
 import {cache, extractErrorMessage, useApi} from "../../hooks/useApi";
@@ -14,6 +13,7 @@ import {useHistory} from "react-router-dom";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import {classNames} from "../../helper/buildClassNames";
 import {toast, ToastContext} from "../../components/Toaster/Toaster";
+import {composeFormElement} from "../../hooks/useForm";
 
 const TimeSlotList = ({ymd, roomId, user}) => {
 

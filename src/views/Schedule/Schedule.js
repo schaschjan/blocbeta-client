@@ -2,7 +2,6 @@ import React, {Fragment, useContext, useEffect, useState} from "react";
 import 'react-dates/initialize';
 import moment from "moment";
 import {queryCache, useMutation, useQuery} from "react-query";
-import {Button, Select} from "./../../index";
 import "./Schedule.css";
 import {cache, extractErrorMessage, queryDefaults, useApi} from "../../hooks/useApi";
 import {Loader} from "../../components/Loader/Loader";
@@ -10,15 +9,19 @@ import {DatePicker} from "../../components/DatePicker/DatePicker";
 import {Counter} from "../../components/Counter/Counter";
 import {toast, ToastContext} from "../../components/Toaster/Toaster";
 import {classNames} from "../../helper/buildClassNames";
+import {Button} from "../../components/Button/Button";
+import {Select} from "../../components/Select/Select";
 
 export const BookButton = ({isFull, isDisabled, isBlocked, timeSlot, blockHandler, unBlockHandler}) => {
 
   const [quantity, setQuantity] = useState(timeSlot.min_quantity);
 
   if (isDisabled) {
-    return <Button variant="text">
-      disabled
-    </Button>
+    return (
+      <Button variant="text">
+        disabled
+      </Button>
+    )
   }
 
   if (isBlocked) {

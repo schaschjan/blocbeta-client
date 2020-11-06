@@ -2,21 +2,61 @@ import React, {Fragment, useContext} from "react";
 import {useHistory} from "react-router-dom";
 import Label from "../../components/Label/Label";
 import Input from "../../components/Input/Input";
-import Button from "../../components/Button/Button";
 import {extractErrorMessage, useApi} from "../../hooks/useApi";
 import {useMutation, useQuery} from "react-query";
 import Switch from "../../components/Switch/Switch";
 import {Meta} from "../../App";
-import {composeFormElement, useForm, FormRow} from "../../index";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import "./Account.css";
 import {LoadedContent} from "../../components/Loader/Loader";
-import {toast, ToastContext} from "../../components/Toaster/Toaster";
+import {errorToast, toast, ToastContext} from "../../components/Toaster/Toaster";
+import {Button} from "../../components/Button/Button";
+import {FormRow} from "../../components/Form/Form";
+import {composeFormElement, useForm} from "../../hooks/useForm";
+import axios from "axios";
+import Avatar from "../../components/Avatar/Avatar";
+
+const UploadField = ({onSuccess}) => {
+  const {dispatch} = useContext(ToastContext);
+
+  const handleUpload = async (event) => {
+    const [file] = event.target.files;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const {data} = await axios.post("/api/upload", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      onSuccess(data.file);
+
+    } catch (error) {
+      dispatch(errorToast(error))
+    }
+  };
+
+  return (
+    <Input type="file" onChange={(event) => handleUpload(event)}/>
+  )
+};
 
 const Form = ({defaults, onSubmit}) => {
-  const {handleSubmit, submitting, formData, observeField} = useForm(defaults);
+  const {handleSubmit, submitting, formData, setKeyValue, observeField} = useForm(defaults);
 
   return <form onSubmit={(event) => handleSubmit(event, onSubmit)}>
+
+    <FormRow>
+      {formData.image && (
+        <Avatar image={`${formData.image}`} />
+      )}
+
+      <UploadField onSuccess={resource => setKeyValue("image", resource)}/>
+    </FormRow>
+
     <FormRow>
       {composeFormElement(
         "visible",
@@ -96,8 +136,6 @@ const Account = () => {
 
   const onSubmit = async (data) => {
 
-    delete data.media;
-
     try {
       await mutate({payload: data});
 
@@ -149,7 +187,6 @@ const Account = () => {
       <h1 className="t--alpha page-title">
         Account
       </h1>
-
 
       <LoadedContent loading={status !== "success"}>
         <div className="account-layout content-offset">

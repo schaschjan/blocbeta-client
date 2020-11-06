@@ -1,6 +1,6 @@
 import React, {useMemo, createContext, useEffect} from "react";
-import {usePersistentState} from "./../index.js"
-import packageJson from '../../package.json';
+import packageJson from "../../package.json";
+import usePersistentState from "../hooks/usePersistentState";
 
 export const BlocBetaUIContext = createContext({});
 

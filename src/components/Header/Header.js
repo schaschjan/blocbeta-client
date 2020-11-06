@@ -3,13 +3,13 @@ import {Link} from 'react-router-dom'
 import {useHistory} from "react-router-dom"
 import './Header.css'
 import {BlocBetaUIContext} from "../BlocBetaUI";
-import {NavItem} from "../../index";
 import {useLocation} from "react-router-dom";
 import {Close} from "../Icon/Close";
 import {cache, queryDefaults, useApi} from "../../hooks/useApi";
 import {useQuery} from "react-query";
 import {classNames} from "../../helper/buildClassNames";
 import Burger from "../Icon/Burger";
+import {NavItem} from "../NavItem/NavItem";
 
 const ReservationCountItem = () => {
   const {contextualizedPath} = useContext(BlocBetaUIContext);
@@ -27,7 +27,7 @@ const ReservationCountItem = () => {
   )
 };
 
-export default () => {
+const Header = () => {
   const {
     contextualizedPath,
     user,
@@ -129,3 +129,5 @@ export default () => {
     </header>
   )
 };
+
+export {Header}

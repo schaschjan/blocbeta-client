@@ -3,17 +3,17 @@ import {Close} from "../Icon/Close";
 import "./Input.css";
 import {classNames} from "../../helper/buildClassNames";
 
-export default ({
-                  className,
-                  clearable,
-                  onClear,
-                  prefix,
-                  type,
-                  value,
-                  filled = false,
-                  size = "default",
-                  ...rest
-                }) => {
+const Input = ({
+                 className,
+                 clearable,
+                 onClear,
+                 prefix,
+                 type,
+                 value,
+                 filled = false,
+                 size = "default",
+                 ...rest
+               }) => {
 
   const classes = classNames(
     className,
@@ -35,3 +35,5 @@ export default ({
     </div>
   );
 };
+
+export default Input

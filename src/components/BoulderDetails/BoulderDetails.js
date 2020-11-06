@@ -5,9 +5,9 @@ import {LoadedContent} from "../../components/Loader/Loader";
 import HoldStyle from "../../components/HoldStyle/HoldStyle";
 import {classNames} from "../../helper/buildClassNames";
 import Icon from "../../components/Icon/Icon";
-import Button from "../../components/Button/Button";
 import "./BoulderDetails.css";
 import {Close} from "../Icon/Close";
+import {Button} from "../Button/Button";
 
 const BoulderDetails = ({id, closeDrawer}) => {
   const {status, data} = useQuery([cache.boulder, {id}], useApi("boulderDetail", {id}));

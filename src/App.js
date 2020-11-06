@@ -3,11 +3,11 @@ import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom
 import {router} from "./router";
 import {Footer} from "./components/Footer/Footer";
 import {Helmet} from "react-helmet";
-import {Header} from "./index"
 import {BlocBetaUI, BlocBetaUIContext} from "./components/BlocBetaUI";
 import ScrollToTop from "./components/ScrollToTop";
 import {ToastContainer} from "./components/Toaster/Toaster";
 import {DrawerContainer} from "./components/Drawer/Drawer";
+import {Header} from "./components/Header/Header";
 
 export const Meta = ({title, description}) => {
   return (

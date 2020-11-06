@@ -3,9 +3,9 @@ import {useQuery} from "react-query";
 import {LoadedContent} from "../../components/Loader/Loader";
 import EmptyState from "../../components/EmptyState/EmptyState";
 import {useApi} from "../../hooks/useApi";
-import {Button} from "../../index";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import {CrudTable} from "../../components/CrudTable/CrudTable";
+import {Button} from "../../components/Button/Button";
 
 export default () => {
   const {contextualizedPath} = useContext(BlocBetaUIContext);

@@ -1,5 +1,6 @@
 import axios from "axios";
 import {useParams} from "react-router-dom";
+import {alphaSort} from "../helpers";
 
 export const getLocationFromGlobals = () => window.location.pathname.split("/")[1];
 
@@ -88,30 +89,35 @@ export const resources = {
   walls: async ({location}) => {
     const {data} = await axios.get(`/api/${location}/wall`);
 
-    return data;
+    return alphaSort(data, "name");
   },
   grades: async ({location}) => {
     const {data} = await axios.get(`/api/${location}/grade`);
 
-    return data;
+    return alphaSort(data, "name");
   },
   holdTypes: async ({location}) => {
     const {data} = await axios.get(`/api/${location}/holdstyle`);
 
-    return data;
+    return alphaSort(data, "name");
   },
   tags: async ({location}) => {
     const {data} = await axios.get(`/api/${location}/tag`);
 
-    return data;
+    return alphaSort(data, "name");
   },
   setters: async ({location}) => {
     const {data} = await axios.get(`/api/${location}/setter`);
 
-    return data;
+    return alphaSort(data, "username");
   },
   updateSetter: async ({location, id, payload}) => {
     const {data} = await axios.put(`/api/${location}/setter/${id}`, payload);
+
+    return data;
+  },
+  createSetter: async ({location, payload}) => {
+    const {data} = await axios.post(`/api/${location}/setter`, payload);
 
     return data;
   },
@@ -231,11 +237,17 @@ export const resources = {
     };
   },
   updateTimeSlot: async ({location, id, payload}) => {
-
     const {data} = await axios.put(`/api/${location}/time-slot/${id}`, payload);
 
     return data;
   },
+  searchUser: async ({username}) => {
+    const {data} = await axios.get(`/api/user/search`, {
+      params: {username}
+    });
+
+    return data;
+  }
 };
 
 export const useApi = (key, args = {}) => {

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {set} from 'lodash'
-import {FormElement} from './../index'
+import {FormElement} from "../components/Form/Form";
 
 export const composeFormElement = (
   name,
@@ -39,6 +39,14 @@ export const useForm = (defaults) => {
     setSubmitting(false)
   };
 
+  const setKeyValue = (key, value) => {
+    const current = {...formData};
+
+    set(current, key, value);
+
+    setFormData({...current})
+  };
+
   const observeField = (event) => {
     const {name, value, checked} = event.target;
     const current = {...formData};
@@ -52,5 +60,5 @@ export const useForm = (defaults) => {
     setFormData({...current})
   };
 
-  return {formData, setFormData, handleSubmit, submitting, setSubmitting, observeField}
+  return {formData, setKeyValue, handleSubmit, submitting, setSubmitting, observeField}
 };

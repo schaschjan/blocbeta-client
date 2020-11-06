@@ -2,7 +2,7 @@ import React from 'react'
 import {NavLink} from 'react-router-dom'
 import "./NavItem.css";
 
-export default ({children, to, external, ...rest}) => {
+const NavItem = ({children, to, external, ...rest}) => {
   if (external) {
     return <a href={to} target="_blank" className="header-nav__item">{children}</a>
   }
@@ -12,4 +12,6 @@ export default ({children, to, external, ...rest}) => {
       {children}
     </NavLink>
   )
-}
+};
+
+export {NavItem}

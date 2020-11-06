@@ -11,6 +11,12 @@
     right: calc(var(--spacing-unit) * 1.5);
 }
 
+.button--disabled {
+    pointer-events: none;
+    filter: grayscale(1);
+    opacity: .5;
+}
+
 /* default */
 .button--default {
     font-size: var(--font-size-zeta);
