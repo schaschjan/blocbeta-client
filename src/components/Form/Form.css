@@ -2,8 +2,9 @@
 }
 
 .form-row {
-  display: block;
+  grid-column-gap: calc(3 * var(--spacing-unit));
   margin-bottom: calc(8 * var(--spacing-unit));
+  display: grid;
 }
 
 .form-element {

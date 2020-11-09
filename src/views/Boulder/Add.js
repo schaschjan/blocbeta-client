@@ -1,51 +1,56 @@
 import React, {Fragment, useContext} from "react";
 import {Meta} from "../../App";
-import {cache, extractErrorMessage} from "../../hooks/useApi";
-import {useHistory} from "react-router-dom";
+import {cache, useApi} from "../../hooks/useApi";
 import Input from "../../components/Input/Input";
 import {FormRow} from "../../components/Form/Form";
-import {Textarea} from "../../components/Textarea/Textarea";
+import {queryCache, useMutation} from "react-query";
 import ResourceDependantSelect from "../../components/ResourceDependantSelect/ResourceDependantSelect";
-import {api} from "../../helper/api";
-import {BlocBetaUIContext} from "../../components/BlocBetaUI";
-import {toast, ToastContext} from "../../components/Toaster/Toaster";
+import {errorToast, successToast, ToastContext} from "../../components/Toaster/Toaster";
 import {composeFormElement, useForm} from "../../hooks/useForm";
 import {Button} from "../../components/Button/Button";
+import {Select} from "../../components/Select/Select";
 
 export default () => {
-  const history = useHistory();
   const {dispatch} = useContext(ToastContext);
 
-  const {handleSubmit, observeField, submitting, formData} = useForm({
+  const {
+    handleSubmit,
+    observeField,
+    submitting,
+    formData,
+    resetForm
+  } = useForm({
     name: null,
+    status: "active",
     points: 1000,
     start_wall: null,
     end_wall: null,
     grade: null,
+    internal_grade: null,
     hold_type: null,
     tags: [null],
     setters: [null]
   });
 
-  const {contextualizedPath} = useContext(BlocBetaUIContext);
+  const [mutateCreation, {
+    status: creationMutationStatus,
+    error: creationMutationError
+  }] = useMutation(useApi("createBoulder"), {
+    throwOnError: true,
+    onSuccess: () => {
+      queryCache.invalidateQueries([cache.boulder]);
+    },
+  });
 
   const onSubmit = async (payload) => {
-    console.log(payload);
-
     try {
-      await api.timeSlotExclusion.add(payload);
-      alert("blocker added!");
-      history.push(contextualizedPath("/dashboard"));
+      await mutateCreation({payload});
+
+      dispatch(successToast("Boulder created!"));
+      resetForm();
 
     } catch (error) {
-
-      dispatch(
-        toast(
-          "Error",
-          extractErrorMessage(error),
-          "danger"
-        )
-      );
+      dispatch(errorToast(error));
     }
   };
 
@@ -71,7 +76,7 @@ export default () => {
               )}
             </FormRow>
 
-            <FormRow>
+            <FormRow columns={2}>
               {composeFormElement(
                 "start_wall",
                 "Start Wall",
@@ -84,9 +89,7 @@ export default () => {
                   labelProperty: "name"
                 }
               )}
-            </FormRow>
 
-            <FormRow>
               {composeFormElement(
                 "end_wall",
                 "End Wall",
@@ -101,11 +104,24 @@ export default () => {
               )}
             </FormRow>
 
-            <FormRow>
+            <FormRow columns={2}>
               {composeFormElement(
                 "grade",
                 "Grade",
                 formData.grade,
+                ResourceDependantSelect,
+                observeField,
+                {
+                  cacheKey: cache.grades,
+                  api: cache.grades,
+                  labelProperty: "name"
+                }
+              )}
+
+              {composeFormElement(
+                "internal_grade",
+                "Internal Grade",
+                formData.internal_grade,
                 ResourceDependantSelect,
                 observeField,
                 {
@@ -165,6 +181,24 @@ export default () => {
 
             <FormRow>
               {composeFormElement(
+                "status",
+                "Status",
+                formData.status,
+                Select,
+                observeField,
+                {
+                  children: (
+                    <Fragment>
+                      <option value="active">Active</option>
+                      <option value="inactive">Inactive</option>
+                    </Fragment>
+                  )
+                }
+              )}
+            </FormRow>
+
+            <FormRow>
+              {composeFormElement(
                 "points",
                 "Points",
                 formData.points,
@@ -175,6 +209,7 @@ export default () => {
                 }
               )}
             </FormRow>
+
 
             <Button
               type="submit"

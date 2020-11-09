@@ -21,6 +21,7 @@ const ResourceDependantSelect = ({cacheKey, api, labelProperty, valueProperty = 
     <Fragment>
       <Select {...rest}>
         <option value="">--</option>
+
         {data && data.map((item) => {
           if (item instanceof Object) {
             return (

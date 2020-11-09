@@ -43,7 +43,6 @@ export const useForm = (defaults) => {
     const current = {...formData};
 
     set(current, key, value);
-
     setFormData({...current})
   };
 
@@ -51,7 +50,9 @@ export const useForm = (defaults) => {
     const {name, value, checked} = event.target;
     const current = {...formData};
 
-    if (event.target.type === "checkbox") {
+    if (event.target.type === "select-multiple") {
+      set(current, name, Array.from(event.target.selectedOptions, option => option.value));
+    } else if (event.target.type === "checkbox") {
       set(current, name, checked);
     } else {
       set(current, name, value);
@@ -60,5 +61,9 @@ export const useForm = (defaults) => {
     setFormData({...current})
   };
 
-  return {formData, setKeyValue, handleSubmit, submitting, setSubmitting, observeField}
+  const resetForm = () => {
+    setFormData(defaults);
+  };
+
+  return {formData, setKeyValue, handleSubmit, submitting, setSubmitting, observeField, resetForm}
 };

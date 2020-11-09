@@ -71,6 +71,11 @@ export const resources = {
 
     return data;
   },
+  createBoulder: async ({location, payload}) => {
+    const {data} = await axios.post(`/api/${location}/boulder`, payload);
+
+    return data;
+  },
   ascents: async ({location}) => {
     const {data} = await axios.get(`/api/${location}/ascent`);
 

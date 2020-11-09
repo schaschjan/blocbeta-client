@@ -283,41 +283,45 @@ const Index = () => {
     return [
       {
         id: "hold",
-        Header: "Hold",
         accessor: "holdType",
+        Header: "Hold",
         Cell: ({value}) => <HoldStyle image={value.image}/>
       },
-      isAdmin ? {
+      {
         id: "grade",
-        Header: "Grade",
         accessor: "grade",
-        Cell: ({value}) => (
-          <Grade
-            name={value.name}
-            color={value.color}
-          />
-        ),
-      } : {
-        id: "internalGrade",
-        Header: "Internal Grade",
-        accessor: "internalGrade",
-        Cell: ({value}) => (
-          <Grade
-            name={value.name}
-            color={value.color}
-          />
-        ),
+        Header: "Grade",
+        Cell: ({value}) => {
+
+          if (isAdmin && value.internal) {
+            return (
+              <Grade
+                name={value.name}
+                color={value.color}
+                internalName={value.internal.name}
+                internalColor={value.internal.color}
+              />
+            );
+          }
+
+          return (
+            <Grade
+              name={value.name}
+              color={value.color}
+            />
+          );
+        }
       },
       {
         id: "points",
-        Header: "Points",
         accessor: "points",
+        Header: "Points",
         Cell: ({value}) => `${value} pts`,
       },
       {
         id: "name",
-        Header: "Name",
         accessor: "name",
+        Header: "Name",
         Cell: ({value, row}) => {
           const active = boulder === row.original.id;
 
@@ -331,26 +335,26 @@ const Index = () => {
       },
       {
         id: "start",
-        Header: "Start",
         accessor: "startWall.name",
+        Header: "Start",
       },
       {
         id: "end",
-        Header: "End",
         accessor: "endWall.name",
+        Header: "End",
       },
       {
         id: "date",
-        Header: "Date",
         accessor: "createdAt",
+        Header: "Date",
         Cell: ({value}) => (
           moment(value).format("l")
         )
       },
       {
         id: "ascent",
-        Header: "Ascent",
         accessor: "ascent",
+        Header: "Ascent",
         Cell: ({value}) => renderAscents(value)
       }
     ];
@@ -359,7 +363,15 @@ const Index = () => {
 
   const mergedData = useMemo(() => {
 
-    if (!boulderQuery.data || !gradesQuery.data || !holdTypesQuery.data || !wallsQuery.data || !settersQuery.data || !tagsQuery.data) {
+    if (
+      !boulderQuery.data ||
+      !gradesQuery.data ||
+      !holdTypesQuery.data ||
+      !wallsQuery.data ||
+      !settersQuery.data ||
+      !tagsQuery.data ||
+      !ascentsQuery.data) {
+
       return [];
     }
 
@@ -369,16 +381,26 @@ const Index = () => {
         return ascent.boulderId === boulder.id
       });
 
+      const grade = gradesQuery.data.find(grade => {
+        return grade.id === boulder.grade.id
+      });
+
+      const internalGrade = gradesQuery.data.find(grade => {
+        if (!boulder.internalGrade) {
+          return null
+        }
+
+        return grade.id === boulder.internalGrade.id
+      });
+
       return {
         ...boulder,
         points: ascent.points,
         ascents: ascent.ascents,
-        grade: gradesQuery.data.find(grade => {
-          return grade.id === boulder.grade.id
-        }),
-        internalGrade: gradesQuery.data.find(grade => {
-          return grade.id === boulder.internalGrade.id
-        }),
+        grade: {
+          ...grade,
+          internal: internalGrade
+        },
         holdType: holdTypesQuery.data.find(holdType => {
           return holdType.id === boulder.holdType.id
         }),

@@ -10,9 +10,12 @@ const Form = ({children, ...rest}) => {
   );
 };
 
-const FormRow = ({children, ...rest}) => {
+const FormRow = ({children, columns}) => {
   return (
-    <div className="form-row" {...rest}>
+    <div className="form-row" style={{
+      display: "grid",
+      gridTemplateColumns: `repeat(${columns}, 1fr)`
+    }}>
       {children}
     </div>
   );
