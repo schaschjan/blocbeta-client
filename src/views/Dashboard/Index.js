@@ -1,11 +1,11 @@
 import React, {Fragment, useContext, useEffect} from "react";
 import {Meta} from "../../App";
 import {useApi} from "../../hooks/useApi";
-import "./Dashboard.css";
+import "./Index.css";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import {Link} from "react-router-dom";
 
-const Dashboard = () => {
+const Index = () => {
   const {user, isAdmin, contextualizedPath} = useContext(BlocBetaUIContext);
 
   const ping = useApi("ping");
@@ -71,7 +71,7 @@ const Dashboard = () => {
             <ul className="dashboard-links">
               <li className="dashboard-links__item">
                 <Link to={contextualizedPath("/admin/rooms")} className="t--gamma">
-                 List
+                  List
                 </Link>
               </li>
 
@@ -130,4 +130,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export {Index}

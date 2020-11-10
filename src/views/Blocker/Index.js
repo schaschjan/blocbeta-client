@@ -1,11 +1,11 @@
 import React, {Fragment} from "react";
 import {useQuery} from "react-query";
-import {api} from "../../../helper/api";
-import {LoadedContent} from "../../../components/Loader/Loader";
-import EmptyState from "../../../components/EmptyState/EmptyState";
-import {cache, useApi} from "../../../hooks/useApi";
+import {api} from "../../helper/api";
+import {LoadedContent} from "../../components/Loader/Loader";
+import EmptyState from "../../components/EmptyState/EmptyState";
+import {cache, useApi} from "../../hooks/useApi";
 
-const IndexTimeSlotBlocker = () => {
+const Index = () => {
   const roomResource = useApi("rooms");
 
   const {status, data} = useQuery(cache.timeSlotExclusion, async () => {
@@ -49,4 +49,4 @@ const IndexTimeSlotBlocker = () => {
   </Fragment>
 };
 
-export default IndexTimeSlotBlocker
+export {Index}

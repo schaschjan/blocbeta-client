@@ -1,14 +1,14 @@
 import React, {Fragment, useContext} from "react";
 import {queryCache, useMutation, useQuery} from "react-query";
 import AddToCalendar from "react-add-to-calendar"
-import "./Reservations.css";
+import "./Index.css";
 import {cache, useApi} from "../../hooks/useApi";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import Emoji from "../../components/Emoji/Emoji";
 import {LoadedContent} from "../../components/Loader/Loader";
 import {Button} from "../../components/Button/Button";
 
-export default () => {
+const Index = () => {
   const {currentLocation: {id: locationId}} = useContext(BlocBetaUIContext);
 
   const {status: reservationStatus, data: reservations} = useQuery("reservations", useApi("reservations"));
@@ -72,4 +72,6 @@ export default () => {
 
     </Fragment>
   )
-}
+};
+
+export {Index}

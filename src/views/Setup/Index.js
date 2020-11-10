@@ -5,10 +5,10 @@ import {useHistory} from "react-router-dom";
 import {useQuery} from "react-query";
 import axios from "axios";
 import {LoadedContent} from "../../components/Loader/Loader";
-import "./Setup.css"
+import "./Index.css"
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 
-const Setup = () => {
+const Index = () => {
   let history = useHistory();
   const {setCurrentLocation} = useContext(BlocBetaUIContext);
 
@@ -44,10 +44,6 @@ const Setup = () => {
                 );
               })}
             </ul>
-
-            {/*<em>*/}
-            {/*  Want to track your progress in privacy? You can edit your visibility settings in the account page.*/}
-            {/*</em>*/}
           </LoadedContent>
         </div>
       </div>
@@ -55,4 +51,4 @@ const Setup = () => {
   );
 };
 
-export default Setup;
+export {Index};

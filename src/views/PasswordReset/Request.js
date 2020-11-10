@@ -1,7 +1,7 @@
 import React, {Fragment, useContext} from "react";
 import {Meta} from "../../App";
 import {FormRow} from "../../components/Form/Form";
-import Input from "../../components/Input/Input";
+import {Input} from "../../components/Input/Input";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
 import {extractErrorMessage} from "../../hooks/useApi";
@@ -9,7 +9,7 @@ import {toast, ToastContext} from "../../components/Toaster/Toaster";
 import {composeFormElement, useForm} from "../../hooks/useForm";
 import {Button} from "../../components/Button/Button";
 
-const RequestPasswordReset = () => {
+const Request = () => {
   const history = useHistory();
   const {dispatch} = useContext(ToastContext);
 
@@ -77,4 +77,4 @@ const RequestPasswordReset = () => {
   );
 };
 
-export default RequestPasswordReset;
+export {Request};

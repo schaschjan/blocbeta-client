@@ -1,17 +1,16 @@
 import React, {useContext, Fragment} from "react";
 import {Meta} from "../../App";
 import {FormRow} from "../../components/Form/Form";
-import Input from "../../components/Input/Input";
+import {Input} from "../../components/Input/Input";
 import axios from "axios";
 import {useHistory} from "react-router-dom";
-import "./Register.css"
 import {extractErrorMessage} from "../../hooks/useApi";
 import {toast, ToastContext} from "../../components/Toaster/Toaster";
 import {Select} from "../../components/Select/Select";
 import {Button} from "../../components/Button/Button";
 import {composeFormElement, useForm} from "../../hooks/useForm";
 
-const Register = () => {
+const Index = () => {
   const history = useHistory();
   const {dispatch} = useContext(ToastContext);
 
@@ -167,4 +166,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export {Index};

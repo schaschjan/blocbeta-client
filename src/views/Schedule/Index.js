@@ -2,54 +2,14 @@ import React, {Fragment, useContext, useEffect, useState} from "react";
 import 'react-dates/initialize';
 import moment from "moment";
 import {queryCache, useMutation, useQuery} from "react-query";
-import "./Schedule.css";
 import {cache, extractErrorMessage, queryDefaults, useApi} from "../../hooks/useApi";
 import {Loader} from "../../components/Loader/Loader";
 import {DatePicker} from "../../components/DatePicker/DatePicker";
-import {Counter} from "../../components/Counter/Counter";
 import {toast, ToastContext} from "../../components/Toaster/Toaster";
 import {classNames} from "../../helper/buildClassNames";
-import {Button} from "../../components/Button/Button";
 import {Select} from "../../components/Select/Select";
-
-export const BookButton = ({isFull, isDisabled, isBlocked, timeSlot, blockHandler, unBlockHandler}) => {
-
-  const [quantity, setQuantity] = useState(timeSlot.min_quantity);
-
-  if (isDisabled) {
-    return (
-      <Button variant="text">
-        disabled
-      </Button>
-    )
-  }
-
-  if (isBlocked) {
-    return <Button variant="primary" size="small" modifier="inverted"
-                   onClick={() => unBlockHandler(timeSlot.reservation)}>
-      Cancel!
-    </Button>;
-  }
-
-  if (isFull) {
-    return <Button variant="text">
-      Fully booked
-    </Button>
-  }
-
-  return (
-    <Fragment>
-      <Counter max={timeSlot.available < timeSlot.max_quantity ? timeSlot.available : timeSlot.max_quantity}
-               min={timeSlot.min_quantity}
-               value={quantity}
-               onChange={(count) => setQuantity(count)}/>
-
-      <Button variant="primary" size="small" onClick={() => blockHandler(timeSlot, quantity)}>
-        Book!
-      </Button>
-    </Fragment>
-  )
-};
+import {BookButton} from "../../components/BookButton/BookButton";
+import "./Index.css";
 
 const TimeSlotList = ({ymd, roomId}) => {
   const {dispatch} = useContext(ToastContext);
@@ -180,7 +140,7 @@ const TimeSlotList = ({ymd, roomId}) => {
   )
 };
 
-export default () => {
+const Index = () => {
   const [selectedDate, setSelectedDate] = useState(moment());
   const [selectedRoomId, setSelectedRoom] = useState(null);
 
@@ -261,4 +221,6 @@ export default () => {
       </div>
     </Fragment>
   )
-}
+};
+
+export {Index}

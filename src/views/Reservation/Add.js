@@ -1,19 +1,18 @@
 import React, {useContext, Fragment, useState} from "react";
 import {Meta} from "../../App";
 import {FormRow} from "../../components/Form/Form";
-import Input from "../../components/Input/Input";
+import {Input} from "../../components/Input/Input";
 import ResourceDependantSelect from "../../components/ResourceDependantSelect/ResourceDependantSelect";
 import {cache, extractErrorMessage, useApi} from "../../hooks/useApi";
-import "./AddGuest.css";
 import moment from "moment";
 import {Loader} from "../../components/Loader/Loader";
 import {queryCache, useMutation, useQuery} from "react-query";
-import {BookButton} from "../Schedule/Schedule";
 import {useHistory} from "react-router-dom";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import {classNames} from "../../helper/buildClassNames";
 import {toast, ToastContext} from "../../components/Toaster/Toaster";
 import {composeFormElement} from "../../hooks/useForm";
+import {BookButton} from "../../components/BookButton/BookButton";
 
 const TimeSlotList = ({ymd, roomId, user}) => {
 
@@ -124,7 +123,7 @@ const TimeSlotList = ({ymd, roomId, user}) => {
                   className={classNames(
                     "time-slot-list__item time-slot-list-item",
                     isPassed ? "time-slot-list-item--disabled" : null,
-                    (( timeSlotIsFull || isDisabled)) ? "time-slot-list-item--disabled" : null
+                    ((timeSlotIsFull || isDisabled)) ? "time-slot-list-item--disabled" : null
                   )}>
 
                 <div className="time-slot-list-item__time t--epsilon">
@@ -154,7 +153,7 @@ const TimeSlotList = ({ymd, roomId, user}) => {
   )
 };
 
-export default () => {
+const Add = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedDate, setSelectedDate] = useState(moment());
 
@@ -269,4 +268,6 @@ export default () => {
       </div>
     </div>
   </Fragment>
-}
+};
+
+export {Add}

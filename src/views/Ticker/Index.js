@@ -2,8 +2,8 @@ import React, {Fragment, useMemo, useCallback, useState, useContext} from "react
 import {useQuery, queryCache, useMutation} from "react-query";
 import {LoadedContent} from "../../components/Loader/Loader";
 import {useTable, useExpanded, useGlobalFilter} from "react-table"
-import Input from "../../components/Input/Input";
-import "./Ticker.css";
+import {Input} from "../../components/Input/Input";
+import "./Index.css";
 import Forward from "../../components/Icon/Forward";
 import Downward from "../../components/Icon/Downward";
 import moment from "moment";
@@ -108,7 +108,7 @@ const Table = ({columns, ymd, setYmd, data, renderRowSubComponent}) => {
   )
 };
 
-export default () => {
+const Index = () => {
   const [fetched, setFetched] = useState(moment());
   const [selectedDate, setSelectedDate] = useState(moment().format("Y-MM-DD"));
   const {dispatch} = useContext(ToastContext);
@@ -308,3 +308,5 @@ export default () => {
     </Fragment>
   )
 }
+
+export {Index}

@@ -1,17 +1,17 @@
 import React, {useContext, useEffect, Fragment} from "react";
-import Input from "../../components/Input/Input";
+import {Input} from "../../components/Input/Input";
 import {Meta} from "../../App";
 import axios from "axios";
 import {FormRow} from "../../components/Form/Form";
 import {extractErrorMessage} from "../../hooks/useApi";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import {useHistory} from "react-router-dom";
-import "./Login.css";
+import "./Index.css";
 import {toast, ToastContext} from "../../components/Toaster/Toaster";
 import {composeFormElement, useForm} from "../../hooks/useForm";
 import {Button} from "../../components/Button/Button";
 
-const Login = () => {
+const Index = () => {
   const {handleSubmit, formData, submitting, observeField} = useForm({
     username: null,
     password: null
@@ -126,4 +126,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export {Index};

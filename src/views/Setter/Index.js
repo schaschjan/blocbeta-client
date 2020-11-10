@@ -7,7 +7,7 @@ import {CrudTable, EditableCellSwitch} from "../../components/CrudTable/CrudTabl
 import {toast, ToastContext} from "../../components/Toaster/Toaster";
 import {alphaSort} from "../../helpers";
 
-export default () => {
+const Index = () => {
   const {dispatch} = useContext(ToastContext);
   const {status, data} = useQuery(cache.setters, useApi("setters"));
 
@@ -88,3 +88,5 @@ export default () => {
     </LoadedContent>
   </Fragment>
 };
+
+export {Index}

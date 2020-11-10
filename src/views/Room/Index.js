@@ -7,7 +7,7 @@ import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import {CrudTable} from "../../components/CrudTable/CrudTable";
 import {Button} from "../../components/Button/Button";
 
-export default () => {
+const Index = () => {
   const {contextualizedPath} = useContext(BlocBetaUIContext);
   const {status, data} = useQuery("rooms", useApi("rooms"));
 
@@ -45,3 +45,5 @@ export default () => {
     </LoadedContent>
   </Fragment>
 };
+
+export {Index}

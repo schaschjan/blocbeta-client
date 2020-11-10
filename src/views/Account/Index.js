@@ -1,14 +1,14 @@
-import React, {Fragment, useContext} from "react";
+import React, {Fragment, useState, useContext} from "react";
 import {useHistory} from "react-router-dom";
 import Label from "../../components/Label/Label";
-import Input from "../../components/Input/Input";
+import {Input} from "../../components/Input/Input";
 import {extractErrorMessage, useApi} from "../../hooks/useApi";
 import {useMutation, useQuery} from "react-query";
 import Switch from "../../components/Switch/Switch";
 import {Meta} from "../../App";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
-import "./Account.css";
-import {LoadedContent} from "../../components/Loader/Loader";
+import "./Index.css";
+import {LoadedContent, Loader} from "../../components/Loader/Loader";
 import {errorToast, toast, ToastContext} from "../../components/Toaster/Toaster";
 import {Button} from "../../components/Button/Button";
 import {FormRow} from "../../components/Form/Form";
@@ -16,11 +16,12 @@ import {composeFormElement, useForm} from "../../hooks/useForm";
 import axios from "axios";
 import Avatar from "../../components/Avatar/Avatar";
 
-const UploadField = ({onSuccess}) => {
+const UploadField = ({value, renderValue, onSuccess}) => {
   const {dispatch} = useContext(ToastContext);
+  const [loading, setLoading] = useState(false);
 
-  const handleUpload = async (event) => {
-    const [file] = event.target.files;
+  const handleUpload = async (file) => {
+    setLoading(true);
 
     const formData = new FormData();
     formData.append("file", file);
@@ -37,10 +38,30 @@ const UploadField = ({onSuccess}) => {
     } catch (error) {
       dispatch(errorToast(error))
     }
+
+    setLoading(false);
   };
 
   return (
-    <Input type="file" onChange={(event) => handleUpload(event)}/>
+    <div className={"upload-field"}>
+      {loading ? <Loader/> : renderValue(value)}
+
+      <div className={"file-input"}>
+        <label htmlFor={"image"} className="button button--primary button--small file-input__button">
+          Upload
+        </label>
+
+        <input type="file"
+               style={{
+                 display: "none",
+               }}
+               id={"image"}
+               name={"image"}
+               onChange={event => {
+                 handleUpload(event.target.files[0])
+               }}/>
+      </div>
+    </div>
   )
 };
 
@@ -50,11 +71,11 @@ const Form = ({defaults, onSubmit}) => {
   return <form onSubmit={(event) => handleSubmit(event, onSubmit)}>
 
     <FormRow>
-      {formData.image && (
-        <Avatar image={`${formData.image}`} />
-      )}
-
-      <UploadField onSuccess={resource => setKeyValue("image", resource)}/>
+      <UploadField value={formData.image}
+                   renderValue={(value) => {
+                     return <Avatar image={`${value}`}/>
+                   }}
+                   onSuccess={resource => setKeyValue("image", resource)}/>
     </FormRow>
 
     <FormRow>
@@ -125,7 +146,7 @@ const Form = ({defaults, onSubmit}) => {
   </form>
 };
 
-const Account = () => {
+const Index = () => {
   const {status, data} = useQuery("me", useApi("me"));
   const deleteMe = useApi("deleteMe");
   const [mutate] = useMutation(useApi("updateMe"), {throwOnError: true});
@@ -203,4 +224,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export {Index};

@@ -56,3 +56,7 @@
 .input--filled {
     background: var(--color-white);
 }
+
+.file-input__button {
+    margin-left: var(--spacing-unit);
+}

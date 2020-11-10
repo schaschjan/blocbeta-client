@@ -3,7 +3,7 @@ import Container from "../../components/Container/Container";
 import { PageHeader } from "../../components/PageHeader/PageHeader";
 import useApi, { api, cache } from "../../hooks/useApi";
 import { Loader } from "../../components/Loader/Loader";
-import "./Settings.css";
+import "./Index.css";
 import Button from "../../components/Button/Button";
 import Wrapper from "../../components/Wrapper/Wrapper";
 import { queryCache, useMutation } from "react-query";
@@ -58,7 +58,7 @@ const Setters = () => {
   );
 };
 
-const Settings = () => {
+const Index = () => {
   return (
     <Container>
       <PageHeader title={`Settings`} />
@@ -70,4 +70,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export {Index};

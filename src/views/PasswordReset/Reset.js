@@ -1,18 +1,18 @@
 import React, {useState, useContext, useEffect, Fragment} from "react";
 import {Meta} from "../../App";
 import {FormRow} from "../../components/Form/Form";
-import Input from "../../components/Input/Input";
+import {Input} from "../../components/Input/Input";
 import {extractErrorMessage} from "../../hooks/useApi";
 import {useParams} from "react-router-dom";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
-import "./ResetPassword.css";
+import "./Reset.css";
 import {toast, ToastContext} from "../../components/Toaster/Toaster";
 import {classNames} from "../../helper/buildClassNames";
 import {composeFormElement, useForm} from "../../hooks/useForm";
 import {Button} from "../../components/Button/Button";
 
-const ResetPassword = () => {
+const Reset = () => {
   const [hashFound, setHashFound] = useState(false);
   const {dispatch} = useContext(ToastContext);
 
@@ -103,4 +103,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export {Reset};

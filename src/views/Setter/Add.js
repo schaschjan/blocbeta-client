@@ -1,6 +1,6 @@
 import React, {Fragment, useContext, useState} from "react";
 import {errorToast, successToast, ToastContext} from "../../components/Toaster/Toaster";
-import Input from "../../components/Input/Input";
+import {Input} from "../../components/Input/Input";
 import {FormElement} from "../../components/Form/Form";
 import {cache, mutationDefaults, useApi} from "../../hooks/useApi";
 import axios from "axios";
@@ -9,7 +9,7 @@ import {Button} from "../../components/Button/Button";
 import {useQuery, useMutation, queryCache} from "react-query";
 import {LoadedContent} from "../../components/Loader/Loader";
 
-export default () => {
+const Add = () => {
   const {dispatch} = useContext(ToastContext);
   const {status, data: setters} = useQuery(cache.setters, useApi("setters"));
 
@@ -87,3 +87,5 @@ export default () => {
     </LoadedContent>
   </Fragment>
 };
+
+export {Add}

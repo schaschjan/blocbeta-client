@@ -2,7 +2,7 @@ import {useGlobalFilter, useSortBy, useTable} from "react-table";
 import React from "react";
 import {TableCell, TableHeader, TableRow} from "../Table/Table";
 import SwipeOut from "../SwipeOut/SwipeOut";
-import Input from "../Input/Input";
+import {Input} from "../Input/Input";
 import "./RankingTable.css";
 import {classNames} from "../../helper/buildClassNames";
 

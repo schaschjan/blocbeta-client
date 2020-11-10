@@ -5,7 +5,7 @@ import axios from "axios";
 import {LoadedContent} from "../../components/Loader/Loader";
 import {Button} from "../../components/Button/Button";
 
-export default () => {
+const Cancel = () => {
   const {hash} = useParams();
   const [hashFound, setHashFound] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -60,3 +60,5 @@ export default () => {
     </Fragment>
   )
 };
+
+export {Cancel}

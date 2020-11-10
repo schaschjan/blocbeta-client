@@ -13,10 +13,10 @@ import Avatar from "../../components/Avatar/Avatar";
 import {Female, Male} from "../../components/Icon/Icons";
 import {BlocBetaUIContext} from "../../components/BlocBetaUI";
 import {LoadedContent} from "../../components/Loader/Loader";
-import "./CurrentRanking.css";
+import "./Current.css";
 import {Button} from "../../components/Button/Button";
 
-export default () => {
+const Current = () => {
   const {user, contextualizedPath} = useContext(BlocBetaUIContext);
 
   const {
@@ -157,3 +157,5 @@ export default () => {
     </Fragment>
   );
 };
+
+export {Current}

@@ -7,7 +7,7 @@ import {useParams} from "react-router-dom";
 import {CrudTable, EditableCellInput, EditableCellSwitch} from "../../components/CrudTable/CrudTable";
 import {toast, ToastContext} from "../../components/Toaster/Toaster";
 
-export default () => {
+const Detail = () => {
   const {room} = useParams();
   const {status, data} = useQuery([cache.roomSchedule, {room}], useApi("roomSchedule", {room}));
   const {dispatch} = useContext(ToastContext);
@@ -161,3 +161,5 @@ export default () => {
     </LoadedContent>
   </Fragment>
 };
+
+export {Detail}

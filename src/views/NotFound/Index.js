@@ -1,6 +1,6 @@
 import React, {Fragment} from "react";
 
-export default () => {
+const Index = () => {
   return (
     <Fragment>
       <h1 className="t--alpha page-title">
@@ -8,4 +8,6 @@ export default () => {
       </h1>
     </Fragment>
   );
-}
+};
+
+export {Index}

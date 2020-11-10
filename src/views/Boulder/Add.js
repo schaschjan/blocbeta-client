@@ -1,7 +1,7 @@
 import React, {Fragment, useContext} from "react";
 import {Meta} from "../../App";
 import {cache, useApi} from "../../hooks/useApi";
-import Input from "../../components/Input/Input";
+import {Input} from "../../components/Input/Input";
 import {FormRow} from "../../components/Form/Form";
 import {queryCache, useMutation} from "react-query";
 import ResourceDependantSelect from "../../components/ResourceDependantSelect/ResourceDependantSelect";
@@ -10,7 +10,7 @@ import {composeFormElement, useForm} from "../../hooks/useForm";
 import {Button} from "../../components/Button/Button";
 import {Select} from "../../components/Select/Select";
 
-export default () => {
+const Add = () => {
   const {dispatch} = useContext(ToastContext);
 
   const {
@@ -225,3 +225,5 @@ export default () => {
     </Fragment>
   );
 };
+
+export {Add}

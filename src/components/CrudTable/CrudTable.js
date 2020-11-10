@@ -3,7 +3,7 @@ import {useTable, useGroupBy, useExpanded} from "react-table"
 import "./CrudTable.css";
 import Downward from "../Icon/Downward";
 import Forward from "../Icon/Forward";
-import Input from "../../components/Input/Input";
+import {Input} from "../../components/Input/Input";
 import Switch from "../Switch/Switch";
 
 const useEditableCell = (
