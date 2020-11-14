@@ -1,8 +1,0 @@
-.hyperlink {
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.hyperlink.hyperlink--active {
-  color: var(--color-dark);
-}
