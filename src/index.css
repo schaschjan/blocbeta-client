@@ -20,9 +20,7 @@ body {
 
 :root {
   --spacing-unit: 8px;
-}
 
-:root {
   --color-black: #000;
   --color-dark: #333;
   --color-light: #fff;
@@ -47,6 +45,23 @@ body {
 
   --header-height: 40px;
   --footer-height: 40px;
+
+  --gradient: linear-gradient(
+      49.93deg,
+      rgba(255, 230, 0, 0.39) 18.88%,
+      rgba(255, 230, 0, 0) 66.41%
+    ),
+    linear-gradient(30deg, rgba(216, 210, 254, 0), transparent 80%),
+    radial-gradient(
+      28.63% 28.63% at 45.43% 50%,
+      rgba(251, 87, 87, 0.6) 0%,
+      rgba(216, 210, 254, 0) 100%
+    ),
+    radial-gradient(
+      50% 50% at 50% 50%,
+      rgba(87, 89, 251, 0.64) 0%,
+      rgba(216, 210, 254, 0) 100%
+    );
 }
 
 @keyframes rainbow {
@@ -65,22 +80,7 @@ body {
   min-height: 100vh;
   padding: calc(1 * var(--spacing-unit));
   padding-bottom: 0;
-  background: linear-gradient(
-      49.93deg,
-      rgba(255, 230, 0, 0.39) 18.88%,
-      rgba(255, 230, 0, 0) 66.41%
-    ),
-    linear-gradient(30deg, rgba(216, 210, 254, 0), transparent 80%),
-    radial-gradient(
-      28.63% 28.63% at 45.43% 50%,
-      rgba(251, 87, 87, 0.6) 0%,
-      rgba(216, 210, 254, 0) 100%
-    ),
-    radial-gradient(
-      50% 50% at 50% 50%,
-      rgba(87, 89, 251, 0.64) 0%,
-      rgba(216, 210, 254, 0) 100%
-    );
+  background: var(--gradient);
   background-size: 200% 200%;
   animation: rainbow 20s linear infinite;
   display: grid;

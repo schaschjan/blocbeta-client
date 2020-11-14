@@ -11,8 +11,9 @@
   width: 100%;
   grid-template-columns: 3fr 1fr;
   grid-template-rows: var(--header-height) auto;
-  background: var(--color-white);
+  background: rgba(255, 255, 255, 0.3);
   height: var(--header-height);
+  backdrop-filter: blur(6px);
 }
 
 .header__logo {
@@ -91,7 +92,6 @@
 
 @media (min-width: 1024px) {
   .header {
-    background: none;
     display: flex;
     padding: calc(3 * var(--spacing-unit));
   }
