@@ -1,26 +1,27 @@
-import React, {useContext, useEffect, Fragment} from "react";
-import {Input} from "../../components/Input/Input";
-import {Meta} from "../../App";
-import axios from "axios";
-import {FormRow} from "../../components/Form/Form";
-import {extractErrorMessage} from "../../hooks/useApi";
-import {BlocBetaUIContext} from "../../components/BlocBetaUI";
-import {useHistory} from "react-router-dom";
+import React, { useContext, useEffect, Fragment } from "react";
+import { Input } from "../../components/Input/Input";
+import { Meta } from "../../App";
+import { FormRow } from "../../components/Form/Form";
+import { extractErrorMessage, resources } from "../../hooks/useApi";
+import { BlocBetaUIContext } from "../../components/BlocBetaUI";
+import { useHistory } from "react-router-dom";
 import "./Index.css";
-import {toast, ToastContext} from "../../components/Toaster/Toaster";
-import {composeFormElement, useForm} from "../../hooks/useForm";
-import {Button} from "../../components/Button/Button";
+import { toast, ToastContext } from "../../components/Toaster/Toaster";
+import { composeFormElement, useForm } from "../../hooks/useForm";
+import { Button } from "../../components/Button/Button";
 
 const Index = () => {
-  const {handleSubmit, formData, submitting, observeField} = useForm({
+  const { handleSubmit, formData, submitting, observeField } = useForm({
     username: null,
-    password: null
+    password: null,
   });
 
   const history = useHistory();
-  const {setUser, setCurrentLocation, setExpiration, reset} = useContext(BlocBetaUIContext);
+  const { setUser, setCurrentLocation, setExpiration, reset } = useContext(
+    BlocBetaUIContext
+  );
 
-  const {dispatch} = useContext(ToastContext);
+  const { dispatch } = useContext(ToastContext);
 
   useEffect(() => {
     reset();
@@ -28,45 +29,42 @@ const Index = () => {
 
   const onSubmit = async (payload) => {
     try {
-      const {data} = await axios.post(`/api/login`, payload);
+      const {
+        expiration,
+        user,
+        location,
+        targetLocation,
+      } = await resources.login({ payload });
 
-      setExpiration(data.expiration);
-      setUser(data.user);
-      setCurrentLocation(data.location);
+      setExpiration(expiration);
+      setUser(user);
+      setCurrentLocation(location);
 
-      if (!data.user.username || !data.user.first_name || !data.user.last_name) {
-        alert("Account details missing. Please add them in your account settings!");
+      if (!user.username || !user.first_name || !user.last_name) {
+        alert(
+          "Account details missing. Please add them in your account settings!"
+        );
       }
 
-      if (!data.targetLocation) {
+      if (!targetLocation) {
         history.push(`/setup`);
       } else {
-        history.push(`${data.targetLocation}/dashboard`);
+        history.push(`${targetLocation}/dashboard`);
       }
-
     } catch (error) {
-
-      dispatch(
-        toast(
-          "Error",
-          extractErrorMessage(error),
-          "danger"
-        )
-      );
+      dispatch(toast("Error", extractErrorMessage(error), "danger"));
     }
   };
 
   return (
     <Fragment>
-      <Meta title="Log in"/>
+      <Meta title="Log in" />
 
       <div className="side-title-layout">
         <div className="side-title-layout__title">
-          <h1 className="t--alpha">
-            Please sign to access BlocBeta.
-          </h1>
-          <br/>
-          <br/>
+          <h1 className="t--alpha">Please sign to access BlocBeta.</h1>
+          <br />
+          <br />
 
           <h2 className="t--gamma">
             If you have an existing boulderdb.de account use it to sign in.
@@ -84,7 +82,7 @@ const Index = () => {
                 observeField,
                 {
                   type: "text",
-                  required: true
+                  required: true,
                 }
               )}
             </FormRow>
@@ -98,15 +96,17 @@ const Index = () => {
                 observeField,
                 {
                   type: "password",
-                  required: true
+                  required: true,
                 }
               )}
             </FormRow>
 
-            <Button type="submit"
-                    loader={true}
-                    loading={submitting}
-                    disabled={submitting}>
+            <Button
+              type="submit"
+              loader={true}
+              loading={submitting}
+              disabled={submitting}
+            >
               Login
             </Button>
           </form>
@@ -116,7 +116,12 @@ const Index = () => {
               Create Account
             </Button>
 
-            <Button variant="primary" size="small" asLink={true} to="/password-reset/request">
+            <Button
+              variant="primary"
+              size="small"
+              asLink={true}
+              to="/password-reset/request"
+            >
               Forgot Password
             </Button>
           </div>
@@ -126,4 +131,4 @@ const Index = () => {
   );
 };
 
-export {Index};
+export { Index };

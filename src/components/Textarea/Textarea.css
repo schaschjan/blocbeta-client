@@ -1,12 +1,12 @@
 textarea {
-    background: transparent;
-    resize: none;
-    min-height: 260px;
-    width: 100%;
-    outline: none;
-    border: 1px solid var(--color-black);
-    margin: 5px 0 10px !important;
-    padding: var(--spacing-unit);
-    font-size: 1.125rem;
-    line-height: 1.25em;
+  background: transparent;
+  resize: none;
+  min-height: 260px;
+  width: 100%;
+  outline: none;
+  border: 1px solid var(--color-black);
+  margin: 5px 0 10px !important;
+  padding: var(--spacing-unit);
+  font-size: 1.125rem;
+  line-height: 1.25em;
 }

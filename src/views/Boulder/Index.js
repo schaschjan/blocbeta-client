@@ -1,167 +1,48 @@
-import React, {Fragment, useContext, useState, useCallback, useMemo} from "react";
-import {Meta} from "../../App";
-import {useQuery, queryCache, useMutation} from "react-query";
-import {cache, allIdle, useApi, queryDefaults, extractErrorMessage} from "../../hooks/useApi";
-import {LoadedContent} from "../../components/Loader/Loader";
+import React, {
+  Fragment,
+  useContext,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
+import { Meta } from "../../App";
+import { useQuery, queryCache, useMutation } from "react-query";
+import {
+  cache,
+  allIdle,
+  useApi,
+  queryDefaults,
+  extractErrorMessage,
+} from "../../hooks/useApi";
+import { LoadedContent } from "../../components/Loader/Loader";
 import HoldStyle from "../../components/HoldStyle/HoldStyle";
-import {usePagination, useTable, useGlobalFilter, useSortBy, useRowSelect, useFilters} from "react-table";
 import Grade from "../../components/Grade/Grade";
-import {BlocBetaUIContext} from "../../components/BlocBetaUI";
+import { BlocBetaUIContext } from "../../components/BlocBetaUI";
 import moment from "moment";
-import Ascent from "../../components/Ascent/Ascent";
-import "./Index.css"
-import {toast, ToastContext} from "../../components/Toaster/Toaster";
-import {classNames} from "../../helper/buildClassNames";
+import {
+  errorToast,
+  toast,
+  ToastContext,
+} from "../../components/Toaster/Toaster";
+import { classNames } from "../../helper/classNames";
 import Forward from "../../components/Icon/Forward";
-import Paragraph from "../../components/Paragraph/Paragraph";
-import Icon from "../../components/Icon/Icon";
-import Downward from "../../components/Icon/Downward";
-import Upward from "../../components/Icon/Upward";
-import {useDrawer} from "../../components/Drawer/Drawer";
+import { useDrawer } from "../../components/Drawer/Drawer";
 import BoulderDetails from "../../components/BoulderDetails/BoulderDetails";
-
-const Ascents = ({boulderId, ascent, removeHandler, addHandler}) => {
-
-  return (
-    <div className="ascents">
-      <Ascent
-        type="flash"
-        disabled={ascent && ascent.type !== "flash"}
-        checked={ascent && ascent.type === "flash"}
-        onClick={
-          () => ascent ? removeHandler(ascent.id) : addHandler(boulderId, "flash")
-        }
-      />
-
-      <Ascent
-        type="top"
-        disabled={ascent && ascent.type !== "top"}
-        checked={ascent && ascent.type === "top"}
-        onClick={
-          () => ascent ? removeHandler(ascent.id) : addHandler(boulderId, "top")
-        }
-      />
-
-      <Ascent
-        type="resignation"
-        disabled={ascent && ascent.type !== "resignation"}
-        checked={ascent && ascent.type === "resignation"}
-        onClick={
-          () => ascent ? removeHandler(ascent.id) : addHandler(boulderId, "resignation")
-        }
-      />
-    </div>
-  );
-};
-
-const Table = ({columns, data}) => {
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    page,
-    prepareRow,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    nextPage,
-    previousPage,
-    selectedFlatRows,
-    setFilter,
-    setAllFilters,
-    setGlobalFilter,
-    state: {pageIndex, pageSize},
-  } = useTable(
-    {
-      columns,
-      data,
-      initialState: {pageIndex: 0, pageSize: 20},
-      autoResetFilters: false,
-      autoResetSortBy: false,
-      autoResetPage: false,
-    },
-    useFilters,
-    useGlobalFilter,
-    useSortBy,
-    usePagination,
-    useRowSelect
-  );
-
-  return (
-    <Fragment>
-      <div className="boulder-list">
-        {headerGroups.map(headerGroup => (
-          <div className="boulder-list__header boulder-list-header" {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <div {...column.getHeaderProps(column.getSortByToggleProps())}
-                   className="boulder-list-header__item t--eta">
-                {column.render('Header')}
-
-                {column.isSorted
-                  ? column.isSortedDesc
-                    ? <Downward/>
-                    : <Upward/>
-                  : ''}
-              </div>
-            ))}
-          </div>
-        ))}
-
-        <div className="boulder-list__content boulder-list-content">
-          {page.map((row, index) => {
-            prepareRow(row);
-
-            return (
-              <div className="boulder-list-content__item boulder-list-content-item" key={index}>
-                {row.cells.map(cell => {
-                  return (
-                    <div
-                      className={`t--eta boulder-list-content-item__cell boulder-list-content-item__cell--${cell.column.id}`} {...cell.getCellProps()}>
-                      {cell.render("Cell")}
-                    </div>
-                  );
-                })}
-              </div>
-            )
-          })}
-        </div>
-
-        <div className="boulder-list__footer boulder-list-footer">
-          <div className="boulder-list-footer__pager boulder-list-footer-pager ">
-            <Paragraph className="boulder-list-footer-pager__info">
-              {pageIndex * pageSize} - {(pageIndex + 1) * pageSize} of{" "}
-              {pageOptions.length * pageSize}
-            </Paragraph>
-
-            <span onClick={() => previousPage()} className={classNames(
-              "boulder-list-footer-pager__prev",
-              !canPreviousPage ? "boulder-list-footer-pager__prev--disabled" : null
-            )}
-            >
-          <Icon name="backward"/>
-        </span>
-            <span onClick={() => nextPage()}
-                  className={classNames(
-                    "boulder-list-footer-pager__next",
-                    !canNextPage ? "boulder-list-footer-pager__next--disabled" : null
-                  )}>
-            <Icon name="forward"/>
-            </span>
-          </div>
-        </div>
-
-      </div>
-    </Fragment>
-  )
-};
+import { Ascents } from "../../components/Ascents/Ascents";
+import { Bar } from "../../components/Bar/Bar";
+import { Button } from "../../components/Button/Button";
+import { BoulderTable } from "../../components/BoulderTable/BoulderTable";
+import { Input } from "../../components/Input/Input";
 
 const Index = () => {
-  const {isAdmin} = useContext(BlocBetaUIContext);
-  const {dispatch} = useContext(ToastContext);
-  const [boulder, setBoulder] = useState(null);
+  const { isAdmin } = useContext(BlocBetaUIContext);
+  const { dispatch } = useContext(ToastContext);
 
-  const {openDrawer, closeDrawer, Drawer} = useDrawer(() => setBoulder(null));
+  const [boulder, setBoulder] = useState(null);
+  const [selected, setSelected] = useState([]);
+  const [globalFilterValue, setGlobalFilterValue] = useState("");
+
+  const { openDrawer, closeDrawer, Drawer } = useDrawer(() => setBoulder(null));
 
   const boulderQuery = useQuery(
     cache.boulder,
@@ -175,17 +56,9 @@ const Index = () => {
     queryDefaults
   );
 
-  const wallsQuery = useQuery(
-    cache.walls,
-    useApi("walls"),
-    queryDefaults
-  );
+  const wallsQuery = useQuery(cache.walls, useApi("walls"), queryDefaults);
 
-  const gradesQuery = useQuery(
-    cache.grades,
-    useApi("grades"),
-    queryDefaults
-  );
+  const gradesQuery = useQuery(cache.grades, useApi("grades"), queryDefaults);
 
   const holdTypesQuery = useQuery(
     cache.holdTypes,
@@ -193,11 +66,7 @@ const Index = () => {
     queryDefaults
   );
 
-  const tagsQuery = useQuery(
-    cache.tags,
-    useApi("tags"),
-    queryDefaults
-  );
+  const tagsQuery = useQuery(cache.tags, useApi("tags"), queryDefaults);
 
   const settersQuery = useQuery(
     cache.setters,
@@ -219,6 +88,13 @@ const Index = () => {
     },
   });
 
+  const [mutateMass] = useMutation(useApi("boulderMass"), {
+    throwOnError: true,
+    onSuccess: () => {
+      queryCache.invalidateQueries(cache.boulder);
+    },
+  });
+
   const idle = allIdle(
     boulderQuery,
     ascentsQuery,
@@ -230,48 +106,35 @@ const Index = () => {
   );
 
   const addHandler = async (boulderId, type) => {
-
     const payload = {
       boulder: boulderId,
-      type: type
+      type: type,
     };
 
     try {
-      await mutateAscentCreation({payload});
+      await mutateAscentCreation({ payload });
     } catch (error) {
-
-      dispatch(
-        toast(
-          "Error",
-          extractErrorMessage(error),
-          "danger"
-        )
-      );
+      dispatch(toast("Error", extractErrorMessage(error), "danger"));
     }
   };
 
   const removeHandler = async (id) => {
-
     try {
-      await mutateAscentCreation({id});
+      await mutateAscentDeletion({ id });
     } catch (error) {
-
-      dispatch(
-        toast(
-          "Error",
-          extractErrorMessage(error),
-          "danger"
-        )
-      );
+      dispatch(toast("Error", extractErrorMessage(error), "danger"));
     }
   };
 
-  const renderAscents = useCallback(ascent => {
-    return <Ascents boulderId={ascent.boulderId}
-                    addHandler={addHandler}
-                    removeHandler={removeHandler}
-                    ascent={ascent}/>
-
+  const renderAscents = useCallback((ascent) => {
+    return (
+      <Ascents
+        boulderId={ascent.boulderId}
+        addHandler={addHandler}
+        removeHandler={removeHandler}
+        ascent={ascent}
+      />
+    );
   }, []);
 
   const toggleDetails = (id) => {
@@ -282,17 +145,29 @@ const Index = () => {
   const columns = useMemo(() => {
     return [
       {
-        id: "hold",
+        id: "holdType",
         accessor: "holdType",
         Header: "Hold",
-        Cell: ({value}) => <HoldStyle image={value.image}/>
+        sortType: (a, b) => {
+          return a.values.holdType.name > b.values.holdType.name ? -1 : 1;
+        },
+        Cell: ({ value }) => <HoldStyle image={value.image} />,
       },
       {
         id: "grade",
         accessor: "grade",
         Header: "Grade",
-        Cell: ({value}) => {
+        sortType: (a, b) => {
+          const gradeA = a.values.grade.internal
+            ? a.values.grade.internal.name
+            : a.values.grade.name;
+          const gradeB = b.values.grade.internal
+            ? b.values.grade.internal.name
+            : b.values.grade.name;
 
+          return gradeA > gradeB ? -1 : 1;
+        },
+        Cell: ({ value }) => {
           if (isAdmin && value.internal) {
             return (
               <Grade
@@ -304,34 +179,37 @@ const Index = () => {
             );
           }
 
-          return (
-            <Grade
-              name={value.name}
-              color={value.color}
-            />
-          );
-        }
+          return <Grade name={value.name} color={value.color} />;
+        },
       },
       {
         id: "points",
         accessor: "points",
         Header: "Points",
-        Cell: ({value}) => `${value} pts`,
+        sortType: (a, b) => {
+          return a.values.points > b.values.points ? -1 : 1;
+        },
+        Cell: ({ value }) => `${value} pts`,
       },
       {
         id: "name",
         accessor: "name",
         Header: "Name",
-        Cell: ({value, row}) => {
+        Cell: ({ value, row }) => {
           const active = boulder === row.original.id;
 
           return (
-            <span onClick={() => toggleDetails(row.original.id)}
-                  className={classNames("toggle-details", active ? "toggle-details__active" : null)}>
-            {value} <Forward/>
-          </span>
-          )
-        }
+            <span
+              onClick={() => toggleDetails(row.original.id)}
+              className={classNames(
+                "toggle-details",
+                active ? "toggle-details__active" : null
+              )}
+            >
+              {value} <Forward />
+            </span>
+          );
+        },
       },
       {
         id: "start",
@@ -347,22 +225,23 @@ const Index = () => {
         id: "date",
         accessor: "createdAt",
         Header: "Date",
-        Cell: ({value}) => (
-          moment(value).format("l")
-        )
+        Cell: ({ value }) => {
+          return moment(value).format("l");
+        },
       },
       {
         id: "ascent",
         accessor: "ascent",
         Header: "Ascent",
-        Cell: ({value}) => renderAscents(value)
-      }
+        sortType: (a, b) => {
+          return a.values.ascent.type > b.values.ascent.type ? -1 : 1;
+        },
+        Cell: ({ value }) => renderAscents(value),
+      },
     ];
-
   }, [isAdmin, boulder]);
 
   const mergedData = useMemo(() => {
-
     if (
       !boulderQuery.data ||
       !gradesQuery.data ||
@@ -370,27 +249,26 @@ const Index = () => {
       !wallsQuery.data ||
       !settersQuery.data ||
       !tagsQuery.data ||
-      !ascentsQuery.data) {
-
+      !ascentsQuery.data
+    ) {
       return [];
     }
 
-    return boulderQuery.data.map(boulder => {
-
-      const ascent = ascentsQuery.data.find(ascent => {
-        return ascent.boulderId === boulder.id
+    return boulderQuery.data.map((boulder) => {
+      const ascent = ascentsQuery.data.find((ascent) => {
+        return ascent.boulderId === boulder.id;
       });
 
-      const grade = gradesQuery.data.find(grade => {
-        return grade.id === boulder.grade.id
+      const grade = gradesQuery.data.find((grade) => {
+        return grade.id === boulder.grade.id;
       });
 
-      const internalGrade = gradesQuery.data.find(grade => {
+      const internalGrade = gradesQuery.data.find((grade) => {
         if (!boulder.internalGrade) {
-          return null
+          return null;
         }
 
-        return grade.id === boulder.internalGrade.id
+        return grade.id === boulder.internalGrade.id;
       });
 
       return {
@@ -399,64 +277,123 @@ const Index = () => {
         ascents: ascent.ascents,
         grade: {
           ...grade,
-          internal: internalGrade
+          internal: internalGrade,
         },
-        holdType: holdTypesQuery.data.find(holdType => {
-          return holdType.id === boulder.holdType.id
+        holdType: holdTypesQuery.data.find((holdType) => {
+          return holdType.id === boulder.holdType.id;
         }),
-        startWall: wallsQuery.data.find(wall => {
-          return wall.id === boulder.startWall.id
+        startWall: wallsQuery.data.find((wall) => {
+          return wall.id === boulder.startWall.id;
         }),
-        endWall: wallsQuery.data.find(wall => {
+        endWall: wallsQuery.data.find((wall) => {
           if (!boulder.endWall) {
             return null;
           }
 
-          return wall.id === boulder.endWall.id
+          return wall.id === boulder.endWall.id;
         }),
-        setters: boulder.setters.map(boulderSetter => {
-          return settersQuery.data.find(setter => boulderSetter.id === setter.id)
+        setters: boulder.setters.map((boulderSetter) => {
+          return settersQuery.data.find(
+            (setter) => boulderSetter.id === setter.id
+          );
         }),
-        tags: boulder.tags.map(boulderTag => {
-          return tagsQuery.data.find(tag => boulderTag.id === tag.id)
+        tags: boulder.tags.map((boulderTag) => {
+          return tagsQuery.data.find((tag) => boulderTag.id === tag.id);
         }),
-        ascent: ascent ? {
-          id: ascent.id,
-          boulderId: ascent.boulderId,
-          type: ascent.me ? ascent.me.type : null,
-        } : null
-      }
+        ascent: ascent
+          ? {
+              id: ascent.me ? ascent.me.id : null,
+              boulderId: ascent.boulderId,
+              type: ascent.me ? ascent.me.type : null,
+            }
+          : null,
+      };
     });
-
   }, [
     boulderQuery,
     wallsQuery,
     gradesQuery,
     holdTypesQuery,
     tagsQuery,
-    settersQuery
+    settersQuery,
+    ascentsQuery,
   ]);
 
   return (
     <Fragment>
-      <Meta title={"Boulder"}/>
+      <Meta title={"Boulder"} />
 
-      <h1 className="t--alpha page-title">
-        Boulder
-      </h1>
+      <h1 className="t--alpha page-title">Boulder</h1>
 
       <LoadedContent loading={!idle}>
-        <Table columns={columns} data={mergedData}/>
+        <Input
+          className="boulder-search"
+          placeholder="Search"
+          value={globalFilterValue}
+          onClear={() => setGlobalFilterValue("")}
+          onChange={(event) => {
+            setGlobalFilterValue(event.target.value);
+          }}
+        />
+
+        <BoulderTable
+          columns={columns}
+          data={mergedData}
+          globalFilterValue={globalFilterValue}
+          onSelectRows={(ids) => setSelected(ids)}
+          isAdmin={isAdmin}
+        />
       </LoadedContent>
 
       <Drawer>
-        {boulder && (
-          <BoulderDetails id={boulder} closeDrawer={closeDrawer}/>
-        )}
+        {boulder && <BoulderDetails id={boulder} closeDrawer={closeDrawer} />}
       </Drawer>
 
+      <Bar visible={selected.length > 0}>
+        <span>Selected ({selected.length})</span>
+
+        <span>
+          <Button
+            size={"small"}
+            variant={"danger"}
+            onClick={async () => {
+              try {
+                await mutateMass({
+                  payload: {
+                    items: selected,
+                    operation: "prune-ascents",
+                  },
+                });
+              } catch (error) {
+                dispatch(errorToast(error));
+              }
+            }}
+          >
+            Prune Ascents
+          </Button>
+
+          <Button
+            size={"small"}
+            variant={"danger"}
+            onClick={async () => {
+              try {
+                await mutateMass({
+                  payload: {
+                    items: selected,
+                    operation: "deactivate",
+                  },
+                });
+              } catch (error) {
+                dispatch(errorToast(error));
+              }
+            }}
+          >
+            Deactivate
+          </Button>
+        </span>
+      </Bar>
     </Fragment>
   );
 };
 
-export {Index};
+export { Index };

@@ -1,42 +1,58 @@
-import React, {Fragment, useContext, useMemo} from "react";
-import {useApi} from "../../hooks/useApi";
-import {useQuery} from "react-query";
+import React, { Fragment, useContext, useMemo } from "react";
+import { useApi } from "../../hooks/useApi";
+import { useQuery } from "react-query";
 import RankingTable from "../../components/RankingTable/RankingTable";
 import EmptyState from "../../components/EmptyState/EmptyState";
 import Emoji from "../../components/Emoji/Emoji";
 import Progress from "../../components/Progress/Progress";
-import {getPercentage} from "../../helpers";
-import {Meta} from "../../App";
-import Paragraph from "../../components/Paragraph/Paragraph";
+import { Meta } from "../../App";
 import moment from "moment";
 import Avatar from "../../components/Avatar/Avatar";
-import {Female, Male} from "../../components/Icon/Icons";
-import {BlocBetaUIContext} from "../../components/BlocBetaUI";
-import {LoadedContent} from "../../components/Loader/Loader";
+import { BlocBetaUIContext } from "../../components/BlocBetaUI";
+import { LoadedContent } from "../../components/Loader/Loader";
 import "./Current.css";
-import {Button} from "../../components/Button/Button";
+import { Button } from "../../components/Button/Button";
+import Male from "../../components/Icon/Male";
+import Female from "../../components/Icon/Female";
+
+const calculatePercentage = (amount, total) => {
+  let percentage = 0;
+
+  if (amount > 0) {
+    percentage = (amount / total) * 100;
+  }
+
+  if (percentage === 0) {
+    return `${amount} (0%)`;
+  }
+
+  if (percentage < 1) {
+    return `${amount} (<1%)`;
+  }
+
+  return `${amount} (${Math.floor(percentage)}%)`;
+};
 
 const Current = () => {
-  const {user, contextualizedPath} = useContext(BlocBetaUIContext);
+  const { user, contextualizedPath } = useContext(BlocBetaUIContext);
 
-  const {
-    status: rankingStatus,
-    data: ranking
-  } = useQuery("currentRanking", useApi("currentRanking"));
+  const { status: rankingStatus, data: ranking } = useQuery(
+    "currentRanking",
+    useApi("currentRanking")
+  );
 
-  const {
-    status: boulderCountStatus,
-    data: boulderCount
-  } = useQuery("boulderCount", useApi("boulderCount"));
+  const { status: boulderCountStatus, data: boulderCount } = useQuery(
+    "boulderCount",
+    useApi("boulderCount")
+  );
 
   const columns = useMemo(() => {
-
     return [
       {
         Header: "Rank",
         accessor: "rank",
         className: `table-cell--rank`,
-        Cell: ({value}) => {
+        Cell: ({ value }) => {
           return <strong>{value}</strong>;
         },
       },
@@ -44,14 +60,15 @@ const Current = () => {
         Header: "User",
         accessor: "user.username",
         className: "table-cell--user",
-        Cell: ({cell, row}) => {
-
+        Cell: ({ cell, row }) => {
           return (
             <Fragment>
-              <Avatar image={row.original.user.image}/>
+              <Avatar image={row.original.user.image} />
               {cell.value}
 
-              {row.original.boulder === boulderCount && <span className='rank-badge'>🥋</span>}
+              {row.original.boulder === boulderCount && (
+                <span className="rank-badge">🥋</span>
+              )}
             </Fragment>
           );
         },
@@ -59,17 +76,16 @@ const Current = () => {
       {
         Header: "Gender",
         accessor: "user.gender",
-        Cell: ({cell}) => {
-
+        Cell: ({ cell }) => {
           if (cell.value === "male") {
-            return <Male/>
+            return <Male />;
           }
 
           if (cell.value === "female") {
-            return <Female/>
+            return <Female />;
           }
 
-          return "-"
+          return "-";
         },
       },
       {
@@ -84,27 +100,27 @@ const Current = () => {
         Header: "Boulders",
         accessor: "boulders",
         className: "table-cell--boulders",
-        Cell: ({cell}) => {
+        Cell: ({ cell }) => {
           const percentage = (cell.value / boulderCount) * 100;
 
-          return <Progress percentage={percentage}/>;
+          return <Progress percentage={percentage} />;
         },
       },
       {
         Header: "Flashed",
         accessor: "flashes",
-        Cell: ({cell}) => getPercentage(cell.value, boulderCount),
+        Cell: ({ cell }) => calculatePercentage(cell.value, boulderCount),
       },
       {
         Header: "Topped",
         accessor: "tops",
-        Cell: ({cell}) => getPercentage(cell.value, boulderCount),
+        Cell: ({ cell }) => calculatePercentage(cell.value, boulderCount),
       },
       {
         Header: "Last activity",
         accessor: "user.lastActivity",
-        Cell: ({cell}) => {
-          return <Paragraph>{moment(cell.value).fromNow()}</Paragraph>;
+        Cell: ({ cell }) => {
+          return <span>{moment(cell.value).fromNow()}</span>;
         },
       },
       {
@@ -112,33 +128,37 @@ const Current = () => {
         id: "user.id",
         accessor: "user.id",
         className: "table-cell--actions",
-        Cell: ({cell}) => {
+        Cell: ({ cell }) => {
           if (parseInt(cell.value) === parseInt(user.id)) {
-            return null
+            return null;
           }
 
           return (
-            <Button asLink={true}
-                    variant="primary"
-                    size="small"
-                    to={contextualizedPath(`/compare/${user.id}/to/${cell.value}/at/current`)}>
+            <Button
+              asLink={true}
+              variant="primary"
+              size="small"
+              to={contextualizedPath(
+                `/compare/${user.id}/to/${cell.value}/at/current`
+              )}
+            >
               Compare
             </Button>
           );
-        }
+        },
       },
     ];
   }, [user.id, boulderCount]);
 
   return (
     <Fragment>
-      <Meta title="Current Ranking"/>
+      <Meta title="Current Ranking" />
 
-      <h1 className="t--alpha page-title">
-        Current Ranking
-      </h1>
+      <h1 className="t--alpha page-title">Current Ranking</h1>
 
-      <LoadedContent loading={[rankingStatus, boulderCountStatus].includes("loading")}>
+      <LoadedContent
+        loading={[rankingStatus, boulderCountStatus].includes("loading")}
+      >
         {ranking && ranking.list.length > 0 ? (
           <RankingTable
             data={ranking.list}
@@ -152,10 +172,9 @@ const Current = () => {
             </h2>
           </EmptyState>
         )}
-
       </LoadedContent>
     </Fragment>
   );
 };
 
-export {Current}
+export { Current };

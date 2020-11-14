@@ -1,19 +1,18 @@
 .footer {
-    display: flex;
-    list-style: none;
-    background: transparent;
-    align-self: end;
-    align-items: center;
-    height: var(--footer-height);
+  display: flex;
+  list-style: none;
+  background: transparent;
+  align-self: end;
+  align-items: center;
+  height: var(--footer-height);
 }
 
-
 .footer__item {
-    font-weight: 400;
-    text-decoration: none;
-    margin-left: calc(2 * var(--spacing-unit));
+  font-weight: 400;
+  text-decoration: none;
+  margin-left: calc(2 * var(--spacing-unit));
 }
 
 .footer__item:first-child {
-    margin-left: auto;
+  margin-left: auto;
 }

@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
-import {set} from 'lodash'
-import {FormElement} from "../components/Form/Form";
+import React, { useState } from "react";
+import { set } from "lodash";
+import { FormElement } from "../components/Form/Form";
 
 export const composeFormElement = (
   name,
@@ -13,17 +13,21 @@ export const composeFormElement = (
   const inputProps = {
     name: name,
     id: name,
-    value: value ? value : '',
+    value: value ? value : "",
     onChange: onChange,
 
-    ...additionalInputProps
+    ...additionalInputProps,
   };
 
   return (
     <FormElement name={name} label={label}>
-      {React.createElement(Component, inputProps, additionalInputProps.children)}
+      {React.createElement(
+        Component,
+        inputProps,
+        additionalInputProps.children
+      )}
     </FormElement>
-  )
+  );
 };
 
 export const useForm = (defaults) => {
@@ -36,34 +40,46 @@ export const useForm = (defaults) => {
     event.preventDefault();
     await callback(formData);
 
-    setSubmitting(false)
+    setSubmitting(false);
   };
 
   const setKeyValue = (key, value) => {
-    const current = {...formData};
+    const current = { ...formData };
 
     set(current, key, value);
-    setFormData({...current})
+    setFormData({ ...current });
   };
 
   const observeField = (event) => {
-    const {name, value, checked} = event.target;
-    const current = {...formData};
+    const { name, value, checked } = event.target;
+    const current = { ...formData };
 
     if (event.target.type === "select-multiple") {
-      set(current, name, Array.from(event.target.selectedOptions, option => option.value));
+      set(
+        current,
+        name,
+        Array.from(event.target.selectedOptions, (option) => option.value)
+      );
     } else if (event.target.type === "checkbox") {
       set(current, name, checked);
     } else {
       set(current, name, value);
     }
 
-    setFormData({...current})
+    setFormData({ ...current });
   };
 
   const resetForm = () => {
     setFormData(defaults);
   };
 
-  return {formData, setKeyValue, handleSubmit, submitting, setSubmitting, observeField, resetForm}
+  return {
+    formData,
+    setKeyValue,
+    handleSubmit,
+    submitting,
+    setSubmitting,
+    observeField,
+    resetForm,
+  };
 };

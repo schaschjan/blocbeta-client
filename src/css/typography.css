@@ -3,9 +3,9 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap");
 
 @font-face {
-    font-family: "Karla";
-    src: url("https://fonts.googleapis.com/css?family=Karla&display=swap");
-    font-weight: normal;
+  font-family: "Karla";
+  src: url("https://fonts.googleapis.com/css?family=Karla&display=swap");
+  font-weight: normal;
 }
 
 /*
@@ -52,7 +52,7 @@
 .t--zeta,
 .t--eta,
 .t--theta {
-    font-family: var(--font-family-sans);
+  font-family: var(--font-family-sans);
 }
 
 .t--alpha,
@@ -62,49 +62,49 @@
 .t--epsilon,
 .t--zeta,
 .t--eta {
-    letter-spacing: 0;
+  letter-spacing: 0;
 }
 
 .t--alpha {
-    font-size: 48px;
-    line-height: 56px;
+  font-size: 48px;
+  line-height: 56px;
 }
 
 .t--beta {
-    font-size: var(--font-size-beta);
-    line-height: var(--line-height-beta);
+  font-size: var(--font-size-beta);
+  line-height: var(--line-height-beta);
 }
 
 .t--gamma {
-    font-size: var(--font-size-gamma);
-    line-height: var(--line-height-gamma);
+  font-size: var(--font-size-gamma);
+  line-height: var(--line-height-gamma);
 }
 
 .t--delta {
-    font-size: var(--font-size-delta);
-    line-height: var(--line-height-delta);
+  font-size: var(--font-size-delta);
+  line-height: var(--line-height-delta);
 }
 
 .t--epsilon {
-    font-size: var(--font-size-epsilon);
-    line-height: var(--line-height-epsilon);
+  font-size: var(--font-size-epsilon);
+  line-height: var(--line-height-epsilon);
 }
 
 .t--zeta {
-    font-size: var(--font-size-zeta);
-    line-height: var(--line-height-zeta);
+  font-size: var(--font-size-zeta);
+  line-height: var(--line-height-zeta);
 }
 
 .t--eta {
-    font-size: var(--font-size-eta);
-    line-height: var(--line-height-eta);
-    letter-spacing: 0.05em;
+  font-size: var(--font-size-eta);
+  line-height: var(--line-height-eta);
+  letter-spacing: 0.05em;
 }
 
 mark {
-    padding: 2px 4px;
-    background: var(--color-lila);
-    color: var(--color-white);
+  padding: 2px 4px;
+  background: var(--color-lila);
+  color: var(--color-white);
 }
 
 a svg,
@@ -114,23 +114,23 @@ h1,
 h2,
 h3,
 h4 {
-    display: inline-flex;
+  display: inline-flex;
 }
 
 strong {
-    font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 
 @media (min-width: 768px) {
-    .t--alpha {
-        font-size: 38px;
-        line-height: 46px;
-    }
+  .t--alpha {
+    font-size: 38px;
+    line-height: 46px;
+  }
 }
 
 @media (min-width: 1024px) {
-    .t--alpha {
-        font-size: 48px;
-        line-height: 56px;
-    }
+  .t--alpha {
+    font-size: 48px;
+    line-height: 56px;
+  }
 }

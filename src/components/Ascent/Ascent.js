@@ -1,29 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Ascent.css";
 import Flash from "../Icon/Flash";
 import Top from "../Icon/Top";
 import Resignation from "../Icon/Resignation";
-import {classNames} from "../../helper/buildClassNames";
+import { classNames } from "../../helper/classNames";
+import Todo from "../Icon/Todo";
 
 const icons = {
   top: Top,
   flash: Flash,
-  resignation: Resignation
+  resignation: Resignation,
+  todo: Todo,
 };
 
-const Ascent = ({type, checked, disabled, ...rest}) => {
+const getIcon = (type) => {
+  return icons[type];
+};
+
+const Ascent = ({ type, checked, disabled, asyncHandler, ...rest }) => {
+  const [loading, setLoading] = useState(false);
+
   return (
-    <div className={classNames(
-      "ascent",
-      type ? `ascent--${type}` : null,
-      checked ? "ascent--checked" : null,
-      disabled ? "ascent--disabled" : null
-    )} {...rest}>
+    <div
+      onClick={async () => {
+        setLoading(true);
+        await asyncHandler();
+        setLoading(false);
+      }}
+      className={classNames(
+        "ascent",
+        type ? `ascent--${type}` : null,
+        checked ? "ascent--checked" : null,
+        disabled ? "ascent--disabled" : null,
+        loading ? "ascent--loading" : null
+      )}
+      {...rest}
+    >
       {React.createElement(icons[type], {
-        fill: checked
+        fill: checked,
       })}
     </div>
   );
 };
 
-export default Ascent;
+export { Ascent, getIcon };

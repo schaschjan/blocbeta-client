@@ -1,12 +1,12 @@
 .account-layout__actions {
-    margin-top: calc(12 * var(--spacing-unit));
+  margin-top: calc(12 * var(--spacing-unit));
 }
 
 .upload-field {
-    display: inline-flex;
-    align-items: center;
+  display: inline-flex;
+  align-items: center;
 }
 
 .upload-field .loader {
-    margin: 0;
+  margin: 0;
 }

@@ -1,48 +1,25 @@
 import React, { useRef } from "react";
-import Icon from "../Icon/Icon";
 import Input from "../Input/Input";
-import { Tag } from "../TagInput/TagInput";
 import "./Search.css";
+import { Close } from "../Icon/Close";
+import { Search as SearchIcon } from "../Icon/Search";
 
-const Search = ({
-  placeholder,
-  onInputChange,
-  onClear,
-  value,
-  tags,
-  onTagRemove,
-  onToggle,
-  ...rest
-}) => {
+const Search = ({ placeholder, onChange, onClear, value, ...rest }) => {
   const inputElement = useRef(null);
 
   return (
     <div className="search" {...rest}>
-      <Icon name="search" onClick={() => inputElement.current.focus()} />
-
-      {tags &&
-        tags.map((tag) => (
-          <Tag id={tag.id} value={tag.value} onRemove={onTagRemove} />
-        ))}
+      <SearchIcon onClick={() => inputElement.current.focus()} />
 
       <Input
         register={inputElement}
         placeholder={placeholder}
-        onChange={onInputChange}
+        onChange={onChange}
         value={value}
       />
 
-      {onToggle && (
-        <Icon
-          name="menu-small"
-          className="toggle-filter-dropdown"
-          onClick={() => onToggle()}
-        />
-      )}
-
       {inputElement.current && inputElement.current.value && (
-        <Icon
-          name="close"
+        <Close
           onClick={() => {
             inputElement.current.value = null;
             onClear();

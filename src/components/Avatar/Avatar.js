@@ -1,12 +1,12 @@
 import React from "react";
 import "./Avatar.css";
-import Icon from "../Icon/Icon";
+import AvatarIcon from "../Icon/Avatar";
 
 const Avatar = ({ image }) => {
   if (!image) {
     return (
       <div className="avatar avatar--fallback">
-        <Icon name="avatar" />
+        <AvatarIcon />
       </div>
     );
   }

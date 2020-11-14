@@ -1,13 +1,12 @@
-import {SingleDatePicker} from "react-dates";
-import React, {useState} from "react";
-import 'react-dates/lib/css/_datepicker.css';
-import "./DatePicker.css"
-import {useMediaQuery} from "react-responsive/src";
+import { SingleDatePicker } from "react-dates";
+import React, { useState } from "react";
+import "react-dates/lib/css/_datepicker.css";
+import "./DatePicker.css";
+import { useMediaQuery } from "react-responsive/src";
 
-export const DatePicker = ({onChange, ...rest}) => {
-
+export const DatePicker = ({ onChange, ...rest }) => {
   const isSmall = useMediaQuery({
-    query: '(max-width: 1280px)'
+    query: "(max-width: 1280px)",
   });
 
   const [selectFocused, setSelectFocused] = useState(false);
@@ -18,8 +17,8 @@ export const DatePicker = ({onChange, ...rest}) => {
       daySize={isSmall ? 40 : 65}
       displayFormat="dddd D.M.YYYY"
       focused={selectFocused}
-      onFocusChange={({focused}) => setSelectFocused({focused})}
+      onFocusChange={({ focused }) => setSelectFocused({ focused })}
       {...rest}
     />
-  )
+  );
 };

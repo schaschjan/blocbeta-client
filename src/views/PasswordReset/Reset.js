@@ -1,26 +1,26 @@
-import React, {useState, useContext, useEffect, Fragment} from "react";
-import {Meta} from "../../App";
-import {FormRow} from "../../components/Form/Form";
-import {Input} from "../../components/Input/Input";
-import {extractErrorMessage} from "../../hooks/useApi";
-import {useParams} from "react-router-dom";
-import {useHistory} from "react-router-dom";
+import React, { useState, useContext, useEffect, Fragment } from "react";
+import { Meta } from "../../App";
+import { FormRow } from "../../components/Form/Form";
+import { Input } from "../../components/Input/Input";
+import { extractErrorMessage } from "../../hooks/useApi";
+import { useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 import "./Reset.css";
-import {toast, ToastContext} from "../../components/Toaster/Toaster";
-import {classNames} from "../../helper/buildClassNames";
-import {composeFormElement, useForm} from "../../hooks/useForm";
-import {Button} from "../../components/Button/Button";
+import { toast, ToastContext } from "../../components/Toaster/Toaster";
+import { classNames } from "../../helper/classNames";
+import { composeFormElement, useForm } from "../../hooks/useForm";
+import { Button } from "../../components/Button/Button";
 
 const Reset = () => {
   const [hashFound, setHashFound] = useState(false);
-  const {dispatch} = useContext(ToastContext);
+  const { dispatch } = useContext(ToastContext);
 
   const history = useHistory();
-  const {hash} = useParams();
+  const { hash } = useParams();
 
-  const {handleSubmit, observeField, submitting, formData} = useForm({
-    password: null
+  const { handleSubmit, observeField, submitting, formData } = useForm({
+    password: null,
   });
 
   const checkToken = async (hash) => {
@@ -28,14 +28,7 @@ const Reset = () => {
       await axios.get(`/api/reset/${hash}`, false);
       setHashFound(true);
     } catch (error) {
-
-      dispatch(
-        toast(
-          "Error",
-          extractErrorMessage(error),
-          "danger"
-        )
-      );
+      dispatch(toast("Error", extractErrorMessage(error), "danger"));
     }
   };
 
@@ -46,24 +39,18 @@ const Reset = () => {
   const onSubmit = async (payload) => {
     try {
       await axios.post(`/api/reset/${hash}`, payload);
-      alert("Your Password was successfully updated. You can now log in again.");
-      history.push("/login");
-
-    } catch (error) {
-
-      dispatch(
-        toast(
-          "Error",
-          extractErrorMessage(error),
-          "danger"
-        )
+      alert(
+        "Your Password was successfully updated. You can now log in again."
       );
+      history.push("/login");
+    } catch (error) {
+      dispatch(toast("Error", extractErrorMessage(error), "danger"));
     }
   };
 
   return (
     <Fragment>
-      <Meta title="Reset password"/>
+      <Meta title="Reset password" />
 
       <div className="side-title-layout">
         <h1 className="t--alpha side-title-layout__title">
@@ -71,8 +58,13 @@ const Reset = () => {
         </h1>
 
         <div className="side-title-layout__content">
-          <form onSubmit={(event) => handleSubmit(event, onSubmit)}
-                className={classNames("reset-form", (!hashFound) ? "reset-form--disabled" : null)}>
+          <form
+            onSubmit={(event) => handleSubmit(event, onSubmit)}
+            className={classNames(
+              "reset-form",
+              !hashFound ? "reset-form--disabled" : null
+            )}
+          >
             <FormRow>
               {composeFormElement(
                 "password",
@@ -93,7 +85,8 @@ const Reset = () => {
               primary="true"
               loader={true}
               loading={submitting}
-              disabled={submitting}>
+              disabled={submitting}
+            >
               Update password
             </Button>
           </form>
@@ -103,4 +96,4 @@ const Reset = () => {
   );
 };
 
-export {Reset};
+export { Reset };

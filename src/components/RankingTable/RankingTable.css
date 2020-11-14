@@ -2,6 +2,6 @@
 }
 
 .ranking-table-layout__search {
-    max-width: 50%;
-    margin-bottom: calc(8 * var(--spacing-unit));
+  max-width: 50%;
+  margin-bottom: calc(8 * var(--spacing-unit));
 }

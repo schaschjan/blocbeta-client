@@ -1,7 +1,6 @@
 import React from "react";
 
-const EmptyState = ({children, isEmpty = true}) => {
-
+const EmptyState = ({ children, isEmpty = true }) => {
   if (!children) {
     return <h2 className="t--gamma">🤷</h2>;
   }

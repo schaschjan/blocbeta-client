@@ -1,51 +1,49 @@
-import React, {Fragment, useContext} from "react";
-import {Meta} from "../../App";
-import {extractErrorMessage} from "../../hooks/useApi";
-import {useHistory} from "react-router-dom";
-import {Input} from "../../components/Input/Input";
-import {FormRow} from "../../components/Form/Form";
-import {Textarea} from "../../components/Textarea/Textarea";
+import React, { Fragment, useContext } from "react";
+import { Meta } from "../../App";
+import { useApi } from "../../hooks/useApi";
+import { useHistory } from "react-router-dom";
+import { Input } from "../../components/Input/Input";
+import { FormRow } from "../../components/Form/Form";
+import { Textarea } from "../../components/Textarea/Textarea";
 import ResourceDependantSelect from "../../components/ResourceDependantSelect/ResourceDependantSelect";
-import {api} from "../../helper/api";
-import {BlocBetaUIContext} from "../../components/BlocBetaUI";
-import {toast, ToastContext} from "../../components/Toaster/Toaster";
-import {composeFormElement, useForm} from "../../hooks/useForm";
-import {Button} from "../../components/Button/Button";
+import { BlocBetaUIContext } from "../../components/BlocBetaUI";
+import {
+  errorToast,
+  successToast,
+  ToastContext,
+} from "../../components/Toaster/Toaster";
+import { composeFormElement, useForm } from "../../hooks/useForm";
+import { Button } from "../../components/Button/Button";
 
 const Add = () => {
   const history = useHistory();
-  const {dispatch} = useContext(ToastContext);
+  const { dispatch } = useContext(ToastContext);
 
-  const {handleSubmit, observeField, submitting, formData} = useForm({
+  const { handleSubmit, observeField, submitting, formData } = useForm({
     start_date: null,
     end_date: null,
     note: null,
-    room: null
+    room: null,
   });
 
-  const {contextualizedPath} = useContext(BlocBetaUIContext);
+  const addApi = useApi("addBlocker");
+  const { contextualizedPath } = useContext(BlocBetaUIContext);
 
   const onSubmit = async (payload) => {
     try {
-      await api.timeSlotExclusion.add(payload);
-      alert("blocker added!");
+      await addApi({ payload });
+
+      dispatch(successToast("Blocker added!"));
+
       history.push(contextualizedPath("/dashboard"));
-
     } catch (error) {
-
-      dispatch(
-        toast(
-          "Error",
-          extractErrorMessage(error),
-          "danger"
-        )
-      );
+      dispatch(errorToast(error));
     }
   };
 
   return (
     <Fragment>
-      <Meta title="Add time slot exclusion"/>
+      <Meta title="Add time slot exclusion" />
 
       <div className="side-title-layout">
         <h1 className="t--alpha side-title-layout__title">
@@ -54,7 +52,6 @@ const Add = () => {
 
         <div className="side-title-layout__content">
           <form onSubmit={(event) => handleSubmit(event, onSubmit)}>
-
             <FormRow>
               {composeFormElement(
                 "quantity",
@@ -65,7 +62,7 @@ const Add = () => {
                 {
                   type: "number",
                   min: 1,
-                  max: 200
+                  max: 200,
                 }
               )}
             </FormRow>
@@ -80,7 +77,7 @@ const Add = () => {
                 {
                   cacheKey: "room",
                   api: "rooms",
-                  labelProperty: "name"
+                  labelProperty: "name",
                 }
               )}
             </FormRow>
@@ -94,7 +91,7 @@ const Add = () => {
                 observeField,
                 {
                   type: "datetime-local",
-                  required: true
+                  required: true,
                 }
               )}
             </FormRow>
@@ -108,7 +105,7 @@ const Add = () => {
                 observeField,
                 {
                   type: "datetime-local",
-                  required: true
+                  required: true,
                 }
               )}
             </FormRow>
@@ -128,14 +125,15 @@ const Add = () => {
               variant="primary"
               loader={true}
               loading={submitting}
-              disabled={submitting}>
+              disabled={submitting}
+            >
               Add
             </Button>
           </form>
         </div>
       </div>
     </Fragment>
-  )
+  );
 };
 
-export {Add};
+export { Add };

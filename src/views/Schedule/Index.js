@@ -1,118 +1,117 @@
-import React, {Fragment, useContext, useEffect, useState} from "react";
-import 'react-dates/initialize';
+import React, { Fragment, useContext, useEffect, useState } from "react";
+import "react-dates/initialize";
 import moment from "moment";
-import {queryCache, useMutation, useQuery} from "react-query";
-import {cache, extractErrorMessage, queryDefaults, useApi} from "../../hooks/useApi";
-import {Loader} from "../../components/Loader/Loader";
-import {DatePicker} from "../../components/DatePicker/DatePicker";
-import {toast, ToastContext} from "../../components/Toaster/Toaster";
-import {classNames} from "../../helper/buildClassNames";
-import {Select} from "../../components/Select/Select";
-import {BookButton} from "../../components/BookButton/BookButton";
+import { queryCache, useMutation, useQuery } from "react-query";
+import {
+  cache,
+  extractErrorMessage,
+  queryDefaults,
+  useApi,
+} from "../../hooks/useApi";
+import { Loader } from "../../components/Loader/Loader";
+import { DatePicker } from "../../components/DatePicker/DatePicker";
+import { toast, ToastContext } from "../../components/Toaster/Toaster";
+import { classNames } from "../../helper/classNames";
+import { Select } from "../../components/Select/Select";
+import { BookButton } from "../../components/BookButton/BookButton";
 import "./Index.css";
 
-const TimeSlotList = ({ymd, roomId}) => {
-  const {dispatch} = useContext(ToastContext);
+const TimeSlotList = ({ ymd, roomId }) => {
+  const { dispatch } = useContext(ToastContext);
 
-  const {status: scheduleStatus, data: schedule} = useQuery(
-    ["schedule", {ymd, roomId}],
-    useApi("schedule", {ymd, roomId}),
+  const { status: scheduleStatus, data: schedule } = useQuery(
+    ["schedule", { ymd, roomId }],
+    useApi("schedule", { ymd, roomId }),
     queryDefaults
   );
 
-  const [mutateDeletion, {status: deletionMutationStatus, error: deletionMutationError}] = useMutation(useApi("deleteReservation"), {
+  const [
+    mutateDeletion,
+    { status: deletionMutationStatus, error: deletionMutationError },
+  ] = useMutation(useApi("deleteReservation"), {
     throwOnError: true,
     onSuccess: () => {
-      queryCache.invalidateQueries([cache.schedule, {ymd, roomId}]);
+      queryCache.invalidateQueries([cache.schedule, { ymd, roomId }]);
       queryCache.invalidateQueries(cache.reservationCount);
     },
   });
 
-  const [mutateCreation, {status: creationMutationStatus, error: creationMutationError}] = useMutation(useApi("createReservation"), {
+  const [
+    mutateCreation,
+    { status: creationMutationStatus, error: creationMutationError },
+  ] = useMutation(useApi("createReservation"), {
     throwOnError: true,
     onSuccess: () => {
-      queryCache.invalidateQueries([cache.schedule, {ymd, roomId}]);
+      queryCache.invalidateQueries([cache.schedule, { ymd, roomId }]);
       queryCache.invalidateQueries(cache.reservationCount);
     },
   });
 
   const blockTimeSlot = async (timeSlot, quantity) => {
-
     try {
       await mutateCreation({
         payload: {
-          "start_time": timeSlot.start_time,
-          "end_time": timeSlot.end_time,
-          "date": ymd,
-          "room": roomId,
-          "quantity": quantity
-        }
+          start_time: timeSlot.start_time,
+          end_time: timeSlot.end_time,
+          date: ymd,
+          room: roomId,
+          quantity: quantity,
+        },
       });
     } catch (error) {
-
-      dispatch(
-        toast(
-          "Error",
-          extractErrorMessage(error),
-          "danger"
-        )
-      );
+      dispatch(toast("Error", extractErrorMessage(error), "danger"));
     }
   };
 
   const unblockTimeSlot = async (id) => {
-
     try {
-      await mutateDeletion({id});
+      await mutateDeletion({ id });
     } catch (error) {
-
-      dispatch(
-        toast(
-          "Error",
-          extractErrorMessage(error),
-          "danger"
-        )
-      );
+      dispatch(toast("Error", extractErrorMessage(error), "danger"));
     }
   };
 
   const findPendingReservation = () => {
-    return schedule.find(timeSlot => timeSlot.reservation !== null);
+    return schedule.find((timeSlot) => timeSlot.reservation !== null);
   };
 
-  if (scheduleStatus === "loading") return <Loader/>;
+  if (scheduleStatus === "loading") return <Loader />;
 
   return (
     <div className="schedule-list">
       <ul className="schedule-list__header">
-        <li className="t--epsilon">
-          Time
-        </li>
+        <li className="t--epsilon">Time</li>
 
-        <li className="t--epsilon">
-          Capacity
-        </li>
+        <li className="t--epsilon">Capacity</li>
       </ul>
 
-      {(schedule.length ? (
-        <ul className={classNames("schedule-list__time-slot-list", "time-slot-list")}>
-          {schedule.map(timeSlot => {
-
+      {schedule.length ? (
+        <ul
+          className={classNames(
+            "schedule-list__time-slot-list",
+            "time-slot-list"
+          )}
+        >
+          {schedule.map((timeSlot) => {
             const dayHasBlockedTimeSlot = findPendingReservation();
             const timeSlotIsBlocked = timeSlot.reservation;
             const timeSlotIsFull = timeSlot.available === 0;
-            const isPassed = moment() > moment(ymd + ' ' + timeSlot.end_time);
+            const isPassed = moment() > moment(ymd + " " + timeSlot.end_time);
             const isDisabled = timeSlot.capacity === 0;
 
             return (
-              <li key={timeSlot.hash}
-                  className={classNames(
-                    "time-slot-list__item time-slot-list-item",
-                    timeSlotIsBlocked ? "time-slot-list-item--blocked" : null,
-                    isPassed ? "time-slot-list-item--disabled" : null,
-                    ((dayHasBlockedTimeSlot || timeSlotIsFull || isDisabled) && !timeSlotIsBlocked) ? "time-slot-list-item--disabled" : null
-                  )}>
-
+              <li
+                key={timeSlot.hash}
+                className={classNames(
+                  "time-slot-list__item time-slot-list-item",
+                  timeSlotIsBlocked ? "time-slot-list-item--blocked" : null,
+                  isPassed ? "time-slot-list-item--disabled" : null,
+                  (dayHasBlockedTimeSlot || timeSlotIsFull || isDisabled) &&
+                    !timeSlotIsBlocked
+                    ? "time-slot-list-item--disabled"
+                    : null
+                )}
+              >
                 <div className="time-slot-list-item__time t--epsilon">
                   {timeSlot.start_time} - {timeSlot.end_time}
                 </div>
@@ -122,29 +121,31 @@ const TimeSlotList = ({ymd, roomId}) => {
                 </div>
 
                 <div className="time-slot-list-item__action">
-                  <BookButton blockHandler={blockTimeSlot}
-                              timeSlot={timeSlot}
-                              unBlockHandler={unblockTimeSlot}
-                              isBlocked={timeSlotIsBlocked}
-                              isDisabled={isDisabled}
-                              isFull={timeSlotIsFull}/>
+                  <BookButton
+                    blockHandler={blockTimeSlot}
+                    timeSlot={timeSlot}
+                    unBlockHandler={unblockTimeSlot}
+                    isBlocked={timeSlotIsBlocked}
+                    isDisabled={isDisabled}
+                    isFull={timeSlotIsFull}
+                  />
                 </div>
               </li>
-            )
+            );
           })}
         </ul>
       ) : (
         <Fragment>Not configured!</Fragment>
-      ))}
+      )}
     </div>
-  )
+  );
 };
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(moment());
   const [selectedRoomId, setSelectedRoom] = useState(null);
 
-  const {status: roomsStatus, data: rooms} = useQuery(
+  const { status: roomsStatus, data: rooms } = useQuery(
     "rooms",
     useApi("rooms"),
     queryDefaults
@@ -152,46 +153,50 @@ const Index = () => {
 
   useEffect(() => {
     if (!rooms) {
-      return
+      return;
     }
 
     if (rooms.length) {
       setSelectedRoom(rooms[0].id);
     }
-
   }, [rooms]);
 
   const RoomSelect = () => {
-
-    return <div className="room-select">
-      <h2 className="t--gamma room-select__label">Room:</h2>
-      <Select onChange={(event) => setSelectedRoom(event.target.value)}
-              value={selectedRoomId}>
-        {roomsStatus === "success" && (
-          <Fragment>
-            {rooms.map((room, index) => <option value={room.id} key={room.id}>{room.name}</option>)}
-          </Fragment>
-        )}
-      </Select>
-    </div>
+    return (
+      <div className="room-select">
+        <h2 className="t--gamma room-select__label">Room:</h2>
+        <Select
+          onChange={(event) => setSelectedRoom(event.target.value)}
+          value={selectedRoomId}
+        >
+          {roomsStatus === "success" && (
+            <Fragment>
+              {rooms.map((room, index) => (
+                <option value={room.id} key={room.id}>
+                  {room.name}
+                </option>
+              ))}
+            </Fragment>
+          )}
+        </Select>
+      </div>
+    );
   };
 
   if (!selectedRoomId) {
-    return <Loader/>
+    return <Loader />;
   }
 
-  const selectedRoom = rooms.find(room => room.id === parseInt(selectedRoomId));
+  const selectedRoom = rooms.find(
+    (room) => room.id === parseInt(selectedRoomId)
+  );
 
   return (
     <Fragment>
-      <h1 className="t--alpha page-title">
-        Schedule
-      </h1>
+      <h1 className="t--alpha page-title">Schedule</h1>
 
       <div className="schedule-header">
-        {rooms.length > 1 && (
-          <RoomSelect/>
-        )}
+        {rooms.length > 1 && <RoomSelect />}
 
         {selectedRoom && selectedRoom.instructions && (
           <span>
@@ -214,13 +219,18 @@ const Index = () => {
         </div>
 
         <div className="schedule__list schedule-list">
-          <h2 className="schedule-list__title t--gamma">Available Time Slots</h2>
+          <h2 className="schedule-list__title t--gamma">
+            Available Time Slots
+          </h2>
 
-          <TimeSlotList ymd={selectedDate.format("Y-MM-DD")} roomId={selectedRoomId}/>
+          <TimeSlotList
+            ymd={selectedDate.format("Y-MM-DD")}
+            roomId={selectedRoomId}
+          />
         </div>
       </div>
     </Fragment>
-  )
+  );
 };
 
-export {Index}
+export { Index };

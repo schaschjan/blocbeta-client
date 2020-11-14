@@ -1,16 +1,15 @@
 .rank-badge {
-    margin-left: .5rem;
-    font-size: 1.5rem;
+  margin-left: 0.5rem;
+  font-size: 1.5rem;
 }
-
 
 @media (min-width: 601px) and (max-width: 1139px) {
 }
 
 @media (min-width: 1140px) {
-    .table--current .table-header,
-    .table--current .table-row {
-        display: grid;
-        grid-template-columns: 72px auto 110px 110px 110px 110px 110px 110px 120px 80px;
-    }
+  .table--current .table-header,
+  .table--current .table-row {
+    display: grid;
+    grid-template-columns: 72px auto 110px 110px 110px 110px 110px 110px 120px 80px;
+  }
 }

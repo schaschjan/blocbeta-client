@@ -1,7 +1,7 @@
 .login-extra {
-    margin-top: calc(12 * var(--spacing-unit));
+  margin-top: calc(12 * var(--spacing-unit));
 }
 
 .login-extra .button:first-child {
-    margin-right: calc(2 * var(--spacing-unit));
+  margin-right: calc(2 * var(--spacing-unit));
 }

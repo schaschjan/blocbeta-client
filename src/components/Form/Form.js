@@ -2,7 +2,7 @@ import React from "react";
 import Label from "../Label/Label";
 import "./Form.css";
 
-const Form = ({children, ...rest}) => {
+const Form = ({ children, ...rest }) => {
   return (
     <form {...rest} className="form">
       {children}
@@ -10,18 +10,21 @@ const Form = ({children, ...rest}) => {
   );
 };
 
-const FormRow = ({children, columns}) => {
+const FormRow = ({ children, columns }) => {
   return (
-    <div className="form-row" style={{
-      display: "grid",
-      gridTemplateColumns: `repeat(${columns}, 1fr)`
-    }}>
+    <div
+      className="form-row"
+      style={{
+        display: "grid",
+        gridTemplateColumns: `repeat(${columns}, 1fr)`,
+      }}
+    >
       {children}
     </div>
   );
 };
 
-const FormElement = ({label, name, children}) => {
+const FormElement = ({ label, name, children }) => {
   return (
     <div className="form-element">
       <Label htmlFor={name}>{label}</Label>
@@ -31,5 +34,4 @@ const FormElement = ({label, name, children}) => {
   );
 };
 
-export {FormRow, Form, FormElement}
-
+export { FormRow, Form, FormElement };

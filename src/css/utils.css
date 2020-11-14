@@ -1,19 +1,19 @@
 .page-title {
-    margin-bottom: calc(2 * var(--spacing-unit));
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    display: flex;
+  margin-bottom: calc(2 * var(--spacing-unit));
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
 }
 
 @media (min-width: 768px) {
-    .page-title {
-        margin-bottom: calc(4 * var(--spacing-unit));
-    }
+  .page-title {
+    margin-bottom: calc(4 * var(--spacing-unit));
+  }
 }
 
 @media (min-width: 1024px) {
-    .page-title {
-        margin-bottom: calc(8 * var(--spacing-unit));
-    }
+  .page-title {
+    margin-bottom: calc(8 * var(--spacing-unit));
+  }
 }

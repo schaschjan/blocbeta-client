@@ -1,14 +1,12 @@
 import React, { Fragment } from "react";
-import Container from "../../components/Container/Container";
 import { PageHeader } from "../../components/PageHeader/PageHeader";
 import useApi, { api, cache } from "../../hooks/useApi";
 import { Loader } from "../../components/Loader/Loader";
 import "./Index.css";
 import Button from "../../components/Button/Button";
-import Wrapper from "../../components/Wrapper/Wrapper";
 import { queryCache, useMutation } from "react-query";
 import { toast } from "react-toastify";
-import { alphaSort } from "../../helpers";
+import { sortItemsAlphabetically } from "../../helper/sortItemsAlphabetically";
 
 const Setters = () => {
   const { status, data } = useApi(cache.setters, api.setters.all);
@@ -38,7 +36,7 @@ const Setters = () => {
         <Loader />
       ) : (
         <ul className="setter-list">
-          {alphaSort(data, "username").map((setter) => {
+          {sortItemsAlphabetically(data, "username").map((setter) => {
             return (
               <li key={setter.id}>
                 <span>{setter.username}</span>
@@ -60,14 +58,12 @@ const Setters = () => {
 
 const Index = () => {
   return (
-    <Container>
+    <Fragment>
       <PageHeader title={`Settings`} />
 
-      <Wrapper>
-        <Setters />
-      </Wrapper>
-    </Container>
+      <Setters />
+    </Fragment>
   );
 };
 
-export {Index};
+export { Index };

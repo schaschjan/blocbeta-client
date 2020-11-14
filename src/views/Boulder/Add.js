@@ -1,24 +1,28 @@
-import React, {Fragment, useContext} from "react";
-import {Meta} from "../../App";
-import {cache, useApi} from "../../hooks/useApi";
-import {Input} from "../../components/Input/Input";
-import {FormRow} from "../../components/Form/Form";
-import {queryCache, useMutation} from "react-query";
+import React, { Fragment, useContext } from "react";
+import { Meta } from "../../App";
+import { cache, useApi } from "../../hooks/useApi";
+import { Input } from "../../components/Input/Input";
+import { FormRow } from "../../components/Form/Form";
+import { queryCache, useMutation } from "react-query";
 import ResourceDependantSelect from "../../components/ResourceDependantSelect/ResourceDependantSelect";
-import {errorToast, successToast, ToastContext} from "../../components/Toaster/Toaster";
-import {composeFormElement, useForm} from "../../hooks/useForm";
-import {Button} from "../../components/Button/Button";
-import {Select} from "../../components/Select/Select";
+import {
+  errorToast,
+  successToast,
+  ToastContext,
+} from "../../components/Toaster/Toaster";
+import { composeFormElement, useForm } from "../../hooks/useForm";
+import { Button } from "../../components/Button/Button";
+import { Select } from "../../components/Select/Select";
 
 const Add = () => {
-  const {dispatch} = useContext(ToastContext);
+  const { dispatch } = useContext(ToastContext);
 
   const {
     handleSubmit,
     observeField,
     submitting,
     formData,
-    resetForm
+    resetForm,
   } = useForm({
     name: null,
     status: "active",
@@ -29,13 +33,13 @@ const Add = () => {
     internal_grade: null,
     hold_type: null,
     tags: [null],
-    setters: [null]
+    setters: [null],
   });
 
-  const [mutateCreation, {
-    status: creationMutationStatus,
-    error: creationMutationError
-  }] = useMutation(useApi("createBoulder"), {
+  const [
+    mutateCreation,
+    { status: creationMutationStatus, error: creationMutationError },
+  ] = useMutation(useApi("createBoulder"), {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries([cache.boulder]);
@@ -44,11 +48,10 @@ const Add = () => {
 
   const onSubmit = async (payload) => {
     try {
-      await mutateCreation({payload});
+      await mutateCreation({ payload });
 
       dispatch(successToast("Boulder created!"));
       resetForm();
-
     } catch (error) {
       dispatch(errorToast(error));
     }
@@ -56,7 +59,7 @@ const Add = () => {
 
   return (
     <Fragment>
-      <Meta title="Add time slot exclusion"/>
+      <Meta title="Add time slot exclusion" />
 
       <div className="side-title-layout">
         <h1 className="t--alpha side-title-layout__title">
@@ -64,8 +67,7 @@ const Add = () => {
         </h1>
 
         <div className="side-title-layout__content">
-          <form onSubmit={event => handleSubmit(event, onSubmit)}>
-
+          <form onSubmit={(event) => handleSubmit(event, onSubmit)}>
             <FormRow>
               {composeFormElement(
                 "name",
@@ -86,7 +88,7 @@ const Add = () => {
                 {
                   cacheKey: cache.walls,
                   api: cache.walls,
-                  labelProperty: "name"
+                  labelProperty: "name",
                 }
               )}
 
@@ -99,7 +101,7 @@ const Add = () => {
                 {
                   cacheKey: cache.walls,
                   api: cache.walls,
-                  labelProperty: "name"
+                  labelProperty: "name",
                 }
               )}
             </FormRow>
@@ -114,7 +116,7 @@ const Add = () => {
                 {
                   cacheKey: cache.grades,
                   api: cache.grades,
-                  labelProperty: "name"
+                  labelProperty: "name",
                 }
               )}
 
@@ -127,7 +129,7 @@ const Add = () => {
                 {
                   cacheKey: cache.grades,
                   api: cache.grades,
-                  labelProperty: "name"
+                  labelProperty: "name",
                 }
               )}
             </FormRow>
@@ -142,7 +144,7 @@ const Add = () => {
                 {
                   cacheKey: cache.holdTypes,
                   api: cache.holdTypes,
-                  labelProperty: "name"
+                  labelProperty: "name",
                 }
               )}
             </FormRow>
@@ -158,7 +160,7 @@ const Add = () => {
                   cacheKey: cache.tags,
                   api: cache.tags,
                   labelProperty: "name",
-                  multiple: true
+                  multiple: true,
                 }
               )}
             </FormRow>
@@ -174,7 +176,7 @@ const Add = () => {
                   cacheKey: cache.setters,
                   api: cache.setters,
                   labelProperty: "username",
-                  multiple: true
+                  multiple: true,
                 }
               )}
             </FormRow>
@@ -192,7 +194,7 @@ const Add = () => {
                       <option value="active">Active</option>
                       <option value="inactive">Inactive</option>
                     </Fragment>
-                  )
+                  ),
                 }
               )}
             </FormRow>
@@ -205,18 +207,18 @@ const Add = () => {
                 Input,
                 observeField,
                 {
-                  type: "number"
+                  type: "number",
                 }
               )}
             </FormRow>
-
 
             <Button
               type="submit"
               variant="primary"
               loader={true}
               loading={submitting}
-              disabled={submitting}>
+              disabled={submitting}
+            >
               Add
             </Button>
           </form>
@@ -226,4 +228,4 @@ const Add = () => {
   );
 };
 
-export {Add}
+export { Add };

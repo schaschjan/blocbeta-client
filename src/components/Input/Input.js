@@ -1,20 +1,18 @@
 import React from "react";
-import {Close} from "../Icon/Close";
+import { Close } from "../Icon/Close";
 import "./Input.css";
-import {classNames} from "../../helper/buildClassNames";
+import { classNames } from "../../helper/classNames";
 
 const Input = ({
-                 className,
-                 clearable,
-                 onClear,
-                 prefix,
-                 type,
-                 value,
-                 filled = false,
-                 size = "default",
-                 ...rest
-               }) => {
-
+  className,
+  onClear,
+  prefix,
+  type,
+  value,
+  filled = false,
+  size = "default",
+  ...rest
+}) => {
   const classes = classNames(
     className,
     "input",
@@ -23,17 +21,17 @@ const Input = ({
     filled ? "input--filled" : null
   );
 
+  console.log(onClear, value);
+
   return (
     <div className={classes}>
       {prefix && <span>{prefix}</span>}
 
-      <input type={type} {...rest} value={value}/>
+      <input type={type} {...rest} value={value} />
 
-      {(clearable && value) && (
-        <Close onClick={(event) => onClear(event)}/>
-      )}
+      {onClear && value && <Close onClick={(event) => onClear(event)} />}
     </div>
   );
 };
 
-export {Input}
+export { Input };

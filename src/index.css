@@ -9,96 +9,108 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap");
 
 body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: var(--color-black);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--color-black);
 }
 
 :root {
-    --spacing-unit: 8px;
+  --spacing-unit: 8px;
 }
 
 :root {
-    --color-black: #000;
-    --color-dark: #333;
-    --color-light: #fff;
-    --color-lightgrey: #f2f2f2;
-    --color-error: #ff0000;
-    --color-grey: #a2a2a2;
-    --color-blue: #5759fb;
-    --color-lightblue: #cdcefe;
+  --color-black: #000;
+  --color-dark: #333;
+  --color-light: #fff;
+  --color-lightgrey: #f2f2f2;
+  --color-error: #ff0000;
+  --color-grey: #a2a2a2;
+  --color-blue: #5759fb;
+  --color-lightblue: #cdcefe;
 
-    --color-flash: #1687ff;
-    --color-top: #02deaf;
-    --color-resign: #ff5d5f;
-    --color-warning: #fcf6a4;
+  --color-flash: #1687ff;
+  --color-top: #02deaf;
+  --color-resign: #ff5d5f;
+  --color-warning: #fcf6a4;
 
-    --drawer-width: 320px;
+  --drawer-width: 320px;
 
-    --line-height-default: 1rem;
-    --font-size-default: 0.875rem;
+  --line-height-default: 1rem;
+  --font-size-default: 0.875rem;
 
-    --font-family-default: "IBM Plex Sans", sans-serif;
-    --font-family-tech: "IBM Plex Mono", monospace;
+  --font-family-default: "IBM Plex Sans", sans-serif;
+  --font-family-tech: "IBM Plex Mono", monospace;
 
-    --header-height: 40px;
-    --footer-height: 40px;
+  --header-height: 40px;
+  --footer-height: 40px;
 }
 
 @keyframes rainbow {
-    0% {
-        background-position: 100% 0;
-    }
-    50% {
-        background-position: 0 19%;
-    }
-    100% {
-        background-position: 100% 10%;
-    }
+  0% {
+    background-position: 100% 0;
+  }
+  50% {
+    background-position: 0 19%;
+  }
+  100% {
+    background-position: 100% 10%;
+  }
 }
 
 .app {
-    min-height: 100vh;
-    padding: calc(1 * var(--spacing-unit));
-    padding-bottom: 0;
-    background: linear-gradient(49.93deg, rgba(255, 230, 0, 0.39) 18.88%, rgba(255, 230, 0, 0) 66.41%),
+  min-height: 100vh;
+  padding: calc(1 * var(--spacing-unit));
+  padding-bottom: 0;
+  background: linear-gradient(
+      49.93deg,
+      rgba(255, 230, 0, 0.39) 18.88%,
+      rgba(255, 230, 0, 0) 66.41%
+    ),
     linear-gradient(30deg, rgba(216, 210, 254, 0), transparent 80%),
-    radial-gradient(28.63% 28.63% at 45.43% 50%, rgba(251, 87, 87, 0.6) 0%, rgba(216, 210, 254, 0) 100%),
-    radial-gradient(50% 50% at 50% 50%, rgba(87, 89, 251, 0.64) 0%, rgba(216, 210, 254, 0) 100%);
-    background-size: 200% 200%;
-    animation: rainbow 20s linear infinite;
-    display: grid;
-    grid-template-rows: var(--header-height) 1 var(--footer-height);
+    radial-gradient(
+      28.63% 28.63% at 45.43% 50%,
+      rgba(251, 87, 87, 0.6) 0%,
+      rgba(216, 210, 254, 0) 100%
+    ),
+    radial-gradient(
+      50% 50% at 50% 50%,
+      rgba(87, 89, 251, 0.64) 0%,
+      rgba(216, 210, 254, 0) 100%
+    );
+  background-size: 200% 200%;
+  animation: rainbow 20s linear infinite;
+  display: grid;
+  grid-template-rows: var(--header-height) 1 var(--footer-height);
 }
 
 .content {
-    margin-top: calc(var(--header-height) + (4 * var(--spacing-unit)));
+  margin-top: calc(var(--header-height) + (4 * var(--spacing-unit)));
 }
 
 @media (min-width: 768px) {
-    .app {
-        padding: calc(2 * var(--spacing-unit));
-        padding-bottom: 0;
-    }
+  .app {
+    padding: calc(2 * var(--spacing-unit));
+    padding-bottom: 0;
+  }
 
-    :root {
-        --header-height: 60px;
-        --footer-height: 60px;
-    }
+  :root {
+    --header-height: 60px;
+    --footer-height: 60px;
+  }
 }
 
 @media (min-width: 1024px) {
-    .app {
-        padding: calc(3 * var(--spacing-unit));
-        padding-bottom: 0;
-    }
+  .app {
+    padding: calc(3 * var(--spacing-unit));
+    padding-bottom: 0;
+  }
 
-    :root {
-        --header-height: 80px;
-        --footer-height: 80px;
-    }
+  :root {
+    --header-height: 80px;
+    --footer-height: 80px;
+  }
 }

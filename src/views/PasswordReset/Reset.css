@@ -1,9 +1,9 @@
 .reset-form {
-    transition: opacity 200ms ease-in-out;
-    opacity: 1;
+  transition: opacity 200ms ease-in-out;
+  opacity: 1;
 }
 
 .reset-form--disabled {
-    opacity: 0.15;
-    pointer-events: none;
+  opacity: 0.15;
+  pointer-events: none;
 }

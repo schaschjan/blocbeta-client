@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 const Burger = (props) => {
   return (
@@ -9,7 +9,7 @@ const Burger = (props) => {
         strokeLinecap="round"
       />
     </svg>
-  )
+  );
 };
 
-export default Burger
+export default Burger;

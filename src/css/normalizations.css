@@ -4,67 +4,67 @@
  */
 /* Universal CSS basics */
 * {
-    box-sizing: border-box;
-    position: relative;
+  box-sizing: border-box;
+  position: relative;
 }
 
 body {
-    margin: 0;
-    font-family: var(--font-family-sans);
-    font-size: 16px;
-    line-height: 1.5;
-    font-weight: 300;
-    font-feature-settings: "kern" 1, "liga" 1;
-    font-kerning: normal;
-    -webkit-font-smoothing: antialiased;
-    text-size-adjust: none;
-    background: var(--color-white);
+  margin: 0;
+  font-family: var(--font-family-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 300;
+  font-feature-settings: "kern" 1, "liga" 1;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  text-size-adjust: none;
+  background: var(--color-white);
 }
 
 ul {
-    margin-block-start: 0;
-    margin-block-end: 0;
-    padding-inline-start: 0;
-    padding-left: 0;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  padding-inline-start: 0;
+  padding-left: 0;
 }
 
 figure {
-    margin-block-start: 0;
-    margin-block-end: 0;
-    margin-inline-start: 0;
-    margin-inline-end: 0;
-    margin-left: 0;
-    margin-right: 0;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 button {
-    display: block;
-    background: none;
-    border: 0;
-    font-size: 100%;
+  display: block;
+  background: none;
+  border: 0;
+  font-size: 100%;
 }
 
 a {
-    color: inherit;
+  color: inherit;
 }
 
 pre {
-    white-space: pre-wrap;
+  white-space: pre-wrap;
 }
 
 img,
 svg {
-    display: block;
-    vertical-align: middle;
-    height: auto;
+  display: block;
+  vertical-align: middle;
+  height: auto;
 }
 
 img {
-    border-style: none;
+  border-style: none;
 }
 
 svg {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 article,
@@ -77,11 +77,11 @@ hgroup,
 main,
 nav,
 section {
-    display: block;
+  display: block;
 }
 
 code {
-    font-feature-settings: normal;
+  font-feature-settings: normal;
 }
 
 h1,
@@ -90,7 +90,7 @@ h3,
 h4,
 h5,
 h6 {
-    margin: 0;
-    margin-block-start: 0;
-    margin-block-end: 0;
+  margin: 0;
+  margin-block-start: 0;
+  margin-block-end: 0;
 }

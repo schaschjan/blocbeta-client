@@ -1,8 +1,8 @@
 import React from "react";
 import "./HyperLink.css";
-import {classNames} from "../../helper/buildClassNames";
+import { classNames } from "../../helper/classNames";
 
-const HyperLink = ({className,children, light, active, href, ...rest }) => {
+const HyperLink = ({ className, children, light, active, href, ...rest }) => {
   const classes = classNames(
     "hyperlink",
     active ? "hyperlink--active" : null,

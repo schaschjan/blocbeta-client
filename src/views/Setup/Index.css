@@ -1,8 +1,8 @@
 .setup-location-list {
-    list-style: none;
+  list-style: none;
 }
 
 .setup-location-list__item {
-    margin-bottom: calc(2 * var(--spacing-unit));
-    cursor: pointer;
+  margin-bottom: calc(2 * var(--spacing-unit));
+  cursor: pointer;
 }

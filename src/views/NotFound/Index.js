@@ -1,13 +1,11 @@
-import React, {Fragment} from "react";
+import React, { Fragment } from "react";
 
 const Index = () => {
   return (
     <Fragment>
-      <h1 className="t--alpha page-title">
-        Not Found
-      </h1>
+      <h1 className="t--alpha page-title">Not Found</h1>
     </Fragment>
   );
 };
 
-export {Index}
+export { Index };
