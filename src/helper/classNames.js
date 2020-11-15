@@ -1,3 +1,3 @@
 export const classNames = (...classes) => {
-  return [...classes].join(" ");
+  return [...classes].filter((className) => className !== null).join(" ");
 };

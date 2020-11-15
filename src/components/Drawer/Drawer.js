@@ -1,21 +1,25 @@
-import React, { Fragment, useRef, createContext, useState } from "react";
+import React, {
+  Fragment,
+  useContext,
+  createContext,
+  useRef,
+  useState,
+  useEffect,
+} from "react";
 import useClickOutside from "../../hooks/useClickOutside";
 import { classNames } from "../../helper/classNames";
 import "./Drawer.css";
 
-export const DrawerContext = createContext({});
+const DrawerContext = createContext({});
 
-export const DrawerContainer = ({ children }) => {
+const DrawerContainer = ({ children }) => {
   const [isOpen, setOpen] = useState(false);
-  const [isLoading, setLoading] = useState(false);
 
   return (
     <DrawerContext.Provider
       value={{
-        isLoading,
-        setLoading,
         isOpen,
-        toggle: (open) => setOpen(open),
+        toggle: (visible) => setOpen(visible),
       }}
     >
       {children}
@@ -23,46 +27,44 @@ export const DrawerContainer = ({ children }) => {
   );
 };
 
-export const useDrawer = (onClose, onOpen) => {
-  const [isOpen, setOpen] = useState(false);
+const Drawer = ({ children, onClose }) => {
+  const { isOpen, toggle } = useContext(DrawerContext);
 
-  const Drawer = ({ children }) => {
-    const drawerRef = useRef();
+  const drawerRef = useRef();
 
-    useClickOutside(drawerRef, () => {
-      setOpen(false);
+  useClickOutside(drawerRef, () => {
+    toggle(false);
+
+    if (onClose) {
       onClose();
-    });
+    }
+  });
 
-    return (
-      <Fragment>
-        <div
-          className={classNames(`drawer`, isOpen ? "drawer--open" : null)}
-          ref={drawerRef}
-        >
-          {children}
-        </div>
+  useEffect(() => {
+    if (typeof document === "undefined" || typeof window === "undefined") {
+      return null;
+    }
 
-        <div
-          className={classNames(
-            "drawer-overlay",
-            isOpen ? "drawer-overlay--visible" : null
-          )}
-        />
-      </Fragment>
-    );
-  };
+    document.body.style.overflow = isOpen ? "hidden" : "scroll";
+  }, [isOpen]);
 
-  return {
-    openDrawer: () => {
-      setOpen(true);
-      onOpen();
-    },
+  return (
+    <Fragment>
+      <div
+        className={classNames(`drawer`, isOpen ? "drawer--open" : null)}
+        ref={drawerRef}
+      >
+        {children}
+      </div>
 
-    closeDrawer: () => {
-      setOpen(false);
-      onClose();
-    },
-    Drawer,
-  };
+      <div
+        className={classNames(
+          "drawer-overlay",
+          isOpen ? "drawer-overlay--visible" : null
+        )}
+      />
+    </Fragment>
+  );
 };
+
+export { DrawerContext, DrawerContainer, Drawer };

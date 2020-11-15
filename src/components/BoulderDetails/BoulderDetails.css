@@ -42,6 +42,10 @@
   align-items: center;
 }
 
+.details-ascents-item__ascent svg {
+  margin-right: var(--spacing-unit);
+}
+
 .details__section-title {
   margin-top: calc(4 * var(--spacing-unit));
   margin-left: calc(2 * var(--spacing-unit));

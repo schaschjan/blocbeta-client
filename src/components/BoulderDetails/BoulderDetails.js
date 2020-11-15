@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 import { useQuery } from "react-query";
 import { cache, useApi } from "../../hooks/useApi";
 import { LoadedContent } from "../../components/Loader/Loader";
@@ -8,12 +8,15 @@ import "./BoulderDetails.css";
 import { Close } from "../Icon/Close";
 import { Button } from "../Button/Button";
 import { getIcon } from "../Ascent/Ascent";
+import { DrawerContext } from "../Drawer/Drawer";
 
-const BoulderDetails = ({ id, closeDrawer }) => {
+const BoulderDetails = ({ id }) => {
   const { status, data } = useQuery(
     [cache.boulder, { id }],
     useApi("boulderDetail", { id })
   );
+
+  const { toggle: toggleDrawer } = useContext(DrawerContext);
 
   return (
     <div className="details">
@@ -31,7 +34,7 @@ const BoulderDetails = ({ id, closeDrawer }) => {
 
               <Close
                 className="details-header__close"
-                onClick={() => closeDrawer()}
+                onClick={() => toggleDrawer(false)}
               />
             </div>
 
@@ -41,11 +44,15 @@ const BoulderDetails = ({ id, closeDrawer }) => {
 
             {data.ascents.length > 0 && (
               <ul className="details__ascents details-ascents">
-                {data.ascents.map((ascent) => {
+                {data.ascents.map((ascent, index) => {
                   const doubted = ascent.type.includes("pending-doubt");
+                  const Icon = getIcon(ascent.type);
 
                   return (
-                    <li className="details-ascents__item details-ascents-item">
+                    <li
+                      className="details-ascents__item details-ascents-item"
+                      key={`details-ascents__item-${index}`}
+                    >
                       <span
                         className={classNames(
                           "details-ascents-item__ascent t--eta",
@@ -54,7 +61,7 @@ const BoulderDetails = ({ id, closeDrawer }) => {
                             : null
                         )}
                       >
-                        {getIcon(ascent.type)}
+                        <Icon fill={true} />
                         {ascent.username}
                       </span>
 
@@ -71,8 +78,11 @@ const BoulderDetails = ({ id, closeDrawer }) => {
 
             {data.setters.length > 0 && (
               <ul className="details__setters details-setters">
-                {data.setters.map((setter) => (
-                  <li className="details-setters__item t--epsilon">
+                {data.setters.map((setter, index) => (
+                  <li
+                    className="details-setters__item t--epsilon"
+                    key={`details-setters__item-${index}`}
+                  >
                     {setter.username}
                   </li>
                 ))}
@@ -83,8 +93,11 @@ const BoulderDetails = ({ id, closeDrawer }) => {
 
             {data.tags.length > 0 && (
               <ul className="details__tags details-tags">
-                {data.tags.map((tag) => (
-                  <li className="details-tags__item t--epsilon">
+                {data.tags.map((tag, index) => (
+                  <li
+                    className="details-tags__item t--epsilon"
+                    key={`details-tags__item-${index}`}
+                  >
                     {tag.emoji} {tag.name}
                   </li>
                 ))}

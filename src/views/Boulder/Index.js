@@ -26,23 +26,33 @@ import {
 } from "../../components/Toaster/Toaster";
 import { classNames } from "../../helper/classNames";
 import Forward from "../../components/Icon/Forward";
-import { useDrawer } from "../../components/Drawer/Drawer";
 import BoulderDetails from "../../components/BoulderDetails/BoulderDetails";
 import { Ascents } from "../../components/Ascents/Ascents";
 import { Bar } from "../../components/Bar/Bar";
 import { Button } from "../../components/Button/Button";
 import { BoulderTable } from "../../components/BoulderTable/BoulderTable";
 import { Input } from "../../components/Input/Input";
+import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 
 const Index = () => {
   const { isAdmin } = useContext(BlocBetaUIContext);
   const { dispatch } = useContext(ToastContext);
+  const { toggle: toggleDrawer } = useContext(DrawerContext);
 
   const [boulder, setBoulder] = useState(null);
   const [selected, setSelected] = useState([]);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
 
-  const { openDrawer, closeDrawer, Drawer } = useDrawer(() => setBoulder(null));
+  const [filters, setFilters] = useState([
+    {
+      id: "ascent",
+      value: "todo",
+    },
+    {
+      id: "grade",
+      value: "5",
+    },
+  ]);
 
   const boulderQuery = useQuery(
     cache.boulder,
@@ -139,7 +149,7 @@ const Index = () => {
 
   const toggleDetails = (id) => {
     setBoulder(id);
-    openDrawer();
+    toggleDrawer(true);
   };
 
   const columns = useMemo(() => {
@@ -180,6 +190,15 @@ const Index = () => {
           }
 
           return <Grade name={value.name} color={value.color} />;
+        },
+        filter: (rows, id, filterValue) => {
+          return rows.filter((row) => {
+            const rowValue = row.values[id].internal
+              ? row.values[id].internal.name
+              : row.values[id].name;
+
+            return rowValue === filterValue;
+          });
         },
       },
       {
@@ -237,6 +256,13 @@ const Index = () => {
           return a.values.ascent.type > b.values.ascent.type ? -1 : 1;
         },
         Cell: ({ value }) => renderAscents(value),
+        filter: (rows, id, filterValue) => {
+          return rows.filter((row) => {
+            const rowValue = row.values[id].type ? row.values[id].type : "todo";
+
+            return rowValue === filterValue;
+          });
+        },
       },
     ];
   }, [isAdmin, boulder]);
@@ -319,6 +345,8 @@ const Index = () => {
     ascentsQuery,
   ]);
 
+  console.log(filters);
+
   return (
     <Fragment>
       <Meta title={"Boulder"} />
@@ -339,14 +367,15 @@ const Index = () => {
         <BoulderTable
           columns={columns}
           data={mergedData}
+          filters={filters}
           globalFilterValue={globalFilterValue}
           onSelectRows={(ids) => setSelected(ids)}
           isAdmin={isAdmin}
         />
       </LoadedContent>
 
-      <Drawer>
-        {boulder && <BoulderDetails id={boulder} closeDrawer={closeDrawer} />}
+      <Drawer onClose={() => setBoulder(null)}>
+        {boulder && <BoulderDetails id={boulder} />}
       </Drawer>
 
       <Bar visible={selected.length > 0}>

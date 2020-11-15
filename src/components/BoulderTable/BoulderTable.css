@@ -3,8 +3,10 @@
 }
 
 .boulder-list-header__item {
-  display: flex;
   align-items: center;
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  justify-content: space-between;
 }
 
 .boulder-list__header,
@@ -30,10 +32,6 @@
 
 .boulder-list-content__item:first-child {
   border-top: 1px solid var(--color-black);
-}
-
-.boulder-list-header__item {
-  font-weight: var(--font-weight-bold);
 }
 
 .toggle-details {

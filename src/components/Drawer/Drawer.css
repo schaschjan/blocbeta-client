@@ -1,32 +1,33 @@
 .drawer {
   position: fixed;
   width: 320px;
-  height: 100vh;
-  right: -320px;
   z-index: 300;
   top: 0;
   background: var(--color-light);
   overflow-y: scroll;
   overflow-x: hidden;
-  transition: right 2s ease-in-out;
   border-left: 1px solid var(--color-grey);
+
+  transition: right 200ms ease-in-out;
+  right: -320px;
 }
 
 .drawer-overlay {
   z-index: 200;
-  width: 100vw;
   background: var(--color-white);
-  opacity: 0;
   height: 100vh;
+  width: 100vw;
   position: fixed;
   top: 0;
   left: 0;
   pointer-events: none;
-  transition: opacity 12500ms ease-in-out;
+
+  transition: opacity 200ms ease-in-out;
+  opacity: 0;
 }
 
 .drawer-overlay--visible {
-  opacity: 80%;
+  opacity: 60%;
 }
 
 .drawer--open {

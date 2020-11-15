@@ -112,13 +112,9 @@ const Header = () => {
         )}
         onClick={() => setMobileNavOpen(false)}
       >
-        {isAdmin && (
-          <NavItem to={contextualizedPath("/boulder")}>Boulder</NavItem>
-        )}
+        <NavItem to={contextualizedPath("/boulder")}>Boulder</NavItem>
 
-        {user && user.visible && isAdmin && (
-          <NavItem to={contextualizedPath("/ranking/current")}>Ranking</NavItem>
-        )}
+        <NavItem to={contextualizedPath("/ranking/current")}>Ranking</NavItem>
 
         <NavItem to={contextualizedPath("/schedule")}>Schedule</NavItem>
 

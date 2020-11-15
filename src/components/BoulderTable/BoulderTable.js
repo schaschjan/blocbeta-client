@@ -34,6 +34,7 @@ const BoulderTable = ({
   data,
   onSelectRows,
   globalFilterValue,
+  filters,
   isAdmin = false,
 }) => {
   const {
@@ -54,7 +55,7 @@ const BoulderTable = ({
     {
       columns,
       data,
-      initialState: { pageIndex: 0, pageSize: 20 },
+      initialState: { pageIndex: 0, pageSize: 20, filters },
       autoResetFilters: false,
       autoResetSortBy: false,
       autoResetPage: false,

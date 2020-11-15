@@ -21,8 +21,6 @@ const Input = ({
     filled ? "input--filled" : null
   );
 
-  console.log(onClear, value);
-
   return (
     <div className={classes}>
       {prefix && <span>{prefix}</span>}
