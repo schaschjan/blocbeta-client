@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import "./HoldStyle.css";
 import { classNames } from "../../helper/classNames";
 
-const HoldStyle = ({ image, small = false }) => {
+const HoldType = ({ image, small = false }) => {
   return useMemo(
     () => (
       <div
@@ -18,4 +18,4 @@ const HoldStyle = ({ image, small = false }) => {
   );
 };
 
-export default HoldStyle;
+export default HoldType;

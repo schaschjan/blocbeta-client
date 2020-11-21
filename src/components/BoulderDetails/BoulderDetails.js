@@ -2,7 +2,7 @@ import React, { Fragment, useContext } from "react";
 import { useQuery } from "react-query";
 import { cache, useApi } from "../../hooks/useApi";
 import { LoadedContent } from "../../components/Loader/Loader";
-import HoldStyle from "../../components/HoldStyle/HoldStyle";
+import HoldType from "../HoldStyle/HoldType";
 import { classNames } from "../../helper/classNames";
 import "./BoulderDetails.css";
 import { Close } from "../Icon/Close";
@@ -24,7 +24,7 @@ const BoulderDetails = ({ id }) => {
         {data && (
           <Fragment>
             <div className="details__header details-header">
-              <HoldStyle
+              <HoldType
                 name={data.hold_type.name}
                 image={data.hold_type.image}
                 small={true}

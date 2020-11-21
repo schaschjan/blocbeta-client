@@ -64,9 +64,16 @@ export const cache = {
   },
 };
 
-const axiosInstance = axios.create({
+let options = {
   baseURL: process.env.REACT_APP_API_HOST,
-});
+  headers: {},
+};
+
+if (process.env !== "production" && typeof window !== "undefined") {
+  options.headers["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
+}
+
+const axiosInstance = axios.create(options);
 
 export const resources = {
   login: async ({ payload }) => {

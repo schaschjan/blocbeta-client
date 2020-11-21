@@ -1,0 +1,51 @@
+.boulder-filters__list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.boulder-filters__search {
+    margin-top: calc(4 * var(--spacing-unit));
+    margin-bottom: calc(4 * var(--spacing-unit));
+}
+
+.filter-tag {
+    border: 1px solid var(--color-black);
+    height: 32px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    padding-left: var(--spacing-unit);
+    padding-right: calc(var(--spacing-unit) / 3);
+    margin-right: var(--spacing-unit);
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.filter {
+    list-style: none;
+    margin: 0;
+}
+
+.filter__name {
+    margin-bottom: calc(2 * var(--spacing-unit));
+}
+
+.filter__items {
+    max-height: 200px;
+    overflow: scroll;
+    list-style: none;
+}
+
+.filter-items__item {
+    cursor: pointer;
+    margin-bottom: var(--spacing-unit);
+}
+
+.hold-type-filter-item {
+    display: flex;
+    align-items: center;
+}
+
+.hold-type-filter-item > *:first-child {
+    margin-right: var(--spacing-unit);
+}
