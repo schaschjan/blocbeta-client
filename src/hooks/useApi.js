@@ -69,7 +69,7 @@ let options = {
   headers: {},
 };
 
-if (process.env !== "production" && typeof window !== "undefined") {
+if (process.env.NODE_ENV !== "production" && typeof window !== "undefined") {
   options.headers["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
 }
 
