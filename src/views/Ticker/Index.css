@@ -1,0 +1,122 @@
+.ticker-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: calc(4.25 * var(--spacing-unit));
+  margin-bottom: calc(5 * var(--spacing-unit));
+}
+
+.ticker-reservations__item {
+  border-right: 1px solid var(--color-black);
+}
+
+.ticker-reservations-item {
+}
+
+.ticker-reservations-item--active {
+}
+
+.ticker-reservations-item__detail {
+  margin: 0;
+}
+
+.ticker-reservations-item__detail {
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-unit);
+}
+
+.ticker-table {
+  border-spacing: 0;
+  width: 100%;
+  font-size: var(--font-size-zeta);
+  line-height: var(--line-height-zeta);
+}
+
+.ticker-table__body {
+  border-left: 1px solid var(--color-black);
+  border-right: 1px solid var(--color-black);
+  border-bottom: 1px solid var(--color-black);
+}
+
+.ticker-table-body__row--active {
+  background: var(--color-lila);
+  color: var(--color-white);
+}
+
+.ticker-table__head {
+  border: none;
+  border-bottom: 1px solid var(--color-black);
+  text-align: left;
+}
+
+.ticker-table__head th {
+  font-weight: normal;
+  padding: calc(2 * var(--spacing-unit)) calc(2 * var(--spacing-unit))
+    calc(4 * var(--spacing-unit)) calc(2 * var(--spacing-unit));
+}
+
+.ticker-table-head__row {
+  padding: calc(2 * var(--spacing-unit));
+}
+
+.ticker-table-body__row td {
+  padding: calc(2 * var(--spacing-unit));
+}
+
+.ticker-table-body__row {
+  border-top: 1px solid var(--color-black);
+}
+
+.ticker-reservation-table {
+  width: 100%;
+}
+
+.ticker-reservation-table:last-child {
+  border-bottom: none;
+}
+
+.ticker-reservation-table__item {
+  padding: calc(3 * var(--spacing-unit));
+  font-size: var(--font-size-eta);
+  line-height: var(--line-height-eta);
+  display: grid;
+  grid-template-columns: auto max-content max-content;
+}
+
+.ticker-reservation-table__item:hover {
+  background: rgba(207, 255, 255, 0.5);
+}
+
+.ticker-reservation-table-item__details {
+  display: grid;
+}
+
+.ticker-reservation-table__item--active {
+  background: var(--color-ice);
+}
+
+.ticker-reservation-table-item__cancel,
+.ticker-reservation-table-item__check-in {
+  margin-left: auto;
+  align-self: center;
+}
+
+.expander {
+  display: flex;
+}
+
+.expander svg {
+  margin-left: auto;
+}
+
+td {
+  margin: 0;
+  padding: 0;
+}
+
+.actions-cell {
+  display: flex;
+}
+
+.actions-cell .button {
+  margin-left: auto;
+}

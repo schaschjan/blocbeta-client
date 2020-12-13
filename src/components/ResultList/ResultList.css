@@ -1,0 +1,12 @@
+.result-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.result-list__item {
+  margin-top: var(--spacing-unit);
+  margin-bottom: var(--spacing-unit);
+  display: flex;
+  justify-content: space-between;
+}

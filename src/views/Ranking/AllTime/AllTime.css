@@ -1,7 +1,0 @@
-@media (min-width: 1140px) {
-  .table--all-time .table-header,
-  .table--all-time .table-row {
-    display: grid;
-    grid-template-columns: 72px auto 110px 110px 110px 110px 110px;
-  }
-}

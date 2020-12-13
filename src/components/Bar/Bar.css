@@ -1,0 +1,17 @@
+.bar {
+  position: fixed;
+  z-index: 100;
+  bottom: -100px;
+  left: 0;
+  width: 100%;
+  padding: calc(4 * var(--spacing-unit));
+  background: var(--color-lila);
+  color: var(--color-white);
+  transition: bottom 200ms ease-in-out;
+  display: flex;
+  justify-content: space-between;
+}
+
+.bar--visible {
+  bottom: 0;
+}

@@ -1,61 +1,68 @@
 .button {
-    cursor: pointer;
-    outline: none;
-    display: inline-flex;
-    position: relative;
-    text-decoration: none;
+  cursor: pointer;
+  outline: none;
+  display: inline-flex;
+  position: relative;
+  text-decoration: none;
 }
 
 .button .loader {
-    position: absolute;
-    right: calc(var(--spacing-unit) * 1.5);
+  position: absolute;
+  right: calc(var(--spacing-unit) * 1.5);
+}
+
+.button--disabled {
+  pointer-events: none;
+  filter: grayscale(1);
+  opacity: 0.5;
 }
 
 /* default */
 .button--default {
-    font-size: var(--font-size-zeta);
-    font-weight: var(--font-weight-bold);
-    padding: calc(var(--spacing-unit) * 1.25) calc(var(--spacing-unit) * 6);
+  font-size: var(--font-size-zeta);
+  font-weight: var(--font-weight-bold);
+  padding: calc(var(--spacing-unit) * 1.25) calc(var(--spacing-unit) * 6);
 }
 
 /* danger */
 .button--default.button--danger {
-    color: var(--color-white);
-    background: var(--color-red);
+  color: var(--color-white);
+  background: var(--color-red);
 }
 
 /* primary */
 .button--default.button--primary {
-    color: var(--color-white);
-    background: var(--color-lila);
+  color: var(--color-white);
+  background: var(--color-lila);
 }
 
 /* small */
 .button--small {
-    font-size: var(--font-size-eta);
-    font-weight: var(--font-weight-bold);
-    padding: calc(var(--spacing-unit) / 2) calc(var(--spacing-unit) * 2);
-    border-radius: calc(var(--spacing-unit));
+  font-size: var(--font-size-eta);
+  line-height: 20px;
+  font-weight: var(--font-weight-bold);
+  padding: calc(var(--spacing-unit) / 2) calc(var(--spacing-unit) * 2);
+  border-radius: calc(var(--spacing-unit));
 }
 
 /* danger */
 .button--small.button--danger {
-    color: var(--color-red)
+  color: var(--color-red);
 }
 
 .button--small.button--danger:hover,
 .button--small.button--danger.button--inverted {
-    color: var(--color-white);
-    background: var(--color-red);
+  color: var(--color-white);
+  background: var(--color-red);
 }
 
 /* primary */
 .button--small.button--primary {
-    color: var(--color-lila)
+  color: var(--color-lila);
 }
 
 .button--small.button--primary:hover,
 .button--small.button--primary.button--inverted {
-    color: var(--color-white);
-    background: var(--color-lila);
+  color: var(--color-white);
+  background: var(--color-lila);
 }

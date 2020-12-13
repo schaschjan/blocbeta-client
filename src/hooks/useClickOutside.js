@@ -1,8 +1,8 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from "react";
 
 export default (elementRef, callback) => {
-  const callbackRef = useRef(null)
-  callbackRef.current = callback
+  const callbackRef = useRef(null);
+  callbackRef.current = callback;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -11,14 +11,14 @@ export default (elementRef, callback) => {
         !elementRef.current.contains(event.target) &&
         callbackRef.current
       ) {
-        callbackRef.current(event)
+        callbackRef.current(event);
       }
-    }
+    };
 
-    document.addEventListener('click', handleClickOutside, true)
+    document.addEventListener("click", handleClickOutside, true);
 
     return () => {
-      document.removeEventListener('click', handleClickOutside, true)
-    }
-  }, [callbackRef, elementRef])
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  }, [callbackRef, elementRef]);
 };

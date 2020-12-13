@@ -1,18 +1,18 @@
 .avatar {
-  margin: 12px 12px 12px 0;
   width: 40px;
   height: 40px;
   background-size: 40px 40px;
-  background-color: #eee;
+  background-color: var(--color-grey);
   border-radius: 50%;
   display: flex;
   align-items: center;
+  justify-items: center;
 }
 
-.avatar.avatar--fallback {
-  background: #4b58a4;
+.avatar--fallback {
+  background: var(--color-lila);
 }
 
-.avatar.avatar--fallback .icon {
+.avatar--fallback .icon {
   margin: 0 auto;
 }

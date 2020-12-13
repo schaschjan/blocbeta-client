@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 export const Plus = (props) => {
   return (
@@ -10,5 +10,5 @@ export const Plus = (props) => {
         fill="#333"
       />
     </svg>
-  )
+  );
 };

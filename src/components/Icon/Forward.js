@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 const Forward = (props) => {
   return (
@@ -11,7 +11,7 @@ const Forward = (props) => {
         strokeLinejoin="round"
       />
     </svg>
-  )
+  );
 };
 
 export default Forward;

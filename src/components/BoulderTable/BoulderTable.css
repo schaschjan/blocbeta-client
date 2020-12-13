@@ -1,0 +1,90 @@
+.boulder-list {
+  padding-top: calc(4 * var(--spacing-unit));
+}
+
+.boulder-list-header__item {
+  align-items: center;
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  justify-content: space-between;
+}
+
+.boulder-list__header,
+.boulder-list-content__item {
+  display: grid;
+  align-items: center;
+  grid-column-gap: calc(4 * var(--spacing-unit));
+  grid-template-columns:
+    20px minmax(48px, 80px) minmax(60px, 90px) minmax(80px, 100px)
+    auto 140px 140px 100px 152px;
+  padding-top: calc(2 * var(--spacing-unit));
+  padding-bottom: calc(2 * var(--spacing-unit));
+}
+
+.boulder-list-content-item__cell {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.boulder-list-content__item {
+  border-bottom: 1px solid var(--color-black);
+}
+
+.boulder-list-content__item:first-child {
+  border-top: 1px solid var(--color-black);
+}
+
+.toggle-details {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.toggle-details svg {
+  margin-left: auto;
+  position: absolute;
+  right: 0;
+  transform: rotate(0);
+  transition: transform 200ms ease-in-out;
+}
+
+.toggle-details__active svg {
+  transform: rotate(90deg);
+}
+
+.boulder-list-footer__pager {
+  display: flex;
+  align-items: center;
+
+  margin-top: calc(1.5 * var(--spacing-unit));
+  margin-right: calc(2 * var(--spacing-unit));
+  margin-bottom: calc(1.5 * var(--spacing-unit));
+  margin-left: calc(2 * var(--spacing-unit));
+}
+
+.boulder-list-footer-pager__info {
+  margin-left: auto;
+  margin-right: calc(2 * var(--spacing-unit));
+}
+
+.boulder-list-footer-pager__prev,
+.boulder-list-footer-pager__next {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.boulder-list-footer-pager__prev--disabled,
+.boulder-list-footer-pager__next--disabled {
+  opacity: 0.4;
+}
+
+.boulder-list-footer-pager__separator {
+  display: flex;
+  height: 40px;
+  background: var(--color-black);
+  width: 1px;
+
+  margin-left: calc(2 * var(--spacing-unit));
+  margin-right: calc(2 * var(--spacing-unit));
+}

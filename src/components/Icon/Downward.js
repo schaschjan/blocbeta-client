@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 const Downward = (props) => {
   return (
@@ -11,7 +11,7 @@ const Downward = (props) => {
         strokeLinejoin="round"
       />
     </svg>
-  )
+  );
 };
 
 export default Downward;

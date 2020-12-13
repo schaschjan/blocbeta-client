@@ -1,28 +1,33 @@
-import React, {useMemo, createContext, useEffect} from "react";
-import {usePersistentState} from "./../index.js"
-import packageJson from '../../package.json';
+import React, { useMemo, createContext, useEffect } from "react";
+import packageJson from "../../package.json";
+import usePersistentState from "../hooks/usePersistentState";
 
 export const BlocBetaUIContext = createContext({});
 
-export const BlocBetaUI = ({children}) => {
-
+export const BlocBetaUI = ({ children }) => {
   const [user, setUser] = usePersistentState("user", null);
-  const [currentLocation, setCurrentLocation] = usePersistentState("location", null);
+  const [currentLocation, setCurrentLocation] = usePersistentState(
+    "location",
+    null
+  );
   const [expiration, setExpiration] = usePersistentState("expiration", null);
 
-  const [version, setVersion] = usePersistentState("version", packageJson.version);
+  const [version, setVersion] = usePersistentState(
+    "version",
+    packageJson.version
+  );
 
   const contextualizedPath = (path) => {
     if (!currentLocation) {
       return;
     }
 
-    return `/${currentLocation.url}${path}`
+    return `/${currentLocation.url}${path}`;
   };
 
   const isAuthenticated = useMemo(() => {
     if (!user || !currentLocation || !expiration) {
-      return false
+      return false;
     }
 
     return new Date().getTime() / 1000 <= expiration;
@@ -42,9 +47,7 @@ export const BlocBetaUI = ({children}) => {
       return false;
     }
 
-    return user.roles.includes(
-      `ROLE_ADMIN@${currentLocation.id}`
-    );
+    return user.roles.includes(`ROLE_ADMIN@${currentLocation.id}`);
   }, [currentLocation, user]);
 
   const reset = () => {
@@ -56,7 +59,6 @@ export const BlocBetaUI = ({children}) => {
   };
 
   useEffect(() => {
-
     fetch("/meta.json")
       .then((response) => response.json())
       .then((meta) => {
@@ -79,24 +81,25 @@ export const BlocBetaUI = ({children}) => {
         if (typeof window !== "undefined") {
           window.location.reload();
         }
-      })
-
+      });
   }, [version]);
 
   return (
-    <BlocBetaUIContext.Provider value={{
-      currentLocation,
-      setCurrentLocation,
-      user,
-      setUser,
-      expiration,
-      setExpiration,
-      contextualizedPath,
-      isAdmin,
-      isAuthenticated,
-      reset,
-    }}>
+    <BlocBetaUIContext.Provider
+      value={{
+        currentLocation,
+        setCurrentLocation,
+        user,
+        setUser,
+        expiration,
+        setExpiration,
+        contextualizedPath,
+        isAdmin,
+        isAuthenticated,
+        reset,
+      }}
+    >
       {children}
     </BlocBetaUIContext.Provider>
-  )
+  );
 };

@@ -1,8 +1,8 @@
 import React from "react";
 import "./Progress.css";
-import {classNames} from "../../helper/buildClassNames";
+import { classNames } from "../../helper/classNames";
 
-const Progress = ({percentage}) => {
+const Progress = ({ percentage }) => {
   const classes = classNames(
     "progress",
     percentage > 66
@@ -14,7 +14,7 @@ const Progress = ({percentage}) => {
 
   return (
     <div className={classes}>
-      <div style={{width: `${percentage}%`}}/>
+      <div style={{ width: `${percentage}%` }} />
     </div>
   );
 };

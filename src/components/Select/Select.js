@@ -1,12 +1,14 @@
 import React from "react";
 import "./Select.css";
 
-export default ({...rest}) => {
+const Select = ({ multiple = false, value = [], ...rest }) => {
+  let props = { ...rest };
 
   return (
     <div className="select">
-      <select {...rest}
-      />
+      <select {...props} multiple={multiple} />
     </div>
   );
 };
+
+export { Select };

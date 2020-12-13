@@ -1,24 +1,27 @@
-import Login from "./views/Login/Login";
-import Register from "./views/Register/Register";
-import RequestPasswordReset from "./views/RequestPasswordReset/RequestPasswordReset";
-import Dashboard from "./views/Dashboard/Dashboard";
-import Account from "./views/Account/Account";
 import React from "react";
-import NotFound from "./views/NotFound/NotFound";
-import ResetPassword from "./views/ResetPassword/ResetPassword";
-import Setup from "./views/Setup/Setup";
-import AccessDenied from "./views/AccessDenied/AccessDenied";
-import Schedule from "./views/Schedule/Schedule";
-import Ticker from "./views/Ticker/Ticker";
-import Reservations from "./views/Reservations/Reservations";
-import CurrentRanking from "./views/CurrentRanking/CurrentRanking";
-import CancelReservation from "./views/CancelReservation/CancelReservation";
-import AddTimeSlotBlocker from "./views/TimeSlotBlocker/Add";
-import IndexTimeSlotBlocker from "./views/TimeSlotBlocker/Index";
-import RoomsIndex from "./views/Room/Index";
-import RoomsDetail from "./views/Room/Detail";
-import GuestAdd from "./views/Reservation/AddGuest";
-import BoulderIndex from "./views/Boulder/Index";
+import { Index as AccessDenied } from "./views/AccessDenied/Index";
+import { Index as Ticker } from "./views/Ticker/Index";
+import { Index as BlockerIndex } from "./views/Blocker/Index";
+import { Add as BlockerAdd } from "./views/Blocker/Add";
+import { Index as RoomIndex } from "./views/Room/Index";
+import { Detail as RoomDetail } from "./views/Room/Detail";
+import { Index as SetterIndex } from "./views/Setter/Index";
+import { Index as NotFound } from "./views/NotFound/Index";
+import { Add as SetterAdd } from "./views/Setter/Add";
+import { Add as BoulderAdd } from "./views/Boulder/Add";
+import { Add as ReservationAdd } from "./views/Reservation/Add";
+import { Index as Login } from "./views/Login/Index";
+import { Index as Setup } from "./views/Setup/Index";
+import { Index as Register } from "./views/Register/Index";
+import { Index as Schedule } from "./views/Schedule/Index";
+import { Index as Reservations } from "./views/Reservations/Index";
+import { Cancel } from "./views/Reservations/Cancel";
+import { Request } from "./views/PasswordReset/Request";
+import { Reset } from "./views/PasswordReset/Reset";
+import { Index as Account } from "./views/Account/Index";
+import { Index as Dashboard } from "./views/Dashboard/Index";
+import { Index as BoulderIndex } from "./views/Boulder/Index";
+import { Current as CurrentRanking } from "./views/Ranking/Current";
 
 const adminRoutes = [
   {
@@ -26,40 +29,61 @@ const adminRoutes = [
     path: "/:location/admin/schedule-ticker",
     exact: true,
     admin: true,
-    main: () => <Ticker/>,
+    main: () => <Ticker />,
   },
   {
     title: "Time slot blockers",
     path: "/:location/admin/time-slot-blocker",
     exact: true,
     admin: true,
-    main: () => <IndexTimeSlotBlocker/>,
+    main: () => <BlockerIndex />,
   },
   {
     title: "Add time slot blocker",
     path: "/:location/admin/time-slot-blocker/add",
     exact: true,
     admin: true,
-    main: () => <AddTimeSlotBlocker/>,
+    main: () => <BlockerAdd />,
   },
   {
     title: "List rooms",
     path: "/:location/admin/rooms",
     exact: true,
     admin: true,
-    main: () => <RoomsIndex/>,
+    main: () => <RoomIndex />,
+  },
+  {
+    title: "List setters",
+    path: "/:location/admin/setters",
+    exact: true,
+    admin: true,
+    main: () => <SetterIndex />,
+  },
+  {
+    title: "List setters",
+    path: "/:location/admin/setters/add",
+    exact: true,
+    admin: true,
+    main: () => <SetterAdd />,
+  },
+  {
+    title: "Add boulder",
+    path: "/:location/admin/boulder/add",
+    exact: true,
+    admin: true,
+    main: () => <BoulderAdd />,
   },
   {
     title: "Room Detail",
     path: "/:location/admin/rooms/:room",
     admin: true,
-    main: () => <RoomsDetail/>,
+    main: () => <RoomDetail />,
   },
   {
     title: "Add Guest Reservation",
     path: "/:location/admin/reservations/add-guest",
     admin: true,
-    main: () => <GuestAdd/>,
+    main: () => <ReservationAdd />,
   },
 ];
 
@@ -70,58 +94,58 @@ export const router = [
     path: "/login",
     public: true,
     exact: true,
-    main: () => <Login/>,
+    main: () => <Login />,
   },
   {
     title: "Register",
     path: "/register",
     public: true,
     exact: true,
-    main: () => <Register/>,
+    main: () => <Register />,
   },
   {
     title: "Setup",
     path: "/setup",
     exact: true,
     public: true,
-    main: () => <Setup/>,
+    main: () => <Setup />,
   },
   {
     title: "Request Password Reset",
     path: "/password-reset/request",
     public: true,
     exact: true,
-    main: () => <RequestPasswordReset/>,
+    main: () => <Request />,
   },
   {
     title: "Reset Password",
     path: "/password-reset/:hash",
     public: true,
-    main: () => <ResetPassword/>,
+    main: () => <Reset />,
   },
   {
     title: "Dashboard",
     path: "/:location/dashboard",
     exact: true,
-    main: () => <Dashboard/>,
+    main: () => <Dashboard />,
   },
   {
     title: "Account",
     path: "/:location/account",
     exact: true,
-    main: () => <Account/>,
+    main: () => <Account />,
   },
   {
     title: "Current ranking",
     path: "/:location/ranking/current",
-    main: () => <CurrentRanking/>,
+    main: () => <CurrentRanking />,
     exact: true,
     visibleUserOnly: true,
   },
   {
     title: "Boulder",
     path: "/:location/boulder",
-    main: () => <BoulderIndex/>,
+    main: () => <BoulderIndex />,
     exact: true,
     visibleUserOnly: true,
   },
@@ -130,30 +154,30 @@ export const router = [
     id: "schedule",
     path: "/:location/schedule",
     exact: true,
-    main: () => <Schedule/>,
+    main: () => <Schedule />,
   },
   {
     title: "Reservations",
     id: "reservations",
     path: "/:location/reservations",
     exact: true,
-    main: () => <Reservations/>,
+    main: () => <Reservations />,
   },
   {
     title: "Cancel reservation",
     id: "cancelReservation",
     path: "/cancel-reservation/:hash",
     public: true,
-    main: () => <CancelReservation/>,
+    main: () => <Cancel />,
   },
   {
     title: "Access Denied",
     path: "/access-denied",
-    main: () => <AccessDenied/>,
+    main: () => <AccessDenied />,
   },
   {
     title: "Not Found",
     path: "*",
-    main: () => <NotFound/>,
+    main: () => <NotFound />,
   },
 ];
