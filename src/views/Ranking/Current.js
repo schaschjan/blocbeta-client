@@ -64,7 +64,7 @@ const Current = () => {
           return (
             <Fragment>
               <Avatar image={row.original.user.image} />
-              {cell.value}
+              <span className="rank-username">{cell.value}</span>
 
               {row.original.boulder === boulderCount && (
                 <span className="rank-badge">🥋</span>

@@ -63,6 +63,7 @@ const Routing = () => {
               exact={route.exact}
               children={
                 <Fragment>
+                  <Header />
                   <route.main />
                 </Fragment>
               }
@@ -74,7 +75,12 @@ const Routing = () => {
               key={index}
               path={route.path}
               exact={route.exact}
-              children={<route.main />}
+              children={
+                <Fragment>
+                  <Header />
+                  <route.main />
+                </Fragment>
+              }
             />
           );
         }
@@ -92,8 +98,6 @@ const App = () => {
           <DrawerContainer>
             <ToastContainer>
               <div className="app">
-                <Header />
-
                 <div className="content">
                   <Routing />
                 </div>

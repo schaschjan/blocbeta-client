@@ -10,10 +10,14 @@
   display: contents;
 }
 
+.table-row {
+  padding: var(--spacing-unit) 0;
+  border-bottom: 1px solid var(--color-dark);
+}
+
 .table-cell {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--color-dark);
 
   font-size: var(--font-size-default);
   line-height: var(--line-height-default);

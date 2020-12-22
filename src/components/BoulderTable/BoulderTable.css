@@ -15,8 +15,8 @@
   align-items: center;
   grid-column-gap: calc(4 * var(--spacing-unit));
   grid-template-columns:
-    20px minmax(48px, 80px) minmax(60px, 90px) minmax(80px, 100px)
-    auto 140px 140px 100px 152px;
+    20px minmax(20px, 40px) 80px 60px
+    auto 140px 140px 140px 100px 152px;
   padding-top: calc(2 * var(--spacing-unit));
   padding-bottom: calc(2 * var(--spacing-unit));
 }

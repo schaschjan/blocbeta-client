@@ -340,7 +340,7 @@ export const resources = {
 };
 
 export const useApi = (key, args = {}) => {
-  const {location} = useParams();
+  const { location } = useParams();
   const resource = resources[key];
 
   if (!(key in resources)) {
