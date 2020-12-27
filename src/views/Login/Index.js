@@ -3,7 +3,7 @@ import { Input } from "../../components/Input/Input";
 import { Meta } from "../../App";
 import { FormRow } from "../../components/Form/Form";
 import { extractErrorMessage, resources } from "../../hooks/useApi";
-import { BlocBetaUIContext } from "../../components/BlocBetaUI";
+import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import { useHistory } from "react-router-dom";
 import "./Index.css";
 import { toast, ToastContext } from "../../components/Toaster/Toaster";
@@ -18,7 +18,7 @@ const Index = () => {
 
   const history = useHistory();
   const { setUser, setCurrentLocation, setExpiration, reset } = useContext(
-    BlocBetaUIContext
+    BoulderDBUIContext
   );
 
   const { dispatch } = useContext(ToastContext);
@@ -62,13 +62,7 @@ const Index = () => {
 
       <div className="side-title-layout">
         <div className="side-title-layout__title">
-          <h1 className="t--alpha">Please sign to access BlocBeta.</h1>
-          <br />
-          <br />
-
-          <h2 className="t--gamma">
-            If you have an existing boulderdb.de account use it to sign in.
-          </h2>
+          <h1 className="t--alpha">Please sign to access BoulderDB.</h1>
         </div>
 
         <div className="side-title-layout__content">

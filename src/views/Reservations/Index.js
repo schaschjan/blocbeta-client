@@ -3,7 +3,7 @@ import { queryCache, useMutation, useQuery } from "react-query";
 import AddToCalendar from "react-add-to-calendar";
 import "./Index.css";
 import { cache, useApi } from "../../hooks/useApi";
-import { BlocBetaUIContext } from "../../components/BlocBetaUI";
+import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import Emoji from "../../components/Emoji/Emoji";
 import { LoadedContent } from "../../components/Loader/Loader";
 import { Button } from "../../components/Button/Button";
@@ -11,7 +11,7 @@ import { Button } from "../../components/Button/Button";
 const Index = () => {
   const {
     currentLocation: { id: locationId },
-  } = useContext(BlocBetaUIContext);
+  } = useContext(BoulderDBUIContext);
 
   const { status: reservationStatus, data: reservations } = useQuery(
     "reservations",

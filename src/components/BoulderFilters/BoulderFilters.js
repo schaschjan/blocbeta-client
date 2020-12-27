@@ -12,6 +12,7 @@ const Filter = ({
   name,
   id,
   query,
+  itemFilter = () => true,
   valueProperty,
   currentFilters,
   setFilters,
@@ -28,28 +29,30 @@ const Filter = ({
       <span className={"t--gamma filter__name"}>{name}</span>
 
       <ul className={"filter__items filter-items"}>
-        {data.map((item, index) => {
-          return (
-            <li
-              key={index}
-              className={"filter-items__item"}
-              onClick={() => {
-                let current = currentFilters.filter(
-                  (currentFilter) => currentFilter.id !== id
-                );
+        {data
+          .filter((item) => itemFilter(item))
+          .map((item, index) => {
+            return (
+              <li
+                key={index}
+                className={"filter-items__item"}
+                onClick={() => {
+                  let current = currentFilters.filter(
+                    (currentFilter) => currentFilter.id !== id
+                  );
 
-                current.push({
-                  id,
-                  value: item[valueProperty],
-                });
+                  current.push({
+                    id,
+                    value: item[valueProperty],
+                  });
 
-                setFilters([...current]);
-              }}
-            >
-              {renderItem(item)}
-            </li>
-          );
-        })}
+                  setFilters([...current]);
+                }}
+              >
+                {renderItem(item)}
+              </li>
+            );
+          })}
       </ul>
     </div>
   );
@@ -120,6 +123,23 @@ const BoulderFilters = ({
           renderItem={(item) => {
             return item.name;
           }}
+        />
+
+        <Filter
+          name={"Setter"}
+          id={"setter"}
+          query={useQuery(
+            cache.currentSetters,
+            useApi("currentSetters"),
+            queryDefaults
+          )}
+          valueProperty={"username"}
+          setFilters={setFilters}
+          currentFilters={filters}
+          renderItem={(item) => {
+            return item.username;
+          }}
+          itemFilter={(item) => item.username === "schaschjan"}
         />
 
         <Filter

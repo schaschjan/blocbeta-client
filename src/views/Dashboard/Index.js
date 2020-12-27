@@ -2,11 +2,11 @@ import React, { Fragment, useContext, useEffect } from "react";
 import { Meta } from "../../App";
 import { useApi } from "../../hooks/useApi";
 import "./Index.css";
-import { BlocBetaUIContext } from "../../components/BlocBetaUI";
+import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import { Link } from "react-router-dom";
 
 const Index = () => {
-  const { user, isAdmin, contextualizedPath } = useContext(BlocBetaUIContext);
+  const { user, isAdmin, contextualizedPath } = useContext(BoulderDBUIContext);
 
   const ping = useApi("ping");
 

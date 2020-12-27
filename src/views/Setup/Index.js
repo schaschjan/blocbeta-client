@@ -6,11 +6,11 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { LoadedContent } from "../../components/Loader/Loader";
 import "./Index.css";
-import { BlocBetaUIContext } from "../../components/BlocBetaUI";
+import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 
 const Index = () => {
   let history = useHistory();
-  const { setCurrentLocation } = useContext(BlocBetaUIContext);
+  const { setCurrentLocation } = useContext(BoulderDBUIContext);
 
   const { status, data: locations } = useQuery("stat-boulders", async () => {
     const { data } = await axios.get(`/api/location`);

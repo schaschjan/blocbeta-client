@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import "./Header.css";
-import { BlocBetaUIContext } from "../BlocBetaUI";
+import { BoulderDBUIContext } from "../BoulderDBUI";
 import { useLocation } from "react-router-dom";
 import { Close } from "../Icon/Close";
 import { cache, queryDefaults, useApi } from "../../hooks/useApi";
@@ -12,7 +12,7 @@ import Burger from "../Icon/Burger";
 import { NavItem } from "../NavItem/NavItem";
 
 const ReservationCountItem = () => {
-  const { contextualizedPath } = useContext(BlocBetaUIContext);
+  const { contextualizedPath } = useContext(BoulderDBUIContext);
 
   const { status: reservationCountStatus, data: reservationCount } = useQuery(
     cache.reservationCount,
@@ -37,7 +37,7 @@ const Header = () => {
     setCurrentLocation,
     currentLocation,
     isAuthenticated,
-  } = useContext(BlocBetaUIContext);
+  } = useContext(BoulderDBUIContext);
 
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const history = useHistory();
@@ -68,7 +68,7 @@ const Header = () => {
     return (
       <header className="header">
         <Link className="header__logo" to="/login">
-          BlocBeta
+          BoulderDB
         </Link>
       </header>
     );
@@ -81,7 +81,7 @@ const Header = () => {
           to={contextualizedPath("/dashboard")}
           className="header-logo__title t--eta"
         >
-          BlocBeta
+          BoulderDB
         </Link>
 
         <select

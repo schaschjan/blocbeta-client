@@ -3,12 +3,12 @@ import { useQuery } from "react-query";
 import { LoadedContent } from "../../components/Loader/Loader";
 import EmptyState from "../../components/EmptyState/EmptyState";
 import { useApi } from "../../hooks/useApi";
-import { BlocBetaUIContext } from "../../components/BlocBetaUI";
+import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import { CrudTable } from "../../components/CrudTable/CrudTable";
 import { Button } from "../../components/Button/Button";
 
 const Index = () => {
-  const { contextualizedPath } = useContext(BlocBetaUIContext);
+  const { contextualizedPath } = useContext(BoulderDBUIContext);
   const { status, data } = useQuery("rooms", useApi("rooms"));
 
   const columns = useMemo(() => {

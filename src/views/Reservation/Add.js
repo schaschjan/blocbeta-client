@@ -8,7 +8,7 @@ import moment from "moment";
 import { Loader } from "../../components/Loader/Loader";
 import { queryCache, useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
-import { BlocBetaUIContext } from "../../components/BlocBetaUI";
+import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import { classNames } from "../../helper/classNames";
 import { toast, ToastContext } from "../../components/Toaster/Toaster";
 import { composeFormElement } from "../../hooks/useForm";
@@ -16,7 +16,7 @@ import { BookButton } from "../../components/BookButton/BookButton";
 
 const TimeSlotList = ({ ymd, roomId, user }) => {
   const history = useHistory();
-  const { contextualizedPath } = useContext(BlocBetaUIContext);
+  const { contextualizedPath } = useContext(BoulderDBUIContext);
   const { dispatch } = useContext(ToastContext);
 
   const { status: scheduleStatus, data: schedule } = useQuery(

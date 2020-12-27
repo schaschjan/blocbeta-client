@@ -8,7 +8,7 @@ import {
 import { router } from "./router";
 import { Footer } from "./components/Footer/Footer";
 import { Helmet } from "react-helmet";
-import { BlocBetaUI, BlocBetaUIContext } from "./components/BlocBetaUI";
+import { BoulderDBUI, BoulderDBUIContext } from "./components/BoulderDBUI";
 import ScrollToTop from "./components/ScrollToTop";
 import { ToastContainer } from "./components/Toaster/Toaster";
 import { DrawerContainer } from "./components/Drawer/Drawer";
@@ -27,7 +27,9 @@ export const Meta = ({ title, description }) => {
 export const AppContext = createContext({});
 
 const Routing = () => {
-  const { isAuthenticated, contextualizedPath } = useContext(BlocBetaUIContext);
+  const { isAuthenticated, contextualizedPath } = useContext(
+    BoulderDBUIContext
+  );
 
   const PrivateRoute = ({ children, ...rest }) => {
     return (
@@ -94,7 +96,7 @@ const App = () => {
     <Fragment>
       <Router>
         <ScrollToTop />
-        <BlocBetaUI>
+        <BoulderDBUI>
           <DrawerContainer>
             <ToastContainer>
               <div className="app">
@@ -106,7 +108,7 @@ const App = () => {
               </div>
             </ToastContainer>
           </DrawerContainer>
-        </BlocBetaUI>
+        </BoulderDBUI>
       </Router>
     </Fragment>
   );

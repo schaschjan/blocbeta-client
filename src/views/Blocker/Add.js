@@ -6,7 +6,7 @@ import { Input } from "../../components/Input/Input";
 import { FormRow } from "../../components/Form/Form";
 import { Textarea } from "../../components/Textarea/Textarea";
 import ResourceDependantSelect from "../../components/ResourceDependantSelect/ResourceDependantSelect";
-import { BlocBetaUIContext } from "../../components/BlocBetaUI";
+import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import {
   errorToast,
   successToast,
@@ -27,7 +27,7 @@ const Add = () => {
   });
 
   const addApi = useApi("addBlocker");
-  const { contextualizedPath } = useContext(BlocBetaUIContext);
+  const { contextualizedPath } = useContext(BoulderDBUIContext);
 
   const onSubmit = async (payload) => {
     try {

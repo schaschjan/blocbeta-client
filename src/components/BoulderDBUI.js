@@ -2,9 +2,9 @@ import React, { useMemo, createContext, useEffect } from "react";
 import packageJson from "../../package.json";
 import usePersistentState from "../hooks/usePersistentState";
 
-export const BlocBetaUIContext = createContext({});
+export const BoulderDBUIContext = createContext({});
 
-export const BlocBetaUI = ({ children }) => {
+export const BoulderDBUI = ({ children }) => {
   const [user, setUser] = usePersistentState("user", null);
   const [currentLocation, setCurrentLocation] = usePersistentState(
     "location",
@@ -85,7 +85,7 @@ export const BlocBetaUI = ({ children }) => {
   }, [version]);
 
   return (
-    <BlocBetaUIContext.Provider
+    <BoulderDBUIContext.Provider
       value={{
         currentLocation,
         setCurrentLocation,
@@ -100,6 +100,6 @@ export const BlocBetaUI = ({ children }) => {
       }}
     >
       {children}
-    </BlocBetaUIContext.Provider>
+    </BoulderDBUIContext.Provider>
   );
 };

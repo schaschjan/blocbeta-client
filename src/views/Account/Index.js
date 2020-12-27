@@ -6,7 +6,7 @@ import { extractErrorMessage, useApi } from "../../hooks/useApi";
 import { useMutation, useQuery } from "react-query";
 import Switch from "../../components/Switch/Switch";
 import { Meta } from "../../App";
-import { BlocBetaUIContext } from "../../components/BlocBetaUI";
+import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import "./Index.css";
 import { LoadedContent, Loader } from "../../components/Loader/Loader";
 import {
@@ -168,7 +168,7 @@ const Index = () => {
   const { status, data } = useQuery("me", useApi("me"));
   const deleteMe = useApi("deleteMe");
   const [mutate] = useMutation(useApi("updateMe"), { throwOnError: true });
-  const { contextualizedPath } = useContext(BlocBetaUIContext);
+  const { contextualizedPath } = useContext(BoulderDBUIContext);
   const history = useHistory();
 
   const { dispatch } = useContext(ToastContext);

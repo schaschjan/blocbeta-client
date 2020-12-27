@@ -8,7 +8,7 @@ import Progress from "../../components/Progress/Progress";
 import { Meta } from "../../App";
 import moment from "moment";
 import Avatar from "../../components/Avatar/Avatar";
-import { BlocBetaUIContext } from "../../components/BlocBetaUI";
+import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import { LoadedContent } from "../../components/Loader/Loader";
 import "./Current.css";
 import { Button } from "../../components/Button/Button";
@@ -34,7 +34,7 @@ const calculatePercentage = (amount, total) => {
 };
 
 const Current = () => {
-  const { user, contextualizedPath } = useContext(BlocBetaUIContext);
+  const { user, contextualizedPath } = useContext(BoulderDBUIContext);
 
   const { status: rankingStatus, data: ranking } = useQuery(
     "currentRanking",

@@ -17,7 +17,7 @@ import {
 import { LoadedContent } from "../../components/Loader/Loader";
 import HoldType from "../../components/HoldStyle/HoldType";
 import Grade from "../../components/Grade/Grade";
-import { BlocBetaUIContext } from "../../components/BlocBetaUI";
+import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import moment from "moment";
 import {
   errorToast,
@@ -35,7 +35,7 @@ import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 import { BoulderFilters } from "../../components/BoulderFilters/BoulderFilters";
 
 const Index = () => {
-  const { isAdmin } = useContext(BlocBetaUIContext);
+  const { isAdmin, contextualizedPath } = useContext(BoulderDBUIContext);
   const { dispatch } = useContext(ToastContext);
   const { toggle: toggleDrawer } = useContext(DrawerContext);
 
@@ -47,10 +47,6 @@ const Index = () => {
     {
       id: "ascent",
       value: "todo",
-    },
-    {
-      id: "grade",
-      value: "5",
     },
   ]);
 
@@ -257,6 +253,10 @@ const Index = () => {
         },
         Cell: ({ value }) => {
           return value.map((setter, index) => {
+            if (!setter) {
+              return null;
+            }
+
             if (index === value.length - 1) {
               return setter.username;
             }
@@ -374,7 +374,18 @@ const Index = () => {
     <Fragment>
       <Meta title={"Boulder"} />
 
-      <h1 className="t--alpha page-title">Boulder</h1>
+      <h1 className="t--alpha page-title">
+        Boulder
+        {isAdmin && (
+          <Button
+            size={"small"}
+            asLink={true}
+            to={contextualizedPath("/admin/boulder/add")}
+          >
+            Add
+          </Button>
+        )}
+      </h1>
 
       <BoulderFilters
         filters={filters}

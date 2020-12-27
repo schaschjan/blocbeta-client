@@ -42,6 +42,7 @@ export const cache = {
   grades: "grades",
   holdTypes: "holdTypes",
   setters: "setters",
+  currentSetters: "current-setters",
   tags: "tags",
   labels: "labels",
   locations: "locations",
@@ -149,6 +150,11 @@ export const resources = {
   },
   setters: async ({ location }) => {
     const { data } = await axiosInstance.get(`/api/${location}/setter`);
+
+    return sortItemsAlphabetically(data, "username");
+  },
+  currentSetters: async ({ location }) => {
+    const { data } = await axiosInstance.get(`/api/${location}/setter/current`);
 
     return sortItemsAlphabetically(data, "username");
   },
