@@ -78,7 +78,7 @@ const Header = () => {
     <header className="header">
       <div className="header__logo header-logo">
         <Link
-          to={contextualizedPath("/dashboard")}
+          to={contextualizedPath("/boulder")}
           className="header-logo__title t--eta"
         >
           BoulderDB
@@ -123,6 +123,8 @@ const Header = () => {
         <NavItem to={contextualizedPath("/account")}>
           [{user && user.username}]
         </NavItem>
+
+        {isAdmin && <NavItem to={contextualizedPath("/admin")}>Admin</NavItem>}
 
         <span onClick={() => reset()} className="header-nav__item">
           Out!

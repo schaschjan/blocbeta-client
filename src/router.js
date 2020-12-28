@@ -19,11 +19,18 @@ import { Cancel } from "./views/Reservations/Cancel";
 import { Request } from "./views/PasswordReset/Request";
 import { Reset } from "./views/PasswordReset/Reset";
 import { Index as Account } from "./views/Account/Index";
-import { Index as Dashboard } from "./views/Dashboard/Index";
+import { Index as Admin } from "./views/Admin/Index";
 import { Index as BoulderIndex } from "./views/Boulder/Index";
 import { Current as CurrentRanking } from "./views/Ranking/Current";
 
 const adminRoutes = [
+  {
+    title: "Schedule overview",
+    path: "/:location/admin",
+    exact: true,
+    admin: true,
+    main: () => <Admin />,
+  },
   {
     title: "Schedule overview",
     path: "/:location/admin/schedule-ticker",
@@ -122,12 +129,6 @@ export const router = [
     path: "/password-reset/:hash",
     public: true,
     main: () => <Reset />,
-  },
-  {
-    title: "Dashboard",
-    path: "/:location/dashboard",
-    exact: true,
-    main: () => <Dashboard />,
   },
   {
     title: "Account",
