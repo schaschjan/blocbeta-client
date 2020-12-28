@@ -75,8 +75,8 @@ const Index = () => {
   const tagsQuery = useQuery(cache.tags, useApi("tags"), queryDefaults);
 
   const settersQuery = useQuery(
-    cache.setters,
-    useApi("setters"),
+    cache.currentSetters,
+    useApi("currentSetters"),
     queryDefaults
   );
 
@@ -242,13 +242,13 @@ const Index = () => {
         Header: "End",
       },
       {
-        id: "setters",
+        id: "setter",
         accessor: "setters",
-        Header: "Setters",
+        Header: "Setter",
         filter: (rows, id, filterValue) => {
           return rows.filter((row) => {
-            console.log(row.values[id]);
-            return row.values[id].setters.includes(filterValue);
+            console.log(row.values);
+            return row.values[id].some((item) => item.username === filterValue);
           });
         },
         Cell: ({ value }) => {

@@ -139,7 +139,6 @@ const BoulderFilters = ({
           renderItem={(item) => {
             return item.username;
           }}
-          itemFilter={(item) => item.username === "schaschjan"}
         />
 
         <Filter
