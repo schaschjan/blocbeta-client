@@ -50,7 +50,7 @@ const Routing = () => {
     <Switch>
       <Route path="/" exact>
         {isAuthenticated ? (
-          <Redirect to={contextualizedPath("/dashboard")} />
+          <Redirect to={contextualizedPath("/boulder")} />
         ) : (
           <Redirect to="/login" />
         )}

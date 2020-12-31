@@ -20,7 +20,7 @@ const Index = () => {
 
   const switchLocation = (location) => {
     setCurrentLocation(location);
-    history.push(`${location.url}/dashboard`);
+    history.push(`${location.url}/boulder`);
   };
 
   return (
