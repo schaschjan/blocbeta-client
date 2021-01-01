@@ -22,6 +22,7 @@ import { Index as Account } from "./views/Account/Index";
 import { Index as Admin } from "./views/Admin/Index";
 import { Index as BoulderIndex } from "./views/Boulder/Index";
 import { Current as CurrentRanking } from "./views/Ranking/Current";
+import { Current as CompareCurrent } from "./views/Compare/Current";
 
 const adminRoutes = [
   {
@@ -147,6 +148,13 @@ export const router = [
     title: "Boulder",
     path: "/:location/boulder",
     main: () => <BoulderIndex />,
+    exact: true,
+    visibleUserOnly: true,
+  },
+  {
+    title: "Compare current",
+    path: "/:location/compare/:a/to/:b/at/current",
+    main: () => <CompareCurrent />,
     exact: true,
     visibleUserOnly: true,
   },

@@ -153,7 +153,6 @@ const Current = () => {
   return (
     <Fragment>
       <Meta title="Current Ranking" />
-
       <h1 className="t--alpha page-title">Current Ranking</h1>
 
       <LoadedContent

@@ -46,6 +46,38 @@ const BoulderDetails = ({ id }) => {
           </div>
 
           <h3 className="t--epsilon details__section-title">
+            Setters ({pageData.setters.length})
+          </h3>
+
+          {pageData.setters.length > 0 && (
+            <ul className="details__setters details-setters">
+              {pageData.setters.map((setter, index) => (
+                <li
+                  className="details-setters__item t--epsilon"
+                  key={`details-setters__item-${index}`}
+                >
+                  {setter.username}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <h3 className="t--epsilon details__section-title">Tags</h3>
+
+          {pageData.tags.length > 0 && (
+            <ul className="details__tags details-tags">
+              {pageData.tags.map((tag, index) => (
+                <li
+                  className="details-tags__item t--epsilon"
+                  key={`details-tags__item-${index}`}
+                >
+                  {tag.emoji} {tag.name}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <h3 className="t--epsilon details__section-title">
             Ascents ({pageData.ascents.length})
           </h3>
 
@@ -88,38 +120,6 @@ const BoulderDetails = ({ id }) => {
                   </li>
                 );
               })}
-            </ul>
-          )}
-
-          <h3 className="t--epsilon details__section-title">
-            Setters ({pageData.setters.length})
-          </h3>
-
-          {pageData.setters.length > 0 && (
-            <ul className="details__setters details-setters">
-              {pageData.setters.map((setter, index) => (
-                <li
-                  className="details-setters__item t--epsilon"
-                  key={`details-setters__item-${index}`}
-                >
-                  {setter.username}
-                </li>
-              ))}
-            </ul>
-          )}
-
-          <h3 className="t--epsilon details__section-title">Tags</h3>
-
-          {pageData.tags.length > 0 && (
-            <ul className="details__tags details-tags">
-              {pageData.tags.map((tag, index) => (
-                <li
-                  className="details-tags__item t--epsilon"
-                  key={`details-tags__item-${index}`}
-                >
-                  {tag.emoji} {tag.name}
-                </li>
-              ))}
             </ul>
           )}
 

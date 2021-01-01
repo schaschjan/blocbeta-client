@@ -343,6 +343,13 @@ export const resources = {
 
     return data;
   },
+  compareCurrent: async ({ location, a, b }) => {
+    const { data } = await axiosInstance.get(
+      `/api/${location}/compare/${a}/to/${b}/at/current`
+    );
+
+    return data;
+  },
 };
 
 export const useApi = (key, args = {}) => {
