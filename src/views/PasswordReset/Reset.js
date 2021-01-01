@@ -7,7 +7,11 @@ import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import "./Reset.css";
-import { toast, ToastContext } from "../../components/Toaster/Toaster";
+import {
+  successToast,
+  toast,
+  ToastContext,
+} from "../../components/Toaster/Toaster";
 import { classNames } from "../../helper/classNames";
 import { composeFormElement, useForm } from "../../hooks/useForm";
 import { Button } from "../../components/Button/Button";
@@ -39,8 +43,10 @@ const Reset = () => {
   const onSubmit = async (payload) => {
     try {
       await axios.post(`/api/reset/${hash}`, payload);
-      alert(
-        "Your Password was successfully updated. You can now log in again."
+      dispatch(
+        successToast(
+          "Your Password was successfully updated. You can now log in again."
+        )
       );
       history.push("/login");
     } catch (error) {

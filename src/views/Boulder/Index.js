@@ -4,6 +4,7 @@ import React, {
   useState,
   useCallback,
   useMemo,
+  useEffect,
 } from "react";
 import { Meta } from "../../App";
 import { useQuery, queryCache, useMutation } from "react-query";
@@ -42,6 +43,11 @@ const Index = () => {
   const [boulder, setBoulder] = useState(null);
   const [selected, setSelected] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const ping = useApi("ping");
+
+  useEffect(() => {
+    ping();
+  }, []);
 
   const [filters, setFilters] = useState([
     {

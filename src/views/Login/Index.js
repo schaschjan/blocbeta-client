@@ -6,7 +6,11 @@ import { extractErrorMessage, resources, useApi } from "../../hooks/useApi";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import { useHistory } from "react-router-dom";
 import "./Index.css";
-import { toast, ToastContext } from "../../components/Toaster/Toaster";
+import {
+  successToast,
+  toast,
+  ToastContext,
+} from "../../components/Toaster/Toaster";
 import { composeFormElement, useForm } from "../../hooks/useForm";
 import { Button } from "../../components/Button/Button";
 
@@ -42,8 +46,10 @@ const Index = () => {
       setCurrentLocation(location);
 
       if (!user.username || !user.first_name || !user.last_name) {
-        alert(
-          "Account details missing. Please add them in your account settings!"
+        dispatch(
+          successToast(
+            "Account details missing. Please add them in your account settings!"
+          )
         );
       }
 

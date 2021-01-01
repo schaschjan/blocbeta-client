@@ -12,7 +12,7 @@ import { composeFormElement, useForm } from "../../hooks/useForm";
 
 const Index = () => {
   const history = useHistory();
-  const { dispatch } = useContext(ToastContext);
+  const { dispatch, successToast } = useContext(ToastContext);
 
   const { handleSubmit, observeField, submitting, formData } = useForm({
     username: null,
@@ -26,7 +26,7 @@ const Index = () => {
   const onSubmit = async (payload) => {
     try {
       await axios.post(`/api/register`, payload);
-      alert("Your account was created! You can now log in.");
+      dispatch(successToast("Your account was created! You can now log in."));
       history.push("/login");
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "danger"));

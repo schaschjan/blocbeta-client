@@ -171,15 +171,14 @@ const Index = () => {
   const { contextualizedPath } = useContext(BoulderDBUIContext);
   const history = useHistory();
 
-  const { dispatch } = useContext(ToastContext);
+  const { dispatch, successToast } = useContext(ToastContext);
 
   const onSubmit = async (data) => {
     try {
       await mutate({ payload: data });
-
-      dispatch(toast("Success", "Account updated!", "success"));
+      dispatch(successToast("Success", "Account updated!", "success"));
     } catch (error) {
-      dispatch(toast("Error", extractErrorMessage(error), "danger"));
+      dispatch(errorToast(extractErrorMessage(error)));
     }
   };
 
@@ -187,7 +186,12 @@ const Index = () => {
     if (window.confirm("Confirm account deletion")) {
       try {
         await deleteMe();
-        alert("Your account was scheduled for deletion and will be removed.");
+        dispatch(
+          successToast(
+            "Your account was scheduled for deletion and will be removed."
+          )
+        );
+
         history.push(contextualizedPath("/dashboard"));
       } catch (error) {
         dispatch(toast("Error", extractErrorMessage(error), "danger"));

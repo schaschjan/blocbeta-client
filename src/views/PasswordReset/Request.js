@@ -11,7 +11,7 @@ import { Button } from "../../components/Button/Button";
 
 const Request = () => {
   const history = useHistory();
-  const { dispatch } = useContext(ToastContext);
+  const { dispatch, successToast } = useContext(ToastContext);
 
   const { handleSubmit, observeField, submitting, formData } = useForm({
     email: null,
@@ -20,8 +20,10 @@ const Request = () => {
   const onSubmit = async (payload) => {
     try {
       await axios.post(`/api/request-reset`, payload);
-      alert(
-        "You will receive instructions on how to reset your password via E-Mail."
+      dispatch(
+        successToast(
+          "You will receive instructions on how to reset your password via E-Mail."
+        )
       );
       history.push("/login");
     } catch (error) {
