@@ -4,6 +4,7 @@
   border-radius: 2px;
   background-color: #e8e8e8;
   margin-right: 40px;
+  overflow: hidden;
 }
 
 .progress > div {

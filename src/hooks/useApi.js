@@ -215,6 +215,13 @@ export const resources = {
 
     return data;
   },
+  allTimeRanking: async ({ location }) => {
+    const { data } = await axiosInstance.get(
+      `/api/${location}/ranking/all-time`
+    );
+
+    return data;
+  },
   locations: async ({ location }) => {
     const { data } = await axiosInstance.get(`/api/location`);
 

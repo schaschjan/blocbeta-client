@@ -10,7 +10,7 @@ import moment from "moment";
 import Avatar from "../../components/Avatar/Avatar";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import { LoadedContent } from "../../components/Loader/Loader";
-import "./Current.css";
+import "./AllTime.css";
 import { Button } from "../../components/Button/Button";
 import Male from "../../components/Icon/Male";
 import Female from "../../components/Icon/Female";
@@ -34,12 +34,12 @@ const calculatePercentage = (amount, total) => {
   return `${amount} (${Math.floor(percentage)}%)`;
 };
 
-const Current = () => {
+const AllTime = () => {
   const { user, contextualizedPath } = useContext(BoulderDBUIContext);
 
   const { status: rankingStatus, data: ranking } = useQuery(
-    "currentRanking",
-    useApi("currentRanking")
+    "allTimeRanking",
+    useApi("allTimeRanking")
   );
 
   const { status: boulderCountStatus, data: boulderCount } = useQuery(
@@ -140,7 +140,7 @@ const Current = () => {
               variant="primary"
               size="small"
               to={contextualizedPath(
-                `/compare/${user.id}/to/${cell.value}/at/current`
+                `/compare/${user.id}/to/${cell.value}/at/AllTime`
               )}
             >
               Compare
@@ -153,8 +153,8 @@ const Current = () => {
 
   return (
     <Fragment>
-      <Meta title="Current Ranking" />
-      <h1 className="t--alpha page-title">Current Ranking</h1>
+      <Meta title="AllTime Ranking" />
+      <h1 className="t--alpha page-title">AllTime Ranking</h1>
 
       <LoadedContent
         loading={[rankingStatus, boulderCountStatus].includes("loading")}
@@ -164,7 +164,7 @@ const Current = () => {
             <RankingTable
               data={ranking.list}
               columns={columns}
-              className={"current"}
+              className={"all-time"}
             />
 
             <br />
@@ -188,4 +188,4 @@ const Current = () => {
   );
 };
 
-export { Current };
+export { AllTime };

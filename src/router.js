@@ -23,6 +23,7 @@ import { Index as Admin } from "./views/Admin/Index";
 import { Index as BoulderIndex } from "./views/Boulder/Index";
 import { Current as CurrentRanking } from "./views/Ranking/Current";
 import { Current as CompareCurrent } from "./views/Compare/Current";
+import { AllTime as AllTimeRanking } from "./views/Ranking/AllTime";
 
 const adminRoutes = [
   {
@@ -141,6 +142,13 @@ export const router = [
     title: "Current ranking",
     path: "/:location/ranking/current",
     main: () => <CurrentRanking />,
+    exact: true,
+    visibleUserOnly: true,
+  },
+  {
+    title: "All time ranking",
+    path: "/:location/ranking/all-time",
+    main: () => <AllTimeRanking />,
     exact: true,
     visibleUserOnly: true,
   },
