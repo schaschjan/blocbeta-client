@@ -23,21 +23,25 @@ const BoulderDetails = ({ id }) => {
   const { toggle: toggleDrawer } = useContext(DrawerContext);
 
   useEffect(() => {
-    setPageData(detailQuery.data);
+    if (detailQuery.status === "success") {
+      setPageData(detailQuery.data);
+    }
   }, [detailQuery]);
 
   const pages = {
-    index: () => {
+    index: (data) => {
+      console.log(data.ascents);
+
       return (
         <Fragment>
           <div className="details__header details-header">
             <HoldType
-              name={pageData.hold_type.name}
-              image={pageData.hold_type.image}
+              name={data.hold_type.name}
+              image={data.hold_type.image}
               small={true}
             />
 
-            <h3 className="details-header__name t--epsilon">{pageData.name}</h3>
+            <h3 className="details-header__name t--epsilon">{data.name}</h3>
 
             <Close
               className="details-header__close"
@@ -46,12 +50,12 @@ const BoulderDetails = ({ id }) => {
           </div>
 
           <h3 className="t--epsilon details__section-title">
-            Setters ({pageData.setters.length})
+            Setters ({data.setters.length})
           </h3>
 
-          {pageData.setters.length > 0 && (
+          {data.setters.length > 0 && (
             <ul className="details__setters details-setters">
-              {pageData.setters.map((setter, index) => (
+              {data.setters.map((setter, index) => (
                 <li
                   className="details-setters__item t--epsilon"
                   key={`details-setters__item-${index}`}
@@ -64,9 +68,9 @@ const BoulderDetails = ({ id }) => {
 
           <h3 className="t--epsilon details__section-title">Tags</h3>
 
-          {pageData.tags.length > 0 && (
+          {data.tags.length > 0 && (
             <ul className="details__tags details-tags">
-              {pageData.tags.map((tag, index) => (
+              {data.tags.map((tag, index) => (
                 <li
                   className="details-tags__item t--epsilon"
                   key={`details-tags__item-${index}`}
@@ -78,12 +82,12 @@ const BoulderDetails = ({ id }) => {
           )}
 
           <h3 className="t--epsilon details__section-title">
-            Ascents ({pageData.ascents.length})
+            Ascents ({data.ascents.length})
           </h3>
 
-          {pageData.ascents.length > 0 && (
+          {data.ascents.length > 0 && (
             <ul className="details__ascents details-ascents">
-              {pageData.ascents.map((ascent, index) => {
+              {data.ascents.map((ascent, index) => {
                 const doubted = ascent.type.includes("pending-doubt");
                 const Icon = getIcon(ascent.type);
 
@@ -110,8 +114,8 @@ const BoulderDetails = ({ id }) => {
                         setPage("doubt");
                         setPageData({
                           ascent,
-                          id: pageData.id,
-                          name: pageData.name,
+                          id: data.id,
+                          name: data.name,
                         });
                       }}
                     >
@@ -129,12 +133,12 @@ const BoulderDetails = ({ id }) => {
         </Fragment>
       );
     },
-    doubt: () => {
+    doubt: (data) => {
       return (
         <Fragment>
           <div className="details__header details-header">
             <h3 className="details-header__name t--epsilon">
-              Doubt {pageData.ascent.username}
+              Doubt {data.ascent.username}
             </h3>
 
             <Close
@@ -147,11 +151,12 @@ const BoulderDetails = ({ id }) => {
         </Fragment>
       );
     },
-    error: () => {
+    error: (data) => {
       return <Fragment>Error</Fragment>;
     },
   };
-  return <div className="details">{pageData && pages[page]()}</div>;
+
+  return <div className="details">{pageData && pages[page](pageData)}</div>;
 };
 
 export default BoulderDetails;
