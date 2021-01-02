@@ -357,6 +357,14 @@ export const resources = {
 
     return data;
   },
+  createDoubt: async ({ location, payload }) => {
+    const { data } = await axiosInstance.post(
+      `/api/${location}/doubt`,
+      payload
+    );
+
+    return data;
+  },
 };
 
 export const useApi = (key, args = {}) => {

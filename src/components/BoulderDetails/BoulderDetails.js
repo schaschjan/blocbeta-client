@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useContext, useState } from "react";
-import { useQuery } from "react-query";
-import { cache, useApi } from "../../hooks/useApi";
+import { useQuery, useMutation, queryCache } from "react-query";
+import { cache, mutationDefaults, useApi } from "../../hooks/useApi";
 import { Loader } from "../../components/Loader/Loader";
 import HoldType from "../HoldStyle/HoldType";
 import { classNames } from "../../helper/classNames";
@@ -10,6 +10,62 @@ import { Button } from "../Button/Button";
 import { getIcon } from "../Ascent/Ascent";
 import { DrawerContext } from "../Drawer/Drawer";
 import { Textarea } from "../Textarea/Textarea";
+import Backward from "../Icon/Backward";
+import { useForm } from "../../hooks/useForm";
+import { errorToast, successToast, ToastContext } from "../Toaster/Toaster";
+
+const DoubtForm = ({ ascent }) => {
+  const { toggle: toggleDrawer } = useContext(DrawerContext);
+  const { dispatch } = useContext(ToastContext);
+  const { handleSubmit, observeField } = useForm({
+    message: null,
+    ascent,
+  });
+
+  const [
+    mutateCreation,
+    { status: mutateCreationStatus, error: mutateCreationError },
+  ] = useMutation(useApi("createSetter"), {
+    ...mutationDefaults,
+    onSuccess: () => {
+      queryCache.invalidateQueries([cache.boulder, { id: ascent.boulder.id }]);
+    },
+  });
+
+  const onSubmit = async (payload) => {
+    try {
+      await mutateCreation({ payload });
+
+      dispatch(successToast("Doubt submitted"));
+      toggleDrawer(false);
+    } catch (error) {
+      dispatch(errorToast(error));
+    }
+  };
+
+  return (
+    <form
+      onSubmit={(event) => handleSubmit(event, onSubmit)}
+      className={"doubt-form"}
+    >
+      <Textarea
+        placeholder={"Message"}
+        name={"message"}
+        className={"doubt-form__message-input"}
+        required={"required"}
+        onChange={observeField}
+      />
+
+      <Button
+        size={"small"}
+        className={"doubt-form__send-button"}
+        type={"submit"}
+      >
+        Send
+      </Button>
+    </form>
+  );
+};
 
 const BoulderDetails = ({ id }) => {
   const detailQuery = useQuery(
@@ -23,15 +79,15 @@ const BoulderDetails = ({ id }) => {
   const { toggle: toggleDrawer } = useContext(DrawerContext);
 
   useEffect(() => {
-    if (detailQuery.status === "success") {
-      setPageData(detailQuery.data);
-    }
+    setPageData(detailQuery.data);
   }, [detailQuery]);
+
+  if (detailQuery.status === "loading") {
+    return <Loader />;
+  }
 
   const pages = {
     index: (data) => {
-      console.log(data.ascents);
-
       return (
         <Fragment>
           <div className="details__header details-header">
@@ -82,7 +138,7 @@ const BoulderDetails = ({ id }) => {
           )}
 
           <h3 className="t--epsilon details__section-title">
-            Ascents ({data.ascents.length})
+            Ascents ({data.ascents.length > 0 ? data.ascents.length : 0})
           </h3>
 
           {data.ascents.length > 0 && (
@@ -111,12 +167,13 @@ const BoulderDetails = ({ id }) => {
                     <Button
                       size={"small"}
                       onClick={() => {
-                        setPage("doubt");
                         setPageData({
-                          ascent,
-                          id: data.id,
-                          name: data.name,
+                          ...pageData,
+                          doubt: {
+                            ascent,
+                          },
                         });
+                        setPage("doubt");
                       }}
                     >
                       Doubt it
@@ -128,7 +185,9 @@ const BoulderDetails = ({ id }) => {
           )}
 
           <div className="details__report-error">
-            <Button size={"small"}>Report error</Button>
+            <Button size={"small"} onClick={() => setPage("error")}>
+              Report error
+            </Button>
           </div>
         </Fragment>
       );
@@ -137,8 +196,13 @@ const BoulderDetails = ({ id }) => {
       return (
         <Fragment>
           <div className="details__header details-header">
+            <Backward
+              className="details-header__back"
+              onClick={() => setPage("index")}
+            />
+
             <h3 className="details-header__name t--epsilon">
-              Doubt {data.ascent.username}
+              Doubt {data.doubt.ascent.username}
             </h3>
 
             <Close
@@ -147,12 +211,40 @@ const BoulderDetails = ({ id }) => {
             />
           </div>
 
-          <Textarea>Message</Textarea>
+          <div className={"details__section-content"}>
+            <DoubtForm ascent={data.doubt.ascent.id} />
+          </div>
         </Fragment>
       );
     },
     error: (data) => {
-      return <Fragment>Error</Fragment>;
+      return (
+        <Fragment>
+          <div className="details__header details-header">
+            <Backward
+              className="details-header__back"
+              onClick={() => setPage("index")}
+            />
+
+            <h3 className="details-header__name t--epsilon">Report error</h3>
+
+            <Close
+              className="details-header__close"
+              onClick={() => toggleDrawer(false)}
+            />
+          </div>
+
+          <div className={"details__section-content doubt-form"}>
+            <Textarea
+              placeholder={"Message"}
+              className={"doubt-form__message-input"}
+            />
+            <Button size={"small"} className={"doubt-form__send-button"}>
+              Send
+            </Button>
+          </div>
+        </Fragment>
+      );
     },
   };
 

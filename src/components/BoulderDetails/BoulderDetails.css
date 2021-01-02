@@ -22,6 +22,10 @@
 
 .details-header__close {
   margin-left: auto;
+}
+
+.details-header__close,
+.details-header__back {
   cursor: pointer;
 }
 
@@ -52,6 +56,10 @@
   margin-bottom: calc(2 * var(--spacing-unit));
 }
 
+.details__section-content {
+  margin: calc(2 * var(--spacing-unit));
+}
+
 .details__ascents,
 .details__tags,
 .details__setters {
@@ -66,4 +74,17 @@
   display: flex;
   padding: calc(2 * var(--spacing-unit));
   margin-top: auto;
+}
+
+.doubt-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.doubt-form__message-input {
+  margin-bottom: calc(1 * var(--spacing-unit));
+}
+
+.doubt-form__send-button {
+  margin-left: auto;
 }

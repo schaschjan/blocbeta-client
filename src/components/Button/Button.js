@@ -13,11 +13,13 @@ const Button = ({
   loading = false,
   loader = false,
   children,
+  className,
   ...rest
 }) => {
   let loaderVariant = "default";
 
   const classes = classNames(
+    className,
     "button",
     `button--${variant}`,
     `button--${size}`,
