@@ -104,6 +104,7 @@ const Index = () => {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries(cache.boulder);
+      queryCache.invalidateQueries(cache.ascents);
     },
   });
 
@@ -327,6 +328,10 @@ const Index = () => {
 
         return grade.id === boulder.internalGrade.id;
       });
+
+      if (!ascent) {
+        console.log(boulder);
+      }
 
       return {
         ...boulder,

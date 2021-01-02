@@ -159,7 +159,7 @@ const AllTime = () => {
       <LoadedContent
         loading={[rankingStatus, boulderCountStatus].includes("loading")}
       >
-        {ranking && ranking.list.length > 0 ? (
+        {ranking && ranking.list && ranking.list.length > 0 ? (
           <Fragment>
             <RankingTable
               data={ranking.list}
