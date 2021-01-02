@@ -15,7 +15,7 @@ const ReservationCountItem = () => {
   const { contextualizedPath } = useContext(BoulderDBUIContext);
 
   const { status: reservationCountStatus, data: reservationCount } = useQuery(
-    cache.reservationCount,
+    "reservationCount",
     useApi("reservationCount"),
     queryDefaults
   );
@@ -24,6 +24,22 @@ const ReservationCountItem = () => {
     <NavItem to={contextualizedPath("/reservations")}>
       Reservations (
       {reservationCountStatus === "loading" ? 0 : reservationCount})
+    </NavItem>
+  );
+};
+
+const DoubtCountItem = () => {
+  const { contextualizedPath } = useContext(BoulderDBUIContext);
+
+  const { status: doubtCountStatus, data: doubtCount } = useQuery(
+    "doubtCount",
+    useApi("doubtCount"),
+    queryDefaults
+  );
+
+  return (
+    <NavItem to={contextualizedPath("/doubts")}>
+      Doubts ({doubtCountStatus === "loading" ? 0 : doubtCount})
     </NavItem>
   );
 };
@@ -123,6 +139,8 @@ const Header = () => {
         <NavItem to={contextualizedPath("/account")}>
           [{user && user.username}]
         </NavItem>
+
+        {isAuthenticated && currentLocation && <DoubtCountItem />}
 
         {isAdmin && <NavItem to={contextualizedPath("/admin")}>Admin</NavItem>}
 

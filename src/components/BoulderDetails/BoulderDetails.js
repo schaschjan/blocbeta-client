@@ -25,7 +25,7 @@ const DoubtForm = ({ ascent }) => {
   const [
     mutateCreation,
     { status: mutateCreationStatus, error: mutateCreationError },
-  ] = useMutation(useApi("createSetter"), {
+  ] = useMutation(useApi("createDoubt"), {
     ...mutationDefaults,
     onSuccess: () => {
       queryCache.invalidateQueries([cache.boulder, { id: ascent.boulder.id }]);
@@ -59,6 +59,56 @@ const DoubtForm = ({ ascent }) => {
       <Button
         size={"small"}
         className={"doubt-form__send-button"}
+        type={"submit"}
+      >
+        Send
+      </Button>
+    </form>
+  );
+};
+
+const ErrorForm = ({ boulder }) => {
+  const { toggle: toggleDrawer } = useContext(DrawerContext);
+  const { dispatch } = useContext(ToastContext);
+  const { handleSubmit, observeField } = useForm({
+    message: null,
+    boulder,
+  });
+
+  const [
+    mutateCreation,
+    { status: mutateCreationStatus, error: mutateCreationError },
+  ] = useMutation(useApi("createError"), {
+    ...mutationDefaults,
+  });
+
+  const onSubmit = async (payload) => {
+    try {
+      await mutateCreation({ payload });
+
+      dispatch(successToast("Error submitted"));
+      toggleDrawer(false);
+    } catch (error) {
+      dispatch(errorToast(error));
+    }
+  };
+
+  return (
+    <form
+      onSubmit={(event) => handleSubmit(event, onSubmit)}
+      className={"error-form"}
+    >
+      <Textarea
+        placeholder={"Message"}
+        name={"message"}
+        className={"error-form__message-input"}
+        required={"required"}
+        onChange={observeField}
+      />
+
+      <Button
+        size={"small"}
+        className={"error-form__send-button"}
         type={"submit"}
       >
         Send
@@ -234,14 +284,8 @@ const BoulderDetails = ({ id }) => {
             />
           </div>
 
-          <div className={"details__section-content doubt-form"}>
-            <Textarea
-              placeholder={"Message"}
-              className={"doubt-form__message-input"}
-            />
-            <Button size={"small"} className={"doubt-form__send-button"}>
-              Send
-            </Button>
+          <div className={"details__section-content"}>
+            <ErrorForm boulder={data.id} />
           </div>
         </Fragment>
       );
