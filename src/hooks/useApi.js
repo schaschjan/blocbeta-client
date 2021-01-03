@@ -383,6 +383,14 @@ export const resources = {
 
     return data;
   },
+  updateDoubt: async ({ location, id, payload }) => {
+    const { data } = await axiosInstance.put(
+      `/api/${location}/doubt/${id}`,
+      payload
+    );
+
+    return data;
+  },
 };
 
 export const useApi = (key, args = {}) => {
