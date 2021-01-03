@@ -24,6 +24,7 @@ import { Index as BoulderIndex } from "./views/Boulder/Index";
 import { Current as CurrentRanking } from "./views/Ranking/Current";
 import { Current as CompareCurrent } from "./views/Compare/Current";
 import { AllTime as AllTimeRanking } from "./views/Ranking/AllTime";
+import { Index as Doubts } from "./views/Doubt/Index";
 
 const adminRoutes = [
   {
@@ -186,6 +187,13 @@ export const router = [
     path: "/cancel-reservation/:hash",
     public: true,
     main: () => <Cancel />,
+  },
+  {
+    title: "Doubts",
+    path: "/:location/doubts",
+    main: () => <Doubts />,
+    exact: true,
+    visibleUserOnly: true,
   },
   {
     title: "Access Denied",

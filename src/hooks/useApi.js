@@ -365,16 +365,21 @@ export const resources = {
 
     return data;
   },
-  doubtCount: async ({ location }) => {
-    const { data } = await axiosInstance.get(`/api/${location}/doubt/count`);
-
-    return data;
-  },
   createError: async ({ location, payload }) => {
     const { data } = await axiosInstance.post(
       `/api/${location}/error`,
       payload
     );
+
+    return data;
+  },
+  doubtCount: async ({ location }) => {
+    const { data } = await axiosInstance.get(`/api/${location}/doubt/count`);
+
+    return data;
+  },
+  doubts: async ({ location }) => {
+    const { data } = await axiosInstance.get(`/api/${location}/doubt`);
 
     return data;
   },
