@@ -18,7 +18,7 @@ export const Meta = ({ title, description }) => {
   return (
     <Helmet>
       <meta charSet="utf-8" />
-      <title>Blocbeta - {title}</title>
+      <title>BoulderDB - {title}</title>
       <meta name="description" content={description} />
     </Helmet>
   );
