@@ -132,10 +132,6 @@ const Header = () => {
 
         <NavItem to={contextualizedPath("/ranking/current")}>Ranking</NavItem>
 
-        <NavItem to={contextualizedPath("/schedule")}>Schedule</NavItem>
-
-        {isAuthenticated && currentLocation && <ReservationCountItem />}
-
         <NavItem to={contextualizedPath("/account")}>
           [{user && user.username}]
         </NavItem>

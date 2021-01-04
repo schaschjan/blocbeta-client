@@ -88,7 +88,7 @@ export const resources = {
     return data;
   },
   boulderMass: async ({ location, payload }) => {
-    const { data } = await axiosInstance.post(
+    const { data } = await axiosInstance.put(
       `/api/${location}/boulder/mass`,
       payload
     );

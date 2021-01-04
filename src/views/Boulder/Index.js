@@ -36,19 +36,15 @@ import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 import { BoulderFilters } from "../../components/BoulderFilters/BoulderFilters";
 
 const Index = () => {
-  const { isAdmin, contextualizedPath } = useContext(BoulderDBUIContext);
+  const { isAdmin, contextualizedPath, currentLocation } = useContext(
+    BoulderDBUIContext
+  );
   const { dispatch } = useContext(ToastContext);
   const { toggle: toggleDrawer } = useContext(DrawerContext);
 
   const [boulder, setBoulder] = useState(null);
   const [selected, setSelected] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
-  const ping = useApi("ping");
-
-  useEffect(() => {
-    ping();
-  }, []);
-
   const [filters, setFilters] = useState([
     {
       id: "ascent",
@@ -56,32 +52,50 @@ const Index = () => {
     },
   ]);
 
+  const ping = useApi("ping");
+
+  useEffect(() => {
+    ping();
+  }, []);
+
   const boulderQuery = useQuery(
-    cache.boulder,
+    [cache.boulder, currentLocation.id],
     useApi("boulder"),
     queryDefaults
   );
 
   const ascentsQuery = useQuery(
-    cache.ascents,
+    [cache.ascents, currentLocation.id],
     useApi("ascents"),
     queryDefaults
   );
 
-  const wallsQuery = useQuery(cache.walls, useApi("walls"), queryDefaults);
+  const wallsQuery = useQuery(
+    [cache.walls, currentLocation.id],
+    useApi("walls"),
+    queryDefaults
+  );
 
-  const gradesQuery = useQuery(cache.grades, useApi("grades"), queryDefaults);
+  const gradesQuery = useQuery(
+    [cache.grades, currentLocation.id],
+    useApi("grades"),
+    queryDefaults
+  );
 
   const holdTypesQuery = useQuery(
-    cache.holdTypes,
+    [cache.holdTypes, currentLocation.id],
     useApi("holdTypes"),
     queryDefaults
   );
 
-  const tagsQuery = useQuery(cache.tags, useApi("tags"), queryDefaults);
+  const tagsQuery = useQuery(
+    [cache.tags, currentLocation.id],
+    useApi("tags"),
+    queryDefaults
+  );
 
   const settersQuery = useQuery(
-    cache.currentSetters,
+    [cache.currentSetters, currentLocation.id],
     useApi("currentSetters"),
     queryDefaults
   );
@@ -107,53 +121,6 @@ const Index = () => {
       queryCache.invalidateQueries(cache.ascents);
     },
   });
-
-  const idle = allIdle(
-    boulderQuery,
-    ascentsQuery,
-    wallsQuery,
-    gradesQuery,
-    holdTypesQuery,
-    tagsQuery,
-    settersQuery
-  );
-
-  const addHandler = async (boulderId, type) => {
-    const payload = {
-      boulder: boulderId,
-      type: type,
-    };
-
-    try {
-      await mutateAscentCreation({ payload });
-    } catch (error) {
-      dispatch(toast("Error", extractErrorMessage(error), "danger"));
-    }
-  };
-
-  const removeHandler = async (id) => {
-    try {
-      await mutateAscentDeletion({ id });
-    } catch (error) {
-      dispatch(toast("Error", extractErrorMessage(error), "danger"));
-    }
-  };
-
-  const renderAscents = useCallback((ascent) => {
-    return (
-      <Ascents
-        boulderId={ascent.boulderId}
-        addHandler={addHandler}
-        removeHandler={removeHandler}
-        ascent={ascent}
-      />
-    );
-  }, []);
-
-  const toggleDetails = (id) => {
-    setBoulder(id);
-    toggleDrawer(true);
-  };
 
   const columns = useMemo(() => {
     return [
@@ -380,6 +347,53 @@ const Index = () => {
     settersQuery,
     ascentsQuery,
   ]);
+
+  const idle = allIdle(
+    boulderQuery,
+    ascentsQuery,
+    wallsQuery,
+    gradesQuery,
+    holdTypesQuery,
+    tagsQuery,
+    settersQuery
+  );
+
+  const addHandler = async (boulderId, type) => {
+    const payload = {
+      boulder: boulderId,
+      type: type,
+    };
+
+    try {
+      await mutateAscentCreation({ payload });
+    } catch (error) {
+      dispatch(toast("Error", extractErrorMessage(error), "danger"));
+    }
+  };
+
+  const removeHandler = async (id) => {
+    try {
+      await mutateAscentDeletion({ id });
+    } catch (error) {
+      dispatch(toast("Error", extractErrorMessage(error), "danger"));
+    }
+  };
+
+  const renderAscents = useCallback((ascent) => {
+    return (
+      <Ascents
+        boulderId={ascent.boulderId}
+        addHandler={addHandler}
+        removeHandler={removeHandler}
+        ascent={ascent}
+      />
+    );
+  }, []);
+
+  const toggleDetails = (id) => {
+    setBoulder(id);
+    toggleDrawer(true);
+  };
 
   return (
     <Fragment>

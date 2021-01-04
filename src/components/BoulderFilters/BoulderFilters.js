@@ -182,6 +182,12 @@ const BoulderFilters = ({
         onChange={(event) => {
           setGlobalFilter(event.target.value);
         }}
+        onKeyDown={(event) => {
+          if (event.key === "Backspace") {
+            filters.pop();
+            setFilters([...filters]);
+          }
+        }}
       >
         {filters.map((filter, index) => {
           return (
