@@ -24,16 +24,16 @@ const Add = () => {
     formData,
     resetForm,
   } = useForm({
-    name: null,
+    name: "",
     status: "active",
     points: 1000,
-    start_wall: null,
-    end_wall: null,
-    grade: null,
-    internal_grade: null,
-    hold_type: null,
-    tags: [null],
-    setters: [null],
+    start_wall: "",
+    end_wall: "",
+    grade: "",
+    internal_grade: "",
+    hold_type: "",
+    tags: [""],
+    setters: [""],
   });
 
   const [
