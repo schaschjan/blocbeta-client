@@ -1,6 +1,6 @@
 {
   "name": "@boulderdb/ui",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "private": true,
   "dependencies": {
     "@sentry/react": "^5.24.2",
