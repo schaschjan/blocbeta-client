@@ -71,7 +71,7 @@ const Index = () => {
 
       <div className="side-title-layout">
         <div className="side-title-layout__title">
-          <h1 className="t--alpha">Please sign to access BoulderDB.</h1>
+          <h1 className="t--alpha">Please sign in to access BoulderDB.</h1>
         </div>
 
         <div className="side-title-layout__content">
