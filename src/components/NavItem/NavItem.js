@@ -5,7 +5,12 @@ import "./NavItem.css";
 const NavItem = ({ children, to, external, ...rest }) => {
   if (external) {
     return (
-      <a href={to} target="_blank" className="header-nav__item">
+      <a
+        href={to}
+        target="_blank"
+        rel={"noopener noreferrer"}
+        className="header-nav__item"
+      >
         {children}
       </a>
     );

@@ -19,10 +19,7 @@ const Detail = () => {
   );
   const { dispatch } = useContext(ToastContext);
 
-  const [
-    mutateUpdate,
-    { status: mutateUpdateStatus, error: mutateUpdateError },
-  ] = useMutation(useApi("updateTimeSlot"), {
+  const [mutateUpdate] = useMutation(useApi("updateTimeSlot"), {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries([cache.roomSchedule, { room }]);

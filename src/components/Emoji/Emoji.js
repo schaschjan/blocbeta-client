@@ -3,7 +3,7 @@ import "./Emoji.css";
 
 const Emoji = ({ children }) => {
   return (
-    <span className="emoji" role={"image"}>
+    <span className="emoji" role={"img"} aria-label={"Emoji"}>
       {children}
     </span>
   );

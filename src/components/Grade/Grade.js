@@ -18,7 +18,7 @@ const Grade = ({ color, name, internalColor = null, internalName = null }) => {
         )}
       </div>
     ),
-    [color, name]
+    [color, name, internalColor, internalName]
   );
 };
 

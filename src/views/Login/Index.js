@@ -30,7 +30,7 @@ const Index = () => {
 
   useEffect(() => {
     reset();
-  }, []);
+  }, [reset]);
 
   const onSubmit = async (payload) => {
     try {

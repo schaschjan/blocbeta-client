@@ -30,10 +30,7 @@ const TimeSlotList = ({ ymd, roomId, user }) => {
     useApi("schedule", { ymd, roomId })
   );
 
-  const [
-    mutateDeletion,
-    { status: deletionMutationStatus, error: deletionMutationError },
-  ] = useMutation(useApi("deleteReservation"), {
+  const [mutateDeletion] = useMutation(useApi("deleteReservation"), {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries(["schedule", { ymd, roomId }]);
@@ -41,10 +38,7 @@ const TimeSlotList = ({ ymd, roomId, user }) => {
     },
   });
 
-  const [
-    mutateCreation,
-    { status: creationMutationStatus, error: creationMutationError },
-  ] = useMutation(useApi("createGuestReservation"), {
+  const [mutateCreation] = useMutation(useApi("createGuestReservation"), {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries(["schedule", { ymd, roomId }]);
@@ -79,10 +73,6 @@ const TimeSlotList = ({ ymd, roomId, user }) => {
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "danger"));
     }
-  };
-
-  const findPendingReservation = () => {
-    return schedule.find((timeSlot) => timeSlot.reservation !== null);
   };
 
   if (scheduleStatus === "loading") return <Loader />;

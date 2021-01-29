@@ -103,15 +103,15 @@ const BoulderTable = ({
 
   useEffect(() => {
     setAllFilters(filters);
-  }, [filters, setAllFilters]);
+  }, [filters]);
 
   useEffect(() => {
     onSelectRows(selectedFlatRows.map((item) => item.original.id));
-  }, [selectedFlatRows, onSelectRows]);
+  }, [selectedFlatRows]);
 
   useEffect(() => {
     setGlobalFilter(globalFilter);
-  }, [globalFilter, setGlobalFilter]);
+  }, [globalFilter]);
 
   const rowStyle = isAdmin ? styles["gridRow--admin"] : styles.gridRow;
 

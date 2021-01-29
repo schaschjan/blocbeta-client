@@ -22,10 +22,7 @@ const Index = () => {
     useApi("location", { id: locationId })
   );
 
-  const [
-    mutateDeletion,
-    { status: deletionMutationStatus, error: deletionMutationError },
-  ] = useMutation(useApi("deleteReservation"), {
+  const [mutateDeletion] = useMutation(useApi("deleteReservation"), {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries("schedule");

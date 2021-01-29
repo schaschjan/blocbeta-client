@@ -31,7 +31,7 @@ const Index = () => {
         ),
       },
     ];
-  }, []);
+  }, [contextualizedPath]);
 
   return (
     <Fragment>

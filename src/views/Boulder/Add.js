@@ -36,10 +36,7 @@ const Add = () => {
     setters: [""],
   });
 
-  const [
-    mutateCreation,
-    { status: creationMutationStatus, error: creationMutationError },
-  ] = useMutation(useApi("createBoulder"), {
+  const [mutateCreation] = useMutation(useApi("createBoulder"), {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries([cache.boulder]);

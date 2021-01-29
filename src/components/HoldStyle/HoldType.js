@@ -14,7 +14,7 @@ const HoldType = ({ image, small = false }) => {
         />
       </div>
     ),
-    [image]
+    [image, small]
   );
 };
 

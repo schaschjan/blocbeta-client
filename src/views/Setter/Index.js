@@ -19,10 +19,7 @@ const Index = () => {
   const { dispatch } = useContext(ToastContext);
   const { status, data } = useQuery(cache.setters, useApi("setters"));
 
-  const [
-    mutateUpdate,
-    { status: mutateUpdateStatus, error: mutateUpdateError },
-  ] = useMutation(useApi("updateSetter"), {
+  const [mutateUpdate] = useMutation(useApi("updateSetter"), {
     ...mutationDefaults,
     onSuccess: () => {
       queryCache.invalidateQueries(cache.setters);

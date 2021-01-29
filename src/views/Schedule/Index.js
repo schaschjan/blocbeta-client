@@ -25,10 +25,7 @@ const TimeSlotList = ({ ymd, roomId }) => {
     queryDefaults
   );
 
-  const [
-    mutateDeletion,
-    { status: deletionMutationStatus, error: deletionMutationError },
-  ] = useMutation(useApi("deleteReservation"), {
+  const [mutateDeletion] = useMutation(useApi("deleteReservation"), {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries([cache.schedule, { ymd, roomId }]);
@@ -36,10 +33,7 @@ const TimeSlotList = ({ ymd, roomId }) => {
     },
   });
 
-  const [
-    mutateCreation,
-    { status: creationMutationStatus, error: creationMutationError },
-  ] = useMutation(useApi("createReservation"), {
+  const [mutateCreation] = useMutation(useApi("createReservation"), {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries([cache.schedule, { ymd, roomId }]);

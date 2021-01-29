@@ -22,10 +22,7 @@ const Add = () => {
 
   const [searchResults, setSearchResults] = useState([]);
 
-  const [
-    mutateCreation,
-    { status: mutateCreationStatus, error: mutateCreationError },
-  ] = useMutation(useApi("createSetter"), {
+  const [mutateCreation] = useMutation(useApi("createSetter"), {
     ...mutationDefaults,
     onSuccess: () => {
       queryCache.invalidateQueries(cache.setters);

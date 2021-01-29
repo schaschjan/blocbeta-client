@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useContext, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import { useQuery, useMutation, queryCache } from "react-query";
 import { cache, mutationDefaults, useApi } from "../../hooks/useApi";
 import { Loader } from "../../components/Loader/Loader";
@@ -22,10 +22,7 @@ const DoubtForm = ({ ascent, boulder }) => {
     ascent,
   });
 
-  const [
-    mutateCreation,
-    { status: mutateCreationStatus, error: mutateCreationError },
-  ] = useMutation(useApi("createDoubt"), {
+  const [mutateCreation] = useMutation(useApi("createDoubt"), {
     ...mutationDefaults,
     onSuccess: () => {
       queryCache.invalidateQueries([cache.boulder, { id: boulder }]);
@@ -74,10 +71,7 @@ const ErrorForm = ({ boulder }) => {
     boulder,
   });
 
-  const [
-    mutateCreation,
-    { status: mutateCreationStatus, error: mutateCreationError },
-  ] = useMutation(useApi("createError"), {
+  const [mutateCreation] = useMutation(useApi("createError"), {
     ...mutationDefaults,
   });
 

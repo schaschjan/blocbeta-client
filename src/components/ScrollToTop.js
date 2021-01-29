@@ -15,7 +15,7 @@ export default function ScrollToTop() {
     } else {
       window.scrollTo(0, 0);
     }
-  }, [pathname]);
+  }, [pathname, hash]);
 
   return null;
 }
