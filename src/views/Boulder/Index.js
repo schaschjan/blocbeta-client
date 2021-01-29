@@ -25,13 +25,14 @@ import {
   toast,
   ToastContext,
 } from "../../components/Toaster/Toaster";
-import { classNames } from "../../helper/classNames";
-import Forward from "../../components/Icon/Forward";
 import BoulderDetails from "../../components/BoulderDetails/BoulderDetails";
 import { Ascents } from "../../components/Ascents/Ascents";
 import { Bar } from "../../components/Bar/Bar";
 import { Button } from "../../components/Button/Button";
-import { BoulderTable } from "../../components/BoulderTable/BoulderTable";
+import {
+  BoulderTable,
+  DetailToggle,
+} from "../../components/BoulderTable/BoulderTable";
 import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 import { BoulderFilters } from "../../components/BoulderFilters/BoulderFilters";
 
@@ -190,18 +191,13 @@ const Index = () => {
         accessor: "name",
         Header: "Name",
         Cell: ({ value, row }) => {
-          const active = boulder === row.original.id;
-
           return (
-            <span
-              onClick={() => toggleDetails(row.original.id)}
-              className={classNames(
-                "toggle-details",
-                active ? "toggle-details__active" : null
-              )}
-            >
-              {value} <Forward />
-            </span>
+            <DetailToggle
+              value={value}
+              active={boulder === row.original.id}
+              boulderId={row.original.id}
+              toggleHandler={toggleDetails}
+            />
           );
         },
       },

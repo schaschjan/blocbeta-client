@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useRef, forwardRef } from "react";
-import { classNames } from "../../helper/classNames";
 import Downward from "../Icon/Downward";
 import Upward from "../Icon/Upward";
 import {
@@ -10,7 +9,7 @@ import {
   useRowSelect,
   useFilters,
 } from "react-table";
-import "./BoulderTable.css";
+import styles from "./BoulderTable.module.css";
 import Forward from "../Icon/Forward";
 import Backward from "../Icon/Backward";
 
@@ -28,6 +27,18 @@ const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
     </>
   );
 });
+
+const DetailToggle = ({ boulderId, toggleHandler, active, value }) => {
+  const style = `${styles.toggleDetails} ${
+    active ? styles["toggleDetails--active"] : null
+  }`;
+
+  return (
+    <span onClick={() => toggleHandler(boulderId)} className={style}>
+      {value} <Forward />
+    </span>
+  );
+};
 
 const BoulderTable = ({
   columns,
@@ -102,56 +113,55 @@ const BoulderTable = ({
     setGlobalFilter(globalFilter);
   }, [globalFilter]);
 
+  const rowStyle = isAdmin ? styles["gridRow--admin"] : styles.gridRow;
+
   return (
     <Fragment>
-      <div className="boulder-list">
-        {headerGroups.map((headerGroup) => (
-          <div
-            className={classNames(
-              "boulder-list__header",
-              "boulder-list-header",
-              isAdmin ? "boulder-list__header--admin" : null
-            )}
-            {...headerGroup.getHeaderGroupProps()}
-          >
-            {headerGroup.headers.map((column) => (
-              <div
-                {...column.getHeaderProps(column.getSortByToggleProps())}
-                className="boulder-list-header__item t--eta"
-              >
-                {column.render("Header")}
+      <div className={styles.root}>
+        {headerGroups.map((headerGroup) => {
+          return (
+            <div className={rowStyle} {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => {
+                return (
+                  <div
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    className={`${styles.headerItem} ${
+                      styles[`headerItem--${column.id}`]
+                    }`}
+                  >
+                    {column.render("Header")}
 
-                {column.isSorted ? (
-                  column.isSortedDesc ? (
-                    <Downward />
-                  ) : (
-                    <Upward />
-                  )
-                ) : (
-                  ""
-                )}
-              </div>
-            ))}
-          </div>
-        ))}
+                    {column.isSorted ? (
+                      column.isSortedDesc ? (
+                        <Downward />
+                      ) : (
+                        <Upward />
+                      )
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
 
-        <div className="boulder-list__content boulder-list-content">
+        <div>
           {page.map((row, index) => {
             prepareRow(row);
 
             return (
               <div
-                className={classNames(
-                  "boulder-list-content__item",
-                  "boulder-list-content-item",
-                  isAdmin ? "boulder-list-content__item--admin" : null
-                )}
+                className={`${rowStyle} ${styles.contentGridRow}`}
                 key={index}
               >
                 {row.cells.map((cell) => {
                   return (
                     <div
-                      className={`t--eta boulder-list-content-item__cell boulder-list-content-item__cell--${cell.column.id}`}
+                      className={`${styles.cell} ${
+                        styles[`cell--${cell.column.id}`]
+                      }`}
                       {...cell.getCellProps()}
                     >
                       {cell.render("Cell")}
@@ -163,43 +173,35 @@ const BoulderTable = ({
           })}
         </div>
 
-        <div className="boulder-list__footer boulder-list-footer">
-          <div className="boulder-list-footer__pager boulder-list-footer-pager ">
-            <span className="boulder-list-footer-pager__info t--eta">
-              {pageIndex * pageSize} - {(pageIndex + 1) * pageSize} of{" "}
-              {pageOptions.length * pageSize}
-            </span>
+        <div className={styles.pager}>
+          <span className={styles.pagerInfo}>
+            {pageIndex * pageSize} - {(pageIndex + 1) * pageSize} of{" "}
+            {pageOptions.length * pageSize}
+          </span>
 
-            <span
-              onClick={() => previousPage()}
-              className={classNames(
-                "boulder-list-footer-pager__prev",
-                !canPreviousPage
-                  ? "boulder-list-footer-pager__prev--disabled"
-                  : null
-              )}
-            >
-              <Backward />
-            </span>
+          <span
+            onClick={() => previousPage()}
+            className={
+              canPreviousPage ? styles.pagerNav : styles["pagerNav--disabled"]
+            }
+          >
+            <Backward />
+          </span>
 
-            <span className={"boulder-list-footer-pager__separator"} />
+          <span className={styles.pagerSeparator} />
 
-            <span
-              onClick={() => nextPage()}
-              className={classNames(
-                "boulder-list-footer-pager__next",
-                !canNextPage
-                  ? "boulder-list-footer-pager__next--disabled"
-                  : null
-              )}
-            >
-              <Forward />
-            </span>
-          </div>
+          <span
+            onClick={() => nextPage()}
+            className={
+              canNextPage ? styles.pagerNav : styles["pagerNav--disabled"]
+            }
+          >
+            <Forward />
+          </span>
         </div>
       </div>
     </Fragment>
   );
 };
 
-export { BoulderTable };
+export { BoulderTable, DetailToggle };
