@@ -19,9 +19,9 @@ const Current = () => {
       <Meta title="Current Ranking" />
       <h1 className="t--alpha page-title">Current Ranking</h1>
 
-      <LoadedContent
-        loading={[currentStatus].includes("loading")}
-      ></LoadedContent>
+      <LoadedContent loading={[currentStatus].includes("loading")}>
+        Todo
+      </LoadedContent>
     </Fragment>
   );
 };

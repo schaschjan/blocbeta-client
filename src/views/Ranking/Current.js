@@ -11,7 +11,6 @@ import Avatar from "../../components/Avatar/Avatar";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import { LoadedContent } from "../../components/Loader/Loader";
 import "./Current.css";
-import { Button } from "../../components/Button/Button";
 import Male from "../../components/Icon/Male";
 import Female from "../../components/Icon/Female";
 import { Link } from "react-router-dom";
@@ -68,7 +67,9 @@ const Current = () => {
               <span className="rank-username">{cell.value}</span>
 
               {row.original.boulder === boulderCount && (
-                <span className="rank-badge">🥋</span>
+                <span className="rank-badge">
+                  <Emoji>🥋</Emoji>
+                </span>
               )}
             </Fragment>
           );
@@ -134,18 +135,20 @@ const Current = () => {
             return null;
           }
 
-          return (
-            <Button
-              asLink={true}
-              variant="primary"
-              size="small"
-              to={contextualizedPath(
-                `/compare/${user.id}/to/${cell.value}/at/current`
-              )}
-            >
-              Compare
-            </Button>
-          );
+          return null;
+
+          /*return (
+                        <Button
+                            asLink={true}
+                            variant="primary"
+                            size="small"
+                            to={contextualizedPath(
+                                `/compare/${user.id}/to/${cell.value}/at/current`
+                            )}
+                        >
+                            Compare
+                        </Button>
+                    );*/
         },
       },
     ];

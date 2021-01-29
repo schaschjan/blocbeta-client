@@ -137,5 +137,49 @@
 }
 
 /* iPad */
-@media (max-width: 1024px) {
+@media (max-width: 769px) {
+  .gridRow {
+    grid-template-areas: "holdStyle main ascent";
+    grid-template-columns: minmax(20px, 40px) auto 152px;
+    grid-column-gap: calc(2 * var(--spacing-unit));
+  }
+
+  .gridRow--admin {
+    grid-template-areas: "selection holdType main ascent";
+    grid-template-columns: 20px minmax(20px, 40px) auto 152px;
+  }
+
+  .cell--selection {
+    grid-area: selection;
+  }
+
+  .cell--holdType {
+    grid-area: holdType;
+  }
+
+  .cell--name,
+  .cell--grade,
+  .cell--start,
+  .cell--end,
+  .cell--points {
+    grid-area: main;
+  }
+
+  .cell--ascent {
+    grid-area: ascent;
+  }
+
+  .cell--name {
+    grid-row: 1;
+  }
+
+  .cell--grade {
+    grid-row: 2;
+  }
+
+  .cell--start,
+  .cell--end,
+  .cell--points {
+    grid-row: 3;
+  }
 }
