@@ -6,6 +6,7 @@ import Emoji from "../../components/Emoji/Emoji";
 import { LoadedContent } from "../../components/Loader/Loader";
 import { Button } from "../../components/Button/Button";
 import { errorToast, ToastContext } from "../../components/Toaster/Toaster";
+import { getIcon } from "../../components/Ascent/Ascent";
 
 const Index = () => {
   const { dispatch } = useContext(ToastContext);
@@ -30,13 +31,21 @@ const Index = () => {
         {doubts && doubts.length > 0 ? (
           <ul className={"doubt-list"}>
             {doubts.map((doubt) => {
+              const AscentIcon = getIcon(doubt.ascent.type);
+
               return (
                 <li className={"doubt-list__item"}>
-                  <span>
-                    {doubt.username} doubted your "flash" on {doubt.name}
-                  </span>
+                  <div>
+                    <span>
+                      <strong>{doubt.author.username}</strong> doubts your{" "}
+                      <AscentIcon />({doubt.ascent.type}) of{" "}
+                      {doubt.boulder.name}
+                    </span>
 
-                  <span>{doubt.description}</span>
+                    <span>
+                      <strong> Message:</strong> {doubt.author.message}
+                    </span>
+                  </div>
 
                   <Button
                     variant="primary"
