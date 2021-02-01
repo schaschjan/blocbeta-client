@@ -82,7 +82,7 @@ export const BoulderDBUI = ({ children }) => {
           window.location.reload();
         }
       });
-  }, [version, setVersion]);
+  }, [version]);
 
   return (
     <BoulderDBUIContext.Provider

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, Fragment } from "react";
 import { Input } from "../../components/Input/Input";
 import { Meta } from "../../App";
 import { FormRow } from "../../components/Form/Form";
-import { extractErrorMessage, resources } from "../../hooks/useApi";
+import { extractErrorMessage, resources, useApi } from "../../hooks/useApi";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import { useHistory } from "react-router-dom";
 import "./Index.css";
@@ -26,10 +26,11 @@ const Index = () => {
   );
 
   const { dispatch } = useContext(ToastContext);
+  const ping = useApi("ping");
 
   useEffect(() => {
     reset();
-  }, [reset]);
+  }, []);
 
   const onSubmit = async (payload) => {
     try {
@@ -56,6 +57,7 @@ const Index = () => {
         history.push(`/setup`);
       } else {
         history.push(`${targetLocation}/boulder`);
+        ping();
       }
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "danger"));

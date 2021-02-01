@@ -1,7 +1,7 @@
-.ascents {
+.root {
   display: inline-flex;
 }
 
-.ascents .ascent:nth-child(2) {
+.root *:nth-child(2) {
   margin: 0 calc(2 * var(--spacing-unit));
 }

@@ -206,7 +206,7 @@ const Index = () => {
       <h1 className="t--alpha page-title">Account</h1>
 
       <LoadedContent loading={status !== "success"}>
-        <div className="account-layout content-offset">
+        <div className="account-layout">
           <Form defaults={data} onSubmit={onSubmit} />
 
           <div className="account-layout__actions">

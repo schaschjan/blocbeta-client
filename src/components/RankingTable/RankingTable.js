@@ -1,86 +1,93 @@
-import { useGlobalFilter, useSortBy, useTable } from "react-table";
+import {useGlobalFilter, useSortBy, useTable} from "react-table";
 import React from "react";
-import { TableCell, TableHeader, TableRow } from "../Table/Table";
+import {TableCell, TableHeader, TableRow} from "../Table/Table";
 import SwipeOut from "../SwipeOut/SwipeOut";
-import { Input } from "../Input/Input";
+import {Input} from "../Input/Input";
+import {classNames} from "../../helper/classNames";
+import {useMediaQuery} from 'react-responsive'
 import "./RankingTable.css";
-import { classNames } from "../../helper/classNames";
 
-const RankingTable = ({ columns, data, Actions, className }) => {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    setGlobalFilter,
-  } = useTable(
+const Row = ({cells, ...rest}) => {
+    const isTabletOrMobile = useMediaQuery({maxWidth: 1224})
+
+    if(isTabletOrMobile)
     {
-      columns,
-      data,
-    },
-    useGlobalFilter,
-    useSortBy
-  );
+        return  "poop"
+    }
 
-  const Row = ({ cells, ...rest }) => {
     return (
-      <TableRow {...rest}>
-        {cells.map((cell) => {
-          return (
-            <TableCell
-              {...cell.getCellProps({
-                className: cell.column.className,
-              })}
-            >
-              {cell.render("Cell")}
-            </TableCell>
-          );
-        })}
-      </TableRow>
+        <TableRow {...rest}>
+            {cells.map((cell) => {
+                return (
+                    <TableCell
+                        {...cell.getCellProps({
+                            className: cell.column.className,
+                        })}
+                    >
+                        {cell.render("Cell")}
+                    </TableCell>
+                );
+            })}
+        </TableRow>
     );
-  };
+};
 
-  return (
-    <div className="ranking-table-layout content-offset">
-      <Input
-        className="ranking-table-layout__search"
-        placeholder="Search for member"
-        onClear={() => setGlobalFilter(null)}
-        clearable={true}
-        onChange={(event) => {
-          setGlobalFilter(event.target.value);
-        }}
-      />
+const RankingTable = ({columns, data, Actions, className}) => {
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        setGlobalFilter,
+    } = useTable(
+        {
+            columns,
+            data,
+        },
+        useGlobalFilter,
+        useSortBy
+    );
 
-      <div
-        className={classNames(
-          "ranking-table-layout__table",
-          "table",
-          `table--${className}`
-        )}
-        {...getTableProps()}
-      >
-        <TableHeader headerGroups={headerGroups} />
+    return (
+        <div className="ranking-table-layout">
+            <Input
+                className="ranking-table-layout__search"
+                placeholder="Search for member"
+                onClear={() => setGlobalFilter(null)}
+                clearable={true}
+                onChange={(event) => {
+                    setGlobalFilter(event.target.value);
+                }}
+            />
 
-        <div className="table-content" {...getTableBodyProps()}>
-          {rows.map((row, index) => {
-            prepareRow(row);
+            <div
+                className={classNames(
+                    "table",
+                    `table--${className}`
+                )}
+                {...getTableProps()}
+            >
+                <TableHeader headerGroups={headerGroups}/>
 
-            if (Actions) {
-              return (
-                <SwipeOut actions={Actions} key={row.index}>
-                  <Row key={index} cells={row.cells} />
-                </SwipeOut>
-              );
-            }
+                <div className="table-content" {...getTableBodyProps()}>
+                    {rows.map((row, index) => {
+                        prepareRow(row);
 
-            return <Row cells={row.cells} key={row.index} />;
-          })}
+                        if (Actions) {
+                            return (
+                                <SwipeOut actions={Actions} key={row.index}>
+                                    <Row key={index} cells={row.cells}/>
+                                </SwipeOut>
+                            );
+                        }
+
+                        return <Row cells={row.cells} key={row.index}/>;
+                    })}
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default RankingTable;
