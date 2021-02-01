@@ -53,12 +53,11 @@ const Index = () => {
         );
       }
 
-      ping();
-
       if (!targetLocation) {
         history.push(`/setup`);
       } else {
         history.push(`${targetLocation}/boulder`);
+        ping();
       }
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "danger"));
