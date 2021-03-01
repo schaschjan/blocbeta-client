@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { useQuery } from "react-query";
-import { useApi } from "../../hooks/useApi";
+import { queryDefaults, useApi } from "../../hooks/useApi";
 import { Select } from "../Select/Select";
 
 const ResourceDependantSelect = ({
@@ -11,7 +11,7 @@ const ResourceDependantSelect = ({
   ...rest
 }) => {
   const resource = useApi(api);
-  const { status, data } = useQuery(cacheKey, resource);
+  const { status, data } = useQuery(cacheKey, resource, queryDefaults);
 
   if (status === "loading") {
     return (

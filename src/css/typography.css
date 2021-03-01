@@ -107,6 +107,10 @@ mark {
   color: var(--color-white);
 }
 
+a {
+  text-decoration: none;
+}
+
 a svg,
 p svg,
 span svg,

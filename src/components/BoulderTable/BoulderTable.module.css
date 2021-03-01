@@ -13,7 +13,7 @@
 
 .gridRow--admin {
   composes: gridRow;
-  grid-template-columns: 20px minmax(20px, 40px) 80px 60px auto 140px 140px 140px 100px 152px;
+  grid-template-columns: 40px minmax(20px, 40px) 80px 60px auto 140px 140px 140px 100px 152px;
 }
 
 .headerItem {

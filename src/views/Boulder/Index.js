@@ -191,13 +191,18 @@ const Index = () => {
         accessor: "name",
         Header: "Name",
         Cell: ({ value, row }) => {
+          const boulderId = row.original.id;
+
           return (
-            <DetailToggle
-              value={value}
-              active={boulder === row.original.id}
-              boulderId={row.original.id}
-              toggleHandler={toggleDetails}
-            />
+            <Fragment>
+              <DetailToggle
+                active={boulder === boulderId}
+                boulderId={boulderId}
+                toggleHandler={toggleDetails}
+              >
+                {value}
+              </DetailToggle>
+            </Fragment>
           );
         },
       },

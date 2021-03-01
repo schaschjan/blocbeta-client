@@ -3,6 +3,7 @@ import { Index as AccessDenied } from "./views/AccessDenied/Index";
 import { Index as Ticker } from "./views/Ticker/Index";
 import { Index as BlockerIndex } from "./views/Blocker/Index";
 import { Add as BlockerAdd } from "./views/Blocker/Add";
+import { Detail as BoulderDetail } from "./views/Boulder/Detail";
 import { Index as RoomIndex } from "./views/Room/Index";
 import { Detail as RoomDetail } from "./views/Room/Detail";
 import { Index as SetterIndex } from "./views/Setter/Index";
@@ -82,6 +83,13 @@ const adminRoutes = [
     exact: true,
     admin: true,
     main: () => <BoulderAdd />,
+  },
+  {
+    title: "Edit boulder",
+    path: "/:location/admin/boulder/:boulderId",
+    exact: true,
+    admin: true,
+    main: () => <BoulderDetail />,
   },
   {
     title: "Room Detail",

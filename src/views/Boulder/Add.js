@@ -56,7 +56,7 @@ const Add = () => {
 
   return (
     <Fragment>
-      <Meta title="Add time slot exclusion" />
+      <Meta title="Add boulder" />
 
       <div className="side-title-layout">
         <h1 className="t--alpha side-title-layout__title">

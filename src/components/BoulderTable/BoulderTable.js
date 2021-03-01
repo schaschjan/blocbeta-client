@@ -1,4 +1,10 @@
-import React, { Fragment, useEffect, useRef, forwardRef } from "react";
+import React, {
+  useContext,
+  Fragment,
+  useEffect,
+  useRef,
+  forwardRef,
+} from "react";
 import Downward from "../Icon/Downward";
 import Upward from "../Icon/Upward";
 import {
@@ -12,6 +18,8 @@ import {
 import styles from "./BoulderTable.module.css";
 import Forward from "../Icon/Forward";
 import Backward from "../Icon/Backward";
+import { Link } from "react-router-dom";
+import { BoulderDBUIContext } from "../BoulderDBUI";
 
 const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = useRef();
@@ -28,14 +36,14 @@ const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
   );
 });
 
-const DetailToggle = ({ boulderId, toggleHandler, active, value }) => {
+const DetailToggle = ({ boulderId, toggleHandler, active, children }) => {
   const style = `${styles.toggleDetails} ${
     active ? styles["toggleDetails--active"] : null
   }`;
 
   return (
     <span onClick={() => toggleHandler(boulderId)} className={style}>
-      {value} <Forward />
+      {children} <Forward />
     </span>
   );
 };
@@ -48,6 +56,8 @@ const BoulderTable = ({
   filters,
   isAdmin = false,
 }) => {
+  const { contextualizedPath } = useContext(BoulderDBUIContext);
+
   const {
     headerGroups,
     page,
@@ -92,6 +102,12 @@ const BoulderTable = ({
             Cell: ({ row }) => (
               <div>
                 <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+
+                <Link
+                  to={contextualizedPath(`/admin/boulder/${row.original.id}`)}
+                >
+                  &nbsp;&nbsp;&nbsp;✎
+                </Link>
               </div>
             ),
           },

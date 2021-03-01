@@ -1,52 +1,52 @@
 .root {
-    width: 40px;
-    height: 40px;
-    box-sizing: border-box;
-    border: 1px solid var(--color-black);
-    display: flex;
-    align-items: center;
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
+  border: 1px solid var(--color-black);
+  display: flex;
+  align-items: center;
 }
 
 .root:hover svg {
-    cursor: pointer;
-    transform: scale(1.2);
+  cursor: pointer;
+  transform: scale(1.2);
 }
 
 .root svg {
-    margin: 0 auto;
-    align-items: center;
-    transition: transform 80ms ease-in-out;
+  margin: 0 auto;
+  align-items: center;
+  transition: transform 80ms ease-in-out;
 }
 
 .root--disabled {
-    opacity: 0.3;
-    pointer-events: none;
+  opacity: 0.3;
+  pointer-events: none;
 }
 
 .root--loading svg {
-    animation: ascentLoader 600ms linear infinite;
+  animation: ascentLoader 600ms linear infinite;
 }
 
 .root--flash.root--checked {
-    border: 1px solid var(--color-flash);
+  border: 1px solid var(--color-flash);
 }
 
 .root--top.root--checked {
-    border: 1px solid var(--color-top);
+  border: 1px solid var(--color-top);
 }
 
 .root--resign.root--checked {
-    border: 1px solid var(--color-resign);
+  border: 1px solid var(--color-resign);
 }
 
 @keyframes ascentLoader {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
-    }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
