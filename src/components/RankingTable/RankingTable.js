@@ -10,10 +10,6 @@ import "./RankingTable.css";
 const Row = ({ cells, ...rest }) => {
   const isTabletOrMobile = useMediaQuery({ maxWidth: 1224 });
 
-  if (isTabletOrMobile) {
-    return "poop";
-  }
-
   return (
     <TableRow {...rest}>
       {cells.map((cell) => {
