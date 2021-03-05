@@ -265,7 +265,7 @@ const Index = () => {
         },
       },
     ];
-  }, [isAdmin, boulder]);
+  }, [boulder]);
 
   const mergedData = useMemo(() => {
     if (

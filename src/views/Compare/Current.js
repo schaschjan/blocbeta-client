@@ -5,10 +5,14 @@ import { useApi } from "../../hooks/useApi";
 import { useQuery } from "react-query";
 import { AppContext, Meta } from "../../App";
 import { LoadedContent } from "../../components/Loader/Loader";
+import useSWR from "swr";
 
 const Current = () => {
   const { a, b } = useParams();
   const { user } = useContext(AppContext);
+
+  const { data, error } = useSWR();
+
   const { status: currentStatus, data: currentData } = useQuery(
     "compareCurrent",
     useApi("compareCurrent", { a, b })
