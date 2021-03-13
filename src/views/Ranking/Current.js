@@ -14,6 +14,7 @@ import "./Current.css";
 import Male from "../../components/Icon/Male";
 import Female from "../../components/Icon/Female";
 import { Link } from "react-router-dom";
+import { Button } from "../../components/Button/Button";
 
 const calculatePercentage = (amount, total) => {
   let percentage = 0;
@@ -135,20 +136,18 @@ const Current = () => {
             return null;
           }
 
-          return null;
-
-          /*return (
-                        <Button
-                            asLink={true}
-                            variant="primary"
-                            size="small"
-                            to={contextualizedPath(
-                                `/compare/${user.id}/to/${cell.value}/at/current`
-                            )}
-                        >
-                            Compare
-                        </Button>
-                    );*/
+          return (
+            <Button
+              asLink={true}
+              variant="primary"
+              size="small"
+              to={contextualizedPath(
+                `/compare/${user.id}/to/${cell.value}/at/current`
+              )}
+            >
+              Compare
+            </Button>
+          );
         },
       },
     ];

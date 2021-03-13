@@ -1,33 +1,11 @@
 import { useGlobalFilter, useSortBy, useTable } from "react-table";
 import React from "react";
 import { TableCell, TableHeader, TableRow } from "../Table/Table";
-import SwipeOut from "../SwipeOut/SwipeOut";
 import { Input } from "../Input/Input";
 import { classNames } from "../../helper/classNames";
-import { useMediaQuery } from "react-responsive";
 import "./RankingTable.css";
 
-const Row = ({ cells, ...rest }) => {
-  const isTabletOrMobile = useMediaQuery({ maxWidth: 1224 });
-
-  return (
-    <TableRow {...rest}>
-      {cells.map((cell) => {
-        return (
-          <TableCell
-            {...cell.getCellProps({
-              className: cell.column.className,
-            })}
-          >
-            {cell.render("Cell")}
-          </TableCell>
-        );
-      })}
-    </TableRow>
-  );
-};
-
-const RankingTable = ({ columns, data, Actions, className }) => {
+const RankingTable = ({ columns, data, className }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -66,15 +44,21 @@ const RankingTable = ({ columns, data, Actions, className }) => {
           {rows.map((row, index) => {
             prepareRow(row);
 
-            if (Actions) {
-              return (
-                <SwipeOut actions={Actions} key={row.index}>
-                  <Row key={index} cells={row.cells} />
-                </SwipeOut>
-              );
-            }
-
-            return <Row cells={row.cells} key={row.index} />;
+            return (
+              <TableRow key={row.index} index={`row-${index}`}>
+                {row.cells.map((cell) => {
+                  return (
+                    <TableCell
+                      {...cell.getCellProps({
+                        className: cell.column.className,
+                      })}
+                    >
+                      {cell.render("Cell")}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            );
           })}
         </div>
       </div>

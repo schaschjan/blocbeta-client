@@ -35,6 +35,7 @@ import {
 } from "../../components/BoulderTable/BoulderTable";
 import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 import { BoulderFilters } from "../../components/BoulderFilters/BoulderFilters";
+import convertToKeyValueObject from "../../helper/convertToKeyValueObject";
 
 const Index = () => {
   const { isAdmin, contextualizedPath, currentLocation } = useContext(
@@ -194,15 +195,13 @@ const Index = () => {
           const boulderId = row.original.id;
 
           return (
-            <Fragment>
-              <DetailToggle
-                active={boulder === boulderId}
-                boulderId={boulderId}
-                toggleHandler={toggleDetails}
-              >
-                {value}
-              </DetailToggle>
-            </Fragment>
+            <DetailToggle
+              active={boulder === boulderId}
+              boulderId={boulderId}
+              toggleHandler={toggleDetails}
+            >
+              {value}
+            </DetailToggle>
           );
         },
       },
@@ -274,32 +273,21 @@ const Index = () => {
       !holdTypesQuery.data ||
       !wallsQuery.data ||
       !settersQuery.data ||
-      !tagsQuery.data ||
       !ascentsQuery.data
     ) {
       return [];
     }
 
+    const ascents = convertToKeyValueObject(ascentsQuery.data, "boulderId");
+    const grades = convertToKeyValueObject(gradesQuery.data);
+    const holdTypes = convertToKeyValueObject(holdTypesQuery.data);
+    const walls = convertToKeyValueObject(wallsQuery.data);
+    const setters = convertToKeyValueObject(settersQuery.data);
+
     return boulderQuery.data.map((boulder) => {
-      const ascent = ascentsQuery.data.find((ascent) => {
-        return ascent.boulderId === boulder.id;
-      });
-
-      const grade = gradesQuery.data.find((grade) => {
-        return grade.id === boulder.grade.id;
-      });
-
-      const internalGrade = gradesQuery.data.find((grade) => {
-        if (!boulder.internalGrade) {
-          return null;
-        }
-
-        return grade.id === boulder.internalGrade.id;
-      });
-
-      if (!ascent) {
-        console.log(boulder);
-      }
+      const ascent = ascents[boulder.id];
+      const grade = grades[boulder.grade];
+      const startWall = walls[boulder.start_wall];
 
       return {
         ...boulder,
@@ -307,29 +295,12 @@ const Index = () => {
         ascents: ascent.ascents,
         grade: {
           ...grade,
-          internal: internalGrade,
+          internal_grade: null,
         },
-        holdType: holdTypesQuery.data.find((holdType) => {
-          return holdType.id === boulder.holdType.id;
-        }),
-        startWall: wallsQuery.data.find((wall) => {
-          return wall.id === boulder.startWall.id;
-        }),
-        endWall: wallsQuery.data.find((wall) => {
-          if (!boulder.endWall) {
-            return null;
-          }
-
-          return wall.id === boulder.endWall.id;
-        }),
-        setters: boulder.setters.map((boulderSetter) => {
-          return settersQuery.data.find(
-            (setter) => boulderSetter.id === setter.id
-          );
-        }),
-        tags: boulder.tags.map((boulderTag) => {
-          return tagsQuery.data.find((tag) => boulderTag.id === tag.id);
-        }),
+        holdType: holdTypes[boulder.hold_type],
+        startWall: startWall,
+        endWall: boulder.end_wall ? walls[boulder.end_wall] : startWall,
+        setters: boulder.setters.map((id) => setters[id]),
         ascent: ascent
           ? {
               id: ascent.me ? ascent.me.id : null,
@@ -341,12 +312,11 @@ const Index = () => {
     });
   }, [
     boulderQuery,
+    ascentsQuery,
     wallsQuery,
     gradesQuery,
     holdTypesQuery,
-    tagsQuery,
     settersQuery,
-    ascentsQuery,
   ]);
 
   const idle = allIdle(
