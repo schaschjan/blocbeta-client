@@ -7,14 +7,8 @@ import React, {
   useEffect,
 } from "react";
 import { Meta } from "../../App";
-import { useQuery, queryCache, useMutation } from "react-query";
-import {
-  cache,
-  allIdle,
-  useApi,
-  queryDefaults,
-  extractErrorMessage,
-} from "../../hooks/useApi";
+import { queryCache, useMutation } from "react-query";
+import { cache, useApi, extractErrorMessage } from "../../hooks/useApi";
 import { LoadedContent } from "../../components/Loader/Loader";
 import HoldType from "../../components/HoldStyle/HoldType";
 import Grade from "../../components/Grade/Grade";
@@ -32,10 +26,11 @@ import { Button } from "../../components/Button/Button";
 import {
   BoulderTable,
   DetailToggle,
+  boulderTableColumns,
 } from "../../components/BoulderTable/BoulderTable";
 import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 import { BoulderFilters } from "../../components/BoulderFilters/BoulderFilters";
-import convertToKeyValueObject from "../../helper/convertToKeyValueObject";
+import { useBoulders } from "../../hooks/useBoulders";
 
 const Index = () => {
   const { isAdmin, contextualizedPath, currentLocation } = useContext(
@@ -44,7 +39,7 @@ const Index = () => {
   const { dispatch } = useContext(ToastContext);
   const { toggle: toggleDrawer } = useContext(DrawerContext);
 
-  const [boulder, setBoulder] = useState(null);
+  const [detailBoulder, setDetailBoulder] = useState(null);
   const [selected, setSelected] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [filters, setFilters] = useState([
@@ -59,48 +54,6 @@ const Index = () => {
   useEffect(() => {
     ping();
   }, []);
-
-  const boulderQuery = useQuery(
-    [cache.boulder, currentLocation.id],
-    useApi("boulder"),
-    queryDefaults
-  );
-
-  const ascentsQuery = useQuery(
-    [cache.ascents, currentLocation.id],
-    useApi("ascents"),
-    queryDefaults
-  );
-
-  const wallsQuery = useQuery(
-    [cache.walls, currentLocation.id],
-    useApi("walls"),
-    queryDefaults
-  );
-
-  const gradesQuery = useQuery(
-    [cache.grades, currentLocation.id],
-    useApi("grades"),
-    queryDefaults
-  );
-
-  const holdTypesQuery = useQuery(
-    [cache.holdTypes, currentLocation.id],
-    useApi("holdTypes"),
-    queryDefaults
-  );
-
-  const tagsQuery = useQuery(
-    [cache.tags, currentLocation.id],
-    useApi("tags"),
-    queryDefaults
-  );
-
-  const settersQuery = useQuery(
-    [cache.currentSetters, currentLocation.id],
-    useApi("currentSetters"),
-    queryDefaults
-  );
 
   const [mutateAscentCreation] = useMutation(useApi("addAscent"), {
     throwOnError: true,
@@ -127,33 +80,11 @@ const Index = () => {
   const columns = useMemo(() => {
     return [
       {
-        id: "holdType",
-        accessor: "holdType",
-        Header: "Hold",
-        sortType: (a, b) => {
-          return a.values.holdType.name > b.values.holdType.name ? -1 : 1;
-        },
+        ...boulderTableColumns.holdType,
         Cell: ({ value }) => <HoldType image={value.image} />,
-        filter: (rows, id, filterValue) => {
-          return rows.filter((row) => {
-            return row.values[id].name === filterValue;
-          });
-        },
       },
       {
-        id: "grade",
-        accessor: "grade",
-        Header: "Grade",
-        sortType: (a, b) => {
-          const gradeA = a.values.grade.internal
-            ? a.values.grade.internal.name
-            : a.values.grade.name;
-          const gradeB = b.values.grade.internal
-            ? b.values.grade.internal.name
-            : b.values.grade.name;
-
-          return gradeA > gradeB ? -1 : 1;
-        },
+        ...boulderTableColumns.grade,
         Cell: ({ value }) => {
           if (isAdmin && value.internal) {
             return (
@@ -168,37 +99,24 @@ const Index = () => {
 
           return <Grade name={value.name} color={value.color} />;
         },
-        filter: (rows, id, filterValue) => {
-          return rows.filter((row) => {
-            const rowValue = row.values[id].internal
-              ? row.values[id].internal.name
-              : row.values[id].name;
-
-            return rowValue === filterValue;
-          });
-        },
       },
       {
-        id: "points",
-        accessor: "points",
-        Header: "Points",
-        sortType: (a, b) => {
-          return a.values.points > b.values.points ? -1 : 1;
-        },
+        ...boulderTableColumns.points,
         Cell: ({ value }) => `${value} pts`,
       },
       {
-        id: "name",
-        accessor: "name",
-        Header: "Name",
+        ...boulderTableColumns.name,
         Cell: ({ value, row }) => {
           const boulderId = row.original.id;
 
           return (
             <DetailToggle
-              active={boulder === boulderId}
+              active={detailBoulder === boulderId}
               boulderId={boulderId}
-              toggleHandler={toggleDetails}
+              toggleHandler={(id) => {
+                setDetailBoulder(id);
+                toggleDrawer(true);
+              }}
             >
               {value}
             </DetailToggle>
@@ -206,25 +124,13 @@ const Index = () => {
         },
       },
       {
-        id: "start",
-        accessor: "startWall.name",
-        Header: "Start",
+        ...boulderTableColumns.startWall,
       },
       {
-        id: "end",
-        accessor: "endWall.name",
-        Header: "End",
+        ...boulderTableColumns.endWall,
       },
       {
-        id: "setter",
-        accessor: "setters",
-        Header: "Setter",
-        filter: (rows, id, filterValue) => {
-          return rows.filter((row) => {
-            console.log(row.values);
-            return row.values[id].some((item) => item.username === filterValue);
-          });
-        },
+        ...boulderTableColumns.setters,
         Cell: ({ value }) => {
           return value.map((setter, index) => {
             if (!setter) {
@@ -240,94 +146,19 @@ const Index = () => {
         },
       },
       {
-        id: "date",
-        accessor: "createdAt",
-        Header: "Date",
+        ...boulderTableColumns.date,
         Cell: ({ value }) => {
           return moment(value).format("l");
         },
       },
       {
-        id: "ascent",
-        accessor: "ascent",
-        Header: "Ascent",
-        sortType: (a, b) => {
-          return a.values.ascent.type > b.values.ascent.type ? -1 : 1;
-        },
+        ...boulderTableColumns.ascent,
         Cell: ({ value }) => renderAscents(value),
-        filter: (rows, id, filterValue) => {
-          return rows.filter((row) => {
-            const rowValue = row.values[id].type ? row.values[id].type : "todo";
-
-            return rowValue === filterValue;
-          });
-        },
       },
     ];
-  }, [isAdmin, boulder]);
+  }, [isAdmin, detailBoulder]);
 
-  const mergedData = useMemo(() => {
-    if (
-      !boulderQuery.data ||
-      !gradesQuery.data ||
-      !holdTypesQuery.data ||
-      !wallsQuery.data ||
-      !settersQuery.data ||
-      !ascentsQuery.data
-    ) {
-      return [];
-    }
-
-    const ascents = convertToKeyValueObject(ascentsQuery.data, "boulderId");
-    const grades = convertToKeyValueObject(gradesQuery.data);
-    const holdTypes = convertToKeyValueObject(holdTypesQuery.data);
-    const walls = convertToKeyValueObject(wallsQuery.data);
-    const setters = convertToKeyValueObject(settersQuery.data);
-
-    return boulderQuery.data.map((boulder) => {
-      const ascent = ascents[boulder.id];
-      const grade = grades[boulder.grade];
-      const startWall = walls[boulder.start_wall];
-
-      return {
-        ...boulder,
-        points: ascent.points,
-        ascents: ascent.ascents,
-        grade: {
-          ...grade,
-          internal_grade: null,
-        },
-        holdType: holdTypes[boulder.hold_type],
-        startWall: startWall,
-        endWall: boulder.end_wall ? walls[boulder.end_wall] : startWall,
-        setters: boulder.setters.map((id) => setters[id]),
-        ascent: ascent
-          ? {
-              id: ascent.me ? ascent.me.id : null,
-              boulderId: ascent.boulderId,
-              type: ascent.me ? ascent.me.type : null,
-            }
-          : null,
-      };
-    });
-  }, [
-    boulderQuery,
-    ascentsQuery,
-    wallsQuery,
-    gradesQuery,
-    holdTypesQuery,
-    settersQuery,
-  ]);
-
-  const idle = allIdle(
-    boulderQuery,
-    ascentsQuery,
-    wallsQuery,
-    gradesQuery,
-    holdTypesQuery,
-    tagsQuery,
-    settersQuery
-  );
+  const { idle, boulders } = useBoulders();
 
   const addHandler = async (boulderId, type) => {
     const payload = {
@@ -361,11 +192,6 @@ const Index = () => {
     );
   }, []);
 
-  const toggleDetails = (id) => {
-    setBoulder(id);
-    toggleDrawer(true);
-  };
-
   return (
     <Fragment>
       <Meta title={"Boulder"} />
@@ -393,7 +219,7 @@ const Index = () => {
       <LoadedContent loading={!idle}>
         <BoulderTable
           columns={columns}
-          data={mergedData}
+          data={boulders}
           filters={filters}
           globalFilter={globalFilter}
           onSelectRows={(ids) => setSelected(ids)}
@@ -401,8 +227,8 @@ const Index = () => {
         />
       </LoadedContent>
 
-      <Drawer onClose={() => setBoulder(null)}>
-        {boulder && <BoulderDetails id={boulder} />}
+      <Drawer onClose={() => setDetailBoulder(null)}>
+        {detailBoulder && <BoulderDetails id={detailBoulder} />}
       </Drawer>
 
       <Bar visible={selected.length > 0}>

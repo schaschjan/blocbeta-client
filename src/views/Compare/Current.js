@@ -1,58 +1,88 @@
-import React, { Fragment, useContext, useMemo } from "react";
+import React, { Fragment, useContext, useMemo, useState } from "react";
 import "./Current.module.css";
 import { useParams } from "react-router-dom";
 import { AppContext, Meta } from "../../App";
 import useRequest from "../../hooks/useRequest";
 import { useGlobalFilter, useSortBy, useTable } from "react-table";
 import { Input } from "../../components/Input/Input";
-import {
-  TableCell,
-  TableHeader,
-  TableHeaderCell,
-  TableRow,
-} from "../../components/Table/Table";
+import { TableCell, TableHeaderCell } from "../../components/Table/Table";
 import styles from "./Current.module.css";
 import Downward from "../../components/Icon/Downward";
 import Upward from "../../components/Icon/Upward";
+import { useBoulders } from "../../hooks/useBoulders";
+import {
+  boulderTableColumns,
+  DetailToggle,
+} from "../../components/BoulderTable/BoulderTable";
+import HoldType from "../../components/HoldStyle/HoldType";
+import Grade from "../../components/Grade/Grade";
+import { BoulderDBUIContext } from "../../components/BoulderDBUI";
+import BoulderDetails from "../../components/BoulderDetails/BoulderDetails";
+import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 
 const Current = () => {
   const { a, b } = useParams();
-  const { user } = useContext(AppContext);
 
-  const { data: boulders } = useRequest(`/boulder`);
+  const { isAdmin } = useContext(BoulderDBUIContext);
+  const { toggle: toggleDrawer } = useContext(DrawerContext);
+
+  const { idle, boulders } = useBoulders();
   const { data: comparisons } = useRequest(`/compare/${a}/to/${b}/at/current`);
   const { data: compareUser } = useRequest(`/user/${b}`, false);
+
+  const [detailBoulder, setDetailBoulder] = useState(null);
 
   const columns = useMemo(() => {
     return [
       {
-        Header: "Hold",
-        gridTemplate: "1fr",
+        ...boulderTableColumns.holdType,
+        Cell: ({ value }) => <HoldType image={value.image} />,
+      },
+      {
+        ...boulderTableColumns.grade,
         Cell: ({ value }) => {
-          return <strong>{value}</strong>;
+          if (isAdmin && value.internal) {
+            return (
+              <Grade
+                name={value.name}
+                color={value.color}
+                internalName={value.internal.name}
+                internalColor={value.internal.color}
+              />
+            );
+          }
+
+          return <Grade name={value.name} color={value.color} />;
         },
       },
       {
-        Header: "Grade",
-        gridTemplate: "1fr",
-        Cell: ({ value }) => {
-          return <strong>{value}</strong>;
+        ...boulderTableColumns.points,
+        Cell: ({ value }) => `${value} pts`,
+      },
+      {
+        ...boulderTableColumns.name,
+        Cell: ({ value, row }) => {
+          const boulderId = row.original.id;
+
+          return (
+            <DetailToggle
+              active={detailBoulder === boulderId}
+              boulderId={boulderId}
+              toggleHandler={(id) => {
+                setDetailBoulder(id);
+                toggleDrawer(true);
+              }}
+            >
+              {value}
+            </DetailToggle>
+          );
         },
       },
       {
-        Header: "Name",
-        gridTemplate: "1fr",
-        Cell: ({ value }) => {
-          return <strong>{value}</strong>;
-        },
+        ...boulderTableColumns.startWall,
       },
       {
-        Header: "Start",
-        accessor: "startWall.name",
-        gridTemplate: "1fr",
-        Cell: ({ value }) => {
-          return <strong>{value}</strong>;
-        },
+        ...boulderTableColumns.endWall,
       },
       {
         Header: "You",
@@ -81,8 +111,6 @@ const Current = () => {
       };
     });
   }, [boulders, comparisons, compareUser]);
-
-  console.log(data);
 
   const {
     getTableProps,
@@ -179,6 +207,10 @@ const Current = () => {
           </div>
         </div>
       </div>
+
+      <Drawer onClose={() => setDetailBoulder(null)}>
+        {setDetailBoulder && <BoulderDetails id={detailBoulder} />}
+      </Drawer>
     </Fragment>
   );
 };

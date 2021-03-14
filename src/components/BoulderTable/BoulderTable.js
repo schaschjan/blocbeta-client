@@ -20,6 +20,7 @@ import Forward from "../Icon/Forward";
 import Backward from "../Icon/Backward";
 import { Link } from "react-router-dom";
 import { BoulderDBUIContext } from "../BoulderDBUI";
+import Grade from "../Grade/Grade";
 
 const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = useRef();
@@ -220,4 +221,97 @@ const BoulderTable = ({
   );
 };
 
-export { BoulderTable, DetailToggle };
+const boulderTableColumns = {
+  holdType: {
+    id: "holdType",
+    accessor: "holdType",
+    Header: "Hold",
+    sortType: (a, b) => {
+      return a.values.holdType.name > b.values.holdType.name ? -1 : 1;
+    },
+    filter: (rows, id, filterValue) => {
+      return rows.filter((row) => {
+        return row.values[id].name === filterValue;
+      });
+    },
+  },
+  grade: {
+    id: "grade",
+    accessor: "grade",
+    Header: "Grade",
+    sortType: (a, b) => {
+      const gradeA = a.values.grade.internal
+        ? a.values.grade.internal.name
+        : a.values.grade.name;
+      const gradeB = b.values.grade.internal
+        ? b.values.grade.internal.name
+        : b.values.grade.name;
+
+      return gradeA > gradeB ? -1 : 1;
+    },
+    filter: (rows, id, filterValue) => {
+      return rows.filter((row) => {
+        const rowValue = row.values[id].internal
+          ? row.values[id].internal.name
+          : row.values[id].name;
+
+        return rowValue === filterValue;
+      });
+    },
+  },
+  points: {
+    id: "points",
+    accessor: "points",
+    Header: "Points",
+    sortType: (a, b) => {
+      return a.values.points > b.values.points ? -1 : 1;
+    },
+  },
+  name: {
+    id: "name",
+    accessor: "name",
+    Header: "Name",
+  },
+  startWall: {
+    id: "start",
+    accessor: "startWall.name",
+    Header: "Start",
+  },
+  endWall: {
+    id: "end",
+    accessor: "endWall.name",
+    Header: "End",
+  },
+  setters: {
+    id: "setter",
+    accessor: "setters",
+    Header: "Setter",
+    filter: (rows, id, filterValue) => {
+      return rows.filter((row) =>
+        row.values[id].some((item) => item.username === filterValue)
+      );
+    },
+  },
+  date: {
+    id: "date",
+    accessor: "createdAt",
+    Header: "Date",
+  },
+  ascent: {
+    id: "ascent",
+    accessor: "ascent",
+    Header: "Ascent",
+    sortType: (a, b) => {
+      return a.values.ascent.type > b.values.ascent.type ? -1 : 1;
+    },
+    filter: (rows, id, filterValue) => {
+      return rows.filter((row) => {
+        const rowValue = row.values[id].type ? row.values[id].type : "todo";
+
+        return rowValue === filterValue;
+      });
+    },
+  },
+};
+
+export { BoulderTable, DetailToggle, boulderTableColumns };
