@@ -1,7 +1,7 @@
 import React, { Fragment, useContext, useMemo, useState } from "react";
 import "./Current.module.css";
 import { useParams } from "react-router-dom";
-import { AppContext, Meta } from "../../App";
+import { Meta } from "../../App";
 import useRequest from "../../hooks/useRequest";
 import { useGlobalFilter, useSortBy, useTable } from "react-table";
 import { Input } from "../../components/Input/Input";
@@ -19,6 +19,7 @@ import Grade from "../../components/Grade/Grade";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import BoulderDetails from "../../components/BoulderDetails/BoulderDetails";
 import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
+import { Ascent, AscentIcon } from "../../components/Ascent/Ascent";
 
 const Current = () => {
   const { a, b } = useParams();
@@ -36,10 +37,12 @@ const Current = () => {
     return [
       {
         ...boulderTableColumns.holdType,
+        gridTemplate: "minmax(20px, 40px)",
         Cell: ({ value }) => <HoldType image={value.image} />,
       },
       {
         ...boulderTableColumns.grade,
+        gridTemplate: "80px",
         Cell: ({ value }) => {
           if (isAdmin && value.internal) {
             return (
@@ -57,10 +60,12 @@ const Current = () => {
       },
       {
         ...boulderTableColumns.points,
+        gridTemplate: "60px",
         Cell: ({ value }) => `${value} pts`,
       },
       {
         ...boulderTableColumns.name,
+        gridTemplate: "auto",
         Cell: ({ value, row }) => {
           const boulderId = row.original.id;
 
@@ -80,25 +85,23 @@ const Current = () => {
       },
       {
         ...boulderTableColumns.startWall,
+        gridTemplate: "140px",
       },
       {
         ...boulderTableColumns.endWall,
+        gridTemplate: "140px",
       },
       {
         Header: "You",
         accessor: "a",
-        gridTemplate: "1fr",
-        Cell: ({ value }) => {
-          return <strong>{value}</strong>;
-        },
+        gridTemplate: "60px",
+        Cell: ({ value }) => <AscentIcon type={value} />,
       },
       {
         Header: compareUser.username,
         accessor: "b",
-        gridTemplate: "1fr",
-        Cell: ({ value }) => {
-          return <strong>{value}</strong>;
-        },
+        gridTemplate: "60px",
+        Cell: ({ value }) => <AscentIcon type={value} />,
       },
     ];
   }, []);
@@ -209,7 +212,7 @@ const Current = () => {
       </div>
 
       <Drawer onClose={() => setDetailBoulder(null)}>
-        {setDetailBoulder && <BoulderDetails id={detailBoulder} />}
+        {detailBoulder && <BoulderDetails id={detailBoulder} />}
       </Drawer>
     </Fragment>
   );

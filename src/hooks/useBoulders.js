@@ -6,7 +6,7 @@ import convertToKeyValueObject from "../helper/convertToKeyValueObject";
 
 function useBoulders() {
   const { currentLocation } = useContext(BoulderDBUIContext);
-
+  console.log("moin");
   const boulderQuery = useQuery(
     [cache.boulder, currentLocation.id],
     useApi("boulder"),
@@ -95,7 +95,14 @@ function useBoulders() {
       }),
       idle: true,
     };
-  }, [idle]);
+  }, [
+    boulderQuery,
+    ascentsQuery,
+    wallsQuery,
+    gradesQuery,
+    holdTypesQuery,
+    settersQuery,
+  ]);
 }
 
 export { useBoulders };

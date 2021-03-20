@@ -18,24 +18,24 @@
   transition: transform 80ms ease-in-out;
 }
 
-.root--disabled {
+.isDisabled {
   opacity: 0.3;
   pointer-events: none;
 }
 
-.root--loading svg {
+.isLoading svg {
   animation: ascentLoader 600ms linear infinite;
 }
 
-.root--flash.root--checked {
+.isFlash.isChecked {
   border: 1px solid var(--color-flash);
 }
 
-.root--top.root--checked {
+.isTop.isChecked {
   border: 1px solid var(--color-top);
 }
 
-.root--resign.root--checked {
+.isResign.isChecked {
   border: 1px solid var(--color-resign);
 }
 

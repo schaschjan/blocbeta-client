@@ -51,6 +51,8 @@ const Index = () => {
 
   const ping = useApi("ping");
 
+  const { idle, boulders } = useBoulders();
+
   useEffect(() => {
     ping();
   }, []);
@@ -157,8 +159,6 @@ const Index = () => {
       },
     ];
   }, [isAdmin, detailBoulder]);
-
-  const { idle, boulders } = useBoulders();
 
   const addHandler = async (boulderId, type) => {
     const payload = {

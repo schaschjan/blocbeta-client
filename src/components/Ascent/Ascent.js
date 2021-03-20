@@ -3,8 +3,8 @@ import styles from "./Ascent.module.css";
 import Flash from "../Icon/Flash";
 import Top from "../Icon/Top";
 import Resignation from "../Icon/Resignation";
-import { classNames } from "../../helper/classNames";
 import Todo from "../Icon/Todo";
+import { joinClassNames } from "../../helper/classNames";
 
 const icons = {
   top: Top,
@@ -27,20 +27,29 @@ const Ascent = ({ type, checked, disabled, asyncHandler, ...rest }) => {
         await asyncHandler();
         setLoading(false);
       }}
-      className={`
-                ${styles.root} 
-                ${type ? styles[`root--${type}`] : ""}
-                ${checked ? styles[`root--checked`] : ""}
-                ${disabled ? styles[`root--disabled`] : ""}
-                ${loading ? styles[`root--loading`] : ""}
-            `}
+      className={joinClassNames(
+        styles.root,
+        styles[`is${type.capitalize()}`],
+        checked ? styles[`is${type.capitalize()}`] : null,
+        disabled ? styles[`is${type.capitalize()}`] : null,
+        loading ? styles[`is${type.capitalize()}`] : null
+      )}
       {...rest}
     >
-      {React.createElement(icons[type], {
-        fill: checked,
-      })}
+      <AscentIcon type={type} fill={checked} />
     </div>
   );
 };
 
-export { Ascent, getIcon };
+function AscentIcon({ type, fill }) {
+  if (!type) {
+    return <Todo />;
+  }
+
+  const doubted = type.includes("-pending-doubt");
+  const Icon = getIcon(type.replace("-pending-doubt", ""));
+
+  return <Icon fill={fill} style={{ opacity: doubted ? 0.5 : 1 }} />;
+}
+
+export { Ascent, AscentIcon, getIcon };
