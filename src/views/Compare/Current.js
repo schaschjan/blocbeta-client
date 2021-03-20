@@ -3,7 +3,12 @@ import "./Current.module.css";
 import { useParams } from "react-router-dom";
 import { Meta } from "../../App";
 import useRequest from "../../hooks/useRequest";
-import { useGlobalFilter, useSortBy, useTable } from "react-table";
+import {
+  useGlobalFilter,
+  usePagination,
+  useSortBy,
+  useTable,
+} from "react-table";
 import { Input } from "../../components/Input/Input";
 import { TableCell, TableHeaderCell } from "../../components/Table/Table";
 import styles from "./Current.module.css";
@@ -20,6 +25,7 @@ import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import BoulderDetails from "../../components/BoulderDetails/BoulderDetails";
 import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 import { Ascent, AscentIcon } from "../../components/Ascent/Ascent";
+import { Pagination } from "../../components/BoulderTable/Pagination";
 
 const Current = () => {
   const { a, b } = useParams();
@@ -118,17 +124,24 @@ const Current = () => {
   const {
     getTableProps,
     getTableBodyProps,
-    headerGroups,
-    rows,
     prepareRow,
-    setGlobalFilter,
+    canPreviousPage,
+    canNextPage,
+    nextPage,
+    previousPage,
+    pageOptions,
+    headerGroups,
+    page,
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
       data,
+      initialState: { pageIndex: 0, pageSize: 20 },
     },
     useGlobalFilter,
-    useSortBy
+    useSortBy,
+    usePagination
   );
 
   const rowTemplateColumns = columns
@@ -141,16 +154,6 @@ const Current = () => {
       <h1 className="t--alpha page-title">Current Comparison</h1>
 
       <div className="ranking-table-layout">
-        <Input
-          className="ranking-table-layout__search"
-          placeholder="Search for member"
-          onClear={() => setGlobalFilter(null)}
-          clearable={true}
-          onChange={(event) => {
-            setGlobalFilter(event.target.value);
-          }}
-        />
-
         <div {...getTableProps()}>
           <div
             className={styles.header}
@@ -182,7 +185,7 @@ const Current = () => {
           </div>
 
           <div {...getTableBodyProps()}>
-            {rows.map((row, index) => {
+            {page.map((row, index) => {
               prepareRow(row);
 
               return (
@@ -210,6 +213,16 @@ const Current = () => {
           </div>
         </div>
       </div>
+
+      <Pagination
+        pageIndex={pageIndex}
+        pageSize={pageSize}
+        pageCount={pageOptions.length}
+        canPreviousPage={canPreviousPage}
+        canNextPage={canNextPage}
+        previousPage={previousPage}
+        nextPage={nextPage}
+      />
 
       <Drawer onClose={() => setDetailBoulder(null)}>
         {detailBoulder && <BoulderDetails id={detailBoulder} />}

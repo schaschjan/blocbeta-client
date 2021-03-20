@@ -6,7 +6,7 @@ import convertToKeyValueObject from "../helper/convertToKeyValueObject";
 
 function useBoulders() {
   const { currentLocation } = useContext(BoulderDBUIContext);
-  console.log("moin");
+
   const boulderQuery = useQuery(
     [cache.boulder, currentLocation.id],
     useApi("boulder"),

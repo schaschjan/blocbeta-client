@@ -13,15 +13,21 @@ if (process.env.NODE_ENV !== "production" && typeof window !== "undefined") {
 
 const axiosInstance = axios.create(options);
 
-const useRequest = (url, locationResource = true) => {
+const useRequest = (uri, locationResource = true) => {
   const { location } = useParams();
+
+  let url = "/api";
+
+  if (locationResource) {
+    url += `/${location}`;
+  }
+
+  url += uri;
 
   return useSWR(
     url,
     async (url) => {
-      const { data } = await axiosInstance.get(
-        `/api/${locationResource ? location : ""}${url}`
-      );
+      const { data } = await axiosInstance.get(url);
 
       return data;
     },

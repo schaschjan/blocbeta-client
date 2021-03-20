@@ -38,41 +38,6 @@
   border-top: 1px solid var(--color-black);
 }
 
-.pager {
-  display: flex;
-  align-items: center;
-  margin-top: calc(1.5 * var(--spacing-unit));
-  margin-right: calc(2 * var(--spacing-unit));
-  margin-bottom: calc(1.5 * var(--spacing-unit));
-  margin-left: calc(2 * var(--spacing-unit));
-}
-
-.pagerInfo {
-  composes: t--eta from "./../../css/typography.css";
-  margin-left: auto;
-  margin-right: calc(2 * var(--spacing-unit));
-}
-
-.pagerNav {
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.pagerNav--disabled {
-  opacity: 0.4;
-}
-
-.pagerSeparator {
-  display: flex;
-  height: 40px;
-  background: var(--color-black);
-  width: 1px;
-
-  margin-left: calc(2 * var(--spacing-unit));
-  margin-right: calc(2 * var(--spacing-unit));
-}
-
 .toggleDetails {
   cursor: pointer;
   display: flex;

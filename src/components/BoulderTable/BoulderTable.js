@@ -17,10 +17,10 @@ import {
 } from "react-table";
 import styles from "./BoulderTable.module.css";
 import Forward from "../Icon/Forward";
-import Backward from "../Icon/Backward";
 import { Link } from "react-router-dom";
 import { BoulderDBUIContext } from "../BoulderDBUI";
 import Grade from "../Grade/Grade";
+import { Pagination } from "./Pagination";
 
 const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = useRef();
@@ -190,32 +190,15 @@ const BoulderTable = ({
           })}
         </div>
 
-        <div className={styles.pager}>
-          <span className={styles.pagerInfo}>
-            {pageIndex * pageSize} - {(pageIndex + 1) * pageSize} of{" "}
-            {pageOptions.length * pageSize}
-          </span>
-
-          <span
-            onClick={() => previousPage()}
-            className={
-              canPreviousPage ? styles.pagerNav : styles["pagerNav--disabled"]
-            }
-          >
-            <Backward />
-          </span>
-
-          <span className={styles.pagerSeparator} />
-
-          <span
-            onClick={() => nextPage()}
-            className={
-              canNextPage ? styles.pagerNav : styles["pagerNav--disabled"]
-            }
-          >
-            <Forward />
-          </span>
-        </div>
+        <Pagination
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+          pageCount={pageOptions.length}
+          canPreviousPage={canPreviousPage}
+          canNextPage={canNextPage}
+          previousPage={previousPage}
+          nextPage={nextPage}
+        />
       </div>
     </Fragment>
   );
