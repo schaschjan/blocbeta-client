@@ -1,4 +1,4 @@
-import React, { createContext, useContext, Fragment } from "react";
+import React, { createContext, useContext, Fragment, Suspense } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -101,7 +101,9 @@ const App = () => {
             <ToastContainer>
               <div className="app">
                 <div className="content">
-                  <Routing />
+                  <Suspense fallback={<div>loading...</div>}>
+                    <Routing />
+                  </Suspense>
                 </div>
 
                 <Footer />
