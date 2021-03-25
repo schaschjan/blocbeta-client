@@ -21,6 +21,7 @@ import { Link } from "react-router-dom";
 import { BoulderDBUIContext } from "../BoulderDBUI";
 import Grade from "../Grade/Grade";
 import { Pagination } from "./Pagination";
+import moment from "moment";
 
 const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = useRef();
@@ -277,7 +278,7 @@ const boulderTableColumns = {
   },
   date: {
     id: "date",
-    accessor: "createdAt",
+    accessor: ({ created_at }) => moment(created_at).fromNow(),
     Header: "Date",
   },
   ascent: {

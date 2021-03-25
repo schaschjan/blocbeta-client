@@ -149,9 +149,6 @@ const Index = () => {
       },
       {
         ...boulderTableColumns.date,
-        Cell: ({ value }) => {
-          return moment(value).format("l");
-        },
       },
       {
         ...boulderTableColumns.ascent,

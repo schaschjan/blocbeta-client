@@ -61,7 +61,7 @@ const Header = () => {
 
   const { data: locations } = useQuery(
     cache.locations,
-    useApi("locations", { location: "poop" }),
+    useApi("locations"),
     queryDefaults
   );
 

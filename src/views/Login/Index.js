@@ -26,7 +26,6 @@ const Index = () => {
   );
 
   const { dispatch } = useContext(ToastContext);
-  const ping = useApi("ping");
 
   useEffect(() => {
     reset();
@@ -57,7 +56,6 @@ const Index = () => {
         history.push(`/setup`);
       } else {
         history.push(`${targetLocation}/boulder`);
-        ping();
       }
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "danger"));

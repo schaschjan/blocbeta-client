@@ -402,11 +402,16 @@ export const resources = {
 };
 
 export const useApi = (key, args = {}) => {
-  const { location } = useParams();
+  let { location } = useParams();
   const resource = resources[key];
 
   if (!(key in resources)) {
     throw new Error(`Resource ${key} not found`);
+  }
+
+  // split location from window as fallback
+  if (!location) {
+    location = window.location.pathname.split("/")[1];
   }
 
   return (payload) => {
@@ -414,7 +419,7 @@ export const useApi = (key, args = {}) => {
       console.log(`Called resource ${key}`);
       console.log("Args:", { args });
       console.log("Payload:", { payload });
-      console.log("");
+      console.log("Location:", location);
     }
 
     return resource({

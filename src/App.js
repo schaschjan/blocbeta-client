@@ -1,4 +1,4 @@
-import React, { createContext, useContext, Fragment, Suspense } from "react";
+import React, { useContext, Fragment, Suspense } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -23,8 +23,6 @@ export const Meta = ({ title, description }) => {
     </Helmet>
   );
 };
-
-export const AppContext = createContext({});
 
 const Routing = () => {
   const { isAuthenticated, contextualizedPath } = useContext(
@@ -63,12 +61,7 @@ const Routing = () => {
               key={index}
               path={route.path}
               exact={route.exact}
-              children={
-                <Fragment>
-                  <Header />
-                  <route.main />
-                </Fragment>
-              }
+              children={<route.main />}
             />
           );
         } else {
@@ -77,12 +70,7 @@ const Routing = () => {
               key={index}
               path={route.path}
               exact={route.exact}
-              children={
-                <Fragment>
-                  <Header />
-                  <route.main />
-                </Fragment>
-              }
+              children={<route.main />}
             />
           );
         }
@@ -97,6 +85,8 @@ const App = () => {
       <Router>
         <ScrollToTop />
         <BoulderDBUI>
+          <Header />
+
           <DrawerContainer>
             <ToastContainer>
               <div className="app">
@@ -105,11 +95,11 @@ const App = () => {
                     <Routing />
                   </Suspense>
                 </div>
-
-                <Footer />
               </div>
             </ToastContainer>
           </DrawerContainer>
+
+          <Footer />
         </BoulderDBUI>
       </Router>
     </Fragment>
