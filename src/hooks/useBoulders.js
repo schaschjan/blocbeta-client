@@ -5,7 +5,7 @@ import { BoulderDBUIContext } from "../components/BoulderDBUI";
 import convertToKeyValueObject from "../helper/convertToKeyValueObject";
 
 function useBoulders() {
-  const { currentLocation } = useContext(BoulderDBUIContext);
+  const { currentLocation, isAdmin } = useContext(BoulderDBUIContext);
 
   const boulderQuery = useQuery(
     [cache.boulder, currentLocation.id],
@@ -78,7 +78,7 @@ function useBoulders() {
           ascents: ascent.ascents,
           grade: {
             ...grade,
-            internal_grade: null,
+            internal: isAdmin ? grades[boulder.internal_grade] : null,
           },
           holdType: holdTypes[boulder.hold_type],
           startWall: startWall,

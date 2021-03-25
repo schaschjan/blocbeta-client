@@ -33,9 +33,7 @@ import { BoulderFilters } from "../../components/BoulderFilters/BoulderFilters";
 import { useBoulders } from "../../hooks/useBoulders";
 
 const Index = () => {
-  const { isAdmin, contextualizedPath, currentLocation } = useContext(
-    BoulderDBUIContext
-  );
+  const { isAdmin, contextualizedPath } = useContext(BoulderDBUIContext);
   const { dispatch } = useContext(ToastContext);
   const { toggle: toggleDrawer } = useContext(DrawerContext);
 
@@ -88,6 +86,7 @@ const Index = () => {
       {
         ...boulderTableColumns.grade,
         Cell: ({ value }) => {
+          console.log(value);
           if (isAdmin && value.internal) {
             return (
               <Grade
