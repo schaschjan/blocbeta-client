@@ -86,7 +86,6 @@ const Index = () => {
       {
         ...boulderTableColumns.grade,
         Cell: ({ value }) => {
-          console.log(value);
           if (isAdmin && value.internal) {
             return (
               <Grade

@@ -279,6 +279,9 @@ const boulderTableColumns = {
   date: {
     id: "date",
     accessor: ({ created_at }) => moment(created_at).fromNow(),
+    sortType: (a, b) => {
+      return moment(a.original.created_at ).valueOf() > moment(b.original.created_at).valueOf() ? -1 : 1;
+    },
     Header: "Date",
   },
   ascent: {
