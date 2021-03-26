@@ -39,7 +39,7 @@ const Add = () => {
   const [mutateCreation] = useMutation(useApi("createBoulder"), {
     throwOnError: true,
     onSuccess: () => {
-      queryCache.invalidateQueries([cache.boulder]);
+      queryCache.invalidateQueries([cache.boulder, cache.ascents]);
     },
   });
 
@@ -49,6 +49,8 @@ const Add = () => {
 
       dispatch(successToast("Boulder created!"));
       resetForm();
+
+      document.body.scrollTop = 0;
     } catch (error) {
       dispatch(errorToast(error));
     }
@@ -71,7 +73,10 @@ const Add = () => {
                 "Name",
                 formData.name,
                 Input,
-                observeField
+                observeField,
+                {
+                  required: "required",
+                }
               )}
             </FormRow>
 
@@ -86,6 +91,7 @@ const Add = () => {
                   cacheKey: cache.walls,
                   api: cache.walls,
                   labelProperty: "name",
+                  required: "required",
                 }
               )}
 
@@ -99,6 +105,7 @@ const Add = () => {
                   cacheKey: cache.walls,
                   api: cache.walls,
                   labelProperty: "name",
+                  required: "required",
                 }
               )}
             </FormRow>
@@ -114,6 +121,7 @@ const Add = () => {
                   cacheKey: cache.grades,
                   api: cache.grades,
                   labelProperty: "name",
+                  required: "required",
                 }
               )}
 
@@ -142,6 +150,7 @@ const Add = () => {
                   cacheKey: cache.holdTypes,
                   api: cache.holdTypes,
                   labelProperty: "name",
+                  required: "required",
                 }
               )}
             </FormRow>
@@ -174,6 +183,7 @@ const Add = () => {
                   api: cache.setters,
                   labelProperty: "username",
                   multiple: true,
+                  required: "required",
                 }
               )}
             </FormRow>
@@ -192,6 +202,7 @@ const Add = () => {
                       <option value="inactive">Inactive</option>
                     </Fragment>
                   ),
+                  required: "required",
                 }
               )}
             </FormRow>
@@ -205,6 +216,7 @@ const Add = () => {
                 observeField,
                 {
                   type: "number",
+                  required: "required",
                 }
               )}
             </FormRow>

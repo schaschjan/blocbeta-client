@@ -94,12 +94,12 @@ const App = () => {
                   <Suspense fallback={<div>loading...</div>}>
                     <Routing />
                   </Suspense>
+
+                  <Footer />
                 </div>
               </div>
             </ToastContainer>
           </DrawerContainer>
-
-          <Footer />
         </BoulderDBUI>
       </Router>
     </Fragment>

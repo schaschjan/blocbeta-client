@@ -58,7 +58,10 @@ export const useForm = (defaults) => {
       set(
         current,
         name,
-        Array.from(event.target.selectedOptions, (option) => option.value)
+        Array.from(
+          event.target.selectedOptions,
+          (option) => option.value
+        ).filter((value) => value !== "")
       );
     } else if (event.target.type === "checkbox") {
       set(current, name, checked);
