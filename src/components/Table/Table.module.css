@@ -1,0 +1,50 @@
+.row {
+  display: grid;
+  border-bottom: 1px solid var(--color-dark);
+  padding: 8px 0;
+  grid-column-gap: 32px;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  font-size: var(--font-size-default);
+  line-height: var(--line-height-default);
+}
+
+.cell:first-child {
+  margin-left: 8px;
+}
+
+.cell:last-child {
+  margin-right: 8px;
+}
+
+.header {
+  display: grid;
+  font-weight: bold;
+  font-size: 0.875rem;
+  grid-column-gap: 32px;
+  border-bottom: 1px solid var(--color-dark);
+}
+
+.header .sortIndicator {
+  margin-left: auto;
+  height: 40px;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+}
+
+.headerCell {
+  display: flex;
+  align-items: center;
+}
+
+.headerCell:first-child {
+  margin-left: 8px;
+}
+
+.headerCell:last-child {
+  margin-right: 8px;
+}

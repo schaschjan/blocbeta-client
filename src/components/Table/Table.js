@@ -1,32 +1,51 @@
 import React from "react";
-import "./Table.css";
+import styles from "./Table.module.css";
 import { classNames } from "../../helper/classNames";
 import Downward from "../Icon/Downward";
 import Upward from "../Icon/Upward";
 
-export const TableRow = ({ children, ...rest }) => {
+const TableRow = ({ cells, gridTemplateColumns }) => {
   return (
-    <div className="table-row" {...rest}>
-      {children}
+    <div
+      className={styles.row}
+      style={{
+        gridTemplateColumns,
+      }}
+    >
+      {cells.map((cell, cellIndex) => {
+        return (
+          <div
+            className={classNames(styles.cell)}
+            key={`cell-${cellIndex}`}
+            {...cell.getCellProps({
+              className: cell.column.className,
+            })}
+          >
+            {cell.render("Cell")}
+          </div>
+        );
+      })}
     </div>
   );
 };
 
-export const TableCell = ({ children, className }) => {
-  return <div className={classNames("table-cell", className)}>{children}</div>;
-};
-
-export const TableHeader = ({ headerGroups }) => {
+const TableHeader = ({ gridTemplateColumns, headerGroups }) => {
   return (
-    <div className="table-header">
+    <div
+      className={styles.header}
+      style={{
+        gridTemplateColumns,
+      }}
+    >
       {headerGroups.map((headerGroup) => {
         return headerGroup.headers.map((column, index) => (
-          <TableHeaderCell
+          <div
+            className={styles.headerCell}
             {...column.getHeaderProps(column.getSortByToggleProps())}
-            key={index}
+            key={`header-cell-${index}`}
           >
             {column.render("Header")}
-            <span className="sort-indicator">
+            <span className={styles.sortIndicator}>
               {column.isSorted ? (
                 column.isSortedDesc ? (
                   <Downward />
@@ -37,17 +56,11 @@ export const TableHeader = ({ headerGroups }) => {
                 ""
               )}
             </span>
-          </TableHeaderCell>
+          </div>
         ));
       })}
     </div>
   );
 };
 
-export const TableHeaderCell = ({ children, ...rest }) => {
-  return (
-    <div className="table-header-cell" {...rest}>
-      {children}
-    </div>
-  );
-};
+export { TableRow, TableHeader };

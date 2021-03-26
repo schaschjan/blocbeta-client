@@ -1,19 +1,9 @@
 import React, { Fragment, useContext, useMemo, useState } from "react";
-import "./Current.module.css";
 import { useParams } from "react-router-dom";
 import { Meta } from "../../App";
 import useRequest from "../../hooks/useRequest";
-import {
-  useGlobalFilter,
-  usePagination,
-  useSortBy,
-  useTable,
-} from "react-table";
-import { Input } from "../../components/Input/Input";
-import { TableCell, TableHeaderCell } from "../../components/Table/Table";
-import styles from "./Current.module.css";
-import Downward from "../../components/Icon/Downward";
-import Upward from "../../components/Icon/Upward";
+import { usePagination, useSortBy, useTable } from "react-table";
+import { TableHeader, TableRow } from "../../components/Table/Table";
 import { useBoulders } from "../../hooks/useBoulders";
 import {
   boulderTableColumns,
@@ -24,7 +14,7 @@ import Grade from "../../components/Grade/Grade";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import BoulderDetails from "../../components/BoulderDetails/BoulderDetails";
 import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
-import { Ascent, AscentIcon } from "../../components/Ascent/Ascent";
+import { AscentIcon } from "../../components/Ascent/Ascent";
 import { Pagination } from "../../components/BoulderTable/Pagination";
 
 const Current = () => {
@@ -33,7 +23,7 @@ const Current = () => {
   const { isAdmin } = useContext(BoulderDBUIContext);
   const { toggle: toggleDrawer } = useContext(DrawerContext);
 
-  const { idle, boulders } = useBoulders();
+  const { boulders } = useBoulders();
   const { data: comparisons } = useRequest(`/compare/${a}/to/${b}/at/current`);
   const { data: compareUser } = useRequest(`/user/${b}`, false);
 
@@ -43,7 +33,7 @@ const Current = () => {
     return [
       {
         ...boulderTableColumns.holdType,
-        gridTemplate: "minmax(20px, 40px)",
+        gridTemplate: "minmax(20px, 60px)",
         Cell: ({ value }) => <HoldType image={value.image} />,
       },
       {
@@ -100,13 +90,13 @@ const Current = () => {
       {
         Header: "You",
         accessor: "a",
-        gridTemplate: "60px",
+        gridTemplate: "140px",
         Cell: ({ value }) => <AscentIcon type={value} />,
       },
       {
         Header: compareUser.username,
         accessor: "b",
-        gridTemplate: "60px",
+        gridTemplate: "140px",
         Cell: ({ value }) => <AscentIcon type={value} />,
       },
     ];
@@ -139,78 +129,38 @@ const Current = () => {
       data,
       initialState: { pageIndex: 0, pageSize: 20 },
     },
-    useGlobalFilter,
     useSortBy,
     usePagination
   );
 
-  const rowTemplateColumns = columns
+  const gridTemplateColumns = columns
     .map((column) => column.gridTemplate)
     .join(" ");
 
   return (
     <Fragment>
-      <Meta title="Current Ranking" />
-      <h1 className="t--alpha page-title">Current Comparison</h1>
+      <Meta title="Compare" />
 
-      <div className="ranking-table-layout">
-        <div {...getTableProps()}>
-          <div
-            className={styles.header}
-            style={{
-              gridTemplateColumns: rowTemplateColumns,
-            }}
-          >
-            {headerGroups.map((headerGroup) => {
-              return headerGroup.headers.map((column, index) => (
-                <TableHeaderCell
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  key={index}
-                >
-                  {column.render("Header")}
-                  <span className="sort-indicator">
-                    {column.isSorted ? (
-                      column.isSortedDesc ? (
-                        <Downward />
-                      ) : (
-                        <Upward />
-                      )
-                    ) : (
-                      ""
-                    )}
-                  </span>
-                </TableHeaderCell>
-              ));
-            })}
-          </div>
+      <h1 className="t--alpha page-title">Compare</h1>
 
-          <div {...getTableBodyProps()}>
-            {page.map((row, index) => {
-              prepareRow(row);
+      <div {...getTableProps()}>
+        <TableHeader
+          headerGroups={headerGroups}
+          gridTemplateColumns={gridTemplateColumns}
+        />
 
-              return (
-                <div
-                  key={`row-${index}`}
-                  className={styles.row}
-                  style={{
-                    gridTemplateColumns: rowTemplateColumns,
-                  }}
-                >
-                  {row.cells.map((cell) => {
-                    return (
-                      <TableCell
-                        {...cell.getCellProps({
-                          className: cell.column.className,
-                        })}
-                      >
-                        {cell.render("Cell")}
-                      </TableCell>
-                    );
-                  })}
-                </div>
-              );
-            })}
-          </div>
+        <div {...getTableBodyProps()}>
+          {page.map((row, index) => {
+            prepareRow(row);
+
+            return (
+              <TableRow
+                gridTemplateColumns={gridTemplateColumns}
+                cells={row.cells}
+                key={`row-${index}`}
+              />
+            );
+          })}
         </div>
       </div>
 

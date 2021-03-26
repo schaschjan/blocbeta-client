@@ -1,7 +1,6 @@
 import React, { Fragment, useContext, useMemo } from "react";
 import { useApi } from "../../hooks/useApi";
 import { useQuery } from "react-query";
-import RankingTable from "../../components/RankingTable/RankingTable";
 import EmptyState from "../../components/EmptyState/EmptyState";
 import Emoji from "../../components/Emoji/Emoji";
 import Progress from "../../components/Progress/Progress";
@@ -161,12 +160,6 @@ const AllTime = () => {
       >
         {ranking && ranking.list && ranking.list.length > 0 ? (
           <Fragment>
-            <RankingTable
-              data={ranking.list}
-              columns={columns}
-              className={"all-time"}
-            />
-
             <br />
 
             <Link

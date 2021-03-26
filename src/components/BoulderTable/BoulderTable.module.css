@@ -40,14 +40,15 @@
 
 .toggleDetails {
   cursor: pointer;
+  width: 100%;
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .toggleDetails svg {
-  margin-left: auto;
-  position: absolute;
   right: 0;
+  position: absolute;
   transform: rotate(0);
   transition: transform 200ms ease-in-out;
 }

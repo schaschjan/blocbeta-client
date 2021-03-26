@@ -1,20 +1,20 @@
 import React, { Fragment, useContext, useMemo } from "react";
 import { useApi } from "../../hooks/useApi";
 import { useQuery } from "react-query";
-import RankingTable from "../../components/RankingTable/RankingTable";
-import EmptyState from "../../components/EmptyState/EmptyState";
 import Emoji from "../../components/Emoji/Emoji";
 import Progress from "../../components/Progress/Progress";
 import { Meta } from "../../App";
 import moment from "moment";
 import Avatar from "../../components/Avatar/Avatar";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
-import { LoadedContent } from "../../components/Loader/Loader";
 import "./Current.css";
 import Male from "../../components/Icon/Male";
 import Female from "../../components/Icon/Female";
 import { Link } from "react-router-dom";
 import { Button } from "../../components/Button/Button";
+import { useSortBy, useTable } from "react-table";
+import { TableHeader, TableRow } from "../../components/Table/Table";
+import { LoadedContent } from "../../components/Loader/Loader";
 
 const calculatePercentage = (amount, total) => {
   let percentage = 0;
@@ -34,6 +34,49 @@ const calculatePercentage = (amount, total) => {
   return `${amount} (${Math.floor(percentage)}%)`;
 };
 
+const Table = ({ columns, data }) => {
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable(
+    {
+      columns,
+      data,
+    },
+    useSortBy
+  );
+
+  const gridTemplateColumns = columns
+    .map((column) => column.gridTemplate)
+    .join(" ");
+
+  return (
+    <div {...getTableProps()}>
+      <TableHeader
+        headerGroups={headerGroups}
+        gridTemplateColumns={gridTemplateColumns}
+      />
+
+      <div {...getTableBodyProps()}>
+        {rows.map((row, index) => {
+          prepareRow(row);
+
+          return (
+            <TableRow
+              gridTemplateColumns={gridTemplateColumns}
+              cells={row.cells}
+              key={`row-${index}`}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 const Current = () => {
   const { user, contextualizedPath } = useContext(BoulderDBUIContext);
 
@@ -42,7 +85,7 @@ const Current = () => {
     useApi("currentRanking")
   );
 
-  const { status: boulderCountStatus, data: boulderCount } = useQuery(
+  const { data: boulderCount } = useQuery(
     "boulderCount",
     useApi("boulderCount")
   );
@@ -52,7 +95,7 @@ const Current = () => {
       {
         Header: "Rank",
         accessor: "rank",
-        className: `table-cell--rank`,
+        gridTemplate: "72px",
         Cell: ({ value }) => {
           return <strong>{value}</strong>;
         },
@@ -60,7 +103,7 @@ const Current = () => {
       {
         Header: "User",
         accessor: "user.username",
-        className: "table-cell--user",
+        gridTemplate: "auto",
         Cell: ({ cell, row }) => {
           return (
             <Fragment>
@@ -79,6 +122,7 @@ const Current = () => {
       {
         Header: "Gender",
         accessor: "user.gender",
+        gridTemplate: "80px",
         Cell: ({ cell }) => {
           if (cell.value === "male") {
             return <Male />;
@@ -94,34 +138,37 @@ const Current = () => {
       {
         Header: "Points",
         accessor: "score",
+        gridTemplate: "110px",
       },
       {
         Header: "Advance",
         accessor: "advance",
+        gridTemplate: "110px",
       },
       {
         Header: "Boulders",
         accessor: "boulders",
-        className: "table-cell--boulders",
+        gridTemplate: "110px",
         Cell: ({ cell }) => {
-          const percentage = (cell.value / boulderCount) * 100;
-
-          return <Progress percentage={percentage} />;
+          return <Progress percentage={(cell.value / boulderCount) * 100} />;
         },
       },
       {
         Header: "Flashed",
         accessor: "flashes",
+        gridTemplate: "110px",
         Cell: ({ cell }) => calculatePercentage(cell.value, boulderCount),
       },
       {
         Header: "Topped",
         accessor: "tops",
+        gridTemplate: "110px",
         Cell: ({ cell }) => calculatePercentage(cell.value, boulderCount),
       },
       {
         Header: "Last activity",
         accessor: "user.lastActivity",
+        gridTemplate: "120px",
         Cell: ({ cell }) => {
           return <span>{moment(cell.value).fromNow()}</span>;
         },
@@ -130,7 +177,7 @@ const Current = () => {
         Header: "",
         id: "user.id",
         accessor: "user.id",
-        className: "table-cell--actions",
+        gridTemplate: "120px",
         Cell: ({ cell }) => {
           if (parseInt(cell.value) === parseInt(user.id)) {
             return null;
@@ -151,41 +198,20 @@ const Current = () => {
         },
       },
     ];
-  }, [user.id, boulderCount]);
+  }, [boulderCount]);
 
   return (
     <Fragment>
       <Meta title="Current Ranking" />
       <h1 className="t--alpha page-title">Current Ranking</h1>
 
-      <LoadedContent
-        loading={[rankingStatus, boulderCountStatus].includes("loading")}
-      >
-        {ranking && ranking.list.length > 0 ? (
-          <Fragment>
-            <RankingTable
-              data={ranking.list}
-              columns={columns}
-              className={"current"}
-            />
-
-            <br />
-
-            <Link
-              className={"t--eta"}
-              to={contextualizedPath("/ranking/all-time")}
-            >
-              All time ranking
-            </Link>
-          </Fragment>
-        ) : (
-          <EmptyState>
-            <h2 className="t--gamma">
-              <Emoji>🤷</Emoji>
-            </h2>
-          </EmptyState>
-        )}
+      <LoadedContent loading={rankingStatus !== "success"}>
+        <Table data={ranking ? ranking.list : []} columns={columns} />
       </LoadedContent>
+
+      <Link className={"t--eta"} to={contextualizedPath("/ranking/all-time")}>
+        All time ranking
+      </Link>
     </Fragment>
   );
 };

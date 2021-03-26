@@ -1,7 +1,11 @@
 .row {
   display: grid;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-dark);
 }
 
 .header {
   display: grid;
+  composes: t--eta from "./../../css/typography.css";
+  font-weight: 600;
 }
