@@ -5,7 +5,6 @@ import { Meta } from "../../App";
 import moment from "moment";
 import Avatar from "../../components/Avatar/Avatar";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
-import "./Current.css";
 import Male from "../../components/Icon/Male";
 import Female from "../../components/Icon/Female";
 import { Link } from "react-router-dom";
@@ -14,12 +13,15 @@ import useRequest from "../../hooks/useRequest";
 import calculatePercentage from "../../helper/calculatePercentage";
 import { Loader } from "../../components/Loader/Loader";
 import { RankingTable } from "../../components/RankingTable/RankingTable";
+import "./Current.css";
 
 const Current = () => {
   const { user, contextualizedPath } = useContext(BoulderDBUIContext);
 
   const { data: ranking } = useRequest(`/ranking/current`);
-  const { data: boulderCount } = useRequest(`/boulder/count`);
+  const { data: boulderCount } = useRequest(`/boulder/count`, true, {
+    params: { active: true },
+  });
 
   const columns = useMemo(() => {
     return [

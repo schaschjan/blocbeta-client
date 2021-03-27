@@ -16,6 +16,7 @@ import { AscentIcon } from "../../components/Ascent/Ascent";
 import convertToKeyValueObject from "../../helper/convertToKeyValueObject";
 import styles from "./Current.module.css";
 import { RankingTable } from "../../components/RankingTable/RankingTable";
+import { Loader } from "../../components/Loader/Loader";
 
 const Current = () => {
   const { a, b } = useParams();
@@ -28,14 +29,6 @@ const Current = () => {
   const { data: comparisons } = useRequest(`/compare/${a}/to/${b}/at/current`);
   const { data: compareUser } = useRequest(`/user/${b}`, false);
   const { data: ranking } = useRequest(`/ranking/current`);
-
-  const userRank = useMemo(() => {
-    return ranking.list.find((rank) => rank.user.id === parseInt(a));
-  }, [a]);
-
-  const compareUserRank = useMemo(() => {
-    return ranking.list.find((rank) => rank.user.id === parseInt(b));
-  }, [b]);
 
   const [detailBoulder, setDetailBoulder] = useState(null);
 
@@ -104,15 +97,19 @@ const Current = () => {
         Cell: ({ value }) => <AscentIcon type={value} />,
       },
       {
-        Header: compareUser.username,
+        Header: compareUser ? compareUser.username : "",
         accessor: "b",
         gridTemplate: "140px",
         Cell: ({ value }) => <AscentIcon type={value} />,
       },
     ];
-  }, []);
+  }, [compareUser]);
 
   const data = useMemo(() => {
+    if (!comparisons) {
+      return [];
+    }
+
     const comparisonsMap = convertToKeyValueObject(comparisons, "subject");
 
     return boulders.map((boulder) => {
@@ -122,6 +119,15 @@ const Current = () => {
       };
     });
   }, [boulders, comparisons]);
+
+  if (!ranking || !compareUser) {
+    return <Loader />;
+  }
+
+  const userRank = ranking.list.find((rank) => rank.user.id === parseInt(a));
+  const compareUserRank = ranking.list.find(
+    (rank) => rank.user.id === parseInt(b)
+  );
 
   return (
     <Fragment>

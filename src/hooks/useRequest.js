@@ -14,7 +14,7 @@ if (process.env.NODE_ENV !== "production" && typeof window !== "undefined") {
 
 const axiosInstance = axios.create(options);
 
-const useRequest = (uri, locationResource = true) => {
+const useRequest = (uri, locationResource = true, requestConfig) => {
   const { currentLocation } = useContext(BoulderDBUIContext);
 
   let url = "/api";
@@ -30,7 +30,7 @@ const useRequest = (uri, locationResource = true) => {
   url += uri;
 
   return useSWR(url, async (url) => {
-    const { data } = await axiosInstance.get(url);
+    const { data } = await axiosInstance.get(url, requestConfig);
 
     return data;
   });
