@@ -415,13 +415,6 @@ export const useApi = (key, args = {}) => {
   }
 
   return (payload) => {
-    if (process.env.NODE_ENV !== "production") {
-      console.log(`Called resource ${key}`);
-      console.log("Args:", { args });
-      console.log("Payload:", { payload });
-      console.log("Location:", location);
-    }
-
     return resource({
       location,
       ...args,

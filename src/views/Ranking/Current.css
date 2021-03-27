@@ -6,11 +6,3 @@
   margin-left: 8px;
   font-size: 1.5rem;
 }
-
-@media (min-width: 1140px) {
-  .table--current .table-header,
-  .table--current .table-row {
-    display: grid;
-    grid-template-columns: 72px auto 110px 110px 110px 110px 110px 110px 120px 80px;
-  }
-}

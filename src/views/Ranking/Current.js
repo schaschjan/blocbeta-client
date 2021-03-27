@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import { Button } from "../../components/Button/Button";
 import { useSortBy, useTable } from "react-table";
 import { TableHeader, TableRow } from "../../components/Table/Table";
-import { LoadedContent } from "../../components/Loader/Loader";
+import useRequest from "../../hooks/useRequest";
 
 const calculatePercentage = (amount, total) => {
   let percentage = 0;
@@ -49,9 +49,9 @@ const Table = ({ columns, data }) => {
     useSortBy
   );
 
-  const gridTemplateColumns = columns
-    .map((column) => column.gridTemplate)
-    .join(" ");
+  const gridTemplateColumns = useMemo(() => {
+    return columns.map((column) => column.gridTemplate).join(" ");
+  }, [columns]);
 
   return (
     <div {...getTableProps()}>
@@ -80,22 +80,15 @@ const Table = ({ columns, data }) => {
 const Current = () => {
   const { user, contextualizedPath } = useContext(BoulderDBUIContext);
 
-  const { status: rankingStatus, data: ranking } = useQuery(
-    "currentRanking",
-    useApi("currentRanking")
-  );
-
-  const { data: boulderCount } = useQuery(
-    "boulderCount",
-    useApi("boulderCount")
-  );
+  const { data: ranking } = useRequest(`/ranking/current`);
+  const { data: boulderCount } = useRequest(`/boulder/count`);
 
   const columns = useMemo(() => {
     return [
       {
         Header: "Rank",
         accessor: "rank",
-        gridTemplate: "72px",
+        gridTemplate: "60px",
         Cell: ({ value }) => {
           return <strong>{value}</strong>;
         },
@@ -103,7 +96,7 @@ const Current = () => {
       {
         Header: "User",
         accessor: "user.username",
-        gridTemplate: "auto",
+        gridTemplate: "minmax(70px, auto)",
         Cell: ({ cell, row }) => {
           return (
             <Fragment>
@@ -138,12 +131,12 @@ const Current = () => {
       {
         Header: "Points",
         accessor: "score",
-        gridTemplate: "110px",
+        gridTemplate: "100px",
       },
       {
         Header: "Advance",
         accessor: "advance",
-        gridTemplate: "110px",
+        gridTemplate: "100px",
       },
       {
         Header: "Boulders",
@@ -156,19 +149,19 @@ const Current = () => {
       {
         Header: "Flashed",
         accessor: "flashes",
-        gridTemplate: "110px",
+        gridTemplate: "100px",
         Cell: ({ cell }) => calculatePercentage(cell.value, boulderCount),
       },
       {
         Header: "Topped",
         accessor: "tops",
-        gridTemplate: "110px",
+        gridTemplate: "100px",
         Cell: ({ cell }) => calculatePercentage(cell.value, boulderCount),
       },
       {
         Header: "Last activity",
         accessor: "user.lastActivity",
-        gridTemplate: "120px",
+        gridTemplate: "100px",
         Cell: ({ cell }) => {
           return <span>{moment(cell.value).fromNow()}</span>;
         },
@@ -177,7 +170,7 @@ const Current = () => {
         Header: "",
         id: "user.id",
         accessor: "user.id",
-        gridTemplate: "120px",
+        gridTemplate: "100px",
         Cell: ({ cell }) => {
           if (parseInt(cell.value) === parseInt(user.id)) {
             return null;
@@ -203,11 +196,8 @@ const Current = () => {
   return (
     <Fragment>
       <Meta title="Current Ranking" />
-      <h1 className="t--alpha page-title">Current Ranking</h1>
 
-      <LoadedContent loading={rankingStatus !== "success"}>
-        <Table data={ranking ? ranking.list : []} columns={columns} />
-      </LoadedContent>
+      <Table data={ranking ? ranking.list : []} columns={columns} />
 
       <Link className={"t--eta"} to={contextualizedPath("/ranking/all-time")}>
         All time ranking

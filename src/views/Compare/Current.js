@@ -16,6 +16,71 @@ import BoulderDetails from "../../components/BoulderDetails/BoulderDetails";
 import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 import { AscentIcon } from "../../components/Ascent/Ascent";
 import { Pagination } from "../../components/BoulderTable/Pagination";
+import convertToKeyValueObject from "../../helper/convertToKeyValueObject";
+import styles from "./Current.module.css";
+
+const Table = ({ columns, data }) => {
+  const {
+    getTableProps,
+    getTableBodyProps,
+    prepareRow,
+    canPreviousPage,
+    canNextPage,
+    nextPage,
+    previousPage,
+    pageOptions,
+    headerGroups,
+    page,
+    state: { pageIndex, pageSize },
+  } = useTable(
+    {
+      columns,
+      data,
+      initialState: { pageIndex: 0, pageSize: 20 },
+    },
+    useSortBy,
+    usePagination
+  );
+
+  const gridTemplateColumns = useMemo(() => {
+    return columns.map((column) => column.gridTemplate).join(" ");
+  }, [columns]);
+
+  return (
+    <Fragment>
+      <div {...getTableProps()}>
+        <TableHeader
+          headerGroups={headerGroups}
+          gridTemplateColumns={gridTemplateColumns}
+        />
+
+        <div {...getTableBodyProps()}>
+          {page.map((row, index) => {
+            prepareRow(row);
+
+            return (
+              <TableRow
+                gridTemplateColumns={gridTemplateColumns}
+                cells={row.cells}
+                key={`row-${index}`}
+              />
+            );
+          })}
+        </div>
+      </div>
+
+      <Pagination
+        pageIndex={pageIndex}
+        pageSize={pageSize}
+        pageCount={pageOptions.length}
+        canPreviousPage={canPreviousPage}
+        canNextPage={canNextPage}
+        previousPage={previousPage}
+        nextPage={nextPage}
+      />
+    </Fragment>
+  );
+};
 
 const Current = () => {
   const { a, b } = useParams();
@@ -24,8 +89,18 @@ const Current = () => {
   const { toggle: toggleDrawer } = useContext(DrawerContext);
 
   const { boulders } = useBoulders();
+
   const { data: comparisons } = useRequest(`/compare/${a}/to/${b}/at/current`);
   const { data: compareUser } = useRequest(`/user/${b}`, false);
+  const { data: ranking } = useRequest(`/ranking/current`);
+
+  const userRank = useMemo(() => {
+    return ranking.list.find((rank) => rank.user.id === parseInt(a));
+  }, [a]);
+
+  const compareUserRank = useMemo(() => {
+    return ranking.list.find((rank) => rank.user.id === parseInt(b));
+  }, [b]);
 
   const [detailBoulder, setDetailBoulder] = useState(null);
 
@@ -103,76 +178,61 @@ const Current = () => {
   }, []);
 
   const data = useMemo(() => {
+    const comparisonsMap = convertToKeyValueObject(comparisons, "subject");
+
     return boulders.map((boulder) => {
       return {
         ...boulder,
-        ...comparisons.find((comparison) => comparison.subject === boulder.id),
+        ...comparisonsMap[boulder.id],
       };
     });
-  }, [boulders, comparisons, compareUser]);
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    prepareRow,
-    canPreviousPage,
-    canNextPage,
-    nextPage,
-    previousPage,
-    pageOptions,
-    headerGroups,
-    page,
-    state: { pageIndex, pageSize },
-  } = useTable(
-    {
-      columns,
-      data,
-      initialState: { pageIndex: 0, pageSize: 20 },
-    },
-    useSortBy,
-    usePagination
-  );
-
-  const gridTemplateColumns = columns
-    .map((column) => column.gridTemplate)
-    .join(" ");
+  }, [boulders, comparisons]);
 
   return (
     <Fragment>
       <Meta title="Compare" />
 
-      <h1 className="t--alpha page-title">Compare</h1>
+      <div className={styles.header}>
+        <div>
+          <h2>You</h2>
+          <p>
+            <strong>rank</strong> {userRank.rank}
+          </p>
+          <p>
+            <strong>score</strong> {userRank.score}
+          </p>
+          <p>
+            <strong>boulders</strong> {userRank.boulders}
+          </p>
+          <p>
+            <strong>flashes</strong> {userRank.flashes}
+          </p>
+          <p>
+            <strong>tops</strong> {userRank.tops}
+          </p>
+        </div>
 
-      <div {...getTableProps()}>
-        <TableHeader
-          headerGroups={headerGroups}
-          gridTemplateColumns={gridTemplateColumns}
-        />
-
-        <div {...getTableBodyProps()}>
-          {page.map((row, index) => {
-            prepareRow(row);
-
-            return (
-              <TableRow
-                gridTemplateColumns={gridTemplateColumns}
-                cells={row.cells}
-                key={`row-${index}`}
-              />
-            );
-          })}
+        <div>
+          <h2>{compareUser.username}</h2>
+          <p>
+            <strong>rank</strong> {compareUserRank.rank}
+          </p>
+          <p>
+            <strong>score</strong> {compareUserRank.score}
+          </p>
+          <p>
+            <strong>boulders</strong> {compareUserRank.boulders}
+          </p>
+          <p>
+            <strong>flashes</strong> {compareUserRank.flashes}
+          </p>
+          <p>
+            <strong>tops</strong> {compareUserRank.tops}
+          </p>
         </div>
       </div>
 
-      <Pagination
-        pageIndex={pageIndex}
-        pageSize={pageSize}
-        pageCount={pageOptions.length}
-        canPreviousPage={canPreviousPage}
-        canNextPage={canNextPage}
-        previousPage={previousPage}
-        nextPage={nextPage}
-      />
+      <Table data={data ? data : []} columns={columns} />
 
       <Drawer onClose={() => setDetailBoulder(null)}>
         {detailBoulder && <BoulderDetails id={detailBoulder} />}

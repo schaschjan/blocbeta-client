@@ -10,6 +10,7 @@
   align-items: center;
   font-size: var(--font-size-default);
   line-height: var(--line-height-default);
+  white-space: nowrap;
 }
 
 .cell:first-child {
