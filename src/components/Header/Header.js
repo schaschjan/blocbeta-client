@@ -16,7 +16,11 @@ const DoubtCountItem = () => {
   const { contextualizedPath } = useContext(BoulderDBUIContext);
   const { data } = useRequest(`/doubt/count`);
 
-  return <NavItem to={contextualizedPath("/doubts")}>Doubts ({data})</NavItem>;
+  return (
+    <NavItem to={contextualizedPath("/doubts")}>
+      Doubts ({data ? data : 0})
+    </NavItem>
+  );
 };
 
 const Header = () => {

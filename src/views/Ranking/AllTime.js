@@ -10,6 +10,7 @@ import Female from "../../components/Icon/Female";
 import calculatePercentage from "../../helper/calculatePercentage";
 import useRequest from "../../hooks/useRequest";
 import { RankingTable } from "../../components/RankingTable/RankingTable";
+import { Loader } from "../../components/Loader/Loader";
 
 const AllTime = () => {
   const { user, contextualizedPath } = useContext(BoulderDBUIContext);
@@ -117,11 +118,15 @@ const AllTime = () => {
     ];
   }, [boulderCount]);
 
+  if (!ranking || !boulderCount) {
+    return <Loader />;
+  }
+
   return (
     <Fragment>
       <Meta title="AllTime Ranking" />
 
-      <RankingTable data={ranking ? ranking.list : []} columns={columns} />
+      <RankingTable data={ranking.list} columns={columns} />
     </Fragment>
   );
 };

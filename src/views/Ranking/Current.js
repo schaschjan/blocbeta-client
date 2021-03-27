@@ -10,55 +10,10 @@ import Male from "../../components/Icon/Male";
 import Female from "../../components/Icon/Female";
 import { Link } from "react-router-dom";
 import { Button } from "../../components/Button/Button";
-import { useSortBy, useTable } from "react-table";
-import { TableHeader, TableRow } from "../../components/Table/Table";
 import useRequest from "../../hooks/useRequest";
 import calculatePercentage from "../../helper/calculatePercentage";
-
-const Table = ({ columns, data }) => {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable(
-    {
-      columns,
-      data,
-    },
-    useSortBy
-  );
-
-  const gridTemplateColumns = useMemo(() => {
-    return columns.map((column) => column.gridTemplate).join(" ");
-  }, [columns]);
-
-  return (
-    <Fragment>
-      <div {...getTableProps()}>
-        <TableHeader
-          headerGroups={headerGroups}
-          gridTemplateColumns={gridTemplateColumns}
-        />
-
-        <div {...getTableBodyProps()}>
-          {rows.map((row, index) => {
-            prepareRow(row);
-
-            return (
-              <TableRow
-                gridTemplateColumns={gridTemplateColumns}
-                cells={row.cells}
-                key={`row-${index}`}
-              />
-            );
-          })}
-        </div>
-      </div>
-    </Fragment>
-  );
-};
+import { Loader } from "../../components/Loader/Loader";
+import { RankingTable } from "../../components/RankingTable/RankingTable";
 
 const Current = () => {
   const { user, contextualizedPath } = useContext(BoulderDBUIContext);
@@ -176,11 +131,15 @@ const Current = () => {
     ];
   }, [boulderCount]);
 
+  if (!ranking || !boulderCount) {
+    return <Loader />;
+  }
+
   return (
     <Fragment>
       <Meta title="Current Ranking" />
 
-      <Table data={ranking ? ranking.list : []} columns={columns} />
+      <RankingTable data={ranking.list} columns={columns} />
 
       <Link className={"t--eta"} to={contextualizedPath("/ranking/all-time")}>
         All time ranking

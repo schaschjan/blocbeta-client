@@ -29,17 +29,11 @@ const useRequest = (uri, locationResource = true) => {
 
   url += uri;
 
-  return useSWR(
-    url,
-    async (url) => {
-      const { data } = await axiosInstance.get(url);
+  return useSWR(url, async (url) => {
+    const { data } = await axiosInstance.get(url);
 
-      return data;
-    },
-    {
-      suspense: true,
-    }
-  );
+    return data;
+  });
 };
 
 export default useRequest;
