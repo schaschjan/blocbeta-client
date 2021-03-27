@@ -85,21 +85,21 @@ const App = () => {
       <Router>
         <ScrollToTop />
         <BoulderDBUI>
-          <Header />
+          <Suspense fallback={<div>loading...</div>}>
+            <Header />
 
-          <DrawerContainer>
-            <ToastContainer>
-              <div className="app">
-                <div className="content">
-                  <Suspense fallback={<div>loading...</div>}>
+            <DrawerContainer>
+              <ToastContainer>
+                <div className="app">
+                  <div className="content">
                     <Routing />
-                  </Suspense>
 
-                  <Footer />
+                    <Footer />
+                  </div>
                 </div>
-              </div>
-            </ToastContainer>
-          </DrawerContainer>
+              </ToastContainer>
+            </DrawerContainer>
+          </Suspense>
         </BoulderDBUI>
       </Router>
     </Fragment>

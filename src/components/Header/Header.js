@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import "./Header.css";
 import { BoulderDBUIContext } from "../BoulderDBUI";
 import { useLocation } from "react-router-dom";
 import { Close } from "../Icon/Close";
@@ -10,38 +9,14 @@ import { useQuery } from "react-query";
 import { classNames } from "../../helper/classNames";
 import Burger from "../Icon/Burger";
 import { NavItem } from "../NavItem/NavItem";
-
-const ReservationCountItem = () => {
-  const { contextualizedPath } = useContext(BoulderDBUIContext);
-
-  const { status: reservationCountStatus, data: reservationCount } = useQuery(
-    "reservationCount",
-    useApi("reservationCount"),
-    queryDefaults
-  );
-
-  return (
-    <NavItem to={contextualizedPath("/reservations")}>
-      Reservations (
-      {reservationCountStatus === "loading" ? 0 : reservationCount})
-    </NavItem>
-  );
-};
+import useRequest from "../../hooks/useRequest";
+import "./Header.css";
 
 const DoubtCountItem = () => {
   const { contextualizedPath } = useContext(BoulderDBUIContext);
+  const { data } = useRequest(`/doubt/count`);
 
-  const { status: doubtCountStatus, data: doubtCount } = useQuery(
-    "doubtCount",
-    useApi("doubtCount"),
-    queryDefaults
-  );
-
-  return (
-    <NavItem to={contextualizedPath("/doubts")}>
-      Doubts ({doubtCountStatus === "loading" ? 0 : doubtCount})
-    </NavItem>
-  );
+  return <NavItem to={contextualizedPath("/doubts")}>Doubts ({data})</NavItem>;
 };
 
 const Header = () => {

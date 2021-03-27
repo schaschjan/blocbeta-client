@@ -1,6 +1,7 @@
 import useSWR from "swr";
-import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useContext } from "react";
+import { BoulderDBUIContext } from "../components/BoulderDBUI";
 
 let options = {
   baseURL: process.env.REACT_APP_API_HOST,
@@ -14,12 +15,16 @@ if (process.env.NODE_ENV !== "production" && typeof window !== "undefined") {
 const axiosInstance = axios.create(options);
 
 const useRequest = (uri, locationResource = true) => {
-  const { location } = useParams();
+  const { currentLocation } = useContext(BoulderDBUIContext);
 
   let url = "/api";
 
   if (locationResource) {
-    url += `/${location}`;
+    if (!currentLocation) {
+      throw new Error("Unable to resolve current location");
+    }
+
+    url += `/${currentLocation.url}`;
   }
 
   url += uri;

@@ -403,15 +403,11 @@ export const resources = {
 
 export const useApi = (key, args = {}) => {
   let { location } = useParams();
+
   const resource = resources[key];
 
   if (!(key in resources)) {
     throw new Error(`Resource ${key} not found`);
-  }
-
-  // split location from window as fallback
-  if (!location) {
-    location = window.location.pathname.split("/")[1];
   }
 
   return (payload) => {
