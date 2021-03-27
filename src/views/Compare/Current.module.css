@@ -2,3 +2,15 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+
+.search {
+  display: flex;
+}
+
+.searchInput {
+  composes: t--epsilon from "./../../css/typography.css";
+  margin-top: 24px;
+  margin-bottom: 24px;
+  max-width: 400px;
+  margin-left: auto;
+}

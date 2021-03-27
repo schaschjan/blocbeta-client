@@ -2,8 +2,6 @@ import React, { Fragment, useContext, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Meta } from "../../App";
 import useRequest from "../../hooks/useRequest";
-import { usePagination, useSortBy, useTable } from "react-table";
-import { TableHeader, TableRow } from "../../components/Table/Table";
 import { useBoulders } from "../../hooks/useBoulders";
 import {
   boulderTableColumns,
@@ -15,72 +13,9 @@ import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import BoulderDetails from "../../components/BoulderDetails/BoulderDetails";
 import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 import { AscentIcon } from "../../components/Ascent/Ascent";
-import { Pagination } from "../../components/BoulderTable/Pagination";
 import convertToKeyValueObject from "../../helper/convertToKeyValueObject";
 import styles from "./Current.module.css";
-
-const Table = ({ columns, data }) => {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    prepareRow,
-    canPreviousPage,
-    canNextPage,
-    nextPage,
-    previousPage,
-    pageOptions,
-    headerGroups,
-    page,
-    state: { pageIndex, pageSize },
-  } = useTable(
-    {
-      columns,
-      data,
-      initialState: { pageIndex: 0, pageSize: 20 },
-    },
-    useSortBy,
-    usePagination
-  );
-
-  const gridTemplateColumns = useMemo(() => {
-    return columns.map((column) => column.gridTemplate).join(" ");
-  }, [columns]);
-
-  return (
-    <Fragment>
-      <div {...getTableProps()}>
-        <TableHeader
-          headerGroups={headerGroups}
-          gridTemplateColumns={gridTemplateColumns}
-        />
-
-        <div {...getTableBodyProps()}>
-          {page.map((row, index) => {
-            prepareRow(row);
-
-            return (
-              <TableRow
-                gridTemplateColumns={gridTemplateColumns}
-                cells={row.cells}
-                key={`row-${index}`}
-              />
-            );
-          })}
-        </div>
-      </div>
-
-      <Pagination
-        pageIndex={pageIndex}
-        pageSize={pageSize}
-        pageCount={pageOptions.length}
-        canPreviousPage={canPreviousPage}
-        canNextPage={canNextPage}
-        previousPage={previousPage}
-        nextPage={nextPage}
-      />
-    </Fragment>
-  );
-};
+import { RankingTable } from "../../components/RankingTable/RankingTable";
 
 const Current = () => {
   const { a, b } = useParams();
@@ -232,7 +167,7 @@ const Current = () => {
         </div>
       </div>
 
-      <Table data={data ? data : []} columns={columns} />
+      <RankingTable data={data ? data : []} columns={columns} />
 
       <Drawer onClose={() => setDetailBoulder(null)}>
         {detailBoulder && <BoulderDetails id={detailBoulder} />}

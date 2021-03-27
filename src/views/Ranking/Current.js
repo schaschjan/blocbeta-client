@@ -1,6 +1,4 @@
 import React, { Fragment, useContext, useMemo } from "react";
-import { useApi } from "../../hooks/useApi";
-import { useQuery } from "react-query";
 import Emoji from "../../components/Emoji/Emoji";
 import Progress from "../../components/Progress/Progress";
 import { Meta } from "../../App";
@@ -15,24 +13,7 @@ import { Button } from "../../components/Button/Button";
 import { useSortBy, useTable } from "react-table";
 import { TableHeader, TableRow } from "../../components/Table/Table";
 import useRequest from "../../hooks/useRequest";
-
-const calculatePercentage = (amount, total) => {
-  let percentage = 0;
-
-  if (amount > 0) {
-    percentage = (amount / total) * 100;
-  }
-
-  if (percentage === 0) {
-    return `${amount} (0%)`;
-  }
-
-  if (percentage < 1) {
-    return `${amount} (<1%)`;
-  }
-
-  return `${amount} (${Math.floor(percentage)}%)`;
-};
+import calculatePercentage from "../../helper/calculatePercentage";
 
 const Table = ({ columns, data }) => {
   const {
@@ -54,26 +35,28 @@ const Table = ({ columns, data }) => {
   }, [columns]);
 
   return (
-    <div {...getTableProps()}>
-      <TableHeader
-        headerGroups={headerGroups}
-        gridTemplateColumns={gridTemplateColumns}
-      />
+    <Fragment>
+      <div {...getTableProps()}>
+        <TableHeader
+          headerGroups={headerGroups}
+          gridTemplateColumns={gridTemplateColumns}
+        />
 
-      <div {...getTableBodyProps()}>
-        {rows.map((row, index) => {
-          prepareRow(row);
+        <div {...getTableBodyProps()}>
+          {rows.map((row, index) => {
+            prepareRow(row);
 
-          return (
-            <TableRow
-              gridTemplateColumns={gridTemplateColumns}
-              cells={row.cells}
-              key={`row-${index}`}
-            />
-          );
-        })}
+            return (
+              <TableRow
+                gridTemplateColumns={gridTemplateColumns}
+                cells={row.cells}
+                key={`row-${index}`}
+              />
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </Fragment>
   );
 };
 
