@@ -2,6 +2,11 @@
   padding-top: calc(4 * var(--spacing-unit));
 }
 
+.wallLink {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 .gridRow {
   display: grid;
   align-items: center;

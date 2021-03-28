@@ -5,8 +5,3 @@
 .ascents *:nth-child(2) {
   margin: 0 calc(2 * var(--spacing-unit));
 }
-
-.wallLink {
-  cursor: pointer;
-  text-decoration: underline;
-}

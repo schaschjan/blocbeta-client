@@ -304,4 +304,12 @@ const boulderTableColumns = {
   },
 };
 
-export { BoulderTable, DetailToggle, boulderTableColumns };
+function WallLink({ name, onClick }) {
+  return (
+    <span className={styles.wallLink} onClick={onClick}>
+      {name}
+    </span>
+  );
+}
+
+export { BoulderTable, DetailToggle, WallLink, boulderTableColumns };

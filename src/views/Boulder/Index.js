@@ -24,6 +24,7 @@ import {
   BoulderTable,
   DetailToggle,
   boulderTableColumns,
+  WallLink,
 } from "../../components/BoulderTable/BoulderTable";
 import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 import { BoulderFilters } from "../../components/BoulderFilters/BoulderFilters";
@@ -128,23 +129,13 @@ const Index = () => {
       {
         ...boulderTableColumns.startWall,
         Cell: ({ value }) => (
-          <span
-            className={styles.wallLink}
-            onClick={() => setDetailWall(value)}
-          >
-            {value.name}
-          </span>
+          <WallLink onClick={() => setDetailWall(value)} name={value.name} />
         ),
       },
       {
         ...boulderTableColumns.endWall,
         Cell: ({ value }) => (
-          <span
-            className={styles.wallLink}
-            onClick={() => setDetailWall(value)}
-          >
-            {value.name}
-          </span>
+          <WallLink onClick={() => setDetailWall(value)} name={value.name} />
         ),
       },
       {

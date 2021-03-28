@@ -6,6 +6,7 @@ import { useBoulders } from "../../hooks/useBoulders";
 import {
   boulderTableColumns,
   DetailToggle,
+  WallLink,
 } from "../../components/BoulderTable/BoulderTable";
 import HoldType from "../../components/HoldStyle/HoldType";
 import Grade from "../../components/Grade/Grade";
@@ -17,6 +18,7 @@ import convertToKeyValueObject from "../../helper/convertToKeyValueObject";
 import styles from "./Current.module.css";
 import { RankingTable } from "../../components/RankingTable/RankingTable";
 import { Loader } from "../../components/Loader/Loader";
+import { WallDetails } from "../../components/WallDetails/WallDetails";
 
 const Current = () => {
   const { a, b } = useParams();
@@ -31,6 +33,7 @@ const Current = () => {
   const { data: ranking } = useRequest(`/ranking/current`);
 
   const [detailBoulder, setDetailBoulder] = useState(null);
+  const [detailWall, setDetailWall] = useState(null);
 
   const columns = useMemo(() => {
     return [
@@ -85,10 +88,16 @@ const Current = () => {
       {
         ...boulderTableColumns.startWall,
         gridTemplate: "140px",
+        Cell: ({ value }) => (
+          <WallLink onClick={() => setDetailWall(value)} name={value.name} />
+        ),
       },
       {
         ...boulderTableColumns.endWall,
         gridTemplate: "140px",
+        Cell: ({ value }) => (
+          <WallLink onClick={() => setDetailWall(value)} name={value.name} />
+        ),
       },
       {
         Header: "You",
@@ -178,6 +187,10 @@ const Current = () => {
       <Drawer onClose={() => setDetailBoulder(null)}>
         {detailBoulder && <BoulderDetails id={detailBoulder} />}
       </Drawer>
+
+      {detailWall && (
+        <WallDetails wall={detailWall} onClose={() => setDetailWall(null)} />
+      )}
     </Fragment>
   );
 };
