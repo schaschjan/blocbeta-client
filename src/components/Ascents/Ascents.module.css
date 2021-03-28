@@ -1,7 +1,0 @@
-.root {
-  display: inline-flex;
-}
-
-.root *:nth-child(2) {
-  margin: 0 calc(2 * var(--spacing-unit));
-}

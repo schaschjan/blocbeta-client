@@ -202,7 +202,7 @@ const BoulderDetails = ({ id }) => {
                       {ascent.username}
                     </span>
 
-                    {!doubted && (
+                    {!doubted && ascent.type !== "resignation" && (
                       <Button
                         size={"small"}
                         onClick={() => {

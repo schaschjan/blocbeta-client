@@ -30,9 +30,9 @@ const Ascent = ({ type, checked, disabled, asyncHandler, ...rest }) => {
       className={joinClassNames(
         styles.root,
         styles[`is${type.capitalize()}`],
-        checked ? styles[`is${type.capitalize()}`] : null,
-        disabled ? styles[`is${type.capitalize()}`] : null,
-        loading ? styles[`is${type.capitalize()}`] : null
+        checked ? styles.isChecked : null,
+        disabled ? styles.isDisabled : null,
+        loading ? styles.isLoading : null
       )}
       {...rest}
     >

@@ -1,0 +1,42 @@
+.root {
+  transition: opacity 200ms ease-in-out;
+  position: fixed;
+  z-index: 400;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+}
+
+.inner {
+  z-index: 1000;
+  top: 0;
+  position: fixed;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.inner > div {
+  padding: 32px;
+}
+
+.background {
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: var(--color-white);
+  opacity: 0.9;
+  z-index: 100;
+}
+
+.close {
+  position: fixed;
+  right: 32px;
+  top: 32px;
+  z-index: 1000;
+}
+
+.map {
+  max-width: 500px;
+}

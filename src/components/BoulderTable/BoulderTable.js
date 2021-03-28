@@ -258,12 +258,12 @@ const boulderTableColumns = {
   },
   startWall: {
     id: "start",
-    accessor: "startWall.name",
+    accessor: "startWall",
     Header: "Start",
   },
   endWall: {
     id: "end",
-    accessor: "endWall.name",
+    accessor: "endWall",
     Header: "End",
   },
   setters: {

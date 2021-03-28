@@ -2,7 +2,6 @@ import React, {
   Fragment,
   useContext,
   useState,
-  useCallback,
   useMemo,
   useEffect,
 } from "react";
@@ -13,14 +12,12 @@ import { LoadedContent } from "../../components/Loader/Loader";
 import HoldType from "../../components/HoldStyle/HoldType";
 import Grade from "../../components/Grade/Grade";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
-import moment from "moment";
 import {
   errorToast,
   toast,
   ToastContext,
 } from "../../components/Toaster/Toaster";
 import BoulderDetails from "../../components/BoulderDetails/BoulderDetails";
-import { Ascents } from "../../components/Ascents/Ascents";
 import { Bar } from "../../components/Bar/Bar";
 import { Button } from "../../components/Button/Button";
 import {
@@ -31,6 +28,9 @@ import {
 import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 import { BoulderFilters } from "../../components/BoulderFilters/BoulderFilters";
 import { useBoulders } from "../../hooks/useBoulders";
+import { Ascent } from "../../components/Ascent/Ascent";
+import styles from "./Index.module.css";
+import { WallDetails } from "../../components/WallDetails/WallDetails";
 
 const Index = () => {
   const { isAdmin, contextualizedPath } = useContext(BoulderDBUIContext);
@@ -38,6 +38,8 @@ const Index = () => {
   const { toggle: toggleDrawer } = useContext(DrawerContext);
 
   const [detailBoulder, setDetailBoulder] = useState(null);
+  const [detailWall, setDetailWall] = useState(null);
+
   const [selected, setSelected] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [filters, setFilters] = useState([
@@ -125,9 +127,25 @@ const Index = () => {
       },
       {
         ...boulderTableColumns.startWall,
+        Cell: ({ value }) => (
+          <span
+            className={styles.wallLink}
+            onClick={() => setDetailWall(value)}
+          >
+            {value.name}
+          </span>
+        ),
       },
       {
         ...boulderTableColumns.endWall,
+        Cell: ({ value }) => (
+          <span
+            className={styles.wallLink}
+            onClick={() => setDetailWall(value)}
+          >
+            {value.name}
+          </span>
+        ),
       },
       {
         ...boulderTableColumns.setters,
@@ -150,7 +168,42 @@ const Index = () => {
       },
       {
         ...boulderTableColumns.ascent,
-        Cell: ({ value }) => renderAscents(value),
+        Cell: ({ value }) => (
+          <div className={styles.ascents}>
+            <Ascent
+              type="flash"
+              disabled={value.id && value.type !== "flash"}
+              checked={value.type === "flash"}
+              asyncHandler={async () => {
+                value.id
+                  ? await removeHandler(value.id)
+                  : await addHandler(value.boulderId, "flash");
+              }}
+            />
+
+            <Ascent
+              type="top"
+              disabled={value.id && value.type !== "top"}
+              checked={value.type === "top"}
+              asyncHandler={async () => {
+                value.id
+                  ? await removeHandler(value.id)
+                  : await addHandler(value.boulderId, "top");
+              }}
+            />
+
+            <Ascent
+              type="resignation"
+              disabled={value.id && value.type !== "resignation"}
+              checked={value.type === "resignation"}
+              asyncHandler={async () => {
+                value.id
+                  ? await removeHandler(value.id)
+                  : await addHandler(value.boulderId, "resignation");
+              }}
+            />
+          </div>
+        ),
       },
     ];
   }, [isAdmin, detailBoulder]);
@@ -175,17 +228,6 @@ const Index = () => {
       dispatch(toast("Error", extractErrorMessage(error), "danger"));
     }
   };
-
-  const renderAscents = useCallback((ascent) => {
-    return (
-      <Ascents
-        boulderId={ascent.boulderId}
-        addHandler={addHandler}
-        removeHandler={removeHandler}
-        ascent={ascent}
-      />
-    );
-  }, []);
 
   return (
     <Fragment>
@@ -269,6 +311,10 @@ const Index = () => {
           </Button>
         </span>
       </Bar>
+
+      {detailWall && (
+        <WallDetails wall={detailWall} onClose={() => setDetailWall(null)} />
+      )}
     </Fragment>
   );
 };
