@@ -21,6 +21,7 @@ import BoulderDetails from "../../components/BoulderDetails/BoulderDetails";
 import { Bar } from "../../components/Bar/Bar";
 import { Button } from "../../components/Button/Button";
 import {
+  Ascents,
   BoulderTable,
   DetailToggle,
   boulderTableColumns,
@@ -29,8 +30,6 @@ import {
 import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 import { BoulderFilters } from "../../components/BoulderFilters/BoulderFilters";
 import { useBoulders } from "../../hooks/useBoulders";
-import { Ascent } from "../../components/Ascent/Ascent";
-import styles from "./Index.module.css";
 import { WallDetails } from "../../components/WallDetails/WallDetails";
 
 const Index = () => {
@@ -141,17 +140,7 @@ const Index = () => {
       {
         ...boulderTableColumns.setters,
         Cell: ({ value }) => {
-          return value.map((setter, index) => {
-            if (!setter) {
-              return null;
-            }
-
-            if (index === value.length - 1) {
-              return setter.username;
-            }
-
-            return `${setter.username}, `;
-          });
+          return value.map((setter) => setter.username).join(", ");
         },
       },
       {
@@ -160,40 +149,11 @@ const Index = () => {
       {
         ...boulderTableColumns.ascent,
         Cell: ({ value }) => (
-          <div className={styles.ascents}>
-            <Ascent
-              type="flash"
-              disabled={value.id && value.type !== "flash"}
-              checked={value.type === "flash"}
-              asyncHandler={async () => {
-                value.id
-                  ? await removeHandler(value.id)
-                  : await addHandler(value.boulderId, "flash");
-              }}
-            />
-
-            <Ascent
-              type="top"
-              disabled={value.id && value.type !== "top"}
-              checked={value.type === "top"}
-              asyncHandler={async () => {
-                value.id
-                  ? await removeHandler(value.id)
-                  : await addHandler(value.boulderId, "top");
-              }}
-            />
-
-            <Ascent
-              type="resignation"
-              disabled={value.id && value.type !== "resignation"}
-              checked={value.type === "resignation"}
-              asyncHandler={async () => {
-                value.id
-                  ? await removeHandler(value.id)
-                  : await addHandler(value.boulderId, "resignation");
-              }}
-            />
-          </div>
+          <Ascents
+            value={value}
+            addHandler={addHandler}
+            removeHandler={removeHandler}
+          />
         ),
       },
     ];

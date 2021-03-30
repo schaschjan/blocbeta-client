@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useRef,
   forwardRef,
+  useMemo,
 } from "react";
 import Downward from "../Icon/Downward";
 import Upward from "../Icon/Upward";
@@ -22,6 +23,7 @@ import { BoulderDBUIContext } from "../BoulderDBUI";
 import Grade from "../Grade/Grade";
 import { Pagination } from "./Pagination";
 import moment from "moment";
+import { Ascent } from "../Ascent/Ascent";
 
 const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = useRef();
@@ -205,6 +207,46 @@ const BoulderTable = ({
   );
 };
 
+const Ascents = ({ removeHandler, addHandler, value }) =>
+  useMemo(() => {
+    return (
+      <div className={styles.ascents}>
+        <Ascent
+          type="flash"
+          disabled={value.id && value.type !== "flash"}
+          checked={value.type === "flash"}
+          asyncHandler={async () => {
+            value.id
+              ? await removeHandler(value.id)
+              : await addHandler(value.boulderId, "flash");
+          }}
+        />
+
+        <Ascent
+          type="top"
+          disabled={value.id && value.type !== "top"}
+          checked={value.type === "top"}
+          asyncHandler={async () => {
+            value.id
+              ? await removeHandler(value.id)
+              : await addHandler(value.boulderId, "top");
+          }}
+        />
+
+        <Ascent
+          type="resignation"
+          disabled={value.id && value.type !== "resignation"}
+          checked={value.type === "resignation"}
+          asyncHandler={async () => {
+            value.id
+              ? await removeHandler(value.id)
+              : await addHandler(value.boulderId, "resignation");
+          }}
+        />
+      </div>
+    );
+  }, [value]);
+
 const boulderTableColumns = {
   holdType: {
     id: "holdType",
@@ -260,11 +302,15 @@ const boulderTableColumns = {
     id: "start",
     accessor: "startWall",
     Header: "Start",
+    filter: (rows, id, filterValue) =>
+      rows.filter((row) => row.values[id].name === filterValue),
   },
   endWall: {
     id: "end",
     accessor: "endWall",
     Header: "End",
+    filter: (rows, id, filterValue) =>
+      rows.filter((row) => row.values[id].name === filterValue),
   },
   setters: {
     id: "setter",
@@ -278,7 +324,7 @@ const boulderTableColumns = {
   },
   date: {
     id: "date",
-    accessor: ({ created_at }) => moment(created_at).fromNow(),
+    accessor: ({ created_at }) => moment(created_at).format("ll"),
     sortType: (a, b) => {
       return moment(a.original.created_at).valueOf() >
         moment(b.original.created_at).valueOf()
@@ -304,12 +350,13 @@ const boulderTableColumns = {
   },
 };
 
-function WallLink({ name, onClick }) {
-  return (
-    <span className={styles.wallLink} onClick={onClick}>
-      {name}
-    </span>
-  );
-}
+const WallLink = ({ name, onClick }) =>
+  useMemo(() => {
+    return (
+      <span className={styles.wallLink} onClick={onClick}>
+        {name}
+      </span>
+    );
+  }, [name]);
 
-export { BoulderTable, DetailToggle, WallLink, boulderTableColumns };
+export { BoulderTable, DetailToggle, WallLink, boulderTableColumns, Ascents };

@@ -2,9 +2,9 @@ import React, { useMemo } from "react";
 import "./HoldStyle.css";
 import { classNames } from "../../helper/classNames";
 
-const HoldType = ({ image, small = false }) => {
-  return useMemo(
-    () => (
+const HoldType = ({ image, small = false }) =>
+  useMemo(() => {
+    return (
       <div
         className={classNames("holdstyle", small ? "holdstyle--small" : null)}
       >
@@ -13,9 +13,7 @@ const HoldType = ({ image, small = false }) => {
           className="holdstyle__image"
         />
       </div>
-    ),
-    [image, small]
-  );
-};
+    );
+  }, [image, small]);
 
 export default HoldType;
