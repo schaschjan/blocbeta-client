@@ -1,0 +1,104 @@
+@import url("https://fonts.googleapis.com/css?family=Karla&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap");
+
+@font-face {
+  font-family: "Karla";
+  src: url("https://fonts.googleapis.com/css?family=Karla&display=swap");
+  font-weight: normal;
+}
+
+.alpha,
+.beta,
+.gamma,
+.delta,
+.epsilon,
+.zeta,
+.eta,
+.theta {
+  font-family: var(--font-family-sans);
+}
+
+.alpha,
+.beta,
+.gamma,
+.delta,
+.epsilon,
+.zeta,
+.eta {
+  letter-spacing: 0;
+}
+
+.alpha {
+  font-size: 48px;
+  line-height: 56px;
+}
+
+.beta {
+  font-size: var(--font-size-beta);
+  line-height: var(--line-height-beta);
+}
+
+.gamma {
+  font-size: var(--font-size-gamma);
+  line-height: var(--line-height-gamma);
+}
+
+.delta {
+  font-size: var(--font-size-delta);
+  line-height: var(--line-height-delta);
+}
+
+.epsilon {
+  font-size: var(--font-size-epsilon);
+  line-height: var(--line-height-epsilon);
+}
+
+.zeta {
+  font-size: var(--font-size-zeta);
+  line-height: var(--line-height-zeta);
+}
+
+.eta {
+  font-size: var(--font-size-eta);
+  line-height: var(--line-height-eta);
+  letter-spacing: 0.05em;
+}
+
+mark {
+  padding: 2px 4px;
+  background: var(--color-lila);
+  color: var(--color-white);
+}
+
+a {
+  text-decoration: none;
+}
+
+a svg,
+p svg,
+span svg,
+h1,
+h2,
+h3,
+h4 {
+  display: inline-flex;
+}
+
+strong {
+  font-weight: var(--font-weight-bold);
+}
+
+@media (min-width: 768px) {
+  .alpha {
+    font-size: 38px;
+    line-height: 46px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .alpha {
+    font-size: 48px;
+    line-height: 56px;
+  }
+}

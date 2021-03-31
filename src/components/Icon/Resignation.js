@@ -1,6 +1,6 @@
 import * as React from "react";
 
-const Resignation = ({ fill = false, ...rest }) => {
+const Resignation = ({ fill, ...rest }) => {
   return (
     <svg width={24} height={24} viewBox="0 0 24 24" fill="none" {...rest}>
       <path d="M0 0h24v24H0V0z" />

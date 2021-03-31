@@ -1,4 +1,4 @@
-.avatar {
+.root {
   width: 40px;
   height: 40px;
   min-width: 40px;
@@ -11,10 +11,10 @@
   padding: 8px;
 }
 
-.avatar--fallback {
+.isFallback {
   background: var(--color-lila);
 }
 
-.avatar--fallback .icon {
+.isFallback .icon {
   margin: 0 auto;
 }

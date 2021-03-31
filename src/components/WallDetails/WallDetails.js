@@ -4,11 +4,9 @@ import { joinClassNames } from "../../helper/classNames";
 import { Close } from "../Icon/Close";
 import useRequest from "../../hooks/useRequest";
 import { Loader } from "../Loader/Loader";
-import { Frame } from "framer";
 
 function WallDetails({ wall, onClose }) {
   const { data } = useRequest(`/wall/${wall.id}`);
-  console.log(data);
 
   return (
     <div className={styles.root}>

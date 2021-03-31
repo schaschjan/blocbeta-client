@@ -1,13 +1,4 @@
-import React, {
-  useContext,
-  Fragment,
-  useEffect,
-  useRef,
-  forwardRef,
-  useMemo,
-} from "react";
-import Downward from "../Icon/Downward";
-import Upward from "../Icon/Upward";
+import React, { Fragment, useEffect, useRef, forwardRef, useMemo } from "react";
 import {
   usePagination,
   useTable,
@@ -18,12 +9,10 @@ import {
 } from "react-table";
 import styles from "./BoulderTable.module.css";
 import Forward from "../Icon/Forward";
-import { Link } from "react-router-dom";
-import { BoulderDBUIContext } from "../BoulderDBUI";
 import Grade from "../Grade/Grade";
 import { Pagination } from "./Pagination";
-import moment from "moment";
 import { Ascent } from "../Ascent/Ascent";
+import { TableHeader, TableRow } from "../Table/Table";
 
 const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = useRef();
@@ -42,7 +31,7 @@ const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
 
 const DetailToggle = ({ boulderId, toggleHandler, active, children }) => {
   const style = `${styles.toggleDetails} ${
-    active ? styles["toggleDetails--active"] : null
+    active ? styles.isActiveToggleDetails : null
   }`;
 
   return (
@@ -52,17 +41,25 @@ const DetailToggle = ({ boulderId, toggleHandler, active, children }) => {
   );
 };
 
+const WallLink = ({ name, onClick }) =>
+  useMemo(() => {
+    return (
+      <span className={styles.wallLink} onClick={onClick}>
+        {name}
+      </span>
+    );
+  }, [name]);
+
 const BoulderTable = ({
   columns,
   data,
   onSelectRows,
   globalFilter,
   filters,
-  isAdmin = false,
 }) => {
-  const { contextualizedPath } = useContext(BoulderDBUIContext);
-
   const {
+    getTableProps,
+    getTableBodyProps,
     headerGroups,
     page,
     prepareRow,
@@ -88,37 +85,7 @@ const BoulderTable = ({
     useGlobalFilter,
     useSortBy,
     usePagination,
-    useRowSelect,
-    (hooks) => {
-      hooks.visibleColumns.push((columns) => {
-        if (!isAdmin) {
-          return columns;
-        }
-
-        return [
-          {
-            id: "selection",
-            Header: ({ getToggleAllRowsSelectedProps }) => (
-              <div>
-                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-              </div>
-            ),
-            Cell: ({ row }) => (
-              <div>
-                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-
-                <Link
-                  to={contextualizedPath(`/admin/boulder/${row.original.id}`)}
-                >
-                  &nbsp;&nbsp;&nbsp;✎
-                </Link>
-              </div>
-            ),
-          },
-          ...columns,
-        ];
-      });
-    }
+    useRowSelect
   );
 
   useEffect(() => {
@@ -133,76 +100,42 @@ const BoulderTable = ({
     setGlobalFilter(globalFilter);
   }, [globalFilter]);
 
-  const rowStyle = isAdmin ? styles["gridRow--admin"] : styles.gridRow;
+  const gridTemplateColumns = useMemo(() => {
+    return columns.map((column) => column.gridTemplate).join(" ");
+  }, [columns]);
 
   return (
     <Fragment>
-      <div className={styles.root}>
-        {headerGroups.map((headerGroup) => {
-          return (
-            <div className={rowStyle} {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => {
-                return (
-                  <div
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className={`${styles.headerItem} ${
-                      styles[`headerItem--${column.id}`]
-                    }`}
-                  >
-                    {column.render("Header")}
+      <div className={styles.root} {...getTableProps()}>
+        <TableHeader
+          headerGroups={headerGroups}
+          gridTemplateColumns={gridTemplateColumns}
+        />
 
-                    {column.isSorted ? (
-                      column.isSortedDesc ? (
-                        <Downward />
-                      ) : (
-                        <Upward />
-                      )
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
-
-        <div>
+        <div {...getTableBodyProps()}>
           {page.map((row, index) => {
             prepareRow(row);
 
             return (
-              <div
-                className={`${rowStyle} ${styles.contentGridRow}`}
-                key={index}
-              >
-                {row.cells.map((cell) => {
-                  return (
-                    <div
-                      className={`${styles.cell} ${
-                        styles[`cell--${cell.column.id}`]
-                      }`}
-                      {...cell.getCellProps()}
-                    >
-                      {cell.render("Cell")}
-                    </div>
-                  );
-                })}
-              </div>
+              <TableRow
+                gridTemplateColumns={gridTemplateColumns}
+                cells={row.cells}
+                key={`row-${index}`}
+              />
             );
           })}
         </div>
-
-        <Pagination
-          pageIndex={pageIndex}
-          pageSize={pageSize}
-          pageCount={pageOptions.length}
-          canPreviousPage={canPreviousPage}
-          canNextPage={canNextPage}
-          previousPage={previousPage}
-          nextPage={nextPage}
-        />
       </div>
+
+      <Pagination
+        pageIndex={pageIndex}
+        pageSize={pageSize}
+        pageCount={pageOptions.length}
+        canPreviousPage={canPreviousPage}
+        canNextPage={canNextPage}
+        previousPage={previousPage}
+        nextPage={nextPage}
+      />
     </Fragment>
   );
 };
@@ -248,10 +181,20 @@ const Ascents = ({ removeHandler, addHandler, value }) =>
   }, [value]);
 
 const boulderTableColumns = {
+  selection: {
+    id: "selection",
+    gridTemplate: "40px",
+    Header: ({ getToggleAllRowsSelectedProps }) => (
+      <div>
+        <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+      </div>
+    ),
+  },
   holdType: {
     id: "holdType",
     accessor: "holdType",
     Header: "Hold",
+    gridTemplate: "minmax(20px, 60px)",
     sortType: (a, b) => {
       return a.values.holdType.name > b.values.holdType.name ? -1 : 1;
     },
@@ -265,6 +208,7 @@ const boulderTableColumns = {
     id: "grade",
     accessor: "grade",
     Header: "Grade",
+    gridTemplate: "80px",
     sortType: (a, b) => {
       const gradeA = a.values.grade.internal
         ? a.values.grade.internal.name
@@ -289,6 +233,7 @@ const boulderTableColumns = {
     id: "points",
     accessor: "points",
     Header: "Points",
+    gridTemplate: "60px",
     sortType: (a, b) => {
       return a.values.points > b.values.points ? -1 : 1;
     },
@@ -297,11 +242,14 @@ const boulderTableColumns = {
     id: "name",
     accessor: "name",
     Header: "Name",
+    gridTemplate: "auto",
   },
   startWall: {
     id: "start",
     accessor: "startWall",
     Header: "Start",
+    gridTemplate: "140px",
+    sortType: (a, b) => (a.values.start.name > b.values.start.name ? -1 : 1),
     filter: (rows, id, filterValue) =>
       rows.filter((row) => row.values[id].name === filterValue),
   },
@@ -309,34 +257,34 @@ const boulderTableColumns = {
     id: "end",
     accessor: "endWall",
     Header: "End",
+    gridTemplate: "140px",
+    sortType: (a, b) => (a.values.end.name > b.values.end.name ? -1 : 1),
     filter: (rows, id, filterValue) =>
       rows.filter((row) => row.values[id].name === filterValue),
   },
   setters: {
     id: "setter",
-    accessor: "setters",
+    accessor: ({ setters }) =>
+      setters.map((setter) => setter.username).join(", "),
     Header: "Setter",
+    gridTemplate: "140px",
     filter: (rows, id, filterValue) => {
-      return rows.filter((row) =>
-        row.values[id].some((item) => item.username === filterValue)
-      );
+      return rows.filter((row) => row.values[id].includes(filterValue));
     },
   },
   date: {
     id: "date",
-    accessor: ({ created_at }) => moment(created_at).format("ll"),
-    sortType: (a, b) => {
-      return moment(a.original.created_at).valueOf() >
-        moment(b.original.created_at).valueOf()
-        ? -1
-        : 1;
-    },
+    accessor: "created_at",
     Header: "Date",
+    gridTemplate: "100px",
+    sortType: (a, b) => (a.timestamp > b.timestamp ? -1 : 1),
+    Cell: ({ value }) => value.string,
   },
   ascent: {
     id: "ascent",
     accessor: "ascent",
     Header: "Ascent",
+    gridTemplate: "152px",
     sortType: (a, b) => {
       return a.values.ascent.type > b.values.ascent.type ? -1 : 1;
     },
@@ -349,14 +297,5 @@ const boulderTableColumns = {
     },
   },
 };
-
-const WallLink = ({ name, onClick }) =>
-  useMemo(() => {
-    return (
-      <span className={styles.wallLink} onClick={onClick}>
-        {name}
-      </span>
-    );
-  }, [name]);
 
 export { BoulderTable, DetailToggle, WallLink, boulderTableColumns, Ascents };

@@ -42,9 +42,7 @@ const Detail = () => {
       <Meta title="Add boulder" />
 
       <div className="side-title-layout">
-        <h1 className="t--alpha side-title-layout__title">
-          Add a new boulder.
-        </h1>
+        <h1 className="t--alpha side-title-layout__title">Edit {data.name}</h1>
 
         <div className="side-title-layout__content">
           <BoulderForm

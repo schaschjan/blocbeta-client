@@ -3,6 +3,7 @@ import { allIdle, cache, queryDefaults, useApi } from "./useApi";
 import { useContext, useMemo } from "react";
 import { BoulderDBUIContext } from "../components/BoulderDBUI";
 import convertToKeyValueObject from "../helper/convertToKeyValueObject";
+import { parseDate } from "../helper/parseDate";
 
 function useBoulders() {
   const { currentLocation, isAdmin } = useContext(BoulderDBUIContext);
@@ -91,6 +92,7 @@ function useBoulders() {
                 type: ascent.me ? ascent.me.type : null,
               }
             : null,
+          created_at: parseDate(boulder.created_at),
         };
       }),
       idle: true,

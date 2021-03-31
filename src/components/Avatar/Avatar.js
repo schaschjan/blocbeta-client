@@ -1,11 +1,12 @@
 import React from "react";
-import "./Avatar.css";
+import styles from "./Avatar.module.css";
 import AvatarIcon from "../Icon/Avatar";
+import { joinClassNames } from "../../helper/classNames";
 
 const Avatar = ({ image }) => {
   if (!image) {
     return (
-      <div className="avatar avatar--fallback">
+      <div className={joinClassNames(styles.root, styles.isFallback)}>
         <AvatarIcon />
       </div>
     );
@@ -13,7 +14,7 @@ const Avatar = ({ image }) => {
 
   return (
     <div
-      className="avatar"
+      className={styles.root}
       style={{ backgroundImage: `url(${image}?w=80&h=80&fit=crop)` }}
     />
   );

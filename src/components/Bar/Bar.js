@@ -1,11 +1,16 @@
 import React from "react";
-import "./Bar.css";
-import { classNames } from "../../helper/classNames";
+import styles from "./Bar.module.css";
+import typography from "../../css/typography.module.css";
+import { joinClassNames } from "../../helper/classNames";
 
 const Bar = ({ visible, children }) => {
   return (
     <div
-      className={classNames("bar t--gamma", visible ? "bar--visible" : null)}
+      className={joinClassNames(
+        styles.root,
+        visible ? styles.isVisible : null,
+        typography.gamma
+      )}
     >
       {children}
     </div>

@@ -156,8 +156,6 @@ const Index = () => {
     }
   );
 
-  console.log(data);
-
   const [
     mutateDeletion,
     { status: mutateCancellationStatus, error: mutateCancellationError },

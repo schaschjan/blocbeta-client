@@ -1,29 +1,22 @@
 import React from "react";
 import "./BoulderFilters.css";
 import { Close } from "../Icon/Close";
-import { cache, queryDefaults, useApi } from "../../hooks/useApi";
-import { useQuery } from "react-query";
-import { Loader } from "../Loader/Loader";
 import Grade from "../Grade/Grade";
 import HoldType from "../HoldStyle/HoldType";
 import { Input } from "../Input/Input";
+import useRequest from "../../hooks/useRequest";
+import { Loader } from "../Loader/Loader";
 
 const Filter = ({
   name,
   id,
-  query,
+  data,
   itemFilter = () => true,
   valueProperty,
   currentFilters,
   setFilters,
   renderItem,
 }) => {
-  const { status, data } = query;
-
-  if (status !== "success") {
-    return <Loader />;
-  }
-
   return (
     <div className={"filter"}>
       <span className={"t--gamma filter__name"}>{name}</span>
@@ -64,13 +57,40 @@ const BoulderFilters = ({
   globalFilter,
   setGlobalFilter,
 }) => {
+  const { data: holdTypes } = useRequest("/holdstyle");
+  const { data: grades } = useRequest("/grade");
+  const { data: walls } = useRequest("/wall");
+  const { data: setters } = useRequest("/setter/current");
+  const ascents = [
+    {
+      value: "todo",
+      label: "Todo",
+    },
+    {
+      value: "flash",
+      label: "Flash",
+    },
+    {
+      value: "top",
+      label: "Top",
+    },
+    {
+      value: "resignation",
+      label: "Resignation",
+    },
+  ];
+
+  if (!holdTypes || !grades || !walls || !setters || !ascents) {
+    return <Loader />;
+  }
+
   return (
     <div className={"boulder-filters"}>
       <div className={"boulder-filters__list"}>
         <Filter
           name={"Hold types"}
           id={"holdType"}
-          query={useQuery(cache.holdTypes, useApi("holdTypes"), queryDefaults)}
+          data={holdTypes ? holdTypes : []}
           valueProperty={"name"}
           setFilters={setFilters}
           currentFilters={filters}
@@ -86,7 +106,7 @@ const BoulderFilters = ({
         <Filter
           name={"Grade"}
           id={"grade"}
-          query={useQuery(cache.grades, useApi("grades"), queryDefaults)}
+          data={grades ? grades : []}
           valueProperty={"name"}
           setFilters={setFilters}
           currentFilters={filters}
@@ -104,7 +124,7 @@ const BoulderFilters = ({
         <Filter
           name={"Start"}
           id={"start"}
-          query={useQuery(cache.walls, useApi("walls"), queryDefaults)}
+          data={walls ? walls : []}
           valueProperty={"name"}
           setFilters={setFilters}
           currentFilters={filters}
@@ -116,7 +136,7 @@ const BoulderFilters = ({
         <Filter
           name={"End"}
           id={"end"}
-          query={useQuery(cache.walls, useApi("walls"), queryDefaults)}
+          data={walls ? walls : []}
           valueProperty={"name"}
           setFilters={setFilters}
           currentFilters={filters}
@@ -128,11 +148,7 @@ const BoulderFilters = ({
         <Filter
           name={"Setter"}
           id={"setter"}
-          query={useQuery(
-            cache.currentSetters,
-            useApi("currentSetters"),
-            queryDefaults
-          )}
+          data={setters ? setters : []}
           valueProperty={"username"}
           setFilters={setFilters}
           currentFilters={filters}
@@ -144,27 +160,7 @@ const BoulderFilters = ({
         <Filter
           name={"Ascent"}
           id={"ascent"}
-          query={{
-            status: "success",
-            data: [
-              {
-                value: "todo",
-                label: "Todo",
-              },
-              {
-                value: "flash",
-                label: "Flash",
-              },
-              {
-                value: "top",
-                label: "Top",
-              },
-              {
-                value: "resignation",
-                label: "Resignation",
-              },
-            ],
-          }}
+          data={ascents ? ascents : []}
           valueProperty={"value"}
           setFilters={setFilters}
           currentFilters={filters}

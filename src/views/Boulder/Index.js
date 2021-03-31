@@ -31,6 +31,8 @@ import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 import { BoulderFilters } from "../../components/BoulderFilters/BoulderFilters";
 import { useBoulders } from "../../hooks/useBoulders";
 import { WallDetails } from "../../components/WallDetails/WallDetails";
+import { Link } from "react-router-dom";
+import { IndeterminateCheckbox } from "../../components/IndeterminateCheckbox";
 
 const Index = () => {
   const { isAdmin, contextualizedPath } = useContext(BoulderDBUIContext);
@@ -59,8 +61,11 @@ const Index = () => {
 
   const [mutateAscentCreation] = useMutation(useApi("addAscent"), {
     throwOnError: true,
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryCache.invalidateQueries(cache.ascents);
+
+      console.log(data);
+      dispatch(toast(`${data.me.type}`, `+${data.points}`));
     },
   });
 
@@ -80,7 +85,7 @@ const Index = () => {
   });
 
   const columns = useMemo(() => {
-    return [
+    const defaultColumns = [
       {
         ...boulderTableColumns.holdType,
         Cell: ({ value }) => <HoldType image={value.image} />,
@@ -139,9 +144,6 @@ const Index = () => {
       },
       {
         ...boulderTableColumns.setters,
-        Cell: ({ value }) => {
-          return value.map((setter) => setter.username).join(", ");
-        },
       },
       {
         ...boulderTableColumns.date,
@@ -157,6 +159,23 @@ const Index = () => {
         ),
       },
     ];
+
+    if (isAdmin) {
+      defaultColumns.unshift({
+        ...boulderTableColumns.selection,
+        Cell: ({ row }) => (
+          <div>
+            <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+
+            <Link to={contextualizedPath(`/admin/boulder/${row.original.id}`)}>
+              &nbsp;&nbsp;&nbsp;✎
+            </Link>
+          </div>
+        ),
+      });
+    }
+
+    return defaultColumns;
   }, [isAdmin, detailBoulder]);
 
   const addHandler = async (boulderId, type) => {
