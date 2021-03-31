@@ -218,10 +218,7 @@ const Index = () => {
         )}
       </h1>
 
-      <BoulderFilters
-        setGlobalFilter={setGlobalFilter}
-        setFilters={setFilters}
-      />
+      <BoulderFilters filters={filters} setFilters={setFilters} />
 
       <GlobalFilter
         filters={filters}
