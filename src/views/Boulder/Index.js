@@ -4,6 +4,7 @@ import React, {
   useState,
   useMemo,
   useEffect,
+  useCallback,
 } from "react";
 import { Meta } from "../../App";
 import { queryCache, useMutation } from "react-query";
@@ -28,7 +29,10 @@ import {
   WallLink,
 } from "../../components/BoulderTable/BoulderTable";
 import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
-import { BoulderFilters } from "../../components/BoulderFilters/BoulderFilters";
+import {
+  BoulderFilters,
+  GlobalFilter,
+} from "../../components/BoulderFilters/BoulderFilters";
 import { useBoulders } from "../../hooks/useBoulders";
 import { WallDetails } from "../../components/WallDetails/WallDetails";
 import { Link } from "react-router-dom";
@@ -63,8 +67,6 @@ const Index = () => {
     throwOnError: true,
     onSuccess: (data) => {
       queryCache.invalidateQueries(cache.ascents);
-
-      console.log(data);
       dispatch(toast(`${data.me.type}`, `+${data.points}`));
     },
   });
@@ -178,7 +180,7 @@ const Index = () => {
     return defaultColumns;
   }, [isAdmin, detailBoulder]);
 
-  const addHandler = async (boulderId, type) => {
+  const addHandler = useCallback(async (boulderId, type) => {
     const payload = {
       boulder: boulderId,
       type: type,
@@ -189,15 +191,15 @@ const Index = () => {
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "danger"));
     }
-  };
+  }, []);
 
-  const removeHandler = async (id) => {
+  const removeHandler = useCallback(async (id) => {
     try {
       await mutateAscentDeletion({ id });
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "danger"));
     }
-  };
+  }, []);
 
   return (
     <Fragment>
@@ -217,10 +219,15 @@ const Index = () => {
       </h1>
 
       <BoulderFilters
-        filters={filters}
-        globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
         setFilters={setFilters}
+      />
+
+      <GlobalFilter
+        filters={filters}
+        setFilters={setFilters}
+        setGlobalFilter={setGlobalFilter}
+        globalFilter={globalFilter}
       />
 
       <LoadedContent loading={!idle}>
