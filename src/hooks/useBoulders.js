@@ -5,6 +5,20 @@ import { BoulderDBUIContext } from "../components/BoulderDBUI";
 import convertToKeyValueObject from "../helper/convertToKeyValueObject";
 import { parseDate } from "../helper/parseDate";
 
+function filterPresentOptions(boulders, column, uniqueProperty = "id") {
+  if (!boulders || !boulders.length) {
+    return [];
+  }
+
+  const map = new Map();
+
+  boulders.forEach((boulder) => {
+    map.set(boulder[column][uniqueProperty], boulder[column]);
+  });
+
+  return Array.from(map.values());
+}
+
 function useBoulders() {
   const { currentLocation, isAdmin } = useContext(BoulderDBUIContext);
 
@@ -107,4 +121,4 @@ function useBoulders() {
   ]);
 }
 
-export { useBoulders };
+export { useBoulders, filterPresentOptions };

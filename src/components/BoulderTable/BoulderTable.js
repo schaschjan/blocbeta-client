@@ -93,7 +93,9 @@ const BoulderTable = ({
   }, [filters]);
 
   useEffect(() => {
-    onSelectRows(selectedFlatRows.map((item) => item.original.id));
+    if (onSelectRows) {
+      onSelectRows(selectedFlatRows.map((item) => item.original.id));
+    }
   }, [selectedFlatRows]);
 
   useEffect(() => {
@@ -104,40 +106,42 @@ const BoulderTable = ({
     return columns.map((column) => column.gridTemplate).join(" ");
   }, [columns]);
 
-  return (
-    <Fragment>
-      <div className={styles.root} {...getTableProps()}>
-        <TableHeader
-          headerGroups={headerGroups}
-          gridTemplateColumns={gridTemplateColumns}
-        />
+  return useMemo(() => {
+    return (
+      <Fragment>
+        <div className={styles.root} {...getTableProps()}>
+          <TableHeader
+            headerGroups={headerGroups}
+            gridTemplateColumns={gridTemplateColumns}
+          />
 
-        <div {...getTableBodyProps()}>
-          {page.map((row, index) => {
-            prepareRow(row);
+          <div {...getTableBodyProps()}>
+            {page.map((row, index) => {
+              prepareRow(row);
 
-            return (
-              <TableRow
-                gridTemplateColumns={gridTemplateColumns}
-                cells={row.cells}
-                key={`row-${index}`}
-              />
-            );
-          })}
+              return (
+                <TableRow
+                  gridTemplateColumns={gridTemplateColumns}
+                  cells={row.cells}
+                  key={`row-${index}`}
+                />
+              );
+            })}
+          </div>
         </div>
-      </div>
 
-      <Pagination
-        pageIndex={pageIndex}
-        pageSize={pageSize}
-        pageCount={pageOptions.length}
-        canPreviousPage={canPreviousPage}
-        canNextPage={canNextPage}
-        previousPage={previousPage}
-        nextPage={nextPage}
-      />
-    </Fragment>
-  );
+        <Pagination
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+          pageCount={pageOptions.length}
+          canPreviousPage={canPreviousPage}
+          canNextPage={canNextPage}
+          previousPage={previousPage}
+          nextPage={nextPage}
+        />
+      </Fragment>
+    );
+  }, [data, onSelectRows, globalFilter, filters]);
 };
 
 const Ascents = ({ removeHandler, addHandler, value }) =>

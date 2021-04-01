@@ -1,38 +1,24 @@
-import {
-  useGlobalFilter,
-  usePagination,
-  useSortBy,
-  useTable,
-} from "react-table";
+import { useGlobalFilter, useSortBy, useTable } from "react-table";
 import React, { Fragment, useMemo } from "react";
 import styles from "../../views/Compare/Current.module.css";
 import { Input } from "../Input/Input";
 import { TableHeader, TableRow } from "../Table/Table";
-import { Pagination } from "../BoulderTable/Pagination";
 
 const RankingTable = ({ columns, data }) => {
   const {
     getTableProps,
     getTableBodyProps,
+    rows,
     prepareRow,
-    canPreviousPage,
-    canNextPage,
-    nextPage,
-    previousPage,
-    pageOptions,
     headerGroups,
     setGlobalFilter,
-    page,
-    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
       data,
-      initialState: { pageIndex: 0, pageSize: 20 },
     },
     useGlobalFilter,
-    useSortBy,
-    usePagination
+    useSortBy
   );
 
   const gridTemplateColumns = useMemo(() => {
@@ -57,7 +43,7 @@ const RankingTable = ({ columns, data }) => {
         />
 
         <div {...getTableBodyProps()}>
-          {page.map((row, index) => {
+          {rows.map((row, index) => {
             prepareRow(row);
 
             return (
@@ -70,16 +56,6 @@ const RankingTable = ({ columns, data }) => {
           })}
         </div>
       </div>
-
-      <Pagination
-        pageIndex={pageIndex}
-        pageSize={pageSize}
-        pageCount={pageOptions.length}
-        canPreviousPage={canPreviousPage}
-        canNextPage={canNextPage}
-        previousPage={previousPage}
-        nextPage={nextPage}
-      />
     </Fragment>
   );
 };

@@ -3,6 +3,12 @@
   grid-template-columns: 1fr 1fr;
 }
 
+.filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 40px;
+}
+
 .search {
   display: flex;
 }
