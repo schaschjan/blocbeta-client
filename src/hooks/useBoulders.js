@@ -13,7 +13,11 @@ function filterPresentOptions(boulders, column, uniqueProperty = "id") {
   const map = new Map();
 
   boulders.forEach((boulder) => {
-    map.set(boulder[column][uniqueProperty], boulder[column]);
+    if (column === "setters") {
+      boulder[column].map((item) => map.set(item.id, item));
+    } else {
+      map.set(boulder[column][uniqueProperty], boulder[column]);
+    }
   });
 
   return Array.from(map.values());

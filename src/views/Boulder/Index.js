@@ -41,9 +41,8 @@ import { filterPresentOptions, useBoulders } from "../../hooks/useBoulders";
 import { WallDetails } from "../../components/WallDetails/WallDetails";
 import { Link } from "react-router-dom";
 import { IndeterminateCheckbox } from "../../components/IndeterminateCheckbox";
-import useRequest from "../../hooks/useRequest";
 import styles from "./Index.module.css";
-import { Loader } from "../../components/Loader/Loader";
+import { sortItemsAlphabetically } from "../../helper/sortItemsAlphabetically";
 
 const Index = () => {
   const { isAdmin, contextualizedPath } = useContext(BoulderDBUIContext);
@@ -65,17 +64,40 @@ const Index = () => {
   const ping = useApi("ping");
   const { boulders } = useBoulders();
 
-  const grades = useMemo(() => filterPresentOptions(boulders, "grade"), [
-    boulders,
-  ]);
-  const holdTypes = useMemo(() => filterPresentOptions(boulders, "holdType"), [
-    boulders,
-  ]);
-  const walls = useMemo(() => filterPresentOptions(boulders, "startWall"), [
-    boulders,
-  ]);
+  const grades = useMemo(
+    () =>
+      filterPresentOptions(boulders, "grade").sort((a, b) =>
+        a.name > b.name ? 1 : -1
+      ),
+    [boulders]
+  );
 
-  const { data: setters } = useRequest("/setter");
+  const holdTypes = useMemo(
+    () =>
+      sortItemsAlphabetically(
+        filterPresentOptions(boulders, "holdType"),
+        "name"
+      ),
+    [boulders]
+  );
+
+  const walls = useMemo(
+    () =>
+      sortItemsAlphabetically(
+        filterPresentOptions(boulders, "startWall"),
+        "name"
+      ),
+    [boulders]
+  );
+
+  const setters = useMemo(
+    () =>
+      sortItemsAlphabetically(
+        filterPresentOptions(boulders, "setters"),
+        "username"
+      ),
+    [boulders]
+  );
 
   useEffect(() => {
     ping();
