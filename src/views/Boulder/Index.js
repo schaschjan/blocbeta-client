@@ -43,6 +43,7 @@ import { Link } from "react-router-dom";
 import { IndeterminateCheckbox } from "../../components/IndeterminateCheckbox";
 import styles from "./Index.module.css";
 import { sortItemsAlphabetically } from "../../helper/sortItemsAlphabetically";
+import { Loader } from "../../components/Loader/Loader";
 
 const Index = () => {
   const { isAdmin, contextualizedPath } = useContext(BoulderDBUIContext);
@@ -257,6 +258,10 @@ const Index = () => {
     },
     [filters]
   );
+
+  if (!boulders.length) {
+    return <Loader />;
+  }
 
   return (
     <Fragment>
