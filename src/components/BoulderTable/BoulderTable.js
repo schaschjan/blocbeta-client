@@ -30,13 +30,14 @@ const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
 });
 
 const DetailToggle = ({ boulderId, toggleHandler, active, children }) => {
-  const style = `${styles.toggleDetails} ${
+  const className = `${styles.toggleDetails} ${
     active ? styles.isActiveToggleDetails : null
   }`;
 
   return (
-    <span onClick={() => toggleHandler(boulderId)} className={style}>
-      {children} <Forward />
+    <span onClick={() => toggleHandler(boulderId)} className={className}>
+      <span className={styles.toggleDetailsLabel}>{children}</span>
+      <Forward />
     </span>
   );
 };

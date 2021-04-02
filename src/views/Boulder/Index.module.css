@@ -5,10 +5,10 @@
 
 .tableRow,
 .tableHeader {
-  grid-template-columns: minmax(20px, 60px) 80px 60px auto 140px 140px 140px 100px 152px;
+  grid-template-columns: minmax(20px, 60px) 80px 60px minmax(60px, auto) 140px 140px 140px 100px 152px;
 }
 
 .isAdminTableRow,
 .isAdminTableHeader {
-  grid-template-columns: 40px minmax(20px, 60px) 80px 60px auto 140px 140px 140px 100px 152px;
+  grid-template-columns: 40px minmax(20px, 60px) 80px 60px minmax(60px, auto) 140px 140px 140px 100px 152px;
 }

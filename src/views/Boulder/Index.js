@@ -156,6 +156,7 @@ const Index = () => {
       },
       {
         ...boulderTableColumns.name,
+        className: styles.nameCell,
         Cell: ({ value, row }) => {
           const boulderId = row.original.id;
 
