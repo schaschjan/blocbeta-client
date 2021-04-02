@@ -12,8 +12,13 @@ import { Button } from "../../components/Button/Button";
 import useRequest from "../../hooks/useRequest";
 import calculatePercentage from "../../helper/calculatePercentage";
 import { Loader } from "../../components/Loader/Loader";
-import { RankingTable } from "../../components/RankingTable/RankingTable";
-import "./Current.css";
+import {
+  RankingTable,
+  UserRank,
+} from "../../components/RankingTable/RankingTable";
+import styles from "./Current.module.css";
+import { joinClassNames } from "../../helper/classNames";
+import typography from "../../css/typography.module.css";
 
 const Current = () => {
   const { user, contextualizedPath } = useContext(BoulderDBUIContext);
@@ -37,25 +42,19 @@ const Current = () => {
         Header: "User",
         accessor: "user.username",
         gridTemplate: "minmax(70px, auto)",
-        Cell: ({ cell, row }) => {
-          return (
-            <Fragment>
-              <Avatar image={row.original.user.image} />
-              <span className="rank-username">{cell.value}</span>
-
-              {row.original.boulder === boulderCount && (
-                <span className="rank-badge">
-                  <Emoji>🥋</Emoji>
-                </span>
-              )}
-            </Fragment>
-          );
-        },
+        Cell: ({ cell, row }) => (
+          <UserRank
+            username={cell.value}
+            image={row.original.user.image}
+            sentAllBoulders={row.original.boulder === boulderCount}
+          />
+        ),
       },
       {
         Header: "Gender",
         accessor: "user.gender",
         gridTemplate: "80px",
+        className: styles.genderCell,
         Cell: ({ cell }) => {
           if (cell.value === "male") {
             return <Male />;
@@ -72,16 +71,19 @@ const Current = () => {
         Header: "Points",
         accessor: "score",
         gridTemplate: "100px",
+        className: styles.pointsCell,
       },
       {
         Header: "Advance",
         accessor: "advance",
         gridTemplate: "100px",
+        className: styles.advanceCell,
       },
       {
         Header: "Boulders",
         accessor: "boulders",
         gridTemplate: "110px",
+        className: styles.bouldersCell,
         Cell: ({ cell }) => {
           return <Progress percentage={(cell.value / boulderCount) * 100} />;
         },
@@ -90,18 +92,21 @@ const Current = () => {
         Header: "Flashed",
         accessor: "flashes",
         gridTemplate: "100px",
+        className: styles.flashedCell,
         Cell: ({ cell }) => calculatePercentage(cell.value, boulderCount),
       },
       {
         Header: "Topped",
         accessor: "tops",
         gridTemplate: "100px",
+        className: styles.toppedCell,
         Cell: ({ cell }) => calculatePercentage(cell.value, boulderCount),
       },
       {
         Header: "Last activity",
         accessor: "user.lastActivity",
         gridTemplate: "100px",
+        className: styles.lastActivityCell,
         Cell: ({ cell }) => {
           return <span>{moment(cell.value).fromNow()}</span>;
         },
@@ -141,9 +146,17 @@ const Current = () => {
     <Fragment>
       <Meta title="Current Ranking" />
 
-      <RankingTable data={ranking.list} columns={columns} />
+      <RankingTable
+        data={ranking.list}
+        columns={columns}
+        rowClassName={styles.tableRow}
+        headerClassName={styles.tableHeader}
+      />
 
-      <Link className={"t--eta"} to={contextualizedPath("/ranking/all-time")}>
+      <Link
+        className={joinClassNames(styles.allTimeLink, typography.eta)}
+        to={contextualizedPath("/ranking/all-time")}
+      >
         All time ranking
       </Link>
     </Fragment>

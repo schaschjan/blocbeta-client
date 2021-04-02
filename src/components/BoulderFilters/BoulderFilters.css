@@ -48,6 +48,7 @@
 }
 
 .filter__items {
+  margin-top: 8px;
   overflow-x: hidden;
   max-height: 200px;
   overflow-y: scroll;

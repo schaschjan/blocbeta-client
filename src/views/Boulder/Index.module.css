@@ -2,3 +2,13 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr);
 }
+
+.tableRow,
+.tableHeader {
+  grid-template-columns: minmax(20px, 60px) 80px 60px auto 140px 140px 140px 100px 152px;
+}
+
+.isAdminTableRow,
+.isAdminTableHeader {
+  grid-template-columns: 40px minmax(20px, 60px) 80px 60px auto 140px 140px 140px 100px 152px;
+}

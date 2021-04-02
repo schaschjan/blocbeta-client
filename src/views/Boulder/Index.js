@@ -352,6 +352,10 @@ const Index = () => {
         globalFilter={globalFilter}
         onSelectRows={(ids) => setSelected(ids)}
         isAdmin={isAdmin}
+        headerClassName={
+          isAdmin ? styles.isAdminTableHeader : styles.tableHeader
+        }
+        rowClassName={isAdmin ? styles.isAdminTableRow : styles.tableRow}
       />
 
       <Drawer onClose={() => setDetailBoulder(null)}>

@@ -9,8 +9,12 @@ import Male from "../../components/Icon/Male";
 import Female from "../../components/Icon/Female";
 import calculatePercentage from "../../helper/calculatePercentage";
 import useRequest from "../../hooks/useRequest";
-import { RankingTable } from "../../components/RankingTable/RankingTable";
+import {
+  RankingTable,
+  UserRank,
+} from "../../components/RankingTable/RankingTable";
 import { Loader } from "../../components/Loader/Loader";
+import styles from "./AllTime.module.css";
 
 const AllTime = () => {
   const { user, contextualizedPath } = useContext(BoulderDBUIContext);
@@ -23,7 +27,6 @@ const AllTime = () => {
       {
         Header: "Rank",
         accessor: "rank",
-        gridTemplate: "60px",
         Cell: ({ value }) => {
           return <strong>{value}</strong>;
         },
@@ -31,24 +34,14 @@ const AllTime = () => {
       {
         Header: "User",
         accessor: "user.username",
-        gridTemplate: "minmax(70px, auto)",
-        Cell: ({ cell, row }) => {
-          return (
-            <Fragment>
-              <Avatar image={row.original.user.image} />
-              <span className="rank-username">{cell.value}</span>
-
-              {row.original.boulder === boulderCount && (
-                <span className="rank-badge">🥋</span>
-              )}
-            </Fragment>
-          );
-        },
+        Cell: ({ cell, row }) => (
+          <UserRank username={cell.value} image={row.original.user.image} />
+        ),
       },
       {
         Header: "Gender",
         accessor: "user.gender",
-        gridTemplate: "80px",
+        className: styles.genderCell,
         Cell: ({ cell }) => {
           if (cell.value === "male") {
             return <Male />;
@@ -64,7 +57,7 @@ const AllTime = () => {
       {
         Header: "Boulders",
         accessor: "boulders",
-        gridTemplate: "110px",
+        className: styles.bouldersCell,
         Cell: ({ cell }) => {
           const percentage = (cell.value / boulderCount) * 100;
 
@@ -74,45 +67,21 @@ const AllTime = () => {
       {
         Header: "Flashed",
         accessor: "flashes",
-        gridTemplate: "100px",
+        className: styles.flashedCell,
         Cell: ({ cell }) => calculatePercentage(cell.value, boulderCount),
       },
       {
         Header: "Topped",
         accessor: "tops",
-        gridTemplate: "100px",
+        className: styles.toppedCell,
         Cell: ({ cell }) => calculatePercentage(cell.value, boulderCount),
       },
       {
         Header: "Last activity",
         accessor: "user.lastActivity",
-        gridTemplate: "100px",
+        className: styles.lastActivityCell,
         Cell: ({ cell }) => {
           return <span>{moment(cell.value).fromNow()}</span>;
-        },
-      },
-      {
-        Header: "",
-        id: "user.id",
-        accessor: "user.id",
-        gridTemplate: "100px",
-        Cell: ({ cell }) => {
-          if (parseInt(cell.value) === parseInt(user.id)) {
-            return null;
-          }
-
-          return (
-            <Button
-              asLink={true}
-              variant="primary"
-              size="small"
-              to={contextualizedPath(
-                `/compare/${user.id}/to/${cell.value}/at/AllTime`
-              )}
-            >
-              Compare
-            </Button>
-          );
         },
       },
     ];
@@ -126,7 +95,12 @@ const AllTime = () => {
     <Fragment>
       <Meta title="AllTime Ranking" />
 
-      <RankingTable data={ranking.list} columns={columns} />
+      <RankingTable
+        data={ranking.list}
+        columns={columns}
+        rowClassName={styles.tableRow}
+        headerClassName={styles.tableHeader}
+      />
     </Fragment>
   );
 };

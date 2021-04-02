@@ -56,6 +56,8 @@ const BoulderTable = ({
   onSelectRows,
   globalFilter,
   filters,
+  rowClassName,
+  headerClassName,
 }) => {
   const {
     getTableProps,
@@ -106,42 +108,42 @@ const BoulderTable = ({
     return columns.map((column) => column.gridTemplate).join(" ");
   }, [columns]);
 
-  return useMemo(() => {
-    return (
-      <Fragment>
-        <div className={styles.root} {...getTableProps()}>
-          <TableHeader
-            headerGroups={headerGroups}
-            gridTemplateColumns={gridTemplateColumns}
-          />
-
-          <div {...getTableBodyProps()}>
-            {page.map((row, index) => {
-              prepareRow(row);
-
-              return (
-                <TableRow
-                  gridTemplateColumns={gridTemplateColumns}
-                  cells={row.cells}
-                  key={`row-${index}`}
-                />
-              );
-            })}
-          </div>
-        </div>
-
-        <Pagination
-          pageIndex={pageIndex}
-          pageSize={pageSize}
-          pageCount={pageOptions.length}
-          canPreviousPage={canPreviousPage}
-          canNextPage={canNextPage}
-          previousPage={previousPage}
-          nextPage={nextPage}
+  return (
+    <Fragment>
+      <div className={styles.root} {...getTableProps()}>
+        <TableHeader
+          className={headerClassName}
+          headerGroups={headerGroups}
+          gridTemplateColumns={gridTemplateColumns}
         />
-      </Fragment>
-    );
-  }, [data, onSelectRows, globalFilter, filters]);
+
+        <div {...getTableBodyProps()}>
+          {page.map((row, index) => {
+            prepareRow(row);
+
+            return (
+              <TableRow
+                className={rowClassName}
+                gridTemplateColumns={gridTemplateColumns}
+                cells={row.cells}
+                key={`row-${index}`}
+              />
+            );
+          })}
+        </div>
+      </div>
+
+      <Pagination
+        pageIndex={pageIndex}
+        pageSize={pageSize}
+        pageCount={pageOptions.length}
+        canPreviousPage={canPreviousPage}
+        canNextPage={canNextPage}
+        previousPage={previousPage}
+        nextPage={nextPage}
+      />
+    </Fragment>
+  );
 };
 
 const Ascents = ({ removeHandler, addHandler, value }) =>
@@ -187,7 +189,6 @@ const Ascents = ({ removeHandler, addHandler, value }) =>
 const boulderTableColumns = {
   selection: {
     id: "selection",
-    gridTemplate: "40px",
     Header: ({ getToggleAllRowsSelectedProps }) => (
       <div>
         <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
@@ -198,7 +199,6 @@ const boulderTableColumns = {
     id: "holdType",
     accessor: "holdType",
     Header: "Hold",
-    gridTemplate: "minmax(20px, 60px)",
     sortType: (a, b) => {
       return a.values.holdType.name > b.values.holdType.name ? -1 : 1;
     },
@@ -212,7 +212,6 @@ const boulderTableColumns = {
     id: "grade",
     accessor: "grade",
     Header: "Grade",
-    gridTemplate: "80px",
     sortType: (a, b) => {
       const gradeA = a.values.grade.internal
         ? a.values.grade.internal.name
@@ -237,7 +236,6 @@ const boulderTableColumns = {
     id: "points",
     accessor: "points",
     Header: "Points",
-    gridTemplate: "60px",
     sortType: (a, b) => {
       return a.values.points > b.values.points ? -1 : 1;
     },
@@ -252,7 +250,6 @@ const boulderTableColumns = {
     id: "start",
     accessor: "startWall",
     Header: "Start",
-    gridTemplate: "140px",
     sortType: (a, b) => (a.values.start.name > b.values.start.name ? -1 : 1),
     filter: (rows, id, filterValue) =>
       rows.filter((row) => row.values[id].name === filterValue),
@@ -261,7 +258,6 @@ const boulderTableColumns = {
     id: "end",
     accessor: "endWall",
     Header: "End",
-    gridTemplate: "140px",
     sortType: (a, b) => (a.values.end.name > b.values.end.name ? -1 : 1),
     filter: (rows, id, filterValue) =>
       rows.filter((row) => row.values[id].name === filterValue),
@@ -271,7 +267,6 @@ const boulderTableColumns = {
     accessor: ({ setters }) =>
       setters.map((setter) => setter.username).join(", "),
     Header: "Setter",
-    gridTemplate: "140px",
     filter: (rows, id, filterValue) => {
       return rows.filter((row) => row.values[id].includes(filterValue));
     },
@@ -280,7 +275,6 @@ const boulderTableColumns = {
     id: "date",
     accessor: "created_at",
     Header: "Date",
-    gridTemplate: "100px",
     sortType: (a, b) => (a.timestamp > b.timestamp ? -1 : 1),
     Cell: ({ value }) => value.string,
   },
@@ -288,7 +282,6 @@ const boulderTableColumns = {
     id: "ascent",
     accessor: "ascent",
     Header: "Ascent",
-    gridTemplate: "152px",
     sortType: (a, b) => {
       return a.values.ascent.type > b.values.ascent.type ? -1 : 1;
     },

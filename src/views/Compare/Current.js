@@ -8,7 +8,7 @@ import React, {
 import { useParams } from "react-router-dom";
 import { Meta } from "../../App";
 import useRequest from "../../hooks/useRequest";
-import { useBoulders } from "../../hooks/useBoulders";
+import { filterPresentOptions, useBoulders } from "../../hooks/useBoulders";
 import {
   BoulderTable,
   boulderTableColumns,
@@ -32,6 +32,7 @@ import {
   holdTypeFilterProps,
   wallFilterProps,
 } from "../../components/BoulderFilters/BoulderFilters";
+import { sortItemsAlphabetically } from "../../helper/sortItemsAlphabetically";
 
 const UserRank = ({ title, rank, score, boulders, flashes, tops }) => {
   return (
@@ -67,9 +68,32 @@ const Current = () => {
   const { data: comparisons } = useRequest(`/compare/${a}/to/${b}/at/current`);
   const { data: compareUser } = useRequest(`/user/${b}`, false);
   const { data: ranking } = useRequest(`/ranking/current`);
-  const { data: grades } = useRequest("/grade");
-  const { data: holdTypes } = useRequest("/holdstyle");
-  const { data: walls } = useRequest("/wall");
+
+  const grades = useMemo(
+    () =>
+      filterPresentOptions(boulders, "grade").sort((a, b) =>
+        a.name > b.name ? 1 : -1
+      ),
+    [boulders]
+  );
+
+  const holdTypes = useMemo(
+    () =>
+      sortItemsAlphabetically(
+        filterPresentOptions(boulders, "holdType"),
+        "name"
+      ),
+    [boulders]
+  );
+
+  const walls = useMemo(
+    () =>
+      sortItemsAlphabetically(
+        filterPresentOptions(boulders, "startWall"),
+        "name"
+      ),
+    [boulders]
+  );
 
   const [detailBoulder, setDetailBoulder] = useState(null);
   const [detailWall, setDetailWall] = useState(null);
@@ -86,7 +110,6 @@ const Current = () => {
       },
       {
         ...boulderTableColumns.grade,
-        gridTemplate: "80px",
         Cell: ({ value }) => {
           if (isAdmin && value.internal) {
             return (
@@ -104,12 +127,10 @@ const Current = () => {
       },
       {
         ...boulderTableColumns.points,
-        gridTemplate: "60px",
         Cell: ({ value }) => `${value} pts`,
       },
       {
         ...boulderTableColumns.name,
-        gridTemplate: "auto",
         Cell: ({ value, row }) => {
           const boulderId = row.original.id;
 
@@ -129,14 +150,12 @@ const Current = () => {
       },
       {
         ...boulderTableColumns.startWall,
-        gridTemplate: "140px",
         Cell: ({ value }) => (
           <WallLink onClick={() => setDetailWall(value)} name={value.name} />
         ),
       },
       {
         ...boulderTableColumns.endWall,
-        gridTemplate: "140px",
         Cell: ({ value }) => (
           <WallLink onClick={() => setDetailWall(value)} name={value.name} />
         ),
@@ -144,13 +163,11 @@ const Current = () => {
       {
         Header: "You",
         accessor: "a",
-        gridTemplate: "140px",
         Cell: ({ value }) => <AscentIcon type={value} />,
       },
       {
         Header: compareUser ? compareUser.username : "",
         accessor: "b",
-        gridTemplate: "140px",
         Cell: ({ value }) => <AscentIcon type={value} />,
       },
     ];
@@ -266,13 +283,6 @@ const Current = () => {
           }
           items={walls}
         />
-
-        {/* <Filter {...setterFilterProps}
-                        onSelect={(item) => applyFilter(
-                            setterFilterProps.id,
-                            item[setterFilterProps.valueProperty]
-                        )}
-                        items={setters}/>*/}
       </div>
 
       <GlobalFilter
@@ -287,6 +297,8 @@ const Current = () => {
         columns={columns}
         filters={filters}
         globalFilter={globalFilter}
+        headerClassName={styles.tableHeader}
+        rowClassName={styles.tableRow}
       />
 
       <Drawer onClose={() => setDetailBoulder(null)}>

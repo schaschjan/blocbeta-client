@@ -1,10 +1,27 @@
 import { useGlobalFilter, useSortBy, useTable } from "react-table";
 import React, { Fragment, useMemo } from "react";
-import styles from "../../views/Compare/Current.module.css";
 import { Input } from "../Input/Input";
 import { TableHeader, TableRow } from "../Table/Table";
+import Avatar from "../Avatar/Avatar";
+import Emoji from "../Emoji/Emoji";
+import styles from "./RankingTable.module.css";
 
-const RankingTable = ({ columns, data }) => {
+const UserRank = ({ image, username, sentAllBoulders = false }) => {
+  return (
+    <Fragment>
+      <Avatar image={image} />
+      <span className={styles.rankUsername}>{username}</span>
+
+      {sentAllBoulders && (
+        <span className={styles.rankBadge}>
+          <Emoji>🥋</Emoji>
+        </span>
+      )}
+    </Fragment>
+  );
+};
+
+const RankingTable = ({ columns, data, rowClassName, headerClassName }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -38,6 +55,7 @@ const RankingTable = ({ columns, data }) => {
 
       <div {...getTableProps()}>
         <TableHeader
+          className={headerClassName}
           headerGroups={headerGroups}
           gridTemplateColumns={gridTemplateColumns}
         />
@@ -48,6 +66,7 @@ const RankingTable = ({ columns, data }) => {
 
             return (
               <TableRow
+                className={rowClassName}
                 gridTemplateColumns={gridTemplateColumns}
                 cells={row.cells}
                 key={`row-${index}`}
@@ -60,4 +79,4 @@ const RankingTable = ({ columns, data }) => {
   );
 };
 
-export { RankingTable };
+export { RankingTable, UserRank };

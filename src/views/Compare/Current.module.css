@@ -9,14 +9,7 @@
   margin-top: 40px;
 }
 
-.search {
-  display: flex;
-}
-
-.searchInput {
-  composes: t--epsilon from "./../../css/typography.css";
-  margin-top: 24px;
-  margin-bottom: 24px;
-  max-width: 400px;
-  margin-left: auto;
+.tableRow,
+.tableHeader {
+  grid-template-columns: minmax(20px, 60px) 80px 60px auto 140px 140px 140px 140px;
 }

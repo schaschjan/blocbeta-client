@@ -1,0 +1,29 @@
+.rankUsername {
+  margin-left: var(--spacing-unit);
+  display: block;
+}
+
+.rankBadge {
+  margin-left: 8px;
+  font-size: 1.5rem;
+}
+
+.search {
+  display: flex;
+}
+
+.searchInput {
+  composes: t--epsilon from "./../../css/typography.css";
+  margin-top: 24px;
+  margin-bottom: 24px;
+  max-width: 400px;
+  margin-left: auto;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .searchInput {
+    max-width: 100%;
+    margin-left: 0;
+  }
+}
