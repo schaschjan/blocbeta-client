@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { BoulderDBUIContext } from "../BoulderDBUI";
@@ -35,6 +35,7 @@ const Header = () => {
   } = useContext(BoulderDBUIContext);
 
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
   const history = useHistory();
   const location = useLocation();
 
@@ -44,20 +45,23 @@ const Header = () => {
     queryDefaults
   );
 
-  const switchLocation = (locationId) => {
-    const newLocation = locations.find(
-      (location) => location.id === parseInt(locationId)
-    );
+  const switchLocation = useCallback(
+    (locationId) => {
+      const newLocation = locations.find(
+        (location) => location.id === parseInt(locationId)
+      );
 
-    if (!newLocation) {
-      return;
-    }
+      if (!newLocation) {
+        return;
+      }
 
-    const oldLocation = currentLocation;
+      const oldLocation = currentLocation;
 
-    setCurrentLocation(newLocation);
-    history.push(location.pathname.replace(oldLocation.url, newLocation.url));
-  };
+      setCurrentLocation(newLocation);
+      history.push(location.pathname.replace(oldLocation.url, newLocation.url));
+    },
+    [locations]
+  );
 
   if (!currentLocation) {
     return (

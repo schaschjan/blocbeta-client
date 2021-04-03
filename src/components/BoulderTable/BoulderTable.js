@@ -30,13 +30,14 @@ const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
 });
 
 const DetailToggle = ({ boulderId, toggleHandler, active, children }) => {
-  const style = `${styles.toggleDetails} ${
+  const className = `${styles.toggleDetails} ${
     active ? styles.isActiveToggleDetails : null
   }`;
 
   return (
-    <span onClick={() => toggleHandler(boulderId)} className={style}>
-      {children} <Forward />
+    <span onClick={() => toggleHandler(boulderId)} className={className}>
+      <span className={styles.toggleDetailsLabel}>{children}</span>
+      <Forward />
     </span>
   );
 };
@@ -56,6 +57,8 @@ const BoulderTable = ({
   onSelectRows,
   globalFilter,
   filters,
+  rowClassName,
+  headerClassName,
 }) => {
   const {
     getTableProps,
@@ -93,7 +96,9 @@ const BoulderTable = ({
   }, [filters]);
 
   useEffect(() => {
-    onSelectRows(selectedFlatRows.map((item) => item.original.id));
+    if (onSelectRows) {
+      onSelectRows(selectedFlatRows.map((item) => item.original.id));
+    }
   }, [selectedFlatRows]);
 
   useEffect(() => {
@@ -108,6 +113,7 @@ const BoulderTable = ({
     <Fragment>
       <div className={styles.root} {...getTableProps()}>
         <TableHeader
+          className={headerClassName}
           headerGroups={headerGroups}
           gridTemplateColumns={gridTemplateColumns}
         />
@@ -118,6 +124,7 @@ const BoulderTable = ({
 
             return (
               <TableRow
+                className={rowClassName}
                 gridTemplateColumns={gridTemplateColumns}
                 cells={row.cells}
                 key={`row-${index}`}
@@ -183,7 +190,6 @@ const Ascents = ({ removeHandler, addHandler, value }) =>
 const boulderTableColumns = {
   selection: {
     id: "selection",
-    gridTemplate: "40px",
     Header: ({ getToggleAllRowsSelectedProps }) => (
       <div>
         <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
@@ -194,7 +200,6 @@ const boulderTableColumns = {
     id: "holdType",
     accessor: "holdType",
     Header: "Hold",
-    gridTemplate: "minmax(20px, 60px)",
     sortType: (a, b) => {
       return a.values.holdType.name > b.values.holdType.name ? -1 : 1;
     },
@@ -208,7 +213,6 @@ const boulderTableColumns = {
     id: "grade",
     accessor: "grade",
     Header: "Grade",
-    gridTemplate: "80px",
     sortType: (a, b) => {
       const gradeA = a.values.grade.internal
         ? a.values.grade.internal.name
@@ -233,7 +237,6 @@ const boulderTableColumns = {
     id: "points",
     accessor: "points",
     Header: "Points",
-    gridTemplate: "60px",
     sortType: (a, b) => {
       return a.values.points > b.values.points ? -1 : 1;
     },
@@ -248,7 +251,6 @@ const boulderTableColumns = {
     id: "start",
     accessor: "startWall",
     Header: "Start",
-    gridTemplate: "140px",
     sortType: (a, b) => (a.values.start.name > b.values.start.name ? -1 : 1),
     filter: (rows, id, filterValue) =>
       rows.filter((row) => row.values[id].name === filterValue),
@@ -257,7 +259,6 @@ const boulderTableColumns = {
     id: "end",
     accessor: "endWall",
     Header: "End",
-    gridTemplate: "140px",
     sortType: (a, b) => (a.values.end.name > b.values.end.name ? -1 : 1),
     filter: (rows, id, filterValue) =>
       rows.filter((row) => row.values[id].name === filterValue),
@@ -267,7 +268,6 @@ const boulderTableColumns = {
     accessor: ({ setters }) =>
       setters.map((setter) => setter.username).join(", "),
     Header: "Setter",
-    gridTemplate: "140px",
     filter: (rows, id, filterValue) => {
       return rows.filter((row) => row.values[id].includes(filterValue));
     },
@@ -276,7 +276,6 @@ const boulderTableColumns = {
     id: "date",
     accessor: "created_at",
     Header: "Date",
-    gridTemplate: "100px",
     sortType: (a, b) => (a.timestamp > b.timestamp ? -1 : 1),
     Cell: ({ value }) => value.string,
   },
@@ -284,7 +283,6 @@ const boulderTableColumns = {
     id: "ascent",
     accessor: "ascent",
     Header: "Ascent",
-    gridTemplate: "152px",
     sortType: (a, b) => {
       return a.values.ascent.type > b.values.ascent.type ? -1 : 1;
     },

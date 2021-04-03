@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.21.1",
+    "classnames": "^2.3.0",
     "framer": "^1.2.3",
     "framer-motion": "^1.11.0",
     "lodash": "^4.17.20",

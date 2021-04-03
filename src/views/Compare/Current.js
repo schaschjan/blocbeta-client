@@ -1,9 +1,16 @@
-import React, { Fragment, useContext, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  Fragment,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import { useParams } from "react-router-dom";
 import { Meta } from "../../App";
 import useRequest from "../../hooks/useRequest";
-import { useBoulders } from "../../hooks/useBoulders";
+import { filterPresentOptions, useBoulders } from "../../hooks/useBoulders";
 import {
+  BoulderTable,
   boulderTableColumns,
   DetailToggle,
   WallLink,
@@ -16,9 +23,39 @@ import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 import { AscentIcon } from "../../components/Ascent/Ascent";
 import convertToKeyValueObject from "../../helper/convertToKeyValueObject";
 import styles from "./Current.module.css";
-import { RankingTable } from "../../components/RankingTable/RankingTable";
 import { Loader } from "../../components/Loader/Loader";
 import { WallDetails } from "../../components/WallDetails/WallDetails";
+import {
+  Filter,
+  GlobalFilter,
+  gradeFilterProps,
+  holdTypeFilterProps,
+  wallFilterProps,
+} from "../../components/BoulderFilters/BoulderFilters";
+import { sortItemsAlphabetically } from "../../helper/sortItemsAlphabetically";
+
+const UserRank = ({ title, rank, score, boulders, flashes, tops }) => {
+  return (
+    <div>
+      <h2>{title}</h2>
+      <p>
+        <strong>rank</strong> {rank ? rank : "–"}
+      </p>
+      <p>
+        <strong>score</strong> {score ? score : 0}
+      </p>
+      <p>
+        <strong>boulders</strong> {boulders ? boulders : 0}
+      </p>
+      <p>
+        <strong>flashes</strong> {flashes ? flashes : 0}
+      </p>
+      <p>
+        <strong>tops</strong> {tops ? tops : 0}
+      </p>
+    </div>
+  );
+};
 
 const Current = () => {
   const { a, b } = useParams();
@@ -32,8 +69,37 @@ const Current = () => {
   const { data: compareUser } = useRequest(`/user/${b}`, false);
   const { data: ranking } = useRequest(`/ranking/current`);
 
+  const grades = useMemo(
+    () =>
+      filterPresentOptions(boulders, "grade").sort((a, b) =>
+        a.name > b.name ? 1 : -1
+      ),
+    [boulders]
+  );
+
+  const holdTypes = useMemo(
+    () =>
+      sortItemsAlphabetically(
+        filterPresentOptions(boulders, "holdType"),
+        "name"
+      ),
+    [boulders]
+  );
+
+  const walls = useMemo(
+    () =>
+      sortItemsAlphabetically(
+        filterPresentOptions(boulders, "startWall"),
+        "name"
+      ),
+    [boulders]
+  );
+
   const [detailBoulder, setDetailBoulder] = useState(null);
   const [detailWall, setDetailWall] = useState(null);
+
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [filters, setFilters] = useState([]);
 
   const columns = useMemo(() => {
     return [
@@ -44,7 +110,6 @@ const Current = () => {
       },
       {
         ...boulderTableColumns.grade,
-        gridTemplate: "80px",
         Cell: ({ value }) => {
           if (isAdmin && value.internal) {
             return (
@@ -62,12 +127,10 @@ const Current = () => {
       },
       {
         ...boulderTableColumns.points,
-        gridTemplate: "60px",
         Cell: ({ value }) => `${value} pts`,
       },
       {
         ...boulderTableColumns.name,
-        gridTemplate: "auto",
         Cell: ({ value, row }) => {
           const boulderId = row.original.id;
 
@@ -87,14 +150,12 @@ const Current = () => {
       },
       {
         ...boulderTableColumns.startWall,
-        gridTemplate: "140px",
         Cell: ({ value }) => (
           <WallLink onClick={() => setDetailWall(value)} name={value.name} />
         ),
       },
       {
         ...boulderTableColumns.endWall,
-        gridTemplate: "140px",
         Cell: ({ value }) => (
           <WallLink onClick={() => setDetailWall(value)} name={value.name} />
         ),
@@ -102,13 +163,11 @@ const Current = () => {
       {
         Header: "You",
         accessor: "a",
-        gridTemplate: "140px",
         Cell: ({ value }) => <AscentIcon type={value} />,
       },
       {
         Header: compareUser ? compareUser.username : "",
         accessor: "b",
-        gridTemplate: "140px",
         Cell: ({ value }) => <AscentIcon type={value} />,
       },
     ];
@@ -129,60 +188,118 @@ const Current = () => {
     });
   }, [boulders, comparisons]);
 
-  if (!ranking || !compareUser) {
+  const userRank = useMemo(() => {
+    if (!ranking) {
+      return null;
+    }
+
+    return ranking.list.find((rank) => rank.user.id === parseInt(a));
+  }, [ranking]);
+
+  const compareUserRank = useMemo(() => {
+    if (!ranking) {
+      return null;
+    }
+
+    return ranking.list.find((rank) => rank.user.id === parseInt(b));
+  }, [ranking]);
+
+  const applyFilter = useCallback((id, value) => {
+    let current = filters.filter((currentFilter) => currentFilter.id !== id);
+
+    current.push({
+      id,
+      value,
+    });
+
+    setFilters([...current]);
+  }, []);
+
+  if (!ranking || !compareUser || !comparisons) {
     return <Loader />;
   }
-
-  const userRank = ranking.list.find((rank) => rank.user.id === parseInt(a));
-  const compareUserRank = ranking.list.find(
-    (rank) => rank.user.id === parseInt(b)
-  );
 
   return (
     <Fragment>
       <Meta title="Compare" />
 
       <div className={styles.header}>
-        <div>
-          <h2>You</h2>
-          <p>
-            <strong>rank</strong> {userRank.rank}
-          </p>
-          <p>
-            <strong>score</strong> {userRank.score}
-          </p>
-          <p>
-            <strong>boulders</strong> {userRank.boulders}
-          </p>
-          <p>
-            <strong>flashes</strong> {userRank.flashes}
-          </p>
-          <p>
-            <strong>tops</strong> {userRank.tops}
-          </p>
-        </div>
+        <UserRank
+          title={"You"}
+          rank={userRank.rank}
+          score={userRank.score}
+          boulders={userRank.boulders}
+          flashes={userRank.flashes}
+          tops={userRank.tops}
+        />
 
-        <div>
-          <h2>{compareUser.username}</h2>
-          <p>
-            <strong>rank</strong> {compareUserRank.rank}
-          </p>
-          <p>
-            <strong>score</strong> {compareUserRank.score}
-          </p>
-          <p>
-            <strong>boulders</strong> {compareUserRank.boulders}
-          </p>
-          <p>
-            <strong>flashes</strong> {compareUserRank.flashes}
-          </p>
-          <p>
-            <strong>tops</strong> {compareUserRank.tops}
-          </p>
-        </div>
+        <UserRank
+          title={compareUser.username}
+          rank={compareUserRank.rank}
+          score={compareUserRank.score}
+          boulders={compareUserRank.boulders}
+          flashes={compareUserRank.flashes}
+          tops={compareUserRank.tops}
+        />
       </div>
 
-      <RankingTable data={data ? data : []} columns={columns} />
+      <div className={styles.filters}>
+        <Filter
+          {...holdTypeFilterProps}
+          onSelect={(item) =>
+            applyFilter(
+              holdTypeFilterProps.id,
+              item[holdTypeFilterProps.valueProperty]
+            )
+          }
+          items={holdTypes}
+        />
+
+        <Filter
+          {...gradeFilterProps}
+          onSelect={(item) =>
+            applyFilter(
+              gradeFilterProps.id,
+              item[gradeFilterProps.valueProperty]
+            )
+          }
+          items={grades}
+        />
+
+        <Filter
+          {...wallFilterProps}
+          name={"Start"}
+          onSelect={(item) =>
+            applyFilter("start", item[wallFilterProps.valueProperty])
+          }
+          items={walls}
+        />
+
+        <Filter
+          {...wallFilterProps}
+          name={"End"}
+          onSelect={(item) =>
+            applyFilter("end", item[wallFilterProps.valueProperty])
+          }
+          items={walls}
+        />
+      </div>
+
+      <GlobalFilter
+        filters={filters}
+        setFilters={setFilters}
+        setGlobalFilter={setGlobalFilter}
+        globalFilter={globalFilter}
+      />
+
+      <BoulderTable
+        data={data}
+        columns={columns}
+        filters={filters}
+        globalFilter={globalFilter}
+        headerClassName={styles.tableHeader}
+        rowClassName={styles.tableRow}
+      />
 
       <Drawer onClose={() => setDetailBoulder(null)}>
         {detailBoulder && <BoulderDetails id={detailBoulder} />}

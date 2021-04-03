@@ -1,0 +1,35 @@
+.tableRow,
+.tableHeader {
+  grid-template-columns: 60px minmax(70px, 200px) 1fr 1fr 1fr 1fr 1fr;
+}
+
+@media (min-width: 376px) and (max-width: 768px) {
+  .pointsCell,
+  .genderCell,
+  .lastActivityCell {
+    display: none;
+  }
+
+  .tableRow,
+  .tableHeader {
+    grid-template-columns: 60px 1fr 1fr 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .pointsCell,
+  .flashedCell,
+  .toppedCell,
+  .genderCell,
+  .lastActivityCell {
+    display: none;
+  }
+
+  .tableRow {
+    grid-template-columns: 10px minmax(70px, auto) 100px;
+  }
+
+  .tableHeader {
+    display: none;
+  }
+}

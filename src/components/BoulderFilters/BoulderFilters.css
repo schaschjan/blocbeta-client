@@ -21,6 +21,23 @@
   white-space: nowrap;
 }
 
+@keyframes loading {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.25;
+  }
+}
+
+.placeholder {
+  margin: 2px 40px 2px 0;
+  width: 80%;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  animation: loading 600ms linear infinite;
+}
+
 .filter {
   list-style: none;
   margin: 0;
@@ -31,8 +48,10 @@
 }
 
 .filter__items {
+  margin-top: 8px;
+  overflow-x: hidden;
   max-height: 200px;
-  overflow: scroll;
+  overflow-y: scroll;
   list-style: none;
 }
 

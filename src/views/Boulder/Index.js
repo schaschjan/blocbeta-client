@@ -9,7 +9,6 @@ import React, {
 import { Meta } from "../../App";
 import { queryCache, useMutation } from "react-query";
 import { cache, useApi, extractErrorMessage } from "../../hooks/useApi";
-import { LoadedContent } from "../../components/Loader/Loader";
 import HoldType from "../../components/HoldStyle/HoldType";
 import Grade from "../../components/Grade/Grade";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
@@ -30,13 +29,21 @@ import {
 } from "../../components/BoulderTable/BoulderTable";
 import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 import {
-  BoulderFilters,
+  ascentFilterProps,
+  Filter,
   GlobalFilter,
+  gradeFilterProps,
+  holdTypeFilterProps,
+  setterFilterProps,
+  wallFilterProps,
 } from "../../components/BoulderFilters/BoulderFilters";
-import { useBoulders } from "../../hooks/useBoulders";
+import { filterPresentOptions, useBoulders } from "../../hooks/useBoulders";
 import { WallDetails } from "../../components/WallDetails/WallDetails";
 import { Link } from "react-router-dom";
 import { IndeterminateCheckbox } from "../../components/IndeterminateCheckbox";
+import styles from "./Index.module.css";
+import { sortItemsAlphabetically } from "../../helper/sortItemsAlphabetically";
+import { Loader } from "../../components/Loader/Loader";
 
 const Index = () => {
   const { isAdmin, contextualizedPath } = useContext(BoulderDBUIContext);
@@ -56,8 +63,42 @@ const Index = () => {
   ]);
 
   const ping = useApi("ping");
+  const { boulders } = useBoulders();
 
-  const { idle, boulders } = useBoulders();
+  const grades = useMemo(
+    () =>
+      filterPresentOptions(boulders, "grade").sort((a, b) =>
+        a.name > b.name ? 1 : -1
+      ),
+    [boulders]
+  );
+
+  const holdTypes = useMemo(
+    () =>
+      sortItemsAlphabetically(
+        filterPresentOptions(boulders, "holdType"),
+        "name"
+      ),
+    [boulders]
+  );
+
+  const walls = useMemo(
+    () =>
+      sortItemsAlphabetically(
+        filterPresentOptions(boulders, "startWall"),
+        "name"
+      ),
+    [boulders]
+  );
+
+  const setters = useMemo(
+    () =>
+      sortItemsAlphabetically(
+        filterPresentOptions(boulders, "setters"),
+        "username"
+      ),
+    [boulders]
+  );
 
   useEffect(() => {
     ping();
@@ -115,6 +156,7 @@ const Index = () => {
       },
       {
         ...boulderTableColumns.name,
+        className: styles.nameCell,
         Cell: ({ value, row }) => {
           const boulderId = row.original.id;
 
@@ -201,6 +243,27 @@ const Index = () => {
     }
   }, []);
 
+  const applyFilter = useCallback(
+    (id, value) => {
+      // clone array, filter out current filters on given id to suppress duplicate filtering
+      const currentFilters = [...filters].filter(
+        (currentFilter) => currentFilter.id !== id
+      );
+
+      currentFilters.push({
+        id,
+        value,
+      });
+
+      setFilters(currentFilters);
+    },
+    [filters]
+  );
+
+  if (!boulders.length) {
+    return <Loader />;
+  }
+
   return (
     <Fragment>
       <Meta title={"Boulder"} />
@@ -218,7 +281,68 @@ const Index = () => {
         )}
       </h1>
 
-      <BoulderFilters filters={filters} setFilters={setFilters} />
+      <div className={styles.filters}>
+        <Filter
+          {...holdTypeFilterProps}
+          onSelect={(item) =>
+            applyFilter(
+              holdTypeFilterProps.id,
+              item[holdTypeFilterProps.valueProperty]
+            )
+          }
+          items={holdTypes}
+        />
+
+        <Filter
+          {...gradeFilterProps}
+          onSelect={(item) =>
+            applyFilter(
+              gradeFilterProps.id,
+              item[gradeFilterProps.valueProperty]
+            )
+          }
+          items={grades}
+        />
+
+        <Filter
+          {...wallFilterProps}
+          name={"Start"}
+          onSelect={(item) =>
+            applyFilter("start", item[wallFilterProps.valueProperty])
+          }
+          items={walls}
+        />
+
+        <Filter
+          {...wallFilterProps}
+          name={"End"}
+          onSelect={(item) =>
+            applyFilter("end", item[wallFilterProps.valueProperty])
+          }
+          items={walls}
+        />
+
+        <Filter
+          {...setterFilterProps}
+          onSelect={(item) =>
+            applyFilter(
+              setterFilterProps.id,
+              item[setterFilterProps.valueProperty]
+            )
+          }
+          items={setters}
+        />
+
+        <Filter
+          {...ascentFilterProps}
+          onSelect={(item) =>
+            applyFilter(
+              ascentFilterProps.id,
+              item[ascentFilterProps.valueProperty]
+            )
+          }
+        />
+      </div>
 
       <GlobalFilter
         filters={filters}
@@ -227,16 +351,18 @@ const Index = () => {
         globalFilter={globalFilter}
       />
 
-      <LoadedContent loading={!idle}>
-        <BoulderTable
-          columns={columns}
-          data={boulders}
-          filters={filters}
-          globalFilter={globalFilter}
-          onSelectRows={(ids) => setSelected(ids)}
-          isAdmin={isAdmin}
-        />
-      </LoadedContent>
+      <BoulderTable
+        columns={columns}
+        data={boulders}
+        filters={filters}
+        globalFilter={globalFilter}
+        onSelectRows={(ids) => setSelected(ids)}
+        isAdmin={isAdmin}
+        headerClassName={
+          isAdmin ? styles.isAdminTableHeader : styles.tableHeader
+        }
+        rowClassName={isAdmin ? styles.isAdminTableRow : styles.tableRow}
+      />
 
       <Drawer onClose={() => setDetailBoulder(null)}>
         {detailBoulder && <BoulderDetails id={detailBoulder} />}

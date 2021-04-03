@@ -1,25 +1,19 @@
 import React from "react";
 import styles from "./Table.module.css";
-import { classNames } from "../../helper/classNames";
+import { joinClassNames } from "../../helper/classNames";
 import Downward from "../Icon/Downward";
 import Upward from "../Icon/Upward";
+import classNames from "classnames";
 
-const TableRow = ({ cells, gridTemplateColumns }) => {
+const TableRow = ({ cells, className }) => {
   return (
-    <div
-      className={styles.row}
-      style={{
-        gridTemplateColumns,
-      }}
-    >
+    <div className={joinClassNames(styles.row, className)}>
       {cells.map((cell, cellIndex) => {
         return (
           <div
-            className={classNames(styles.cell)}
+            className={classNames(styles.cell, cell.column.className)}
             key={`cell-${cellIndex}`}
-            {...cell.getCellProps({
-              className: cell.column.className,
-            })}
+            {...cell.getCellProps()}
           >
             {cell.render("Cell")}
           </div>
@@ -29,18 +23,13 @@ const TableRow = ({ cells, gridTemplateColumns }) => {
   );
 };
 
-const TableHeader = ({ gridTemplateColumns, headerGroups }) => {
+const TableHeader = ({ headerGroups, className }) => {
   return (
-    <div
-      className={styles.header}
-      style={{
-        gridTemplateColumns,
-      }}
-    >
+    <div className={classNames(styles.header, className)}>
       {headerGroups.map((headerGroup) => {
         return headerGroup.headers.map((column, index) => (
           <div
-            className={styles.headerCell}
+            className={joinClassNames(styles.headerCell, column.className)}
             {...column.getHeaderProps(column.getSortByToggleProps())}
             key={`header-cell-${index}`}
           >

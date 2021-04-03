@@ -95,6 +95,6 @@ h6 {
   margin-block-end: 0;
 }
 
-span {
-  display: block;
+a {
+  display: inline-block;
 }

@@ -32,8 +32,8 @@ const Add = () => {
     grade: "",
     internal_grade: "",
     hold_type: "",
-    tags: [""],
-    setters: [""],
+    tags: [],
+    setters: [],
   });
 
   const [mutateCreation] = useMutation(useApi("createBoulder"), {

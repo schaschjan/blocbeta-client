@@ -1,38 +1,41 @@
-import {
-  useGlobalFilter,
-  usePagination,
-  useSortBy,
-  useTable,
-} from "react-table";
+import { useGlobalFilter, useSortBy, useTable } from "react-table";
 import React, { Fragment, useMemo } from "react";
-import styles from "../../views/Compare/Current.module.css";
 import { Input } from "../Input/Input";
 import { TableHeader, TableRow } from "../Table/Table";
-import { Pagination } from "../BoulderTable/Pagination";
+import Avatar from "../Avatar/Avatar";
+import Emoji from "../Emoji/Emoji";
+import styles from "./RankingTable.module.css";
 
-const RankingTable = ({ columns, data }) => {
+const UserRank = ({ image, username, sentAllBoulders = false }) => {
+  return (
+    <Fragment>
+      <Avatar image={image} />
+      <span className={styles.rankUsername}>{username}</span>
+
+      {sentAllBoulders && (
+        <span className={styles.rankBadge}>
+          <Emoji>🥋</Emoji>
+        </span>
+      )}
+    </Fragment>
+  );
+};
+
+const RankingTable = ({ columns, data, rowClassName, headerClassName }) => {
   const {
     getTableProps,
     getTableBodyProps,
+    rows,
     prepareRow,
-    canPreviousPage,
-    canNextPage,
-    nextPage,
-    previousPage,
-    pageOptions,
     headerGroups,
     setGlobalFilter,
-    page,
-    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
       data,
-      initialState: { pageIndex: 0, pageSize: 20 },
     },
     useGlobalFilter,
-    useSortBy,
-    usePagination
+    useSortBy
   );
 
   const gridTemplateColumns = useMemo(() => {
@@ -52,16 +55,18 @@ const RankingTable = ({ columns, data }) => {
 
       <div {...getTableProps()}>
         <TableHeader
+          className={headerClassName}
           headerGroups={headerGroups}
           gridTemplateColumns={gridTemplateColumns}
         />
 
         <div {...getTableBodyProps()}>
-          {page.map((row, index) => {
+          {rows.map((row, index) => {
             prepareRow(row);
 
             return (
               <TableRow
+                className={rowClassName}
                 gridTemplateColumns={gridTemplateColumns}
                 cells={row.cells}
                 key={`row-${index}`}
@@ -70,18 +75,8 @@ const RankingTable = ({ columns, data }) => {
           })}
         </div>
       </div>
-
-      <Pagination
-        pageIndex={pageIndex}
-        pageSize={pageSize}
-        pageCount={pageOptions.length}
-        canPreviousPage={canPreviousPage}
-        canNextPage={canNextPage}
-        previousPage={previousPage}
-        nextPage={nextPage}
-      />
     </Fragment>
   );
 };
 
-export { RankingTable };
+export { RankingTable, UserRank };

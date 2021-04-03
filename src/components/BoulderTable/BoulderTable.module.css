@@ -15,8 +15,15 @@
   position: relative;
 }
 
+.toggleDetailsLabel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 12px;
+}
+
 .toggleDetails svg {
-  right: 0;
+  right: -8px;
   position: absolute;
   transform: rotate(0);
   transition: transform 200ms ease-in-out;

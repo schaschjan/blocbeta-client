@@ -3,14 +3,13 @@
   grid-template-columns: 1fr 1fr;
 }
 
-.search {
-  display: flex;
+.filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 40px;
 }
 
-.searchInput {
-  composes: t--epsilon from "./../../css/typography.css";
-  margin-top: 24px;
-  margin-bottom: 24px;
-  max-width: 400px;
-  margin-left: auto;
+.tableRow,
+.tableHeader {
+  grid-template-columns: minmax(20px, 60px) 80px 60px auto 140px 140px 140px 140px;
 }

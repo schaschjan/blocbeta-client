@@ -1,56 +1,36 @@
 import React, { useMemo } from "react";
-import "./BoulderFilters.css";
 import { Close } from "../Icon/Close";
 import Grade from "../Grade/Grade";
 import HoldType from "../HoldStyle/HoldType";
 import { Input } from "../Input/Input";
-import useRequest from "../../hooks/useRequest";
-import { Loader } from "../Loader/Loader";
+import "./BoulderFilters.css";
 
-const Filter = ({
-  name,
-  id,
-  data,
-  itemFilter = () => true,
-  valueProperty,
-  currentFilters,
-  setFilters,
-  renderItem,
-}) => {
+const Filter = ({ name, items = [], onSelect, renderItem }) => {
   return useMemo(() => {
     return (
       <div className={"filter"}>
         <span className={"t--gamma filter__name"}>{name}</span>
 
         <ul className={"filter__items filter-items"}>
-          {data
-            .filter((item) => itemFilter(item))
-            .map((item, index) => {
+          {items.length > 0 ? (
+            items.map((item, index) => {
               return (
                 <li
                   key={index}
                   className={"filter-items__item"}
-                  onClick={() => {
-                    let current = currentFilters.filter(
-                      (currentFilter) => currentFilter.id !== id
-                    );
-
-                    current.push({
-                      id,
-                      value: item[valueProperty],
-                    });
-
-                    setFilters([...current]);
-                  }}
+                  onClick={() => onSelect(item)}
                 >
                   {renderItem(item)}
                 </li>
               );
-            })}
+            })
+          ) : (
+            <li>loading...</li>
+          )}
         </ul>
       </div>
     );
-  }, [data]);
+  }, [items, onSelect]);
 };
 
 const GlobalFilter = ({
@@ -98,124 +78,65 @@ const GlobalFilter = ({
   }, [filters, globalFilter]);
 };
 
-const BoulderFilters = ({ filters, setFilters }) => {
-  const { data: holdTypes } = useRequest("/holdstyle");
-  const { data: grades } = useRequest("/grade");
-  const { data: walls } = useRequest("/wall");
-  const { data: setters } = useRequest("/setter/current");
-
-  const ascents = useMemo(() => {
-    return [
-      {
-        value: "todo",
-        label: "Todo",
-      },
-      {
-        value: "flash",
-        label: "Flash",
-      },
-      {
-        value: "top",
-        label: "Top",
-      },
-      {
-        value: "resignation",
-        label: "Resignation",
-      },
-    ];
-  }, []);
-
-  if (!holdTypes || !grades || !walls || !setters || !ascents) {
-    return <Loader />;
-  }
-
-  return (
-    <div className={"boulder-filters"}>
-      <div className={"boulder-filters__list"}>
-        <Filter
-          name={"Hold types"}
-          id={"holdType"}
-          data={holdTypes}
-          valueProperty={"name"}
-          setFilters={setFilters}
-          currentFilters={filters}
-          renderItem={(item) => {
-            return (
-              <div className={"hold-type-filter-item"}>
-                <HoldType image={item.image} small={true} /> {item.name}
-              </div>
-            );
-          }}
-        />
-
-        <Filter
-          name={"Grade"}
-          id={"grade"}
-          data={grades}
-          valueProperty={"name"}
-          setFilters={setFilters}
-          currentFilters={filters}
-          renderItem={(item) => {
-            return (
-              <Grade
-                color={item.color}
-                name={item.name}
-                internalName={item.internalName}
-              />
-            );
-          }}
-        />
-
-        <Filter
-          name={"Start"}
-          id={"start"}
-          data={walls}
-          valueProperty={"name"}
-          setFilters={setFilters}
-          currentFilters={filters}
-          renderItem={(item) => {
-            return item.name;
-          }}
-        />
-
-        <Filter
-          name={"End"}
-          id={"end"}
-          data={walls}
-          valueProperty={"name"}
-          setFilters={setFilters}
-          currentFilters={filters}
-          renderItem={(item) => {
-            return item.name;
-          }}
-        />
-
-        <Filter
-          name={"Setter"}
-          id={"setter"}
-          data={setters}
-          valueProperty={"username"}
-          setFilters={setFilters}
-          currentFilters={filters}
-          renderItem={(item) => {
-            return item.username;
-          }}
-        />
-
-        <Filter
-          name={"Ascent"}
-          id={"ascent"}
-          data={ascents}
-          valueProperty={"value"}
-          setFilters={setFilters}
-          currentFilters={filters}
-          renderItem={(item) => {
-            return item.label;
-          }}
-        />
-      </div>
+const holdTypeFilterProps = {
+  name: "Hold types",
+  id: "holdType",
+  valueProperty: "name",
+  renderItem: (item) => (
+    <div className={"hold-type-filter-item"}>
+      <HoldType image={item.image} small={true} /> {item.name}
     </div>
-  );
+  ),
+};
+
+const gradeFilterProps = {
+  name: "Grade",
+  id: "grade",
+  valueProperty: "name",
+  renderItem: (item) => (
+    <Grade
+      color={item.color}
+      name={item.name}
+      internalName={item.internalName}
+    />
+  ),
+};
+
+const setterFilterProps = {
+  name: "Setter",
+  id: "setter",
+  valueProperty: "username",
+  renderItem: (item) => item.username,
+};
+
+const wallFilterProps = {
+  valueProperty: "name",
+  renderItem: (item) => item.name,
+};
+
+const ascentFilterProps = {
+  name: "Ascent",
+  id: "ascent",
+  valueProperty: "value",
+  items: [
+    {
+      value: "todo",
+      label: "Todo",
+    },
+    {
+      value: "flash",
+      label: "Flash",
+    },
+    {
+      value: "top",
+      label: "Top",
+    },
+    {
+      value: "resignation",
+      label: "Resignation",
+    },
+  ],
+  renderItem: (item) => item.label,
 };
 
 const FilterTag = ({ id, value, onClick }) => {
@@ -227,4 +148,12 @@ const FilterTag = ({ id, value, onClick }) => {
   );
 };
 
-export { BoulderFilters, GlobalFilter };
+export {
+  Filter,
+  GlobalFilter,
+  holdTypeFilterProps,
+  gradeFilterProps,
+  wallFilterProps,
+  setterFilterProps,
+  ascentFilterProps,
+};
