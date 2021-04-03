@@ -1,6 +1,6 @@
 {
   "name": "@boulderdb/ui",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "private": true,
   "dependencies": {
     "axios": "^0.21.1",

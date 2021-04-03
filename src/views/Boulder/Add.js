@@ -167,6 +167,7 @@ const Add = () => {
                   api: cache.tags,
                   labelProperty: "name",
                   multiple: true,
+                  searchable: true,
                 }
               )}
             </FormRow>
@@ -184,6 +185,7 @@ const Add = () => {
                   labelProperty: "username",
                   multiple: true,
                   required: "required",
+                  searchable: true,
                 }
               )}
             </FormRow>

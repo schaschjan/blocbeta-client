@@ -156,7 +156,6 @@ const Index = () => {
       },
       {
         ...boulderTableColumns.name,
-        className: styles.nameCell,
         Cell: ({ value, row }) => {
           const boulderId = row.original.id;
 
@@ -188,6 +187,11 @@ const Index = () => {
       },
       {
         ...boulderTableColumns.setters,
+        Cell: ({ value }) => (
+          <div className={styles.setterCell}>
+            <span>{value}</span>
+          </div>
+        ),
       },
       {
         ...boulderTableColumns.date,
