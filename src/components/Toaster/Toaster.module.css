@@ -1,0 +1,39 @@
+.root {
+  position: fixed;
+  top: calc(2 * var(--spacing-unit));
+  right: calc(2 * var(--spacing-unit));
+  z-index: 400;
+  padding: 4px var(--spacing-unit);
+  margin-right: var(--spacing-unit);
+  min-width: 275px;
+  border-radius: 4px;
+  border-width: 1px;
+  border-style: solid;
+  box-sizing: border-box;
+  backdrop-filter: blur(12px);
+}
+
+.title,
+.description {
+  margin: 0;
+}
+
+.title {
+  margin-bottom: calc(1 * var(--spacing-unit));
+}
+
+.isSuccess {
+  border-color: #4fb84f;
+}
+
+.isInfo {
+  border-color: var(--color-lila);
+}
+
+.isDanger {
+  border-color: var(--color-red);
+}
+
+.isWarning {
+  border-color: var(--color-yellow);
+}

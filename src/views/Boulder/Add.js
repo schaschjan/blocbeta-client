@@ -13,6 +13,8 @@ import {
 import { composeFormElement, useForm } from "../../hooks/useForm";
 import { Button } from "../../components/Button/Button";
 import { Select } from "../../components/Select/Select";
+import HoldType from "../../components/HoldStyle/HoldType";
+import styles from "./Add.module.css";
 
 const Add = () => {
   const { dispatch } = useContext(ToastContext);
@@ -151,6 +153,11 @@ const Add = () => {
                   api: cache.holdTypes,
                   labelProperty: "name",
                   required: "required",
+                  childrenRenderer: (option) => (
+                    <span className={styles.holdTypeOption}>
+                      <HoldType image={option.image} small={true} />
+                    </span>
+                  ),
                 }
               )}
             </FormRow>
@@ -167,7 +174,6 @@ const Add = () => {
                   api: cache.tags,
                   labelProperty: "name",
                   multiple: true,
-                  searchable: true,
                 }
               )}
             </FormRow>
@@ -185,7 +191,6 @@ const Add = () => {
                   labelProperty: "username",
                   multiple: true,
                   required: "required",
-                  searchable: true,
                 }
               )}
             </FormRow>
