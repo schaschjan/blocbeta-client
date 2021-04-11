@@ -9,7 +9,7 @@ import { useQuery } from "react-query";
 import { classNames } from "../../helper/classNames";
 import Burger from "../Icon/Burger";
 import { NavItem } from "../NavItem/NavItem";
-import useRequest from "../../hooks/useRequest";
+import { useRequest } from "../../hooks/useRequest";
 import "./Header.css";
 
 const DoubtCountItem = () => {

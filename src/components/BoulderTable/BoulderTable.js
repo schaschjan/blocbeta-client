@@ -105,18 +105,10 @@ const BoulderTable = ({
     setGlobalFilter(globalFilter);
   }, [globalFilter]);
 
-  const gridTemplateColumns = useMemo(() => {
-    return columns.map((column) => column.gridTemplate).join(" ");
-  }, [columns]);
-
   return (
     <Fragment>
       <div className={styles.root} {...getTableProps()}>
-        <TableHeader
-          className={headerClassName}
-          headerGroups={headerGroups}
-          gridTemplateColumns={gridTemplateColumns}
-        />
+        <TableHeader className={headerClassName} headerGroups={headerGroups} />
 
         <div {...getTableBodyProps()}>
           {page.map((row, index) => {
@@ -125,7 +117,6 @@ const BoulderTable = ({
             return (
               <TableRow
                 className={rowClassName}
-                gridTemplateColumns={gridTemplateColumns}
                 cells={row.cells}
                 key={`row-${index}`}
               />
@@ -265,9 +256,9 @@ const boulderTableColumns = {
   },
   setters: {
     id: "setter",
+    Header: "Setter",
     accessor: ({ setters }) =>
       setters.map((setter) => setter.username).join(", "),
-    Header: "Setter",
     filter: (rows, id, filterValue) => {
       return rows.filter((row) => row.values[id].includes(filterValue));
     },

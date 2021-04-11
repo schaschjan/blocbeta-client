@@ -73,6 +73,11 @@
   align-items: center;
 }
 
+.option:focus {
+  font-weight: bold;
+  border-bottom: 1px solid var(--color-lila);
+}
+
 .option:last-child {
   border-bottom: none;
 }

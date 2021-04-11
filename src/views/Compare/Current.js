@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { useParams } from "react-router-dom";
 import { Meta } from "../../App";
-import useRequest from "../../hooks/useRequest";
+import { useRequest } from "../../hooks/useRequest";
 import { filterPresentOptions, useBoulders } from "../../hooks/useBoulders";
 import {
   BoulderTable,
@@ -33,6 +33,7 @@ import {
   wallFilterProps,
 } from "../../components/BoulderFilters/BoulderFilters";
 import { sortItemsAlphabetically } from "../../helper/sortItemsAlphabetically";
+import { Select } from "../../components/Select/Select";
 
 const UserRank = ({ title, rank, score, boulders, flashes, tops }) => {
   return (
@@ -204,16 +205,32 @@ const Current = () => {
     return ranking.list.find((rank) => rank.user.id === parseInt(b));
   }, [ranking]);
 
-  const applyFilter = useCallback((id, value) => {
-    let current = filters.filter((currentFilter) => currentFilter.id !== id);
+  // todo: remove duplicate declaration
+  const applyFilter = useCallback(
+    (id, value) => {
+      // if passed value is empty, clear the filter
+      if (!value) {
+        setFilters([
+          ...filters.filter((activeFilter) => activeFilter.id !== id),
+        ]);
 
-    current.push({
-      id,
-      value,
-    });
+        return;
+      }
 
-    setFilters([...current]);
-  }, []);
+      // clone array, filter out current filters on given id to suppress duplicate filtering
+      const currentFilters = [...filters].filter(
+        (currentFilter) => currentFilter.id !== id
+      );
+
+      currentFilters.push({
+        id,
+        value,
+      });
+
+      setFilters(currentFilters);
+    },
+    [filters]
+  );
 
   if (!ranking || !compareUser || !comparisons) {
     return <Loader />;
@@ -244,42 +261,40 @@ const Current = () => {
       </div>
 
       <div className={styles.filters}>
-        <Filter
+        <Select
           {...holdTypeFilterProps}
-          onSelect={(item) =>
-            applyFilter(
-              holdTypeFilterProps.id,
-              item[holdTypeFilterProps.valueProperty]
-            )
+          options={holdTypes}
+          onChange={(event, newValue) =>
+            applyFilter("holdType", newValue ? newValue.name : null)
           }
           items={holdTypes}
         />
 
-        <Filter
+        <Select
           {...gradeFilterProps}
-          onSelect={(item) =>
-            applyFilter(
-              gradeFilterProps.id,
-              item[gradeFilterProps.valueProperty]
-            )
+          options={grades}
+          onChange={(event, newValue) =>
+            applyFilter("grade", newValue ? newValue.name : null)
           }
           items={grades}
         />
 
-        <Filter
+        <Select
           {...wallFilterProps}
-          name={"Start"}
-          onSelect={(item) =>
-            applyFilter("start", item[wallFilterProps.valueProperty])
+          label={"Start"}
+          options={walls}
+          onChange={(event, newValue) =>
+            applyFilter("start", newValue ? newValue.name : null)
           }
           items={walls}
         />
 
-        <Filter
+        <Select
           {...wallFilterProps}
-          name={"End"}
-          onSelect={(item) =>
-            applyFilter("end", item[wallFilterProps.valueProperty])
+          label={"End"}
+          options={walls}
+          onChange={(event, newValue) =>
+            applyFilter("end", newValue ? newValue.name : null)
           }
           items={walls}
         />

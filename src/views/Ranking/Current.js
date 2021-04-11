@@ -9,7 +9,7 @@ import Male from "../../components/Icon/Male";
 import Female from "../../components/Icon/Female";
 import { Link } from "react-router-dom";
 import { Button } from "../../components/Button/Button";
-import useRequest from "../../hooks/useRequest";
+import { useRequest } from "../../hooks/useRequest";
 import calculatePercentage from "../../helper/calculatePercentage";
 import { Loader } from "../../components/Loader/Loader";
 import {

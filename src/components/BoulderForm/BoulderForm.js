@@ -1,154 +1,154 @@
-import React, { Fragment } from "react";
-import { composeFormElement, useForm } from "../../hooks/useForm";
+import React, { useContext } from "react";
 import { FormRow } from "../Form/Form";
-import { Input } from "../Input/Input";
-import ResourceDependantSelect from "../ResourceDependantSelect/ResourceDependantSelect";
-import { cache } from "../../hooks/useApi";
-import { Select } from "../Select/Select";
+import TextField from "@material-ui/core/TextField";
 import { Button } from "../Button/Button";
-import PropTypes from "prop-types";
+import { useForm } from "../../hooks/useForm";
+import { errorToast, successToast, ToastContext } from "../Toaster/Toaster";
+import { useRequest } from "../../hooks/useRequest";
+import { sortItemsAlphabetically } from "../../helper/sortItemsAlphabetically";
+import Grade from "../Grade/Grade";
+import HoldType from "../HoldStyle/HoldType";
+import { Select } from "../Select/Select";
 
-const BoulderForm = ({ submitLabel, onSubmit, data }) => {
-  const { handleSubmit, observeField, submitting, formData } = useForm(data);
+BoulderForm.defaultProps = {
+  data: {
+    name: "",
+    status: "active",
+    points: 1000,
+    start_wall: null,
+    end_wall: null,
+    grade: null,
+    internal_grade: null,
+    hold_type: null,
+    tags: [],
+    setters: [],
+  },
+};
+
+function extractId(property) {
+  return typeof property === "object" ? property.id : property;
+}
+
+function BoulderForm({ data, id, onSubmit, successMessage }) {
+  const {
+    handleSubmit,
+    setKeyValue,
+    submitting,
+    formData,
+    resetForm,
+  } = useForm(data);
+
+  const { dispatch } = useContext(ToastContext);
+
+  const submitForm = async (payload) => {
+    try {
+      await onSubmit({
+        payload: {
+          ...payload,
+          start_wall: extractId(payload.start_wall),
+          end_wall: extractId(payload.end_wall),
+          grade: extractId(payload.grade),
+          internal_grade: extractId(payload.internal_grade),
+          hold_type: extractId(payload.hold_type),
+          tags: payload.tags.map((tag) => extractId(tag)),
+          setters: payload.setters.map((setter) => extractId(setter)),
+        },
+      });
+
+      dispatch(successToast(successMessage));
+      resetForm();
+
+      if (typeof window !== "undefined") {
+        window.scrollTo(0, 0);
+      }
+    } catch (error) {
+      dispatch(errorToast(error));
+    }
+  };
 
   return (
-    <form onSubmit={(event) => handleSubmit(event, onSubmit)}>
+    <form onSubmit={(event) => handleSubmit(event, submitForm)}>
       <FormRow>
-        {composeFormElement("name", "Name", formData.name, Input, observeField)}
+        <TextField
+          label={"Name"}
+          onChange={(event) => setKeyValue("name", event.target.value)}
+          value={formData.name}
+          required
+        />
       </FormRow>
 
       <FormRow columns={2}>
-        {composeFormElement(
-          "start_wall",
-          "Start Wall",
-          formData.start_wall,
-          ResourceDependantSelect,
-          observeField,
-          {
-            cacheKey: cache.walls,
-            api: cache.walls,
-            labelProperty: "name",
-          }
-        )}
+        <WallSelect
+          value={formData.start_wall}
+          onChange={(event, newValue) => setKeyValue("start_wall", newValue)}
+          label={"Start"}
+          required
+        />
 
-        {composeFormElement(
-          "end_wall",
-          "End Wall",
-          formData.end_wall,
-          ResourceDependantSelect,
-          observeField,
-          {
-            cacheKey: cache.walls,
-            api: cache.walls,
-            labelProperty: "name",
-          }
-        )}
+        <WallSelect
+          value={formData.end_wall}
+          onChange={(event, newValue) => setKeyValue("end_wall", newValue)}
+          label={"End"}
+          required
+        />
       </FormRow>
 
       <FormRow columns={2}>
-        {composeFormElement(
-          "grade",
-          "Grade",
-          formData.grade,
-          ResourceDependantSelect,
-          observeField,
-          {
-            cacheKey: cache.grades,
-            api: cache.grades,
-            labelProperty: "name",
-          }
-        )}
+        <GradeSelect
+          value={formData.grade}
+          onChange={(event, newValue) => setKeyValue("grade", newValue)}
+          label={"Grade"}
+          required
+        />
 
-        {composeFormElement(
-          "internal_grade",
-          "Internal Grade",
-          formData.internal_grade,
-          ResourceDependantSelect,
-          observeField,
-          {
-            cacheKey: cache.grades,
-            api: cache.grades,
-            labelProperty: "name",
+        <GradeSelect
+          value={formData.internal_grade}
+          onChange={(event, newValue) =>
+            setKeyValue("internal_grade", newValue)
           }
-        )}
+          label={"Internal grade"}
+          required
+        />
       </FormRow>
 
       <FormRow>
-        {composeFormElement(
-          "hold_type",
-          "Hold Type",
-          formData.hold_type,
-          ResourceDependantSelect,
-          observeField,
-          {
-            cacheKey: cache.holdTypes,
-            api: cache.holdTypes,
-            labelProperty: "name",
-          }
-        )}
+        <HoldTypeSelect
+          value={formData.hold_type}
+          onChange={(event, newValue) => setKeyValue("hold_type", newValue)}
+          label={"Hold type"}
+          required
+        />
       </FormRow>
 
       <FormRow>
-        {composeFormElement(
-          "tags",
-          "Tags",
-          formData.tags,
-          ResourceDependantSelect,
-          observeField,
-          {
-            cacheKey: cache.tags,
-            api: cache.tags,
-            labelProperty: "name",
-            multiple: true,
-          }
-        )}
+        <TagSelect
+          value={formData.tags}
+          onChange={(event, newValue) => setKeyValue("tags", newValue)}
+          label={"Tags"}
+        />
       </FormRow>
 
       <FormRow>
-        {composeFormElement(
-          "setters",
-          "Setter",
-          formData.setters,
-          ResourceDependantSelect,
-          observeField,
-          {
-            cacheKey: cache.setters,
-            api: cache.setters,
-            labelProperty: "username",
-            multiple: true,
-          }
-        )}
+        <SetterSelect
+          value={formData.setters}
+          onChange={(event, newValue) => setKeyValue("setters", newValue)}
+          label={"Setters"}
+          required
+        />
       </FormRow>
 
       <FormRow>
-        {composeFormElement(
-          "status",
-          "Status",
-          formData.status,
-          Select,
-          observeField,
-          {
-            children: (
-              <Fragment>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </Fragment>
-            ),
-          }
-        )}
+        <TextField
+          label={"Points"}
+          onChange={(event) => setKeyValue("points", event.target.value)}
+          value={formData.points}
+          type={"number"}
+          required
+        />
       </FormRow>
 
       <FormRow>
-        {composeFormElement(
-          "points",
-          "Points",
-          formData.points,
-          Input,
-          observeField,
-          {
-            type: "number",
-          }
-        )}
+        <StatusSelect value={formData.status} label={"Status"} required />
       </FormRow>
 
       <Button
@@ -158,31 +158,136 @@ const BoulderForm = ({ submitLabel, onSubmit, data }) => {
         loading={submitting}
         disabled={submitting}
       >
-        {submitLabel}
+        Add
       </Button>
     </form>
   );
-};
+}
 
-BoulderForm.propTypes = {
-  submitLabel: PropTypes.string.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  data: PropTypes.object.isRequired,
-};
+function TagSelect({ value, ...rest }) {
+  const { data } = useRequest("/tag");
 
-BoulderForm.defaultProps = {
-  data: {
-    name: "",
-    status: "active",
-    points: 1000,
-    start_wall: "",
-    end_wall: "",
-    grade: "",
-    internal_grade: "",
-    hold_type: "",
-    tags: [""],
-    setters: [""],
-  },
-};
+  if (value.every((item) => typeof item === "number") && data) {
+    value = value.map((id) => data.find((item) => item.id === id));
+  }
+
+  return (
+    <Select
+      {...rest}
+      value={value}
+      multiple={true}
+      options={data ? sortItemsAlphabetically(data, "name") : []}
+      renderOption={(option) => option.name}
+      getOptionLabel={(option) => option.name}
+    />
+  );
+}
+
+function SetterSelect({ value, ...rest }) {
+  const { data } = useRequest("/setter/current");
+
+  if (value.every((item) => typeof item === "number") && data) {
+    value = value.map((id) => data.find((item) => item.id === id));
+  }
+
+  return (
+    <Select
+      {...rest}
+      value={value}
+      multiple={true}
+      options={data ? sortItemsAlphabetically(data, "username") : []}
+      renderOption={(option) => option.username}
+      getOptionLabel={(option) => option.username}
+    />
+  );
+}
+
+function WallSelect({ value, ...rest }) {
+  const { data } = useRequest("/wall");
+
+  if (typeof value === "number" && data) {
+    value = data.find((item) => item.id === value);
+  }
+
+  return (
+    <Select
+      {...rest}
+      value={value}
+      options={data ? sortItemsAlphabetically(data, "name") : []}
+      renderOption={(option) => option.name}
+      getOptionLabel={(option) => option.name}
+    />
+  );
+}
+
+function GradeSelect({ value, ...rest }) {
+  const { data } = useRequest("/grade");
+
+  if (typeof value === "number" && data) {
+    value = data.find((item) => item.id === value);
+  }
+
+  return (
+    <Select
+      {...rest}
+      value={value}
+      options={data ? sortItemsAlphabetically(data, "name") : []}
+      renderOption={(option) => (
+        <Grade name={option.name} color={option.color} />
+      )}
+      getOptionLabel={(option) => option.name}
+    />
+  );
+}
+
+function HoldTypeSelect({ value, ...rest }) {
+  const { data } = useRequest("/holdstyle");
+
+  if (typeof value === "number" && data) {
+    value = data.find((item) => item.id === value);
+  }
+
+  return (
+    <Select
+      {...rest}
+      value={value}
+      options={data ? sortItemsAlphabetically(data, "name") : []}
+      renderOption={(option) => (
+        <>
+          <HoldType image={option.image} small={true} />
+          <span>{option.name}</span>
+        </>
+      )}
+      getOptionLabel={(option) => option.name}
+    />
+  );
+}
+
+function StatusSelect({ value, ...rest }) {
+  const options = [
+    {
+      label: "Active",
+      value: "active",
+    },
+    {
+      label: "Inactive",
+      value: "inactive",
+    },
+  ];
+
+  if (typeof value === "string") {
+    value = options.find((option) => value === option.value);
+  }
+
+  return (
+    <Select
+      {...rest}
+      value={value}
+      options={options}
+      renderOption={(option) => option.value}
+      getOptionLabel={(option) => option.label}
+    />
+  );
+}
 
 export { BoulderForm };

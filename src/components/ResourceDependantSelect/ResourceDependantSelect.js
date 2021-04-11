@@ -1,7 +1,6 @@
 import React from "react";
 import { useQuery } from "react-query";
 import { queryDefaults, useApi } from "../../hooks/useApi";
-import { Option, StyledSelect } from "../Select/Select";
 import { Loader } from "../Loader/Loader";
 
 const ResourceDependantSelect = ({
@@ -19,7 +18,8 @@ const ResourceDependantSelect = ({
     return <Loader />;
   }
 
-  return (
+  return null;
+  /*  return (
     <StyledSelect {...rest}>
       {data.map((option) => (
         <Option value={option[valueProperty]} label={option[labelProperty]}>
@@ -27,7 +27,7 @@ const ResourceDependantSelect = ({
         </Option>
       ))}
     </StyledSelect>
-  );
+  );*/
 };
 
 export default ResourceDependantSelect;

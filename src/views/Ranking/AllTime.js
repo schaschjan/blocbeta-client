@@ -2,13 +2,11 @@ import React, { Fragment, useContext, useMemo } from "react";
 import Progress from "../../components/Progress/Progress";
 import { Meta } from "../../App";
 import moment from "moment";
-import Avatar from "../../components/Avatar/Avatar";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
-import { Button } from "../../components/Button/Button";
 import Male from "../../components/Icon/Male";
 import Female from "../../components/Icon/Female";
 import calculatePercentage from "../../helper/calculatePercentage";
-import useRequest from "../../hooks/useRequest";
+import { useRequest } from "../../hooks/useRequest";
 import {
   RankingTable,
   UserRank,

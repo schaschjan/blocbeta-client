@@ -14,7 +14,7 @@ const icons = {
 };
 
 const getIcon = (type) => {
-  return icons[type];
+  return icons[type.toLowerCase()];
 };
 
 const Ascent = ({ type, checked, disabled, asyncHandler, ...rest }) => {
@@ -47,7 +47,7 @@ function AscentIcon({ type, fill }) {
   }
 
   const doubted = type.includes("-pending-doubt");
-  const Icon = getIcon(type.replace("-pending-doubt", ""));
+  const Icon = getIcon(type.replace("-pending-doubt", "").toLowerCase());
 
   return <Icon fill={fill} style={{ opacity: doubted ? 0.5 : 1 }} />;
 }

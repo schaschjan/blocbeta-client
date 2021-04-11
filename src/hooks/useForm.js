@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { set } from "lodash";
 import { FormElement } from "../components/Form/Form";
 
@@ -46,7 +46,6 @@ const dataResolvers = {
   },
   "styled-select": (current, event) => {
     const selected = event.target.selected;
-    console.log(selected.map((option) => option.value));
     set(
       current,
       event.target.name,
@@ -94,6 +93,10 @@ export const useForm = (defaults) => {
   const resetForm = () => {
     setFormData(defaults);
   };
+
+  useEffect(() => {
+    setFormData(defaults);
+  }, [defaults]);
 
   return {
     formData,
