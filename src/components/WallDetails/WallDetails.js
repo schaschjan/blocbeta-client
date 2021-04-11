@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import styles from "./WallDetails.module.css";
 import { joinClassNames } from "../../helper/classNames";
 import { Close } from "../Icon/Close";
-import useRequest from "../../hooks/useRequest";
+import { useRequest } from "../../hooks/useRequest";
 import { Loader } from "../Loader/Loader";
 
 function WallDetails({ wall, onClose }) {

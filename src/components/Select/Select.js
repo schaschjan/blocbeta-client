@@ -1,22 +1,35 @@
-import React, { useEffect, useState } from "react";
-import "./Select.css";
+import { Autocomplete } from "@material-ui/lab";
+import TextField from "@material-ui/core/TextField";
+import React from "react";
 
-const Select = ({ multiple = false, value = [], ...rest }) => {
-  const [selected, setSelected] = useState(value);
-
-  useEffect(() => {
-    setSelected(value);
-
-    if (!value) {
-      setSelected("");
-    }
-  }, [value]);
-
+function Select({
+  label,
+  multiple = false,
+  value,
+  options,
+  required,
+  ...rest
+}) {
   return (
-    <div className="select">
-      <select multiple={multiple} value={selected} {...rest} />
-    </div>
+    <Autocomplete
+      options={options}
+      autoHighlight
+      value={value}
+      multiple={multiple}
+      {...rest}
+      renderInput={(params) => (
+        <TextField
+          required={multiple ? value.length === 0 : required}
+          {...params}
+          label={label}
+          inputProps={{
+            ...params.inputProps,
+            autoComplete: "new-password",
+          }}
+        />
+      )}
+    />
   );
-};
+}
 
 export { Select };

@@ -3,21 +3,26 @@ import { Close } from "../Icon/Close";
 import Grade from "../Grade/Grade";
 import HoldType from "../HoldStyle/HoldType";
 import { Input } from "../Input/Input";
-import "./BoulderFilters.css";
+import styles from "./BoulderFilters.module.css";
+import typography from "../../css/typography.module.css";
+import { joinClassNames } from "../../helper/classNames";
+import { AscentIcon } from "../Ascent/Ascent";
 
 const Filter = ({ name, items = [], onSelect, renderItem }) => {
   return useMemo(() => {
     return (
-      <div className={"filter"}>
-        <span className={"t--gamma filter__name"}>{name}</span>
+      <div className={styles.filter}>
+        <span className={joinClassNames(typography.gamma, styles.filterName)}>
+          {name}
+        </span>
 
-        <ul className={"filter__items filter-items"}>
+        <ul className={styles.filterOptions}>
           {items.length > 0 ? (
             items.map((item, index) => {
               return (
                 <li
                   key={index}
-                  className={"filter-items__item"}
+                  className={styles.filterOptionsItem}
                   onClick={() => onSelect(item)}
                 >
                   {renderItem(item)}
@@ -42,7 +47,7 @@ const GlobalFilter = ({
   return useMemo(() => {
     return (
       <Input
-        className={"boulder-filters__search"}
+        className={styles.search}
         placeholder="Search"
         value={globalFilter}
         onClear={() => setGlobalFilter("")}
@@ -79,46 +84,41 @@ const GlobalFilter = ({
 };
 
 const holdTypeFilterProps = {
-  name: "Hold types",
-  id: "holdType",
-  valueProperty: "name",
-  renderItem: (item) => (
-    <div className={"hold-type-filter-item"}>
-      <HoldType image={item.image} small={true} /> {item.name}
+  label: "Hold type",
+  renderOption: (option) => (
+    <div className={styles.isHoldTypeFilterOptionsItem}>
+      <HoldType image={option.image} small={true} /> {option.name}
     </div>
   ),
+  getOptionLabel: (option) => option.name,
 };
 
 const gradeFilterProps = {
-  name: "Grade",
-  id: "grade",
-  valueProperty: "name",
-  renderItem: (item) => (
+  label: "Grade",
+  renderOption: (option) => (
     <Grade
-      color={item.color}
-      name={item.name}
-      internalName={item.internalName}
+      color={option.color}
+      name={option.name}
+      internalName={option.internalName}
     />
   ),
+  getOptionLabel: (option) => option.name,
 };
 
 const setterFilterProps = {
-  name: "Setter",
-  id: "setter",
-  valueProperty: "username",
-  renderItem: (item) => item.username,
+  label: "Setter",
+  renderOption: (option) => option.username,
+  getOptionLabel: (option) => option.username,
 };
 
 const wallFilterProps = {
-  valueProperty: "name",
-  renderItem: (item) => item.name,
+  renderOption: (option) => option.name,
+  getOptionLabel: (option) => option.name,
 };
 
 const ascentFilterProps = {
-  name: "Ascent",
-  id: "ascent",
-  valueProperty: "value",
-  items: [
+  label: "Ascent",
+  options: [
     {
       value: "todo",
       label: "Todo",
@@ -136,14 +136,22 @@ const ascentFilterProps = {
       label: "Resignation",
     },
   ],
-  renderItem: (item) => item.label,
+  renderOption: (option) => (
+    <div className={styles.isHoldTypeFilterOptionsItem}>
+      <AscentIcon type={option.label} fill={true} /> {option.label}
+    </div>
+  ),
+  getOptionLabel: (option) => option.value,
 };
 
 const FilterTag = ({ id, value, onClick }) => {
   return (
-    <div className={"filter-tag t--eta"}>
+    <div className={joinClassNames(typography.eta, styles.tag)}>
       <strong>{id}:</strong>&nbsp;{value}
-      {onClick ? <Close onClick={onClick} /> : null}
+      <span className={styles.removeTag}>
+        {" "}
+        {onClick ? <Close onClick={onClick} /> : null}
+      </span>
     </div>
   );
 };

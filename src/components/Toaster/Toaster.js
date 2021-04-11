@@ -1,7 +1,9 @@
 import React, { createContext, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import "./Toaster.css";
+import styles from "./Toaster.module.css";
 import { extractErrorMessage } from "../../hooks/useApi";
+import { joinClassNames } from "../../helper/classNames";
+import typography from "../../css/typography.module.css";
 
 export const ToastContext = createContext({});
 
@@ -53,18 +55,22 @@ export const ToastContainer = ({ children }) => {
   );
 };
 
-const Toast = (toast) => {
+const Toast = ({ type = "info", title, description }) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className={`toast toast--${toast.type}`}
+      className={joinClassNames(styles.root, styles[`is${type.capitalize()}`])}
     >
-      <h3 className="toast__title t--epsilon">{toast.title}</h3>
+      <h3 className={joinClassNames(styles.title, typography.epsilon)}>
+        {title}
+      </h3>
 
-      {toast.description && (
-        <p className="toast__description t--eta">{toast.description}</p>
+      {description && (
+        <p className={joinClassNames(styles.description, typography.eta)}>
+          {description}
+        </p>
       )}
     </motion.div>
   );

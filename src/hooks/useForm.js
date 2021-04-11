@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { set } from "lodash";
 import { FormElement } from "../components/Form/Form";
 
@@ -15,7 +15,6 @@ export const composeFormElement = (
     id: name,
     value: value ? value : "",
     onChange: onChange,
-
     ...additionalInputProps,
   };
 
@@ -28,6 +27,34 @@ export const composeFormElement = (
       )}
     </FormElement>
   );
+};
+
+const dataResolvers = {
+  "select-multiple": (current, event) => {
+    set(
+      current,
+      event.target.name,
+      Array.from(event.target.selectedOptions, (option) => option.value)
+    );
+  },
+  "styled-multiselect": (current, event) => {
+    set(
+      current,
+      event.target.name,
+      event.target.selected.map((option) => option.value)
+    );
+  },
+  "styled-select": (current, event) => {
+    const selected = event.target.selected;
+    set(
+      current,
+      event.target.name,
+      selected.length > 0 ? selected.map((option) => option.value)[0] : null
+    );
+  },
+  checkbox: (current, event) => {
+    set(current, event.target.name, event.target.checked);
+  },
 };
 
 export const useForm = (defaults) => {
@@ -51,19 +78,13 @@ export const useForm = (defaults) => {
   };
 
   const observeField = (event) => {
-    const { name, value, checked } = event.target;
     const current = { ...formData };
+    const resolver = dataResolvers[event.target.type];
 
-    if (event.target.type === "select-multiple") {
-      set(
-        current,
-        name,
-        Array.from(event.target.selectedOptions, (option) => option.value)
-      );
-    } else if (event.target.type === "checkbox") {
-      set(current, name, checked);
+    if (!resolver) {
+      set(current, event.target.name, event.target.value);
     } else {
-      set(current, name, value);
+      resolver(current, event);
     }
 
     setFormData({ ...current });
@@ -72,6 +93,10 @@ export const useForm = (defaults) => {
   const resetForm = () => {
     setFormData(defaults);
   };
+
+  useEffect(() => {
+    setFormData(defaults);
+  }, [defaults]);
 
   return {
     formData,

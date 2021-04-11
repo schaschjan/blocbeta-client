@@ -1,27 +1,27 @@
-.side-title-layout {
+.side {
   display: grid;
   margin: 0;
   padding: 0;
 }
 
-.side-title-layout__title {
+.sideTitle {
   margin-bottom: 30px;
 }
 
-.side-title-layout__content {
+.sideContent {
   max-width: 560px;
 }
 
 @media (min-width: 1140px) {
-  .side-title-layout {
+  .side {
     grid-template-columns: 1fr 2fr;
   }
 
-  .side-title-layout__title {
+  .sideTitle {
     margin-bottom: 0;
   }
 
-  .side-title-layout__content {
+  .sideContent {
     margin-left: 116px;
     margin-top: 12px;
   }

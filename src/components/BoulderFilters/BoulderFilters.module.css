@@ -1,14 +1,9 @@
-.boulder-filters__list {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-}
-
-.boulder-filters__search {
+.search {
   margin-top: calc(4 * var(--spacing-unit));
   margin-bottom: calc(4 * var(--spacing-unit));
 }
 
-.filter-tag {
+.tag {
   border: 1px solid var(--color-black);
   height: 32px;
   box-sizing: border-box;
@@ -19,6 +14,10 @@
   margin-right: var(--spacing-unit);
   border-radius: 4px;
   white-space: nowrap;
+}
+
+.removeTag {
+  cursor: pointer;
 }
 
 @keyframes loading {
@@ -43,11 +42,11 @@
   margin: 0;
 }
 
-.filter__name {
+.filterName {
   margin-bottom: calc(2 * var(--spacing-unit));
 }
 
-.filter__items {
+.filterOptions {
   margin-top: 8px;
   overflow-x: hidden;
   max-height: 200px;
@@ -55,16 +54,16 @@
   list-style: none;
 }
 
-.filter-items__item {
+.filterOptionsItem {
   cursor: pointer;
   margin-bottom: var(--spacing-unit);
 }
 
-.hold-type-filter-item {
+.isHoldTypeFilterOptionsItem {
   display: flex;
   align-items: center;
 }
 
-.hold-type-filter-item > *:first-child {
+.isHoldTypeFilterOptionsItem > *:first-child {
   margin-right: var(--spacing-unit);
 }

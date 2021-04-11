@@ -30,7 +30,6 @@ import {
 import { Drawer, DrawerContext } from "../../components/Drawer/Drawer";
 import {
   ascentFilterProps,
-  Filter,
   GlobalFilter,
   gradeFilterProps,
   holdTypeFilterProps,
@@ -44,6 +43,7 @@ import { IndeterminateCheckbox } from "../../components/IndeterminateCheckbox";
 import styles from "./Index.module.css";
 import { sortItemsAlphabetically } from "../../helper/sortItemsAlphabetically";
 import { Loader } from "../../components/Loader/Loader";
+import { Select } from "../../components/Select/Select";
 
 const Index = () => {
   const { isAdmin, contextualizedPath } = useContext(BoulderDBUIContext);
@@ -65,6 +65,7 @@ const Index = () => {
   const ping = useApi("ping");
   const { boulders } = useBoulders();
 
+  // todo: add internal grade filter for admins
   const grades = useMemo(
     () =>
       filterPresentOptions(boulders, "grade").sort((a, b) =>
@@ -152,6 +153,7 @@ const Index = () => {
       },
       {
         ...boulderTableColumns.points,
+        className: styles.pointsCell,
         Cell: ({ value }) => `${value} pts`,
       },
       {
@@ -181,20 +183,19 @@ const Index = () => {
       },
       {
         ...boulderTableColumns.endWall,
+        className: styles.endWallCell,
         Cell: ({ value }) => (
           <WallLink onClick={() => setDetailWall(value)} name={value.name} />
         ),
       },
       {
         ...boulderTableColumns.setters,
-        Cell: ({ value }) => (
-          <div className={styles.setterCell}>
-            <span>{value}</span>
-          </div>
-        ),
+        className: styles.setterCell,
+        Cell: ({ value }) => <span>{value}</span>,
       },
       {
         ...boulderTableColumns.date,
+        className: styles.dateCell,
       },
       {
         ...boulderTableColumns.ascent,
@@ -247,8 +248,18 @@ const Index = () => {
     }
   }, []);
 
+  // todo: remove duplicate declaration
   const applyFilter = useCallback(
     (id, value) => {
+      // if passed value is empty, clear the filter
+      if (!value) {
+        setFilters([
+          ...filters.filter((activeFilter) => activeFilter.id !== id),
+        ]);
+
+        return;
+      }
+
       // clone array, filter out current filters on given id to suppress duplicate filtering
       const currentFilters = [...filters].filter(
         (currentFilter) => currentFilter.id !== id
@@ -286,65 +297,59 @@ const Index = () => {
       </h1>
 
       <div className={styles.filters}>
-        <Filter
+        <Select
           {...holdTypeFilterProps}
-          onSelect={(item) =>
-            applyFilter(
-              holdTypeFilterProps.id,
-              item[holdTypeFilterProps.valueProperty]
-            )
+          options={holdTypes}
+          onChange={(event, newValue) =>
+            applyFilter("holdType", newValue ? newValue.name : null)
           }
           items={holdTypes}
         />
 
-        <Filter
+        <Select
           {...gradeFilterProps}
-          onSelect={(item) =>
-            applyFilter(
-              gradeFilterProps.id,
-              item[gradeFilterProps.valueProperty]
-            )
+          options={grades}
+          onChange={(event, newValue) =>
+            applyFilter("grade", newValue ? newValue.name : null)
           }
           items={grades}
         />
 
-        <Filter
+        <Select
           {...wallFilterProps}
-          name={"Start"}
-          onSelect={(item) =>
-            applyFilter("start", item[wallFilterProps.valueProperty])
+          label={"Start"}
+          options={walls}
+          onChange={(event, newValue) =>
+            applyFilter("start", newValue ? newValue.name : null)
           }
           items={walls}
         />
 
-        <Filter
+        <Select
           {...wallFilterProps}
-          name={"End"}
-          onSelect={(item) =>
-            applyFilter("end", item[wallFilterProps.valueProperty])
+          label={"End"}
+          options={walls}
+          onChange={(event, newValue) =>
+            applyFilter("end", newValue ? newValue.name : null)
           }
           items={walls}
         />
 
-        <Filter
+        <Select
           {...setterFilterProps}
-          onSelect={(item) =>
-            applyFilter(
-              setterFilterProps.id,
-              item[setterFilterProps.valueProperty]
-            )
-          }
-          items={setters}
+          options={setters}
+          value={filters.find((filter) => filter.id === setterFilterProps.id)}
+          onChange={(event, newValue) => {
+            applyFilter("setter", newValue ? newValue.username : null);
+          }}
         />
 
-        <Filter
+        <Select
           {...ascentFilterProps}
-          onSelect={(item) =>
-            applyFilter(
-              ascentFilterProps.id,
-              item[ascentFilterProps.valueProperty]
-            )
-          }
+          value={filters.find((filter) => filter.id === ascentFilterProps.id)}
+          onChange={(event, newValue) => {
+            applyFilter("ascent", newValue ? newValue.value : null);
+          }}
         />
       </div>
 

@@ -1,6 +1,5 @@
 .button {
   cursor: pointer;
-  outline: none;
   display: inline-flex;
   position: relative;
   text-decoration: none;

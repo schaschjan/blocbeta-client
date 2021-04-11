@@ -19,6 +19,7 @@ import { FormRow } from "../../components/Form/Form";
 import { composeFormElement, useForm } from "../../hooks/useForm";
 import axios from "axios";
 import Avatar from "../../components/Avatar/Avatar";
+import { Option, StyledSelect } from "../../components/Select/Select";
 
 const UploadField = ({ value, renderValue, onSuccess }) => {
   const { dispatch } = useContext(ToastContext);
@@ -171,14 +172,14 @@ const Index = () => {
   const { contextualizedPath } = useContext(BoulderDBUIContext);
   const history = useHistory();
 
-  const { dispatch, successToast } = useContext(ToastContext);
+  const { dispatch } = useContext(ToastContext);
 
   const onSubmit = async (data) => {
     try {
       await mutate({ payload: data });
-      dispatch(successToast("Success", "Account updated!", "success"));
+      dispatch(toast("Success", "Account updated!", "success"));
     } catch (error) {
-      dispatch(errorToast(extractErrorMessage(error)));
+      dispatch(toast("Error", extractErrorMessage(error), "error"));
     }
   };
 
@@ -186,10 +187,9 @@ const Index = () => {
     if (window.confirm("Confirm account deletion")) {
       try {
         await deleteMe();
+
         dispatch(
-          successToast(
-            "Your account was scheduled for deletion and will be removed."
-          )
+          toast("Your account was scheduled for deletion and will be removed.")
         );
 
         history.push(contextualizedPath("/dashboard"));
