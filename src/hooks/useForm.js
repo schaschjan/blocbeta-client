@@ -94,10 +94,6 @@ export const useForm = (defaults) => {
     setFormData(defaults);
   };
 
-  useEffect(() => {
-    setFormData(defaults);
-  }, [defaults]);
-
   return {
     formData,
     setKeyValue,

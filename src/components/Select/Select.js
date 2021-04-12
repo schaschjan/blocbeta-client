@@ -10,6 +10,12 @@ function Select({
   required,
   ...rest
 }) {
+  let isRequired = required;
+
+  if (multiple && required) {
+    isRequired = value.length === 0;
+  }
+
   return (
     <Autocomplete
       options={options}
@@ -19,7 +25,7 @@ function Select({
       {...rest}
       renderInput={(params) => (
         <TextField
-          required={multiple ? value.length === 0 : required}
+          required={isRequired}
           {...params}
           label={label}
           inputProps={{

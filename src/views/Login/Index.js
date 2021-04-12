@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, Fragment } from "react";
-import { Input } from "../../components/Input/Input";
 import { Meta } from "../../App";
-import { FormRow } from "../../components/Form/Form";
-import { extractErrorMessage, resources, useApi } from "../../hooks/useApi";
+import { extractErrorMessage, resources } from "../../hooks/useApi";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import { useHistory } from "react-router-dom";
-import "./Index.css";
+import styles from "./Index.module.css";
+import layouts from "../../css/layouts.module.css";
+import typography from "../../css/typography.module.css";
 import {
   successToast,
   toast,
@@ -13,6 +13,8 @@ import {
 } from "../../components/Toaster/Toaster";
 import { composeFormElement, useForm } from "../../hooks/useForm";
 import { Button } from "../../components/Button/Button";
+import { Input } from "../../components/Input/Input";
+import FormRow from "../../components/FormRow/FormRow";
 
 const Index = () => {
   const { handleSubmit, formData, submitting, observeField } = useForm({
@@ -66,12 +68,14 @@ const Index = () => {
     <Fragment>
       <Meta title="Log in" />
 
-      <div className="side-title-layout">
-        <div className="side-title-layout__title">
-          <h1 className="t--alpha">Please sign in to access BoulderDB.</h1>
+      <div className={layouts.side}>
+        <div className={layouts.sideTitle}>
+          <h1 className={typography.alpha}>
+            Please sign in to access BoulderDB.
+          </h1>
         </div>
 
-        <div className="side-title-layout__content">
+        <div className={layouts.sideContent}>
           <form onSubmit={(event) => handleSubmit(event, onSubmit)}>
             <FormRow>
               {composeFormElement(
@@ -111,7 +115,7 @@ const Index = () => {
             </Button>
           </form>
 
-          <div className="login-extra">
+          <div className={styles.extra}>
             <Button variant="primary" size="small" asLink={true} to="/register">
               Create Account
             </Button>
