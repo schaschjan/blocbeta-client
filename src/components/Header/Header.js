@@ -113,7 +113,9 @@ const Header = () => {
       >
         <NavItem to={contextualizedPath("/boulder")}>Boulder</NavItem>
 
-        <NavItem to={contextualizedPath("/ranking/current")}>Ranking</NavItem>
+        {user && user.visible && (
+          <NavItem to={contextualizedPath("/ranking/current")}>Ranking</NavItem>
+        )}
 
         <NavItem to={contextualizedPath("/account")}>
           [{user && user.username}]

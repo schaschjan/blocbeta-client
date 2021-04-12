@@ -2,20 +2,28 @@ import React, { Fragment } from "react";
 import { Meta } from "../../App";
 import { BoulderForm } from "../../components/BoulderForm/BoulderForm";
 import { useParams } from "react-router-dom";
-import { useApi, useRequest } from "../../hooks/useRequest";
+import { useApi, useRequest, useUri } from "../../hooks/useRequest";
 import { Loader } from "../../components/Loader/Loader";
 import layouts from "../../css/layouts.module.css";
 import typography from "../../css/typography.module.css";
 import { joinClassNames } from "../../helper/classNames";
+import { mutate } from "swr";
 
 const Edit = () => {
   const { boulderId } = useParams();
-  const { data, mutate } = useRequest(`/boulder/${boulderId}`);
+
+  const bouldersKey = useUri("/boulder");
+  const ascentsKey = useUri("/ascent");
+
+  const { data, mutate: mutateBoulder } = useRequest(`/boulder/${boulderId}`);
   const update = useApi(`/boulder/${boulderId}`, true, { method: "put" });
 
   const onSubmit = async ({ payload }) => {
     await update(payload);
-    mutate();
+
+    await mutateBoulder();
+    await mutate(bouldersKey);
+    await mutate(ascentsKey);
   };
 
   if (!data) {

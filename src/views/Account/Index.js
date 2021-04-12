@@ -3,12 +3,11 @@ import { useHistory } from "react-router-dom";
 import Label from "../../components/Label/Label";
 import { Input } from "../../components/Input/Input";
 import { extractErrorMessage, useApi } from "../../hooks/useApi";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import Switch from "../../components/Switch/Switch";
 import { Meta } from "../../App";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
-import "./Index.css";
-import { LoadedContent, Loader } from "../../components/Loader/Loader";
+import { Loader } from "../../components/Loader/Loader";
 import {
   errorToast,
   toast,
@@ -17,13 +16,18 @@ import {
 import { Button } from "../../components/Button/Button";
 import { FormRow } from "../../components/Form/Form";
 import { composeFormElement, useForm } from "../../hooks/useForm";
-import axios from "axios";
 import Avatar from "../../components/Avatar/Avatar";
-import { Option, StyledSelect } from "../../components/Select/Select";
+import { useHttp, useRequest } from "../../hooks/useRequest";
+import layouts from "../../css/layouts.module.css";
+import typography from "../../css/typography.module.css";
+import styles from "./Index.module.css";
+import { joinClassNames } from "../../helper/classNames";
 
 const UploadField = ({ value, renderValue, onSuccess }) => {
   const { dispatch } = useContext(ToastContext);
   const [loading, setLoading] = useState(false);
+
+  const http = useHttp();
 
   const handleUpload = async (file) => {
     setLoading(true);
@@ -32,7 +36,7 @@ const UploadField = ({ value, renderValue, onSuccess }) => {
     formData.append("file", file);
 
     try {
-      const { data } = await axios.post("/api/upload", formData, {
+      const { data } = await http.post("/api/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -47,10 +51,10 @@ const UploadField = ({ value, renderValue, onSuccess }) => {
   };
 
   return (
-    <div className={"upload-field"}>
+    <div className={styles.uploadField}>
       {loading ? <Loader /> : renderValue(value)}
 
-      <div className={"file-input"}>
+      <div>
         <label
           htmlFor={"image"}
           className="button button--primary button--small file-input__button"
@@ -166,7 +170,8 @@ const Form = ({ defaults, onSubmit }) => {
 };
 
 const Index = () => {
-  const { status, data } = useQuery("me", useApi("me"));
+  const { data } = useRequest("/me", false);
+
   const deleteMe = useApi("deleteMe");
   const [mutate] = useMutation(useApi("updateMe"), { throwOnError: true });
   const { contextualizedPath } = useContext(BoulderDBUIContext);
@@ -174,6 +179,7 @@ const Index = () => {
 
   const { dispatch } = useContext(ToastContext);
 
+  // todo: reload user object after submit to reflect changes immediately
   const onSubmit = async (data) => {
     try {
       await mutate({ payload: data });
@@ -199,23 +205,29 @@ const Index = () => {
     }
   };
 
+  if (!data) {
+    return <Loader />;
+  }
+
   return (
     <Fragment>
       <Meta title="Account" />
 
-      <h1 className="t--alpha page-title">Account</h1>
+      <div className={layouts.side}>
+        <h1 className={joinClassNames(layouts.sideTitle, typography.alpha)}>
+          Account
+        </h1>
 
-      <LoadedContent loading={status !== "success"}>
-        <div className="account-layout">
+        <div className={layouts.sideContent}>
           <Form defaults={data} onSubmit={onSubmit} />
 
-          <div className="account-layout__actions">
+          <div className={styles.actions}>
             <Button variant="danger" onClick={() => scheduleAccountDeletion()}>
               Delete Account
             </Button>
           </div>
         </div>
-      </LoadedContent>
+      </div>
     </Fragment>
   );
 };

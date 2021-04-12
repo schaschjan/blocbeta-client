@@ -4,16 +4,20 @@ import { BoulderForm } from "../../components/BoulderForm/BoulderForm";
 import layouts from "../../css/layouts.module.css";
 import typography from "../../css/typography.module.css";
 import { joinClassNames } from "../../helper/classNames";
-import { mutate } from "swr";
+import useSWR, { mutate } from "swr";
 import { useApi, useUri } from "../../hooks/useRequest";
 
 const Add = () => {
+  const bouldersKey = useUri("/boulder");
+  const ascentsKey = useUri("/ascent");
+
   const create = useApi(`/boulder`, true, { method: "post" });
-  const boulderApiUrl = useUri(`/boulder`);
 
   const onSubmit = async ({ payload }) => {
     await create(payload);
-    mutate(boulderApiUrl);
+
+    mutate(ascentsKey);
+    mutate(bouldersKey);
   };
 
   return (

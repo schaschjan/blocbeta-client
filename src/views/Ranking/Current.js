@@ -1,9 +1,7 @@
 import React, { Fragment, useContext, useMemo } from "react";
-import Emoji from "../../components/Emoji/Emoji";
 import Progress from "../../components/Progress/Progress";
 import { Meta } from "../../App";
 import moment from "moment";
-import Avatar from "../../components/Avatar/Avatar";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import Male from "../../components/Icon/Male";
 import Female from "../../components/Icon/Female";

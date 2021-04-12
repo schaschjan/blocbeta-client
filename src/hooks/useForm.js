@@ -96,6 +96,7 @@ export const useForm = (defaults) => {
 
   return {
     formData,
+    setFormData,
     setKeyValue,
     handleSubmit,
     submitting,

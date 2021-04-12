@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { FormRow } from "../Form/Form";
 import TextField from "@material-ui/core/TextField";
 import { Button } from "../Button/Button";
@@ -9,6 +9,7 @@ import { sortItemsAlphabetically } from "../../helper/sortItemsAlphabetically";
 import Grade from "../Grade/Grade";
 import HoldType from "../HoldStyle/HoldType";
 import { Select } from "../Select/Select";
+import styles from "./BoulderForm.module.css";
 
 BoulderForm.defaultProps = {
   data: {
@@ -29,13 +30,14 @@ function extractId(property) {
   return typeof property === "object" ? property.id : property;
 }
 
-function BoulderForm({ data, id, onSubmit, successMessage }) {
+function BoulderForm({ data, onSubmit, successMessage }) {
   const {
     handleSubmit,
     setKeyValue,
     submitting,
     formData,
     resetForm,
+    setFormData,
   } = useForm(data);
 
   const { dispatch } = useContext(ToastContext);
@@ -65,6 +67,10 @@ function BoulderForm({ data, id, onSubmit, successMessage }) {
       dispatch(errorToast(error));
     }
   };
+
+  useEffect(() => {
+    setFormData(data);
+  }, [data]);
 
   return (
     <form onSubmit={(event) => handleSubmit(event, submitForm)}>
@@ -177,7 +183,7 @@ function TagSelect({ value, ...rest }) {
       value={value}
       multiple={true}
       options={data ? sortItemsAlphabetically(data, "name") : []}
-      renderOption={(option) => option.name}
+      renderOption={(option) => `${option.emoji} ${option.name}`}
       getOptionLabel={(option) => option.name}
     />
   );
@@ -255,7 +261,7 @@ function HoldTypeSelect({ value, ...rest }) {
       renderOption={(option) => (
         <>
           <HoldType image={option.image} small={true} />
-          <span>{option.name}</span>
+          <span className={styles.holdTypeName}>{option.name}</span>
         </>
       )}
       getOptionLabel={(option) => option.name}

@@ -43,14 +43,23 @@ const useApi = (uri, locationResource = true, requestConfig) => {
     });
 };
 
-const useRequest = (uri, locationResource = true, requestConfig) => {
+const useRequest = (
+  uri,
+  locationResource = true,
+  requestConfig = { method: "get" }
+) => {
   const url = useUri(uri, locationResource);
 
   return useSWR(url, async (url) => {
-    const { data } = await axiosInstance.get(url, requestConfig);
+    const { data } = await axiosInstance({
+      ...requestConfig,
+      url,
+    });
 
     return data;
   });
 };
 
-export { useRequest, useApi, useUri };
+const useHttp = () => axiosInstance;
+
+export { useRequest, useApi, useUri, useHttp };

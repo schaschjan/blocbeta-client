@@ -2,9 +2,6 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { sortItemsAlphabetically } from "../helper/sortItemsAlphabetically";
 
-export const getLocationFromGlobals = () =>
-  window.location.pathname.split("/")[1];
-
 export const extractErrorMessage = (error) => {
   if (!error.response) {
     return null;
@@ -20,9 +17,6 @@ export const extractErrorMessage = (error) => {
 
   return data.message;
 };
-
-export const allIdle = (...resources) =>
-  [...resources].every((resource) => resource.isSuccess === true);
 
 export const queryDefaults = {
   refetchOnWindowFocus: false,

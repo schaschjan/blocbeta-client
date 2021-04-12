@@ -1,8 +1,7 @@
-import React, { Fragment, useContext, useMemo } from "react";
+import React, { Fragment, useMemo } from "react";
 import Progress from "../../components/Progress/Progress";
 import { Meta } from "../../App";
 import moment from "moment";
-import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import Male from "../../components/Icon/Male";
 import Female from "../../components/Icon/Female";
 import calculatePercentage from "../../helper/calculatePercentage";
@@ -15,8 +14,6 @@ import { Loader } from "../../components/Loader/Loader";
 import styles from "./AllTime.module.css";
 
 const AllTime = () => {
-  const { user, contextualizedPath } = useContext(BoulderDBUIContext);
-
   const { data: ranking } = useRequest(`/ranking/all-time`);
   const { data: boulderCount } = useRequest(`/boulder/count`);
 
