@@ -9,12 +9,20 @@ import { toast, ToastContext } from "../../components/Toaster/Toaster";
 import { Select } from "../../components/Select/Select";
 import { Button } from "../../components/Button/Button";
 import { composeFormElement, useForm } from "../../hooks/useForm";
+import layouts from "../../css/layouts.module.css";
+import typography from "../../css/typography.module.css";
 
 const Index = () => {
   const history = useHistory();
-  const { dispatch, successToast } = useContext(ToastContext);
+  const { dispatch } = useContext(ToastContext);
 
-  const { handleSubmit, observeField, submitting, formData } = useForm({
+  const {
+    handleSubmit,
+    observeField,
+    submitting,
+    setKeyValue,
+    formData,
+  } = useForm({
     username: null,
     email: null,
     firstName: null,
@@ -25,8 +33,13 @@ const Index = () => {
 
   const onSubmit = async (payload) => {
     try {
-      await axios.post(`/api/register`, payload);
-      dispatch(successToast("Your account was created! You can now log in."));
+      await axios.post(`/api/register`, {
+        ...payload,
+        gender: payload.gender.value,
+      });
+      dispatch(
+        toast("Your account was created! You can now log in.", null, "success")
+      );
       history.push("/login");
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "danger"));
@@ -37,12 +50,14 @@ const Index = () => {
     <Fragment>
       <Meta title="Account" />
 
-      <div className="side-title-layout">
-        <h1 className="t--alpha side-title-layout__title">
-          Please provide some information for your account.
-        </h1>
+      <div className={layouts.side}>
+        <div className={layouts.sideTitle}>
+          <h1 className={typography.alpha}>
+            Please provide some information for your account.
+          </h1>
+        </div>
 
-        <div className="side-title-layout__content">
+        <div className={layouts.sideContent}>
           <form onSubmit={(event) => handleSubmit(event, onSubmit)}>
             <FormRow>
               {composeFormElement(
@@ -113,16 +128,20 @@ const Index = () => {
                 "Gender",
                 formData.gender,
                 Select,
-                observeField,
+                (event, newValue) => setKeyValue("gender", newValue),
                 {
-                  children: (
-                    <Fragment>
-                      <option value="">–</option>
-                      <option value="neutral">Neutral</option>
-                      <option value="female">Female</option>
-                      <option value="male">Male</option>
-                    </Fragment>
-                  ),
+                  renderOption: (option) => option.label,
+                  getOptionLabel: (option) => option.label,
+                  options: [
+                    {
+                      label: "Female",
+                      value: "female",
+                    },
+                    {
+                      label: "Male",
+                      value: "male",
+                    },
+                  ],
                   required: true,
                 }
               )}
