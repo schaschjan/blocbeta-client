@@ -1,29 +1,27 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 import { Meta } from "../../App";
 import { BoulderForm } from "../../components/BoulderForm/BoulderForm";
 import { useParams } from "react-router-dom";
-import { useApi, useRequest, useUri } from "../../hooks/useRequest";
+import { useHttp, useRequest } from "../../hooks/useRequest";
 import { Loader } from "../../components/Loader/Loader";
 import layouts from "../../css/layouts.module.css";
 import typography from "../../css/typography.module.css";
 import { joinClassNames } from "../../helper/classNames";
 import { mutate } from "swr";
+import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 
 const Edit = () => {
   const { boulderId } = useParams();
 
-  const bouldersKey = useUri("/boulder");
-  const ascentsKey = useUri("/ascent");
+  const { contextualizedApiPath } = useContext(BoulderDBUIContext);
+  const http = useHttp();
 
-  const { data, mutate: mutateBoulder } = useRequest(`/boulder/${boulderId}`);
-  const update = useApi(`/boulder/${boulderId}`, true, { method: "put" });
+  const { data } = useRequest(`/boulder/${boulderId}`);
 
   const onSubmit = async ({ payload }) => {
-    await update(payload);
-
-    await mutateBoulder();
-    await mutate(bouldersKey);
-    await mutate(ascentsKey);
+    await http.post(`/boulder/${boulderId}`, payload);
+    await mutate(contextualizedApiPath("/boulder"));
+    await mutate(contextualizedApiPath("/ascent"));
   };
 
   if (!data) {

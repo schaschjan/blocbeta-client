@@ -2,8 +2,7 @@ import React, { Fragment, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import Label from "../../components/Label/Label";
 import { Input } from "../../components/Input/Input";
-import { extractErrorMessage, useApi } from "../../hooks/useApi";
-import { useMutation } from "react-query";
+import { extractErrorMessage } from "../../hooks/useApi";
 import Switch from "../../components/Switch/Switch";
 import { Meta } from "../../App";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
@@ -17,11 +16,12 @@ import { Button } from "../../components/Button/Button";
 import { FormRow } from "../../components/Form/Form";
 import { composeFormElement, useForm } from "../../hooks/useForm";
 import Avatar from "../../components/Avatar/Avatar";
-import { useHttp, useRequest } from "../../hooks/useRequest";
+import { getApiHost, useHttp, useRequest } from "../../hooks/useRequest";
 import layouts from "../../css/layouts.module.css";
 import typography from "../../css/typography.module.css";
 import styles from "./Index.module.css";
 import { joinClassNames } from "../../helper/classNames";
+import { mutate } from "swr";
 
 const UploadField = ({ value, renderValue, onSuccess }) => {
   const { dispatch } = useContext(ToastContext);
@@ -36,7 +36,8 @@ const UploadField = ({ value, renderValue, onSuccess }) => {
     formData.append("file", file);
 
     try {
-      const { data } = await http.post("/api/upload", formData, {
+      const { data } = await http.post("/upload", formData, {
+        baseURL: getApiHost(), // override preconfigured host prefix
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -171,9 +172,8 @@ const Form = ({ defaults, onSubmit }) => {
 
 const Index = () => {
   const { data } = useRequest("/me", false);
+  const http = useHttp();
 
-  const deleteMe = useApi("deleteMe");
-  const [mutate] = useMutation(useApi("updateMe"), { throwOnError: true });
   const { contextualizedPath } = useContext(BoulderDBUIContext);
   const history = useHistory();
 
@@ -182,7 +182,11 @@ const Index = () => {
   // todo: reload user object after submit to reflect changes immediately
   const onSubmit = async (data) => {
     try {
-      await mutate({ payload: data });
+      await http.put("/me", data, {
+        baseURL: getApiHost(), // override preconfigured host prefix
+      });
+
+      await mutate("/api/me");
       dispatch(toast("Success", "Account updated!", "success"));
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "error"));
@@ -192,7 +196,9 @@ const Index = () => {
   const scheduleAccountDeletion = async () => {
     if (window.confirm("Confirm account deletion")) {
       try {
-        await deleteMe();
+        await http.delete("/me", {
+          baseURL: getApiHost(), // override preconfigured host prefix
+        });
 
         dispatch(
           toast("Your account was scheduled for deletion and will be removed.")

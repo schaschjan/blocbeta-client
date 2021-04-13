@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import axios from "axios";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { BoulderDBUIContext } from "../components/BoulderDBUI";
 
 let options = {
@@ -14,59 +14,62 @@ if (process.env.NODE_ENV !== "production" && typeof window !== "undefined") {
 
 const axiosInstance = axios.create(options);
 
-function useUri(uri, locationResource = true) {
-  const { currentLocation } = useContext(BoulderDBUIContext);
-
-  let url = "/api";
-
-  if (locationResource) {
-    if (!currentLocation) {
-      throw new Error("Unable to resolve current location");
-    }
-
-    url += `/${currentLocation.url}`;
-  }
-
-  url += uri;
-
-  return url;
-}
-
-const useApi = (uri, locationResource = true, requestConfig) => {
-  const url = useUri(uri, locationResource);
-
-  return async (data) =>
-    axiosInstance({
-      ...requestConfig,
-      url,
-      data,
-    });
-};
-
 const useRequest = (
   uri,
   locationResource = true,
   requestConfig = { method: "get" }
 ) => {
-  const { reset } = useContext(BoulderDBUIContext);
-  const url = useUri(uri, locationResource);
+  const { reset, contextualizedApiPath } = useContext(BoulderDBUIContext);
 
-  return useSWR(url, async (url) => {
-    try {
-      const { data } = await axiosInstance({
-        ...requestConfig,
-        url,
-      });
+  return useSWR(
+    locationResource ? contextualizedApiPath(uri) : `/api${uri}`,
+    async (url) => {
+      try {
+        const { data } = await axiosInstance({
+          ...requestConfig,
+          url,
+        });
 
-      return data;
-    } catch (error) {
-      if (error.response.status === 401) {
-        reset();
+        return data;
+      } catch (error) {
+        if (error.response.status === 401) {
+          reset();
+        }
       }
     }
-  });
+  );
 };
 
-const useHttp = () => axiosInstance;
+const getApiHost = () => {
+  const { REACT_APP_API_HOST: host } = process.env;
 
-export { useRequest, useApi, useUri, useHttp };
+  return `${host ? host : ""}/api`;
+};
+
+const useHttp = () => {
+  const { currentLocation } = useContext(BoulderDBUIContext);
+
+  if (!currentLocation || !currentLocation.url) {
+    throw new Error("Unable to resolve current location");
+  }
+
+  return useMemo(() => {
+    let options = {
+      baseURL: `${getApiHost()}/${currentLocation.url}`,
+      headers: {},
+    };
+
+    if (
+      process.env.NODE_ENV !== "production" &&
+      typeof window !== "undefined"
+    ) {
+      options.headers["Authorization"] = `Bearer ${localStorage.getItem(
+        "token"
+      )}`;
+    }
+
+    return axios.create(options);
+  }, [currentLocation]);
+};
+
+export { useRequest, useHttp, getApiHost };

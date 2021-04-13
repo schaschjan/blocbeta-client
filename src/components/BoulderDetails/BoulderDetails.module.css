@@ -1,74 +1,79 @@
-.details {
+.root {
   height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-.details .loader {
+.root .loader {
   top: calc(50% - 30px);
   align-self: center;
 }
 
-.details__header {
+.header {
   padding: calc(2 * var(--spacing-unit));
   border-bottom: 1px solid var(--color-black);
-  display: flex;
+  display: grid;
+  grid-template-columns: 20px auto 24px;
   align-items: center;
 }
 
-.details-header__name {
+.headerTitle {
   margin-left: var(--spacing-unit);
+  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-.details-header__close {
+.close {
   margin-left: auto;
 }
 
-.details-header__close,
-.details-header__back {
+.close,
+.back {
   cursor: pointer;
 }
 
-.details-setters__item,
-.details-tags__item,
-.details-ascents__item {
+.listItem {
   padding: calc(2 * var(--spacing-unit));
   align-items: center;
   display: flex;
+  justify-content: space-between;
 }
 
 .details-ascents__item {
   justify-content: space-between;
 }
 
-.details-ascents-item__ascent {
+.ascent {
   display: flex;
   align-items: center;
 }
 
-.details-ascents-item__ascent svg {
+.ascent svg {
   margin-right: var(--spacing-unit);
 }
 
-.details__section-title {
+.hasPendingDoubtAscent {
+  opacity: 0.25;
+}
+
+.title {
   margin-top: calc(4 * var(--spacing-unit));
   margin-left: calc(2 * var(--spacing-unit));
   margin-bottom: calc(2 * var(--spacing-unit));
 }
 
-.details__section-content {
+.content {
   margin: calc(2 * var(--spacing-unit));
 }
 
-.details__ascents,
-.details__tags,
-.details__setters {
+.list {
   list-style: none;
   border-bottom: 1px solid var(--color-grey);
   padding-bottom: calc(2 * var(--spacing-unit));
 }
 
-.details__report-error {
+.reportErrorButton {
   align-items: center;
   justify-content: center;
   display: flex;
@@ -76,22 +81,15 @@
   margin-top: auto;
 }
 
-.error-form,
-.doubt-form {
+.form {
   display: flex;
   flex-direction: column;
 }
 
-.doubt-form__message-input,
-.error-form__message-input {
+.formTextArea {
   margin-bottom: calc(1 * var(--spacing-unit));
 }
 
-.doubt-form__send-button,
-.error-form__send-button {
+.formButton {
   margin-left: auto;
-}
-
-.details-ascents-item__ascent--pending-doubt {
-  opacity: 0.25;
 }

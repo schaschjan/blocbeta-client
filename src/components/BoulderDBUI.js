@@ -1,4 +1,4 @@
-import React, { useMemo, createContext, useEffect } from "react";
+import React, { useMemo, createContext, useEffect, useCallback } from "react";
 import packageJson from "../../package.json";
 import usePersistentState from "../hooks/usePersistentState";
 
@@ -16,6 +16,8 @@ export const BoulderDBUI = ({ children }) => {
     "version",
     packageJson.version
   );
+
+  const contextualizedApiPath = (path) => "/api" + contextualizedPath(path);
 
   const contextualizedPath = (path) => {
     if (!currentLocation) {
@@ -94,6 +96,7 @@ export const BoulderDBUI = ({ children }) => {
         expiration,
         setExpiration,
         contextualizedPath,
+        contextualizedApiPath,
         isAdmin,
         isAuthenticated,
         reset,

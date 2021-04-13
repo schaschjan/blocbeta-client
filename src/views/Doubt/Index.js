@@ -1,78 +1,69 @@
 import React, { Fragment, useContext } from "react";
-import { queryCache, useMutation, useQuery } from "react-query";
 import "./Index.css";
-import { useApi } from "../../hooks/useApi";
 import Emoji from "../../components/Emoji/Emoji";
-import { LoadedContent } from "../../components/Loader/Loader";
+import { Loader } from "../../components/Loader/Loader";
 import { Button } from "../../components/Button/Button";
 import { errorToast, ToastContext } from "../../components/Toaster/Toaster";
-import { getIcon } from "../../components/Ascent/Ascent";
+import { Ascent, AscentIcon, getIcon } from "../../components/Ascent/Ascent";
+import { useHttp, useRequest } from "../../hooks/useRequest";
+import { BoulderDBUIContext } from "../../components/BoulderDBUI";
+import { mutate } from "swr";
 
 const Index = () => {
+  const { contextualizedApiPath } = useContext(BoulderDBUIContext);
   const { dispatch } = useContext(ToastContext);
+  const { data } = useRequest("/doubt");
+  const http = useHttp();
 
-  const { status: doubtsStatus, data: doubts } = useQuery(
-    "doubts",
-    useApi("doubts")
-  );
-
-  const [mutateUpdate] = useMutation(useApi("updateDoubt"), {
-    throwOnError: true,
-    onSuccess: () => {
-      queryCache.invalidateQueries("doubts");
-    },
-  });
+  if (!data) {
+    return <Loader />;
+  }
 
   return (
     <Fragment>
       <h1 className="t--alpha page-title">Doubts</h1>
 
-      <LoadedContent loading={doubtsStatus === "loading"}>
-        {doubts && doubts.length > 0 ? (
-          <ul className={"doubt-list"}>
-            {doubts.map((doubt) => {
-              const AscentIcon = getIcon(doubt.ascent.type);
+      {data.length > 0 ? (
+        <ul className={"doubt-list"}>
+          {data.map((doubt) => {
+            return (
+              <li className={"doubt-list__item"}>
+                <div>
+                  <p>
+                    <strong>{doubt.author.username}</strong> doubts your
+                    <AscentIcon fill={true} type={doubt.ascent.type} /> of{" "}
+                    {doubt.boulder.name}
+                  </p>
 
-              return (
-                <li className={"doubt-list__item"}>
-                  <div>
-                    <span>
-                      <strong>{doubt.author.username}</strong> doubts your{" "}
-                      <AscentIcon />({doubt.ascent.type}) of{" "}
-                      {doubt.boulder.name}
-                    </span>
+                  <p>{doubt.author.message}</p>
+                </div>
 
-                    <span>
-                      <strong> Message:</strong> {doubt.author.message}
-                    </span>
-                  </div>
+                <Button
+                  variant="primary"
+                  size="small"
+                  onClick={async () => {
+                    try {
+                      await http.put(`/doubt/${doubt.id}`, {
+                        status: 2,
+                      });
 
-                  <Button
-                    variant="primary"
-                    size="small"
-                    onClick={async () => {
-                      try {
-                        await mutateUpdate({
-                          id: doubt.id,
-                          payload: { status: 2 },
-                        });
-                      } catch (error) {
-                        dispatch(errorToast(error));
-                      }
-                    }}
-                  >
-                    Resolve
-                  </Button>
-                </li>
-              );
-            })}
-          </ul>
-        ) : (
-          <h2 className="t--gamma">
-            <Emoji>🤷</Emoji>
-          </h2>
-        )}
-      </LoadedContent>
+                      await mutate(contextualizedApiPath("/doubt"));
+                    } catch (error) {
+                      dispatch(errorToast(error));
+                    }
+                  }}
+                >
+                  Resolve
+                </Button>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <h2 className="t--gamma">
+          <Emoji>🤷</Emoji>
+        </h2>
+      )}
     </Fragment>
   );
 };

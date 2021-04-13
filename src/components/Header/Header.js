@@ -4,8 +4,6 @@ import { useHistory } from "react-router-dom";
 import { BoulderDBUIContext } from "../BoulderDBUI";
 import { useLocation } from "react-router-dom";
 import { Close } from "../Icon/Close";
-import { cache, queryDefaults, useApi } from "../../hooks/useApi";
-import { useQuery } from "react-query";
 import { classNames } from "../../helper/classNames";
 import Burger from "../Icon/Burger";
 import { NavItem } from "../NavItem/NavItem";
@@ -39,11 +37,7 @@ const Header = () => {
   const history = useHistory();
   const location = useLocation();
 
-  const { data: locations } = useQuery(
-    cache.locations,
-    useApi("locations"),
-    queryDefaults
-  );
+  const { data: locations } = useRequest("/location", false);
 
   const switchLocation = useCallback(
     (locationId) => {

@@ -1,23 +1,22 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 import { Meta } from "../../App";
 import { BoulderForm } from "../../components/BoulderForm/BoulderForm";
 import layouts from "../../css/layouts.module.css";
 import typography from "../../css/typography.module.css";
 import { joinClassNames } from "../../helper/classNames";
-import useSWR, { mutate } from "swr";
-import { useApi, useUri } from "../../hooks/useRequest";
+import { mutate } from "swr";
+import { useHttp } from "../../hooks/useRequest";
+import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 
 const Add = () => {
-  const bouldersKey = useUri("/boulder");
-  const ascentsKey = useUri("/ascent");
-
-  const create = useApi(`/boulder`, true, { method: "post" });
+  const { contextualizedApiPath } = useContext(BoulderDBUIContext);
+  const http = useHttp();
 
   const onSubmit = async ({ payload }) => {
-    await create(payload);
+    await http.post("/boulder", payload);
 
-    mutate(ascentsKey);
-    mutate(bouldersKey);
+    await mutate(contextualizedApiPath("/boulder"));
+    await mutate(contextualizedApiPath("/ascent"));
   };
 
   return (

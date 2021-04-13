@@ -7,8 +7,7 @@ import React, {
   useCallback,
 } from "react";
 import { Meta } from "../../App";
-import { queryCache, useMutation } from "react-query";
-import { cache, useApi, extractErrorMessage } from "../../hooks/useApi";
+import { extractErrorMessage } from "../../hooks/useApi";
 import HoldType from "../../components/HoldStyle/HoldType";
 import Grade from "../../components/Grade/Grade";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
@@ -45,10 +44,12 @@ import { sortItemsAlphabetically } from "../../helper/sortItemsAlphabetically";
 import { Loader } from "../../components/Loader/Loader";
 import { Select } from "../../components/Select/Select";
 import { mutate } from "swr";
-import { useUri } from "../../hooks/useRequest";
+import { useHttp } from "../../hooks/useRequest";
 
 const Index = () => {
-  const { isAdmin, contextualizedPath } = useContext(BoulderDBUIContext);
+  const { isAdmin, contextualizedPath, contextualizedApiPath } = useContext(
+    BoulderDBUIContext
+  );
   const { dispatch } = useContext(ToastContext);
   const { toggle: toggleDrawer } = useContext(DrawerContext);
 
@@ -64,10 +65,8 @@ const Index = () => {
     },
   ]);
 
-  const ping = useApi("ping");
   const { boulders } = useBoulders();
-
-  const ascentKey = useUri("/ascent");
+  const http = useHttp();
 
   // todo: add internal grade filter for admins
   const grades = useMemo(
@@ -106,35 +105,8 @@ const Index = () => {
   );
 
   useEffect(() => {
-    ping();
+    http.get("/ping");
   }, []);
-
-  const [mutateAscentCreation] = useMutation(useApi("addAscent"), {
-    throwOnError: true,
-    onSuccess: (data) => {
-      queryCache.invalidateQueries(cache.ascents);
-      dispatch(toast(`${data.me.type}`, `+${data.points}`));
-
-      mutate(ascentKey);
-    },
-  });
-
-  const [mutateAscentDeletion] = useMutation(useApi("removeAscent"), {
-    throwOnError: true,
-    onSuccess: () => {
-      queryCache.invalidateQueries(cache.ascents);
-
-      mutate(ascentKey);
-    },
-  });
-
-  const [mutateMass] = useMutation(useApi("boulderMass"), {
-    throwOnError: true,
-    onSuccess: () => {
-      queryCache.invalidateQueries(cache.boulder);
-      queryCache.invalidateQueries(cache.ascents);
-    },
-  });
 
   const columns = useMemo(() => {
     const defaultColumns = [
@@ -242,7 +214,10 @@ const Index = () => {
     };
 
     try {
-      await mutateAscentCreation({ payload });
+      const { data } = await http.post("/ascent", payload);
+      await mutate(contextualizedApiPath("/ascent"));
+
+      dispatch(toast(`${data.me.type}`, `+${data.points}`));
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "danger"));
     }
@@ -250,7 +225,8 @@ const Index = () => {
 
   const removeHandler = useCallback(async (id) => {
     try {
-      await mutateAscentDeletion({ id });
+      await http.delete(`/ascent/${id}`);
+      await mutate(contextualizedApiPath("/ascent"));
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "danger"));
     }
@@ -394,12 +370,13 @@ const Index = () => {
             variant={"danger"}
             onClick={async () => {
               try {
-                await mutateMass({
-                  payload: {
-                    items: selected,
-                    operation: "prune-ascents",
-                  },
+                await http.put("/boulder/mass", {
+                  items: selected,
+                  operation: "prune-ascents",
                 });
+
+                await mutate(contextualizedApiPath("/ascent"));
+                await mutate(contextualizedApiPath("/boulder"));
               } catch (error) {
                 dispatch(errorToast(error));
               }
@@ -413,12 +390,13 @@ const Index = () => {
             variant={"danger"}
             onClick={async () => {
               try {
-                await mutateMass({
-                  payload: {
-                    items: selected,
-                    operation: "deactivate",
-                  },
+                await http.put("/boulder/mass", {
+                  items: selected,
+                  operation: "deactivate",
                 });
+
+                await mutate(contextualizedApiPath("/ascent"));
+                await mutate(contextualizedApiPath("/boulder"));
               } catch (error) {
                 dispatch(errorToast(error));
               }
