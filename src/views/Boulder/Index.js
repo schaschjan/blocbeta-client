@@ -44,6 +44,8 @@ import styles from "./Index.module.css";
 import { sortItemsAlphabetically } from "../../helper/sortItemsAlphabetically";
 import { Loader } from "../../components/Loader/Loader";
 import { Select } from "../../components/Select/Select";
+import { mutate } from "swr";
+import { useUri } from "../../hooks/useRequest";
 
 const Index = () => {
   const { isAdmin, contextualizedPath } = useContext(BoulderDBUIContext);
@@ -64,6 +66,8 @@ const Index = () => {
 
   const ping = useApi("ping");
   const { boulders } = useBoulders();
+
+  const ascentKey = useUri("/ascent");
 
   // todo: add internal grade filter for admins
   const grades = useMemo(
@@ -110,6 +114,8 @@ const Index = () => {
     onSuccess: (data) => {
       queryCache.invalidateQueries(cache.ascents);
       dispatch(toast(`${data.me.type}`, `+${data.points}`));
+
+      mutate(ascentKey);
     },
   });
 
@@ -117,6 +123,8 @@ const Index = () => {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries(cache.ascents);
+
+      mutate(ascentKey);
     },
   });
 
@@ -284,7 +292,7 @@ const Index = () => {
       <Meta title={"Boulder"} />
 
       <h1 className="t--alpha page-title">
-        Boulder
+        Boulder ({boulders.length})
         {isAdmin && (
           <Button
             size={"small"}
@@ -338,7 +346,7 @@ const Index = () => {
         <Select
           {...setterFilterProps}
           options={setters}
-          value={filters.find((filter) => filter.id === setterFilterProps.id)}
+          value={filters.find((filter) => filter.id === "setter")}
           onChange={(event, newValue) => {
             applyFilter("setter", newValue ? newValue.username : null);
           }}
@@ -346,7 +354,7 @@ const Index = () => {
 
         <Select
           {...ascentFilterProps}
-          value={filters.find((filter) => filter.id === ascentFilterProps.id)}
+          value={filters.find((filter) => filter.id === "ascent")}
           onChange={(event, newValue) => {
             applyFilter("ascent", newValue ? newValue.value : null);
           }}
