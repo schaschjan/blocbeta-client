@@ -20,6 +20,8 @@ const Edit = () => {
 
   const onSubmit = async ({ payload }) => {
     await http.put(`/boulder/${boulderId}`, payload);
+
+    await mutate(contextualizedApiPath(`/boulder/${boulderId}`));
     await mutate(contextualizedApiPath("/boulder"));
     await mutate(contextualizedApiPath("/ascent"));
   };
