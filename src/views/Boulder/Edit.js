@@ -41,6 +41,7 @@ const Edit = () => {
 
         <div className={joinClassNames(layouts.sideContent)}>
           <BoulderForm
+            resetOnSubmit={false}
             successMessage={"Boulder updated"}
             onSubmit={onSubmit}
             id={boulderId}

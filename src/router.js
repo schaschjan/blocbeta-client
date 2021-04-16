@@ -204,11 +204,6 @@ export const router = [
     visibleUserOnly: true,
   },
   {
-    title: "Access Denied",
-    path: "/access-denied",
-    main: () => <AccessDenied />,
-  },
-  {
     title: "Not Found",
     path: "*",
     main: () => <NotFound />,

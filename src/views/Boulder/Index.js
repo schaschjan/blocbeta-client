@@ -45,6 +45,8 @@ import { Loader } from "../../components/Loader/Loader";
 import { Select } from "../../components/Select/Select";
 import { mutate } from "swr";
 import { useHttp } from "../../hooks/useRequest";
+import { CollapsedRow } from "./CollapsedRow";
+import { joinClassNames } from "../../helper/classNames";
 
 const Index = () => {
   const { isAdmin, contextualizedPath, contextualizedApiPath } = useContext(
@@ -112,10 +114,12 @@ const Index = () => {
     const defaultColumns = [
       {
         ...boulderTableColumns.holdType,
+        className: styles.holdTypeCell,
         Cell: ({ value }) => <HoldType image={value.image} />,
       },
       {
         ...boulderTableColumns.grade,
+        className: styles.gradeCell,
         Cell: ({ value }) => {
           if (isAdmin && value.internal) {
             return (
@@ -138,6 +142,7 @@ const Index = () => {
       },
       {
         ...boulderTableColumns.name,
+        className: styles.nameCell,
         Cell: ({ value, row }) => {
           const boulderId = row.original.id;
 
@@ -157,6 +162,7 @@ const Index = () => {
       },
       {
         ...boulderTableColumns.startWall,
+        className: styles.startWallCell,
         Cell: ({ value }) => (
           <WallLink onClick={() => setDetailWall(value)} name={value.name} />
         ),
@@ -351,10 +357,12 @@ const Index = () => {
         globalFilter={globalFilter}
         onSelectRows={(ids) => setSelected(ids)}
         isAdmin={isAdmin}
-        headerClassName={
-          isAdmin ? styles.isAdminTableHeader : styles.tableHeader
-        }
+        headerClassName={joinClassNames(
+          styles.tableHeader,
+          isAdmin ? styles.isAdminTableHeader : null
+        )}
         rowClassName={isAdmin ? styles.isAdminTableRow : styles.tableRow}
+        collapsedRowRenderer={(cells) => <CollapsedRow cells={cells} />}
       />
 
       <Drawer onClose={() => setDetailBoulder(null)}>

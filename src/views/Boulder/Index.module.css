@@ -34,10 +34,6 @@
 @media (max-width: 1280px) {
   .tableRow,
   .tableHeader {
-    grid-template-areas:
-      "a"
-      "b c d e";
-
     grid-template-rows: 1fr 1fr;
     grid-template-columns: minmax(20px, 60px) 80px auto 100px 100px 152px;
   }
@@ -55,25 +51,15 @@
 }
 
 @media (max-width: 768px) {
+  .tableHeader {
+    display: none;
+  }
+
   .filters {
     grid-template-columns: 1fr;
   }
 
   .filters > * {
     margin-bottom: 16px;
-  }
-
-  .tableRow,
-  .tableHeader {
-    grid-template-columns: minmax(20px, 60px) 80px 60px minmax(60px, auto) 152px;
-  }
-
-  .isAdminTableRow,
-  .isAdminTableHeader {
-    grid-template-columns: 40px minmax(20px, 60px) 80px auto 100px 152px;
-  }
-
-  .dateCell {
-    display: none;
   }
 }

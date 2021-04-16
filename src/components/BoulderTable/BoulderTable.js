@@ -1,4 +1,11 @@
-import React, { Fragment, useEffect, useRef, forwardRef, useMemo } from "react";
+import React, {
+  Fragment,
+  useEffect,
+  useRef,
+  forwardRef,
+  useMemo,
+  useContext,
+} from "react";
 import {
   usePagination,
   useTable,
@@ -13,6 +20,8 @@ import Grade from "../Grade/Grade";
 import { Pagination } from "./Pagination";
 import { Ascent } from "../Ascent/Ascent";
 import { TableHeader, TableRow } from "../Table/Table";
+import { useMediaQuery } from "@material-ui/core";
+import { SwipeOutContext } from "../SwipeOut/SwipeOut";
 
 const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = useRef();
@@ -59,7 +68,10 @@ const BoulderTable = ({
   filters,
   rowClassName,
   headerClassName,
+  collapsedRowRenderer,
 }) => {
+  const isTabletOrMobile = useMediaQuery("(max-width: 768px)");
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -114,6 +126,10 @@ const BoulderTable = ({
           {page.map((row, index) => {
             prepareRow(row);
 
+            if (isTabletOrMobile && collapsedRowRenderer) {
+              return collapsedRowRenderer(row.cells);
+            }
+
             return (
               <TableRow
                 className={rowClassName}
@@ -138,8 +154,10 @@ const BoulderTable = ({
   );
 };
 
-const Ascents = ({ removeHandler, addHandler, value }) =>
-  useMemo(() => {
+const Ascents = ({ removeHandler, addHandler, value }) => {
+  const { close } = useContext(SwipeOutContext);
+
+  return useMemo(() => {
     return (
       <div className={styles.ascents}>
         <Ascent
@@ -150,6 +168,10 @@ const Ascents = ({ removeHandler, addHandler, value }) =>
             value.id
               ? await removeHandler(value.id)
               : await addHandler(value.boulderId, "flash");
+
+            if (close) {
+              close();
+            }
           }}
         />
 
@@ -161,6 +183,10 @@ const Ascents = ({ removeHandler, addHandler, value }) =>
             value.id
               ? await removeHandler(value.id)
               : await addHandler(value.boulderId, "top");
+
+            if (close) {
+              close();
+            }
           }}
         />
 
@@ -172,11 +198,16 @@ const Ascents = ({ removeHandler, addHandler, value }) =>
             value.id
               ? await removeHandler(value.id)
               : await addHandler(value.boulderId, "resignation");
+
+            if (close) {
+              close();
+            }
           }}
         />
       </div>
     );
   }, [value]);
+};
 
 const boulderTableColumns = {
   selection: {

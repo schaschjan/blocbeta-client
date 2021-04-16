@@ -17,6 +17,7 @@ import {
 import styles from "./Current.module.css";
 import { joinClassNames } from "../../helper/classNames";
 import typography from "../../css/typography.module.css";
+import { AccessDenied } from "../../components/AccessDenied/AccessDenied";
 
 const Current = () => {
   const { user, contextualizedPath } = useContext(BoulderDBUIContext);
@@ -138,6 +139,10 @@ const Current = () => {
 
   if (!ranking || !boulderCount) {
     return <Loader />;
+  }
+
+  if (!user.visible) {
+    return <AccessDenied />;
   }
 
   return (

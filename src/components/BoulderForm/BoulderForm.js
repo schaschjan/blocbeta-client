@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { FormRow } from "../Form/Form";
 import TextField from "@material-ui/core/TextField";
 import { Button } from "../Button/Button";
@@ -30,14 +30,13 @@ function extractId(property) {
   return typeof property === "object" ? property.id : property;
 }
 
-function BoulderForm({ data, onSubmit, successMessage }) {
+function BoulderForm({ data, onSubmit, successMessage, resetOnSubmit = true }) {
   const {
     handleSubmit,
     setKeyValue,
     submitting,
     formData,
     resetForm,
-    setFormData,
   } = useForm(data);
 
   const { dispatch } = useContext(ToastContext);
@@ -58,7 +57,10 @@ function BoulderForm({ data, onSubmit, successMessage }) {
       });
 
       dispatch(successToast(successMessage));
-      resetForm();
+
+      if (resetOnSubmit) {
+        resetForm();
+      }
 
       if (typeof window !== "undefined") {
         window.scrollTo(0, 0);
@@ -67,10 +69,6 @@ function BoulderForm({ data, onSubmit, successMessage }) {
       dispatch(errorToast(error));
     }
   };
-
-  useEffect(() => {
-    setFormData(data);
-  }, [data]);
 
   return (
     <form onSubmit={(event) => handleSubmit(event, submitForm)}>

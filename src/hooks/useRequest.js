@@ -32,7 +32,10 @@ const useRequest = (
 
         return data;
       } catch (error) {
-        if (error.response.status === 401) {
+        if (
+          error.response.status === 401 &&
+          process.env.NODE_ENV !== "development"
+        ) {
           reset();
         }
       }

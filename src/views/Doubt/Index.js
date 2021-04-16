@@ -4,11 +4,10 @@ import Emoji from "../../components/Emoji/Emoji";
 import { Loader } from "../../components/Loader/Loader";
 import { Button } from "../../components/Button/Button";
 import { errorToast, ToastContext } from "../../components/Toaster/Toaster";
-import { Ascent, AscentIcon, getIcon } from "../../components/Ascent/Ascent";
+import { AscentIcon } from "../../components/Ascent/Ascent";
 import { useHttp, useRequest } from "../../hooks/useRequest";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import { mutate } from "swr";
-
 const Index = () => {
   const { contextualizedApiPath } = useContext(BoulderDBUIContext);
   const { dispatch } = useContext(ToastContext);

@@ -1,0 +1,24 @@
+@media (max-width: 768px) {
+  .root {
+    display: grid;
+    grid-template-columns: 56px auto 60px;
+    align-items: center;
+    box-shadow: inset 0 -1px 0 0 var(--color-black);
+  }
+
+  .meta {
+    padding: 16px 0;
+  }
+
+  .wallNames {
+    color: var(--color-grey);
+  }
+
+  .name {
+    display: inline-flex;
+  }
+
+  .ascent {
+    padding-left: 16px;
+  }
+}

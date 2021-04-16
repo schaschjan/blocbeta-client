@@ -26,7 +26,6 @@ import styles from "./Current.module.css";
 import { Loader } from "../../components/Loader/Loader";
 import { WallDetails } from "../../components/WallDetails/WallDetails";
 import {
-  Filter,
   GlobalFilter,
   gradeFilterProps,
   holdTypeFilterProps,
