@@ -1,5 +1,4 @@
 import React from "react";
-import { Index as AccessDenied } from "./views/AccessDenied/Index";
 import { Index as Ticker } from "./views/Ticker/Index";
 import { Index as BlockerIndex } from "./views/Blocker/Index";
 import { Add as BlockerAdd } from "./views/Blocker/Add";
