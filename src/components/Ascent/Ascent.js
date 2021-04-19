@@ -43,7 +43,7 @@ const Ascent = ({ type, checked, disabled, asyncHandler, ...rest }) => {
 
 function AscentIcon({ type, fill }) {
   if (!type) {
-    return <Todo />;
+    return null;
   }
 
   const doubted = type.includes("-pending-doubt");

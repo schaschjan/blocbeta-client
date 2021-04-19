@@ -11,7 +11,7 @@ import styles from "./SwipeOut.module.css";
 
 const SwipeOutContext = createContext({});
 
-function SwipeOut({ children, hiddenChildren }) {
+function SwipeOut({ children, hiddenChildren, className }) {
   const rootRef = useRef();
   const contentRef = useRef();
 
@@ -23,6 +23,8 @@ function SwipeOut({ children, hiddenChildren }) {
   const dragReset = { x: 0 };
   const x = useMotionValue(0);
   const animation = useAnimation();
+
+  const opacity = useTransform(x, [0, -width / 2, -width], [0, 0.2, 1]);
 
   const close = () => {
     animation.start(dragReset);
@@ -54,15 +56,16 @@ function SwipeOut({ children, hiddenChildren }) {
       <div
         className={joinClassNames(
           styles.root,
-          revealed ? styles.isRevealed : null
+          revealed ? styles.isRevealed : null,
+          className
         )}
         ref={rootRef}
       >
         <motion.div
+          dragDirectionLock
           drag={"x"}
-          x={x}
+          style={{ x }}
           dragConstraints={{ left: dragWidth, right: 0 }}
-          dragElastic={0}
           animate={animation}
           onDragEnd={() => {
             if (x.get() > dragWidth / 2) {
@@ -75,7 +78,13 @@ function SwipeOut({ children, hiddenChildren }) {
           <div className={styles.facade}>{children}</div>
         </motion.div>
 
-        <motion.div className={styles.content} ref={contentRef}>
+        <motion.div
+          className={styles.content}
+          ref={contentRef}
+          style={{
+            opacity,
+          }}
+        >
           {hiddenChildren}
         </motion.div>
       </div>

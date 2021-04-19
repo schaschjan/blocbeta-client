@@ -3,6 +3,7 @@ import { joinClassNames } from "../../helper/classNames";
 import styles from "./CollapsedRow.module.css";
 import typography from "../../css/typography.module.css";
 import React from "react";
+import { AscentIcon } from "../../components/Ascent/Ascent";
 
 function CollapsedRow({ cells }) {
   const ascentCell = cells.find((cell) => cell.column.id === "ascent");
@@ -10,22 +11,34 @@ function CollapsedRow({ cells }) {
   const starWallCell = cells.find((cell) => cell.column.id === "start");
   const endWallCell = cells.find((cell) => cell.column.id === "end");
   const nameCell = cells.find((cell) => cell.column.id === "name");
+  const gradeCell = cells.find((cell) => cell.column.id === "grade");
 
   return (
     <SwipeOut
+      className={styles.root}
       hiddenChildren={
-        <div className={styles.ascent}>{ascentCell.render("Cell")}</div>
+        <div className={styles.ascents}>{ascentCell.render("Cell")}</div>
       }
     >
-      <div className={joinClassNames(styles.root, typography.eta)}>
+      <div className={joinClassNames(styles.inner, typography.eta)}>
         <div>{holdTypeCell.render("Cell")}</div>
 
         <div className={styles.meta}>
-          <p className={styles.name}>{nameCell.render("Cell")}</p>
+          <div className={joinClassNames(styles.name, styles.metaItem)}>
+            {nameCell.render("Cell")}
+          </div>
 
-          <p className={styles.wallNames}>
+          <div className={joinClassNames(styles.wallNames, styles.metaItem)}>
             {starWallCell.render("Cell")} > {endWallCell.render("Cell")}
-          </p>
+          </div>
+
+          <div className={joinClassNames(styles.metaItem)}>
+            {gradeCell.render("Cell")}
+          </div>
+        </div>
+
+        <div className={styles.ascent}>
+          <AscentIcon type={ascentCell?.value?.type} fill={true} />
         </div>
       </div>
     </SwipeOut>

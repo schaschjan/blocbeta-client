@@ -1,8 +1,5 @@
 .root {
-  position: fixed;
-  top: calc(2 * var(--spacing-unit));
-  right: calc(2 * var(--spacing-unit));
-  z-index: 400;
+  position: relative;
   padding: 4px var(--spacing-unit);
   margin-right: var(--spacing-unit);
   min-width: 275px;
@@ -36,4 +33,15 @@
 
 .isWarning {
   border-color: var(--color-yellow);
+}
+
+.list {
+  z-index: 2000;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  justify-content: flex-end;
+  top: calc(2 * var(--spacing-unit));
+  right: calc(2 * var(--spacing-unit));
 }

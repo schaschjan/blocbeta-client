@@ -114,3 +114,9 @@ body {
     --footer-height: 80px;
   }
 }
+
+@media (max-width: 415px) {
+  .app {
+    padding: 0;
+  }
+}

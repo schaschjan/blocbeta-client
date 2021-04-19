@@ -32,11 +32,24 @@
 
 .close {
   position: fixed;
-  right: 32px;
-  top: 32px;
-  z-index: 1000;
+  right: 24px;
+  top: 24px;
+  cursor: pointer;
+  z-index: 4000;
+  padding: 8px;
 }
 
 .map {
+  width: 100%;
   max-width: 500px;
+}
+
+@media (max-width: 768px) {
+  .inner {
+    grid-template-columns: 1fr;
+  }
+
+  .inner > div {
+    padding: 32px;
+  }
 }

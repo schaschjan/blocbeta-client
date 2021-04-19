@@ -1,14 +1,13 @@
 {
   "name": "@boulderdb/ui",
-  "version": "1.7.5",
+  "version": "1.7.6",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "axios": "^0.21.1",
     "classnames": "^2.3.0",
-    "framer": "^1.2.3",
-    "framer-motion": "^1.11.0",
+    "framer-motion": "^4.1.5",
     "lodash": "^4.17.20",
     "moment": "^2.26.0",
     "prop-types": "^15.7.2",

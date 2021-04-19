@@ -10,7 +10,9 @@ function WallDetails({ wall, onClose }) {
 
   return (
     <div className={styles.root}>
-      <Close className={styles.close} onClick={onClose} />
+      <div className={styles.close}>
+        <Close onClick={onClose} />
+      </div>
 
       <div className={styles.inner}>
         <div>

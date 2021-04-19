@@ -60,9 +60,8 @@
 }
 
 .eta {
-  font-size: var(--font-size-eta);
-  line-height: 1.25em;
-  letter-spacing: 0.05em;
+  font-size: 13px;
+  line-height: 15px;
 }
 
 mark {

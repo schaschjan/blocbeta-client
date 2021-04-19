@@ -67,7 +67,7 @@ function useBoulders() {
           ascents: ascent.ascents,
           grade: {
             ...grade,
-            internal: isAdmin ? grades[boulder.internal_grade] : null,
+            internal: isAdmin ? gradeMap[boulder.internal_grade] : null,
           },
           holdType: holdTypeMap[boulder.hold_type],
           startWall: startWall,
