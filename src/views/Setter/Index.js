@@ -1,81 +1,77 @@
-import React, { useMemo, Fragment, useContext } from "react";
-import { useQuery, useMutation, queryCache } from "react-query";
-import { LoadedContent } from "../../components/Loader/Loader";
-import EmptyState from "../../components/EmptyState/EmptyState";
-import {
-  cache,
-  extractErrorMessage,
-  mutationDefaults,
-  useApi,
-} from "../../hooks/useApi";
-import {
-  CrudTable,
-  EditableCellSwitch,
-} from "../../components/CrudTable/CrudTable";
+import React, { useContext } from "react";
+import { extractErrorMessage } from "../../hooks/useApi";
 import { toast, ToastContext } from "../../components/Toaster/Toaster";
-import { sortItemsAlphabetically } from "../../helper/sortItemsAlphabetically";
+import { BoulderDBUIContext } from "../../components/BoulderDBUI";
+import { AccessDenied } from "../../components/AccessDenied/AccessDenied";
+import { useHttp, useRequest } from "../../hooks/useRequest";
+import layouts from "../../css/layouts.module.css";
+import { joinClassNames } from "../../helper/classNames";
+import typography from "../../css/typography.module.css";
+import styles from "./Index.module.css";
+import { Button } from "../../components/Button/Button";
+import { mutate } from "swr";
 
 const Index = () => {
   const { dispatch } = useContext(ToastContext);
-  const { status, data } = useQuery(cache.setters, useApi("setters"));
+  const { isAdmin, contextualizedApiPath } = useContext(BoulderDBUIContext);
+  const { data } = useRequest("/setter/current");
+  const locationHttp = useHttp();
 
-  const [mutateUpdate] = useMutation(useApi("updateSetter"), {
-    ...mutationDefaults,
-    onSuccess: () => {
-      queryCache.invalidateQueries(cache.setters);
-    },
-  });
-
-  const columns = useMemo(() => {
-    return [
-      {
-        Header: "Username",
-        accessor: "username",
-      },
-      {
-        Header: "Active",
-        accessor: "active",
-        Cell: EditableCellSwitch,
-      },
-    ];
-  }, []);
-
-  const handleUpdate = async (rowIndex, columnId, value) => {
-    const payload = {
-      ...data[rowIndex],
-      [columnId]: value,
-    };
-
-    const { id } = payload;
-
-    delete payload.id;
-
-    try {
-      await mutateUpdate({
-        id,
-        payload,
-      });
-
-      dispatch(toast("Update successful", null, "success"));
-    } catch (error) {
-      dispatch(toast("Error", extractErrorMessage(error), "danger"));
-    }
-  };
+  if (!isAdmin) {
+    return <AccessDenied />;
+  }
 
   return (
-    <Fragment>
-      <h1 className="t--alpha page-title">Setter</h1>
+    <>
+      <div className={layouts.side}>
+        <h1 className={joinClassNames(layouts.sideTitle, typography.alpha)}>
+          Setter
+        </h1>
 
-      <LoadedContent loading={status === "loading"}>
-        <EmptyState isEmpty={!data || data.length === 0}>
-          <CrudTable
-            data={data && sortItemsAlphabetically(data, "username")}
-            updateHandler={handleUpdate}
-            columns={columns}
-          />
-        </EmptyState>
-      </LoadedContent>
-    </Fragment>
+        <div className={layouts.sideContent}>
+            {data &&
+              data.map((setter) => {
+                return (
+                  <div className={styles.row}>
+                    <div className={styles.cell}>{setter.username}</div>
+
+                    <div className={styles.cell}>
+                      <Button
+                        size={"small"}
+                        onClick={async () => {
+                          try {
+                            await locationHttp.put(`/setter/${setter.id}`, {
+                              active: false,
+                              username: setter.username,
+                            });
+
+                            await mutate(
+                              contextualizedApiPath(`/setter/current`)
+                            );
+
+                            dispatch(
+                              toast("Update successful", null, "success")
+                            );
+                          } catch (error) {
+                            dispatch(
+                              toast(
+                                "Error",
+                                extractErrorMessage(error),
+                                "danger"
+                              )
+                            );
+                          }
+                        }}
+                      >
+                        deactivate
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
+        </div>
+      </div>
+    </>
   );
 };
 

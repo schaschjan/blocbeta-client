@@ -1,6 +1,7 @@
-import React, { useMemo, createContext, useEffect, useCallback } from "react";
+import React, { useMemo, createContext, useEffect, useState } from "react";
 import packageJson from "../../package.json";
 import usePersistentState from "../hooks/usePersistentState";
+import { getApiHost, useHttp } from "../hooks/useRequest";
 
 export const BoulderDBUIContext = createContext({});
 
@@ -11,11 +12,12 @@ export const BoulderDBUI = ({ children }) => {
     null
   );
   const [expiration, setExpiration] = usePersistentState("expiration", null);
-
   const [version, setVersion] = usePersistentState(
     "version",
     packageJson.version
   );
+  const [instructions, setInstructions] = useState([]);
+  const globalHttp = useHttp(false);
 
   const contextualizedApiPath = (path) => "/api" + contextualizedPath(path);
 
@@ -86,9 +88,28 @@ export const BoulderDBUI = ({ children }) => {
       });
   }, [version]);
 
+  const telemetry = async () => {
+    if (currentLocation) {
+      await globalHttp.get(`/${currentLocation.url}/ping`);
+    }
+
+    const { data } = await globalHttp.post("/telemetry", { version: "1.0.0" });
+
+    data.updates.map((update) => {
+      const { version, instructions } = update;
+
+      console.log(instructions);
+    });
+  };
+
+  useEffect(() => {
+    telemetry();
+  }, []);
+
   return (
     <BoulderDBUIContext.Provider
       value={{
+        version,
         currentLocation,
         setCurrentLocation,
         user,

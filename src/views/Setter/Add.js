@@ -1,98 +1,100 @@
-import React, { Fragment, useContext, useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {
-  errorToast,
-  successToast,
-  ToastContext,
+    errorToast,
+    successToast,
+    ToastContext,
 } from "../../components/Toaster/Toaster";
-import { Input } from "../../components/Input/Input";
-import { FormElement } from "../../components/Form/Form";
-import { cache, mutationDefaults, useApi } from "../../hooks/useApi";
-import axios from "axios";
-import {
-  ResultList,
-  ResultListItem,
-} from "../../components/ResultList/ResultList";
-import { Button } from "../../components/Button/Button";
-import { useQuery, useMutation, queryCache } from "react-query";
-import { LoadedContent } from "../../components/Loader/Loader";
+import {Input} from "../../components/Input/Input";
+import {FormElement} from "../../components/Form/Form";
+import layouts from "../../css/layouts.module.css";
+import {Button} from "../../components/Button/Button";
+import {useHttp, useRequest} from "../../hooks/useRequest";
+import {joinClassNames} from "../../helper/classNames";
+import typography from "../../css/typography.module.css";
+import {mutate} from "swr";
+import {BoulderDBUIContext} from "../../components/BoulderDBUI";
 
 const Add = () => {
-  const { dispatch } = useContext(ToastContext);
-  const { status, data: setters } = useQuery(cache.setters, useApi("setters"));
+        const {contextualizedApiPath} = useContext(BoulderDBUIContext);
+        const {dispatch} = useContext(ToastContext);
 
-  const [searchResults, setSearchResults] = useState([]);
+        const {data: setters} = useRequest("/setter/current");
+        const globalHttp = useHttp(false);
+        const locationHttp = useHttp();
 
-  const [mutateCreation] = useMutation(useApi("createSetter"), {
-    ...mutationDefaults,
-    onSuccess: () => {
-      queryCache.invalidateQueries(cache.setters);
-    },
-  });
+        const [search, setSearch] = useState("");
+        const [users, setUsers] = useState([]);
 
-  return (
-    <Fragment>
-      <h1 className="t--alpha page-title">Add setter</h1>
-
-      <LoadedContent loading={status === "loading"}>
-        <FormElement>
-          <Input
-            placeholder="Search for a username"
-            onChange={async (event) => {
-              const { data } = await axios.get(`/api/user/search`, {
+        const fetchResults = async (username) => {
+            const {data} = await globalHttp.get(`/user/search`, {
                 params: {
-                  username: event.target.value,
+                    username: username
                 },
-              });
+            });
 
-              setSearchResults(data);
-            }}
-          />
-        </FormElement>
+            return data;
+        }
 
-        <ResultList>
-          {searchResults.map((result) => {
-            const isSetter =
-              setters.find((setter) => setter.username === result.username) !==
-              undefined;
+        useEffect(() => {
+            if (search.length < 1) {
+                return
+            }
 
-            return (
-              <ResultListItem>
-                <span>{result.username}</span>
+            fetchResults(search).then(data => setUsers(data))
+        }, [search])
 
-                {!isSetter ? (
-                  <Button
-                    size="small"
-                    onClick={async () => {
-                      try {
-                        await mutateCreation({
-                          payload: {
-                            active: true,
-                            username: result.username,
-                          },
-                        });
+        return (
+            <>
+                <div className={layouts.side}>
+                    <h1 className={joinClassNames(layouts.sideTitle, typography.alpha)}>
+                        Add Setter
+                    </h1>
 
-                        dispatch(
-                          successToast(`Added ${result.username} to setters`)
-                        );
-                      } catch (error) {
-                        dispatch(errorToast(error));
-                      }
-                    }}
-                  >
-                    Add
-                  </Button>
-                ) : (
-                  <Button size="small" disabled={true}>
-                    Already a setter
-                  </Button>
-                )}
-              </ResultListItem>
-            );
-          })}
-        </ResultList>
-      </LoadedContent>
-    </Fragment>
-  );
-};
+                    <div className={layouts.sideContent}>
+                        <FormElement>
+                            <Input
+                                placeholder="Search for a username"
+                                onChange={async (event) => setSearch(event.target.value)}
+                            />
+                        </FormElement>
 
-export { Add };
+                        <ul>
+                            {users.map((user) => {
+                                const isSetter = setters.find((setter) => setter.username === user.username) !== undefined;
+
+                                return (
+                                    <li>
+                                        <span>{user.username}</span>
+
+                                        {!isSetter ? (
+                                            <Button
+                                                size="small"
+                                                onClick={async () => {
+                                                    try {
+                                                        await locationHttp.post('/setter', {user: user.id})
+                                                        await mutate(contextualizedApiPath('/setter'))
+
+                                                        dispatch(successToast(`Added ${user.username} to setters`));
+                                                    } catch (error) {
+                                                        dispatch(errorToast(error));
+                                                    }
+                                                }}>
+                                                Add
+                                            </Button>
+                                        ) : (
+                                            <Button size="small" disabled={true}>
+                                                Already a setter
+                                            </Button>
+                                        )}
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                </div>
+            </>
+        );
+    }
+;
+
+export {Add};

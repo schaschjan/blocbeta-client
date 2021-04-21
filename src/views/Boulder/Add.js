@@ -7,9 +7,10 @@ import { joinClassNames } from "../../helper/classNames";
 import { mutate } from "swr";
 import { useHttp } from "../../hooks/useRequest";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
+import { AccessDenied } from "../../components/AccessDenied/AccessDenied";
 
 const Add = () => {
-  const { contextualizedApiPath } = useContext(BoulderDBUIContext);
+  const { contextualizedApiPath, isAdmin } = useContext(BoulderDBUIContext);
   const http = useHttp();
 
   const onSubmit = async ({ payload }) => {
@@ -18,6 +19,10 @@ const Add = () => {
     await mutate(contextualizedApiPath("/boulder"));
     await mutate(contextualizedApiPath("/ascent"));
   };
+
+  if (!isAdmin) {
+    return <AccessDenied />;
+  }
 
   return (
     <Fragment>

@@ -2,21 +2,14 @@ import React, { Fragment, useContext } from "react";
 import { Meta } from "../../App";
 import { PageHeader } from "../../components/PageHeader/PageHeader";
 import { useHistory } from "react-router-dom";
-import { useQuery } from "react-query";
-import axios from "axios";
-import { LoadedContent } from "../../components/Loader/Loader";
-import "./Index.css";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
+import { useRequest } from "../../hooks/useRequest";
+import "./Index.css";
 
 const Index = () => {
   let history = useHistory();
   const { setCurrentLocation } = useContext(BoulderDBUIContext);
-
-  const { status, data: locations } = useQuery("stat-boulders", async () => {
-    const { data } = await axios.get(`/api/location`);
-
-    return data;
-  });
+  const { data: locations } = useRequest("/location", false);
 
   const switchLocation = (location) => {
     setCurrentLocation(location);
@@ -34,21 +27,19 @@ const Index = () => {
         </h1>
 
         <div className="side-title-layout__content">
-          <LoadedContent loading={status === "loading"}>
-            <ul className="setup-location-list">
-              {locations &&
-                locations.map((location) => {
-                  return (
-                    <li
-                      onClick={() => switchLocation(location)}
-                      className="setup-location-list__item"
-                    >
-                      <h2 className="t--beta">{location.name}</h2>
-                    </li>
-                  );
-                })}
-            </ul>
-          </LoadedContent>
+          <ul className="setup-location-list">
+            {locations &&
+              locations.map((location) => {
+                return (
+                  <li
+                    onClick={() => switchLocation(location)}
+                    className="setup-location-list__item"
+                  >
+                    <h2 className="t--beta">{location.name}</h2>
+                  </li>
+                );
+              })}
+          </ul>
         </div>
       </div>
     </Fragment>

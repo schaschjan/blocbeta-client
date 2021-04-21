@@ -1,21 +1,12 @@
 import React from "react";
-import { Index as Ticker } from "./views/Ticker/Index";
-import { Index as BlockerIndex } from "./views/Blocker/Index";
-import { Add as BlockerAdd } from "./views/Blocker/Add";
 import { Edit as BoulderDetail } from "./views/Boulder/Edit";
-import { Index as RoomIndex } from "./views/Room/Index";
-import { Detail as RoomDetail } from "./views/Room/Detail";
 import { Index as SetterIndex } from "./views/Setter/Index";
 import { Index as NotFound } from "./views/NotFound/Index";
 import { Add as SetterAdd } from "./views/Setter/Add";
 import { Add as BoulderAdd } from "./views/Boulder/Add";
-import { Add as ReservationAdd } from "./views/Reservation/Add";
 import { Index as Login } from "./views/Login/Index";
 import { Index as Setup } from "./views/Setup/Index";
 import { Index as Register } from "./views/Register/Index";
-import { Index as Schedule } from "./views/Schedule/Index";
-import { Index as Reservations } from "./views/Reservations/Index";
-import { Cancel } from "./views/Reservations/Cancel";
 import { Request } from "./views/PasswordReset/Request";
 import { Reset } from "./views/PasswordReset/Reset";
 import { Index as Account } from "./views/Account/Index";
@@ -33,34 +24,6 @@ const adminRoutes = [
     exact: true,
     admin: true,
     main: () => <Admin />,
-  },
-  {
-    title: "Schedule overview",
-    path: "/:location/admin/schedule-ticker",
-    exact: true,
-    admin: true,
-    main: () => <Ticker />,
-  },
-  {
-    title: "Time slot blockers",
-    path: "/:location/admin/time-slot-blocker",
-    exact: true,
-    admin: true,
-    main: () => <BlockerIndex />,
-  },
-  {
-    title: "Add time slot blocker",
-    path: "/:location/admin/time-slot-blocker/add",
-    exact: true,
-    admin: true,
-    main: () => <BlockerAdd />,
-  },
-  {
-    title: "List rooms",
-    path: "/:location/admin/rooms",
-    exact: true,
-    admin: true,
-    main: () => <RoomIndex />,
   },
   {
     title: "List setters",
@@ -89,18 +52,6 @@ const adminRoutes = [
     exact: true,
     admin: true,
     main: () => <BoulderDetail />,
-  },
-  {
-    title: "Room Detail",
-    path: "/:location/admin/rooms/:room",
-    admin: true,
-    main: () => <RoomDetail />,
-  },
-  {
-    title: "Add Guest Reservation",
-    path: "/:location/admin/reservations/add-guest",
-    admin: true,
-    main: () => <ReservationAdd />,
   },
 ];
 
@@ -173,27 +124,6 @@ export const router = [
     main: () => <CompareCurrent />,
     exact: true,
     visibleUserOnly: true,
-  },
-  {
-    title: "Schedule",
-    id: "schedule",
-    path: "/:location/schedule",
-    exact: true,
-    main: () => <Schedule />,
-  },
-  {
-    title: "Reservations",
-    id: "reservations",
-    path: "/:location/reservations",
-    exact: true,
-    main: () => <Reservations />,
-  },
-  {
-    title: "Cancel reservation",
-    id: "cancelReservation",
-    path: "/cancel-reservation/:hash",
-    public: true,
-    main: () => <Cancel />,
   },
   {
     title: "Doubts",

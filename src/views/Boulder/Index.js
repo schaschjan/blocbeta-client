@@ -44,7 +44,7 @@ import { sortItemsAlphabetically } from "../../helper/sortItemsAlphabetically";
 import { Loader } from "../../components/Loader/Loader";
 import { Select } from "../../components/Select/Select";
 import { mutate } from "swr";
-import { useHttp } from "../../hooks/useRequest";
+import { getApiHost, useHttp, useRequest } from "../../hooks/useRequest";
 import { CollapsedRow } from "./CollapsedRow";
 import { joinClassNames } from "../../helper/classNames";
 
@@ -54,6 +54,7 @@ const Index = () => {
   );
   const { dispatch } = useContext(ToastContext);
   const { toggle: toggleDrawer } = useContext(DrawerContext);
+  const { version } = useContext(BoulderDBUIContext);
 
   const [detailBoulder, setDetailBoulder] = useState(null);
   const [detailWall, setDetailWall] = useState(null);
@@ -105,10 +106,6 @@ const Index = () => {
       ),
     [boulders]
   );
-
-  useEffect(() => {
-    http.get("/ping");
-  }, []);
 
   const columns = useMemo(() => {
     const defaultColumns = [

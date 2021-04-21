@@ -9,11 +9,12 @@ import typography from "../../css/typography.module.css";
 import { joinClassNames } from "../../helper/classNames";
 import { mutate } from "swr";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
+import { AccessDenied } from "../../components/AccessDenied/AccessDenied";
 
 const Edit = () => {
   const { boulderId } = useParams();
 
-  const { contextualizedApiPath } = useContext(BoulderDBUIContext);
+  const { contextualizedApiPath, isAdmin } = useContext(BoulderDBUIContext);
   const http = useHttp();
 
   const { data } = useRequest(`/boulder/${boulderId}`);
@@ -28,6 +29,10 @@ const Edit = () => {
 
   if (!data) {
     return <Loader />;
+  }
+
+  if (!isAdmin) {
+    return <AccessDenied />;
   }
 
   return (

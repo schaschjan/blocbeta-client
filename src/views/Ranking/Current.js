@@ -1,7 +1,6 @@
 import React, { Fragment, useContext, useMemo } from "react";
 import Progress from "../../components/Progress/Progress";
 import { Meta } from "../../App";
-import moment from "moment";
 import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 import Male from "../../components/Icon/Male";
 import Female from "../../components/Icon/Female";
@@ -18,6 +17,7 @@ import styles from "./Current.module.css";
 import { joinClassNames } from "../../helper/classNames";
 import typography from "../../css/typography.module.css";
 import { AccessDenied } from "../../components/AccessDenied/AccessDenied";
+import {parseDate} from "../../helper/parseDate";
 
 const Current = () => {
   const { user, contextualizedPath } = useContext(BoulderDBUIContext);
@@ -107,7 +107,7 @@ const Current = () => {
         gridTemplate: "100px",
         className: styles.lastActivityCell,
         Cell: ({ cell }) => {
-          return <span>{moment(cell.value).fromNow()}</span>;
+          return <span>{parseDate(cell.value)}</span>;
         },
       },
       {

@@ -216,7 +216,7 @@ const Index = () => {
   }
 
   return (
-    <Fragment>
+    <>
       <Meta title="Account" />
 
       <div className={layouts.side}>
@@ -234,7 +234,7 @@ const Index = () => {
           </div>
         </div>
       </div>
-    </Fragment>
+    </>
   );
 };
 

@@ -17,7 +17,8 @@ const axiosInstance = axios.create(options);
 const useRequest = (
   uri,
   locationResource = true,
-  requestConfig = { method: "get" }
+  requestConfig = { method: "get" },
+  swrConfig
 ) => {
   const { reset, contextualizedApiPath } = useContext(BoulderDBUIContext);
 
@@ -39,7 +40,8 @@ const useRequest = (
           reset();
         }
       }
-    }
+    },
+    swrConfig
   );
 };
 
@@ -49,16 +51,20 @@ const getApiHost = () => {
   return `${host ? host : ""}/api`;
 };
 
-const useHttp = () => {
+const useHttp = (locationSpecific = true) => {
   const { currentLocation } = useContext(BoulderDBUIContext);
 
-  if (!currentLocation || !currentLocation.url) {
+  if (!currentLocation && locationSpecific) {
     throw new Error("Unable to resolve current location");
   }
 
   return useMemo(() => {
+    const baseURL = locationSpecific
+      ? `${getApiHost()}/${currentLocation.url}`
+      : getApiHost();
+
     let options = {
-      baseURL: `${getApiHost()}/${currentLocation.url}`,
+      baseURL,
       headers: {},
     };
 

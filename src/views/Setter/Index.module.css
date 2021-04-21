@@ -1,0 +1,13 @@
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+}
+
+.cell:last-child > * {
+  margin-left: auto;
+}

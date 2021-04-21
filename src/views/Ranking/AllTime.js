@@ -1,7 +1,6 @@
 import React, { Fragment, useMemo } from "react";
 import Progress from "../../components/Progress/Progress";
 import { Meta } from "../../App";
-import moment from "moment";
 import Male from "../../components/Icon/Male";
 import Female from "../../components/Icon/Female";
 import calculatePercentage from "../../helper/calculatePercentage";
@@ -12,6 +11,7 @@ import {
 } from "../../components/RankingTable/RankingTable";
 import { Loader } from "../../components/Loader/Loader";
 import styles from "./AllTime.module.css";
+import {parseDate} from "../../helper/parseDate";
 
 const AllTime = () => {
   const { data: ranking } = useRequest(`/ranking/all-time`);
@@ -76,7 +76,7 @@ const AllTime = () => {
         accessor: "user.lastActivity",
         className: styles.lastActivityCell,
         Cell: ({ cell }) => {
-          return <span>{moment(cell.value).fromNow()}</span>;
+          return <span>{parseDate(cell.value)}</span>;
         },
       },
     ];
