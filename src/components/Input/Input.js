@@ -26,7 +26,11 @@ const Input = ({
     <div className={classes}>
       {prefix && <span>{prefix}</span>}
       {children} <input type={type} {...rest} value={value} />
-      {onClear && value && <Close onClick={(event) => onClear(event)} />}
+      {onClear && value && (
+        <span>
+          <Close onClick={(event) => onClear(event)} />
+        </span>
+      )}
     </div>
   );
 };

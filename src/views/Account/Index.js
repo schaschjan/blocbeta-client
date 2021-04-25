@@ -27,7 +27,7 @@ const UploadField = ({ value, renderValue, onSuccess }) => {
   const { dispatch } = useContext(ToastContext);
   const [loading, setLoading] = useState(false);
 
-  const http = useHttp();
+  const globalHttp = useHttp(false);
 
   const handleUpload = async (file) => {
     setLoading(true);
@@ -36,12 +36,7 @@ const UploadField = ({ value, renderValue, onSuccess }) => {
     formData.append("file", file);
 
     try {
-      const { data } = await http.post("/upload", formData, {
-        baseURL: getApiHost(), // override preconfigured host prefix
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const { data } = await globalHttp.post("/upload", formData);
 
       onSuccess(data.file);
     } catch (error) {
@@ -172,7 +167,7 @@ const Form = ({ defaults, onSubmit }) => {
 
 const Index = () => {
   const { data } = useRequest("/me", false);
-  const http = useHttp();
+  const globalHttp = useHttp(false);
 
   const { contextualizedPath } = useContext(BoulderDBUIContext);
   const history = useHistory();
@@ -182,9 +177,7 @@ const Index = () => {
   // todo: reload user object after submit to reflect changes immediately
   const onSubmit = async (data) => {
     try {
-      await http.put("/me", data, {
-        baseURL: getApiHost(), // override preconfigured host prefix
-      });
+      await globalHttp.put("/me", data);
 
       await mutate("/api/me");
       dispatch(toast("Success", "Account updated!", "success"));
@@ -196,9 +189,7 @@ const Index = () => {
   const scheduleAccountDeletion = async () => {
     if (window.confirm("Confirm account deletion")) {
       try {
-        await http.delete("/me", {
-          baseURL: getApiHost(), // override preconfigured host prefix
-        });
+        await globalHttp.delete("/me");
 
         dispatch(
           toast("Your account was scheduled for deletion and will be removed.")
@@ -228,7 +219,11 @@ const Index = () => {
           <Form defaults={data} onSubmit={onSubmit} />
 
           <div className={styles.actions}>
-            <Button variant="danger" onClick={() => scheduleAccountDeletion()}>
+            <Button
+              variant="danger"
+              size={"small"}
+              onClick={() => scheduleAccountDeletion()}
+            >
               Delete Account
             </Button>
           </div>

@@ -1,17 +1,20 @@
-import React, { Fragment, useContext } from "react";
+import React, { useContext } from "react";
 import { Meta } from "../../App";
 import { FormRow } from "../../components/Form/Form";
 import { Input } from "../../components/Input/Input";
 import { useHistory } from "react-router-dom";
-import axios from "axios";
 import { extractErrorMessage } from "../../hooks/useApi";
 import { toast, ToastContext } from "../../components/Toaster/Toaster";
 import { composeFormElement, useForm } from "../../hooks/useForm";
 import { Button } from "../../components/Button/Button";
+import layouts from "../../css/layouts.module.css";
+import typography from "../../css/typography.module.css";
+import { useHttp } from "../../hooks/useRequest";
 
 const Request = () => {
   const history = useHistory();
-  const { dispatch, successToast } = useContext(ToastContext);
+  const { dispatch } = useContext(ToastContext);
+  const globalHttp = useHttp(false);
 
   const { handleSubmit, observeField, submitting, formData } = useForm({
     email: null,
@@ -19,10 +22,12 @@ const Request = () => {
 
   const onSubmit = async (payload) => {
     try {
-      await axios.post(`/api/request-reset`, payload);
+      await globalHttp.post(`/request-reset`, payload);
       dispatch(
-        successToast(
-          "You will receive instructions on how to reset your password via E-Mail."
+        toast(
+          null,
+          "You will receive instructions on how to reset your password via E-Mail.",
+          "success"
         )
       );
       history.push("/login");
@@ -32,15 +37,17 @@ const Request = () => {
   };
 
   return (
-    <Fragment>
+    <>
       <Meta title="Reset password" />
 
-      <div className="side-title-layout">
-        <h1 className="t--alpha side-title-layout__title">
-          Receive instructions on how to recover your password via E-Mail.
-        </h1>
+      <div className={layouts.side}>
+        <div className={layouts.sideTitle}>
+          <h1 className={typography.alpha}>
+            Receive instructions on how to recover your password via E-Mail.
+          </h1>
+        </div>
 
-        <div className="side-title-layout__content">
+        <div className={layouts.sideContent}>
           <form onSubmit={(event) => handleSubmit(event, onSubmit)}>
             <FormRow>
               {composeFormElement(
@@ -69,7 +76,7 @@ const Request = () => {
           </form>
         </div>
       </div>
-    </Fragment>
+    </>
   );
 };
 

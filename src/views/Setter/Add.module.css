@@ -1,0 +1,23 @@
+.searchResults {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.searchResultItem {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.addForm {
+}
+
+.addButton {
+  display: flex;
+}
+
+.addButton > * {
+  margin-top: 16px;
+  margin-left: auto;
+}

@@ -1,8 +1,0 @@
-.header-nav__item--active {
-  font-weight: var(--font-weight-bold);
-}
-
-.header-nav__item {
-  margin-left: calc(4 * var(--spacing-unit));
-  padding-bottom: 0;
-}

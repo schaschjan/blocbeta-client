@@ -1,11 +1,13 @@
 export const extractErrorMessage = (error) => {
+  console.error(error);
+
   if (!error.response) {
     return null;
   }
 
   const { data } = error.response;
 
-  console.log(data)
+  console.log(data);
   // todo improve messages
 
   if (data.type === "formError") {

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { set } from "lodash";
 import { FormElement } from "../components/Form/Form";
 
+// deprecated
+// todo: remove
 export const composeFormElement = (
   name,
   label,

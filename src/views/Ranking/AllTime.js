@@ -11,7 +11,7 @@ import {
 } from "../../components/RankingTable/RankingTable";
 import { Loader } from "../../components/Loader/Loader";
 import styles from "./AllTime.module.css";
-import {parseDate} from "../../helper/parseDate";
+import { parseDate } from "../../helper/parseDate";
 
 const AllTime = () => {
   const { data: ranking } = useRequest(`/ranking/all-time`);
@@ -76,7 +76,7 @@ const AllTime = () => {
         accessor: "user.lastActivity",
         className: styles.lastActivityCell,
         Cell: ({ cell }) => {
-          return <span>{parseDate(cell.value)}</span>;
+          return <span>{parseDate(cell.value).string}</span>;
         },
       },
     ];

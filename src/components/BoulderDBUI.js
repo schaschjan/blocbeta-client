@@ -98,12 +98,14 @@ export const BoulderDBUI = ({ children }) => {
     data.updates.map((update) => {
       const { version, instructions } = update;
 
-      console.log(instructions);
+      console.log(version, instructions);
     });
   };
 
   useEffect(() => {
-    telemetry();
+    if (isAuthenticated) {
+      telemetry();
+    }
   }, []);
 
   return (

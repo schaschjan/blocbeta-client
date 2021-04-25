@@ -1,12 +1,11 @@
-import React, { useState, useContext, useEffect, Fragment } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Meta } from "../../App";
 import { FormRow } from "../../components/Form/Form";
 import { Input } from "../../components/Input/Input";
 import { extractErrorMessage } from "../../hooks/useApi";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import axios from "axios";
-import "./Reset.css";
+import styles from "./Reset.module.css";
 import {
   successToast,
   toast,
@@ -15,10 +14,14 @@ import {
 import { classNames } from "../../helper/classNames";
 import { composeFormElement, useForm } from "../../hooks/useForm";
 import { Button } from "../../components/Button/Button";
+import layouts from "../../css/layouts.module.css";
+import typography from "../../css/typography.module.css";
+import { useHttp } from "../../hooks/useRequest";
 
 const Reset = () => {
   const [hashFound, setHashFound] = useState(false);
   const { dispatch } = useContext(ToastContext);
+  const globalHttp = useHttp(false);
 
   const history = useHistory();
   const { hash } = useParams();
@@ -29,7 +32,7 @@ const Reset = () => {
 
   const checkToken = async (hash) => {
     try {
-      await axios.get(`/api/reset/${hash}`, false);
+      await globalHttp.get(`/reset/${hash}`, false);
       setHashFound(true);
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "danger"));
@@ -42,7 +45,7 @@ const Reset = () => {
 
   const onSubmit = async (payload) => {
     try {
-      await axios.post(`/api/reset/${hash}`, payload);
+      await globalHttp.post(`/reset/${hash}`, payload);
       dispatch(
         successToast(
           "Your Password was successfully updated. You can now log in again."
@@ -55,20 +58,20 @@ const Reset = () => {
   };
 
   return (
-    <Fragment>
+    <>
       <Meta title="Reset password" />
 
-      <div className="side-title-layout">
-        <h1 className="t--alpha side-title-layout__title">
-          Choose your new password wisely.
-        </h1>
+      <div className={layouts.side}>
+        <div className={layouts.sideTitle}>
+          <h1 className={typography.alpha}>Choose your new password wisely.</h1>
+        </div>
 
-        <div className="side-title-layout__content">
+        <div className={layouts.sideContent}>
           <form
             onSubmit={(event) => handleSubmit(event, onSubmit)}
             className={classNames(
-              "reset-form",
-              !hashFound ? "reset-form--disabled" : null
+              styles.form,
+              !hashFound ? styles.isDisabledForm : null
             )}
           >
             <FormRow>
@@ -98,7 +101,7 @@ const Reset = () => {
           </form>
         </div>
       </div>
-    </Fragment>
+    </>
   );
 };
 

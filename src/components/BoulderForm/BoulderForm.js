@@ -188,7 +188,7 @@ function TagSelect({ value, ...rest }) {
 }
 
 function SetterSelect({ value, ...rest }) {
-  const { data } = useRequest("/setter/current");
+  const { data } = useRequest("/setter");
 
   if (value.every((item) => typeof item === "number") && data) {
     value = value.map((id) => data.find((item) => item.id === id));

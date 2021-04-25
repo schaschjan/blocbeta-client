@@ -47,6 +47,7 @@
 /* danger */
 .button--small.button--danger {
   color: var(--color-red);
+  border: 1px solid var(--color-red);
 }
 
 .button--small.button--danger:hover,
@@ -58,6 +59,7 @@
 /* primary */
 .button--small.button--primary {
   color: var(--color-lila);
+  border: 1px solid var(--color-lila);
 }
 
 .button--small.button--primary:hover,

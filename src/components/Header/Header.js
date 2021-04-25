@@ -1,16 +1,28 @@
 import React, { useContext, useCallback, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { BoulderDBUIContext } from "../BoulderDBUI";
 import { useLocation } from "react-router-dom";
 import { Close } from "../Icon/Close";
-import { classNames } from "../../helper/classNames";
+import { classNames, joinClassNames } from "../../helper/classNames";
 import Burger from "../Icon/Burger";
-import { NavItem } from "../NavItem/NavItem";
 import { useRequest } from "../../hooks/useRequest";
-import "./Header.css";
+import styles from "./Header.module.css";
+import typography from "../../css/typography.module.css";
 
-const DoubtCountItem = () => {
+const NavItem = ({ children, ...rest }) => {
+  return (
+    <NavLink
+      className={styles.navItem}
+      activeClassName={styles.isActiveNavItem}
+      {...rest}
+    >
+      {children}
+    </NavLink>
+  );
+};
+
+const DoubtCountNavItem = () => {
   const { contextualizedPath } = useContext(BoulderDBUIContext);
   const { data } = useRequest(`/doubt/count`);
 
@@ -59,8 +71,8 @@ const Header = () => {
 
   if (!currentLocation) {
     return (
-      <header className="header">
-        <Link className="header__logo" to="/login">
+      <header className={styles.root}>
+        <Link className={styles.logo} to="/login">
           BoulderDB
         </Link>
       </header>
@@ -68,17 +80,17 @@ const Header = () => {
   }
 
   return (
-    <header className="header">
-      <div className="header__logo header-logo">
+    <header className={joinClassNames(styles.root, typography.eta)}>
+      <div className={styles.logo}>
         <Link
           to={contextualizedPath("/boulder")}
-          className="header-logo__title t--eta"
+          className={joinClassNames(styles.title)}
         >
           BoulderDB
         </Link>
 
         <select
-          className="header-logo__location-select location-select t--eta"
+          className={joinClassNames(styles.locationSelect, typography.eta)}
           onChange={(event) => switchLocation(event.target.value)}
         >
           <option value=""> @{currentLocation.name}</option>
@@ -100,8 +112,8 @@ const Header = () => {
 
       <nav
         className={classNames(
-          "header__nav header-nav",
-          mobileNavOpen ? "header-nav--open" : null
+          styles.nav,
+          mobileNavOpen ? styles.isOpenMobileNav : null
         )}
         onClick={() => setMobileNavOpen(false)}
       >
@@ -115,17 +127,17 @@ const Header = () => {
           [{user && user.username}]
         </NavItem>
 
-        {isAuthenticated && currentLocation && <DoubtCountItem />}
+        {isAuthenticated && currentLocation && <DoubtCountNavItem />}
 
         {isAdmin && <NavItem to={contextualizedPath("/admin")}>Admin</NavItem>}
 
-        <span onClick={() => reset()} className="header-nav__item">
+        <span onClick={() => reset()} className={styles.navItem}>
           Out!
         </span>
       </nav>
 
       <div
-        className="header__mobile-toggle"
+        className={styles.toggle}
         onClick={() => setMobileNavOpen(!mobileNavOpen)}
       >
         {mobileNavOpen ? <Close /> : <Burger />}

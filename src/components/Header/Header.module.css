@@ -1,0 +1,116 @@
+.root {
+  display: flex;
+  padding: calc(3 * var(--spacing-unit));
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
+  align-self: start;
+  position: fixed;
+  z-index: 200;
+  top: 0;
+  left: 0;
+  width: 100%;
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: var(--header-height) auto;
+  background: rgba(255, 255, 255, 0.3);
+  height: var(--header-height);
+  backdrop-filter: blur(6px);
+}
+
+.logo {
+  padding-left: 0;
+  text-decoration: none;
+  font-weight: bold;
+  display: block;
+  grid-row: 1;
+  grid-column: 1;
+}
+
+.toggle {
+  z-index: 200;
+  display: none;
+  cursor: pointer;
+}
+
+.nav {
+  padding: calc(2 * var(--spacing-unit));
+  background: none;
+  display: flex;
+}
+
+.locationSelect {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  outline: none;
+  font-weight: bold;
+}
+
+.navItem {
+  text-decoration: none;
+  cursor: pointer;
+  margin-left: calc(4 * var(--spacing-unit));
+  padding-bottom: 0;
+}
+
+.isActiveNavItem {
+  font-weight: var(--font-weight-bold);
+}
+
+@media (max-width: 1024px) {
+  .root {
+    padding: 16px;
+  }
+
+  .title {
+    text-decoration: none;
+  }
+
+  .toggle {
+    display: flex;
+    grid-row: 1;
+    grid-column: 2;
+    margin-left: auto;
+  }
+
+  .nav {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    width: 0;
+    height: 100vh;
+    overflow: hidden;
+    left: 0;
+    top: 0;
+    background: var(--color-white);
+    flex-direction: column;
+    padding: 0;
+    padding-left: 16px;
+    padding-top: 24px;
+  }
+
+  .isOpenMobileNav {
+    display: flex;
+    width: 100vw;
+  }
+
+  .navItem {
+    margin-bottom: 32px;
+    margin-left: 0;
+  }
+
+  .navItem:last-child {
+    padding-bottom: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .root {
+    padding: 8px;
+  }
+
+  .nav {
+    padding-left: 8px;
+    padding-top: 12px;
+  }
+}

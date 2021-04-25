@@ -14,7 +14,7 @@ import { mutate } from "swr";
 const Index = () => {
   const { dispatch } = useContext(ToastContext);
   const { isAdmin, contextualizedApiPath } = useContext(BoulderDBUIContext);
-  const { data } = useRequest("/setter/current");
+  const { data } = useRequest("/setter");
   const locationHttp = useHttp();
 
   if (!isAdmin) {
@@ -25,50 +25,49 @@ const Index = () => {
     <>
       <div className={layouts.side}>
         <h1 className={joinClassNames(layouts.sideTitle, typography.alpha)}>
-          Setter
+          Setter ({data && data.length})
         </h1>
 
         <div className={layouts.sideContent}>
-            {data &&
-              data.map((setter) => {
-                return (
-                  <div className={styles.row}>
-                    <div className={styles.cell}>{setter.username}</div>
-
-                    <div className={styles.cell}>
-                      <Button
-                        size={"small"}
-                        onClick={async () => {
-                          try {
-                            await locationHttp.put(`/setter/${setter.id}`, {
-                              active: false,
-                              username: setter.username,
-                            });
-
-                            await mutate(
-                              contextualizedApiPath(`/setter/current`)
-                            );
-
-                            dispatch(
-                              toast("Update successful", null, "success")
-                            );
-                          } catch (error) {
-                            dispatch(
-                              toast(
-                                "Error",
-                                extractErrorMessage(error),
-                                "danger"
-                              )
-                            );
-                          }
-                        }}
-                      >
-                        deactivate
-                      </Button>
-                    </div>
+          {data &&
+            data.map((setter) => {
+              return (
+                <div className={styles.row}>
+                  <div
+                    className={joinClassNames(
+                      styles.cell,
+                      !setter.active ? styles.isInactiveCell : null
+                    )}
+                  >
+                    {setter.username}
                   </div>
-                );
-              })}
+
+                  <div className={styles.cell}>
+                    <Button
+                      size={"small"}
+                      variant={setter.active ? "danger" : "primary"}
+                      onClick={async () => {
+                        try {
+                          await locationHttp.put(`/setter/${setter.id}`, {
+                            active: !setter.active,
+                          });
+
+                          await mutate(contextualizedApiPath("/setter"));
+
+                          dispatch(toast("Update successful", null, "success"));
+                        } catch (error) {
+                          dispatch(
+                            toast("Error", extractErrorMessage(error), "danger")
+                          );
+                        }
+                      }}
+                    >
+                      {setter.active ? "deactivate" : "re-activate"}
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
         </div>
       </div>
     </>

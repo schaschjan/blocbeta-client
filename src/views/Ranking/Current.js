@@ -17,7 +17,7 @@ import styles from "./Current.module.css";
 import { joinClassNames } from "../../helper/classNames";
 import typography from "../../css/typography.module.css";
 import { AccessDenied } from "../../components/AccessDenied/AccessDenied";
-import {parseDate} from "../../helper/parseDate";
+import { parseDate } from "../../helper/parseDate";
 
 const Current = () => {
   const { user, contextualizedPath } = useContext(BoulderDBUIContext);
@@ -107,7 +107,7 @@ const Current = () => {
         gridTemplate: "100px",
         className: styles.lastActivityCell,
         Cell: ({ cell }) => {
-          return <span>{parseDate(cell.value)}</span>;
+          return <span>{parseDate(cell.value).string}</span>;
         },
       },
       {

@@ -1,9 +1,9 @@
-.reset-form {
+.form {
   transition: opacity 200ms ease-in-out;
   opacity: 1;
 }
 
-.reset-form--disabled {
+.isDisabledForm {
   opacity: 0.15;
   pointer-events: none;
 }
