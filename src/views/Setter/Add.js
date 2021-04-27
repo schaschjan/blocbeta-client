@@ -20,11 +20,9 @@ const Form = () => {
   const locationHttp = useHttp();
   const { dispatch } = useContext(ToastContext);
 
-  const { handleSubmit, formData, observeField } = useForm({
+  const { handleSubmit, formData, observeField, resetForm } = useForm({
     username: "",
   });
-
-  console.log(formData);
 
   return (
     <div className={styles.addForm}>
@@ -37,6 +35,7 @@ const Form = () => {
               });
 
               dispatch(successToast(`Added ${formData.username} to setters`));
+              resetForm();
             } catch (error) {
               dispatch(errorToast(error));
             }
