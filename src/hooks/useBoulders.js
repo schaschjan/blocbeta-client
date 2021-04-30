@@ -30,7 +30,11 @@ function useBoulders() {
   const { data: walls } = useRequest("/wall");
   const { data: grades } = useRequest("/grade");
   const { data: holdTypes } = useRequest("/holdstyle");
-  const { data: setters } = useRequest("/setter");
+  const { data: setters } = useRequest("/setter", true, {
+    params: {
+      filter: "current",
+    },
+  });
 
   const idle =
     boulders &&
