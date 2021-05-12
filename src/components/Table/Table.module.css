@@ -21,6 +21,10 @@
   margin-right: 8px;
 }
 
+.cell:last-child > * {
+  margin-left: auto;
+}
+
 .header {
   display: grid;
   font-weight: bold;

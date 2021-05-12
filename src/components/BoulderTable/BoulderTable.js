@@ -1,5 +1,4 @@
 import React, {
-  Fragment,
   useEffect,
   useRef,
   forwardRef,
@@ -118,7 +117,7 @@ const BoulderTable = ({
   }, [globalFilter]);
 
   return (
-    <Fragment>
+    <>
       <div className={styles.root} {...getTableProps()}>
         <TableHeader className={headerClassName} headerGroups={headerGroups} />
 
@@ -150,7 +149,7 @@ const BoulderTable = ({
         previousPage={previousPage}
         nextPage={nextPage}
       />
-    </Fragment>
+    </>
   );
 };
 

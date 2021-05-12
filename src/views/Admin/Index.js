@@ -54,6 +54,18 @@ const Index = () => {
           </li>
         </ul>
       </div>
+
+      <div className="dashboard-section">
+        <h3 className="t--beta dashboard-section__title">Walls</h3>
+
+        <ul className="dashboard-links">
+          <li className="dashboard-links__item">
+            <Link to={contextualizedPath("/admin/walls")} className="t--gamma">
+              List
+            </Link>
+          </li>
+        </ul>
+      </div>
     </Fragment>
   );
 };

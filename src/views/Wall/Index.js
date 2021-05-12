@@ -16,14 +16,14 @@ import styles from "./Index.module.css";
 const Index = () => {
   const { dispatch } = useContext(ToastContext);
   const { isAdmin, contextualizedApiPath } = useContext(BoulderDBUIContext);
-  const { data } = useRequest("/setter");
+  const { data } = useRequest("/wall");
   const locationHttp = useHttp();
 
   const columns = useMemo(() => {
     return [
       {
-        accessor: "username",
-        Header: "Username",
+        accessor: "name",
+        Header: "Name",
       },
       {
         id: "deactivate",
@@ -69,7 +69,7 @@ const Index = () => {
     <>
       <div className={layouts.side}>
         <h1 className={joinClassNames(layouts.sideTitle, typography.alpha)}>
-          Setter ({data && data.length})
+          Walls ({data && data.length})
         </h1>
 
         <div className={layouts.sideContent}>

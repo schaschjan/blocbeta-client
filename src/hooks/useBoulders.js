@@ -27,7 +27,11 @@ function useBoulders() {
 
   const { data: boulders } = useRequest("/boulder");
   const { data: ascents } = useRequest("/ascent");
-  const { data: walls } = useRequest("/wall");
+  const { data: walls } = useRequest("/wall", true, {
+    params: {
+      filter: "active",
+    },
+  });
   const { data: grades } = useRequest("/grade");
   const { data: holdTypes } = useRequest("/holdstyle");
   const { data: setters } = useRequest("/setter", true, {

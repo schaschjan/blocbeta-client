@@ -16,6 +16,7 @@ import { Current as CurrentRanking } from "./views/Ranking/Current";
 import { Current as CompareCurrent } from "./views/Compare/Current";
 import { AllTime as AllTimeRanking } from "./views/Ranking/AllTime";
 import { Index as Doubts } from "./views/Doubt/Index";
+import { Index as WallIndex } from "./views/Wall/Index";
 
 const adminRoutes = [
   {
@@ -52,6 +53,13 @@ const adminRoutes = [
     exact: true,
     admin: true,
     main: () => <BoulderDetail />,
+  },
+  {
+    title: "List walls",
+    path: "/:location/admin/walls",
+    exact: true,
+    admin: true,
+    main: () => <WallIndex />,
   },
 ];
 
