@@ -7,8 +7,9 @@ import React, {
   useEffect,
 } from "react";
 import useClickOutside from "../../hooks/useClickOutside";
-import { classNames } from "../../helper/classNames";
+import { classNames, joinClassNames } from "../../helper/classNames";
 import "./Drawer.css";
+import { AnimatePresence, motion } from "framer-motion";
 
 const DrawerContext = createContext({});
 
@@ -49,21 +50,41 @@ const Drawer = ({ children, onClose }) => {
   }, [isOpen]);
 
   return (
-    <Fragment>
-      <div
-        className={classNames(`drawer`, isOpen ? "drawer--open" : null)}
-        ref={drawerRef}
-      >
-        {children}
-      </div>
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            initial={{ x: 320 }}
+            animate={{
+              x: 0,
+            }}
+            exit={{
+              x: 320,
+            }}
+            transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+            className={joinClassNames(`drawer`)}
+            ref={drawerRef}
+          >
+            {children}
+          </motion.div>
 
-      <div
-        className={classNames(
-          "drawer-overlay",
-          isOpen ? "drawer-overlay--visible" : null
-        )}
-      />
-    </Fragment>
+          <motion.div
+            transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: 0.8,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            className={classNames(
+              "drawer-overlay",
+              isOpen ? "drawer-overlay--visible" : null
+            )}
+          />
+        </>
+      )}
+    </AnimatePresence>
   );
 };
 

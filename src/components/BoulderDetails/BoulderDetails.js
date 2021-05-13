@@ -113,6 +113,66 @@ function SectionTitle({ children }) {
   );
 }
 
+function AscentList({ data, setPage, setPageData }) {
+  const limit = 10;
+
+  const [ascents, setAscents] = useState(data.ascents.slice(0, limit));
+
+  if (!ascents) {
+    return null;
+  }
+
+  return (
+    <ul className={styles.list}>
+      {ascents.map((ascent, index) => {
+        const doubted = ascent.type.includes("-pending-doubt");
+        const Icon = getIcon(ascent.type.replace("-pending-doubt", ""));
+
+        if (ascents.length === limit && index + 1 === limit) {
+          return (
+            <li className={joinClassNames(styles.listItem)}>
+              <Button
+                size={"small"}
+                className={styles.listAllButton}
+                onClick={() => setAscents(data.ascents)}
+              >
+                show {data.ascents.length - limit} more
+              </Button>
+            </li>
+          );
+        }
+
+        return (
+          <li className={styles.listItem} key={index}>
+            <span
+              className={joinClassNames(
+                typography.eta,
+                styles.ascent,
+                doubted ? styles.hasPendingDoubtAscent : null
+              )}
+            >
+              <Icon fill={true} />
+              {ascent.username}
+            </span>
+
+            {!doubted && ascent.type !== "resignation" && (
+              <Button
+                size={"small"}
+                onClick={() => {
+                  setPageData({ ascent, boulder: data });
+                  setPage("doubt");
+                }}
+              >
+                Doubt it
+              </Button>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 const BoulderDetails = ({ id }) => {
   const { data } = useRequest(`/boulder/${id}`);
 
@@ -177,43 +237,11 @@ const BoulderDetails = ({ id }) => {
               Ascents ({data.ascents.length > 0 ? data.ascents.length : 0})
             </SectionTitle>
 
-            {data.ascents.length > 0 && (
-              <ul className={styles.list}>
-                {data.ascents.map((ascent, index) => {
-                  const doubted = ascent.type.includes("-pending-doubt");
-                  const Icon = getIcon(
-                    ascent.type.replace("-pending-doubt", "")
-                  );
-
-                  return (
-                    <li className={styles.listItem} key={index}>
-                      <span
-                        className={joinClassNames(
-                          typography.eta,
-                          styles.ascent,
-                          doubted ? styles.hasPendingDoubtAscent : null
-                        )}
-                      >
-                        <Icon fill={true} />
-                        {ascent.username}
-                      </span>
-
-                      {!doubted && ascent.type !== "resignation" && (
-                        <Button
-                          size={"small"}
-                          onClick={() => {
-                            setPageData({ ascent, boulder: data });
-                            setPage("doubt");
-                          }}
-                        >
-                          Doubt it
-                        </Button>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
+            <AscentList
+              data={data}
+              setPage={setPage}
+              setPageData={setPageData}
+            />
 
             <div className={styles.reportErrorButton}>
               <Button size={"small"} onClick={() => setPage("error")}>

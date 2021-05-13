@@ -3,13 +3,13 @@
   width: 320px;
   z-index: 300;
   top: 0;
+  right: 0;
   background: var(--color-light);
   overflow-y: scroll;
   overflow-x: hidden;
   border-left: 1px solid var(--color-grey);
-
+  height: 100vh;
   transition: right 200ms ease-in-out;
-  right: -320px;
 }
 
 .drawer-overlay {
@@ -21,9 +21,6 @@
   top: 0;
   left: 0;
   pointer-events: none;
-
-  transition: opacity 200ms ease-in-out;
-  opacity: 0;
 }
 
 .drawer-overlay--visible {

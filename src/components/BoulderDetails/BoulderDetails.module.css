@@ -34,14 +34,14 @@
 }
 
 .listItem {
-  padding: calc(2 * var(--spacing-unit));
+  padding: 8px 16px;
   align-items: center;
   display: flex;
   justify-content: space-between;
 }
 
-.details-ascents__item {
-  justify-content: space-between;
+.listAllButton {
+  margin: 0 auto;
 }
 
 .ascent {
