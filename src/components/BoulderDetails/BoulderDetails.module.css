@@ -77,8 +77,7 @@
 
 .separator {
   border-bottom: 1px solid var(--color-grey);
-  padding-top: 16px;
-  margin-bottom: 16px;
+  margin-top: 16px;
 }
 
 .reportErrorButton,
@@ -95,6 +94,7 @@
 
 .reportErrorButton {
   padding-bottom: 16px;
+  margin-top: 16px;
 }
 
 .form {
