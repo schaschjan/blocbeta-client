@@ -40,8 +40,12 @@
   justify-content: space-between;
 }
 
+.listItem:last-child {
+  padding-bottom: 0;
+}
+
 .listAllButton {
-  margin: 0 auto;
+  margin: 16px auto 0;
 }
 
 .ascent {
@@ -69,16 +73,28 @@
 
 .list {
   list-style: none;
-  border-bottom: 1px solid var(--color-grey);
-  padding-bottom: calc(2 * var(--spacing-unit));
 }
 
-.reportErrorButton {
+.separator {
+  border-bottom: 1px solid var(--color-grey);
+  padding-top: 16px;
+  margin-bottom: 16px;
+}
+
+.reportErrorButton,
+.commentButton {
   align-items: center;
   justify-content: center;
   display: flex;
-  padding: calc(2 * var(--spacing-unit));
   margin-top: auto;
+}
+
+.commentButton {
+  margin-top: 16px;
+}
+
+.reportErrorButton {
+  padding-bottom: 16px;
 }
 
 .form {
@@ -92,4 +108,37 @@
 
 .formButton {
   margin-left: auto;
+}
+
+.commentList {
+  list-style: none;
+  margin: 0 16px;
+}
+
+.commentListItem {
+  border-bottom: 1px solid var(--color-grey);
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.commentListItem:last-child {
+  border-bottom: none;
+}
+
+.commentAuthor {
+  font-weight: bold;
+}
+
+.commentAuthor,
+.commentDate {
+  text-align: right;
+}
+
+.commentDelete {
+  padding: 0;
+  color: var(--color-red);
+  font-weight: bold;
+  display: flex;
+  margin-left: auto;
+  cursor: pointer;
 }

@@ -13,6 +13,8 @@ function CollapsedRow({ cells }) {
   const nameCell = cells.find((cell) => cell.column.id === "name");
   const gradeCell = cells.find((cell) => cell.column.id === "grade");
 
+  const boulderId = cells[0].row.original.id;
+
   return (
     <SwipeOut
       className={styles.root}
