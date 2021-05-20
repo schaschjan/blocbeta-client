@@ -26,7 +26,7 @@ export const successToast = (message) => {
 };
 
 export const errorToast = (error) => {
-  return toast("A error occurred", extractErrorMessage(error), "danger");
+  return toast("A error occurred", extractErrorMessage(error), "error");
 };
 
 export const ToastContainer = ({ children }) => {

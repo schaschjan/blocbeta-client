@@ -142,3 +142,23 @@
   margin-left: auto;
   cursor: pointer;
 }
+
+.rating {
+  display: inline-flex;
+  margin: 16px auto 0;
+  align-items: center;
+}
+
+.rateButton {
+  cursor: pointer;
+  transition: filter 200ms ease-in-out;
+  filter: grayscale(1);
+}
+
+.rateButton:hover {
+  filter: grayscale(0);
+}
+
+.active {
+  filter: grayscale(0);
+}

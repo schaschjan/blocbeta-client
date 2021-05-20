@@ -61,7 +61,7 @@ const Drawer = ({ children, onClose }) => {
             exit={{
               x: 320,
             }}
-            transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+            transition={{ type: "spring", bounce: 0.1, duration: 0.5 }}
             className={joinClassNames(`drawer`)}
             ref={drawerRef}
           >
@@ -69,7 +69,7 @@ const Drawer = ({ children, onClose }) => {
           </motion.div>
 
           <motion.div
-            transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+            transition={{ type: "spring", bounce: 0, duration: 0.8 }}
             initial={{ opacity: 0 }}
             animate={{
               opacity: 0.8,

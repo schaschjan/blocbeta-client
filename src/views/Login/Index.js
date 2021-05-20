@@ -60,7 +60,7 @@ const Index = () => {
         history.push(`${targetLocation}/boulder`);
       }
     } catch (error) {
-      dispatch(toast("Error", extractErrorMessage(error), "danger"));
+      dispatch(toast("Error", extractErrorMessage(error), "error"));
     }
   };
 

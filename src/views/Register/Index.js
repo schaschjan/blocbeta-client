@@ -42,7 +42,7 @@ const Index = () => {
       );
       history.push("/login");
     } catch (error) {
-      dispatch(toast("Error", extractErrorMessage(error), "danger"));
+      dispatch(toast("Error", extractErrorMessage(error), "error"));
     }
   };
 

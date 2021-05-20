@@ -222,7 +222,7 @@ const Index = () => {
 
       dispatch(toast(`${data.me.type}`, `+${data.points}`));
     } catch (error) {
-      dispatch(toast("Error", extractErrorMessage(error), "danger"));
+      dispatch(toast("Error", extractErrorMessage(error), "error"));
     }
   }, []);
 
@@ -231,7 +231,7 @@ const Index = () => {
       await http.delete(`/ascent/${id}`);
       await mutate(contextualizedApiPath("/ascent"));
     } catch (error) {
-      dispatch(toast("Error", extractErrorMessage(error), "danger"));
+      dispatch(toast("Error", extractErrorMessage(error), "error"));
     }
   }, []);
 
@@ -372,7 +372,7 @@ const Index = () => {
         <span>
           <Button
             size={"small"}
-            variant={"danger"}
+            variant={"error"}
             onClick={async () => {
               try {
                 await http.put("/boulder/mass", {
@@ -392,7 +392,7 @@ const Index = () => {
 
           <Button
             size={"small"}
-            variant={"danger"}
+            variant={"error"}
             onClick={async () => {
               try {
                 await http.put("/boulder/mass", {

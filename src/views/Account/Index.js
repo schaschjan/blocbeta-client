@@ -197,7 +197,7 @@ const Index = () => {
 
         history.push(contextualizedPath("/dashboard"));
       } catch (error) {
-        dispatch(toast("Error", extractErrorMessage(error), "danger"));
+        dispatch(toast("Error", extractErrorMessage(error), "error"));
       }
     }
   };
@@ -220,7 +220,7 @@ const Index = () => {
 
           <div className={styles.actions}>
             <Button
-              variant="danger"
+              variant="error"
               size={"small"}
               onClick={() => scheduleAccountDeletion()}
             >

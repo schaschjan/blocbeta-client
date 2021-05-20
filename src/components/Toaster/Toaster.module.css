@@ -27,7 +27,7 @@
   border-color: var(--color-lila);
 }
 
-.isDanger {
+.isError {
   border-color: var(--color-red);
 }
 

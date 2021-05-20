@@ -16,6 +16,8 @@ import { BoulderDBUIContext } from "../BoulderDBUI";
 import styles from "./BoulderDetails.module.css";
 import typography from "../../css/typography.module.css";
 import { parseDate } from "../../helper/parseDate";
+import axios from "axios";
+import { extractErrorMessage } from "../../hooks/useApi";
 
 function DoubtForm({ ascent }) {
   const { contextualizedApiPath } = useContext(BoulderDBUIContext);
@@ -38,8 +40,8 @@ function DoubtForm({ ascent }) {
       dispatch(toast("Doubt submitted", null, "success"));
       toggleDrawer(false);
     } catch (error) {
-      console.error(error);
-      dispatch(toast("Error", error, "error"));
+      console.error(error.response);
+      dispatch(toast("Error", extractErrorMessage(error), "error"));
     }
   };
 
@@ -84,8 +86,8 @@ function ErrorForm() {
       dispatch(toast("Error submitted", null, "success"));
       toggleDrawer(false);
     } catch (error) {
-      console.error(error);
-      dispatch(toast("Error", error, "error"));
+      console.error(error.response);
+      dispatch(toast("Error", extractErrorMessage(error), "error"));
     }
   };
 
@@ -130,8 +132,8 @@ function CommentForm() {
       dispatch(toast("Comment submitted", null, "success"));
       toggleDrawer(false);
     } catch (error) {
-      console.error(error);
-      dispatch(toast("Error", error, "error"));
+      console.error(error.response);
+      dispatch(toast("Error", extractErrorMessage(error), "error"));
     }
   };
 
@@ -179,13 +181,13 @@ function AscentList() {
 
   return (
     <ul className={styles.list}>
-      {ascents.map((ascent, index) => {
+      {ascents.map((ascent) => {
         const doubted = ascent.type.includes("-pending-doubt");
         const Icon = getIcon(ascent.type.replace("-pending-doubt", ""));
 
-        if (ascents.length === limit && index + 1 === limit) {
+        if (ascents.length === limit && ascent.id + 1 === limit) {
           return (
-            <li className={joinClassNames(styles.listItem)}>
+            <li className={joinClassNames(styles.listItem)} key={ascent.id}>
               <Button
                 size={"small"}
                 className={styles.listAllButton}
@@ -198,7 +200,7 @@ function AscentList() {
         }
 
         return (
-          <li className={styles.listItem} key={index}>
+          <li className={styles.listItem} key={ascent.id}>
             <span
               className={joinClassNames(
                 typography.eta,
@@ -249,8 +251,8 @@ function Comment({ id, message, author, createdAt, matchesUser = false }) {
       await http.delete(`/comment/${id}`);
       await mutate(contextualizedApiPath(`/boulder/${boulderId}`));
     } catch (error) {
-      console.error(error);
-      dispatch(toast("Error", error, "error"));
+      console.error(error.response);
+      dispatch(toast("Error", extractErrorMessage(error.response), "error"));
     }
   };
 
@@ -285,6 +287,7 @@ function CommentList({}) {
       ) : (
         boulder.comments.map((comment) => (
           <Comment
+            key={comment.id}
             {...comment}
             createdAt={comment.created_at}
             matchesUser={user.username === comment.author}
@@ -297,11 +300,27 @@ function CommentList({}) {
 
 const BoulderDetailContext = createContext(null);
 
+function RateButton({ onClick, children, active = false }) {
+  return (
+    <button
+      onClick={onClick}
+      className={joinClassNames(
+        styles.rateButton,
+        active ? styles.active : null
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
 function BoulderDetails({ id }) {
   const { data: boulder } = useRequest(`/boulder/${id}`);
   const [page, setPage] = useState("index");
   const [pageData, setPageData] = useState();
   const { toggle: toggleDrawer } = useContext(DrawerContext);
+  const { dispatch } = useContext(ToastContext);
+  const http = useHttp();
 
   function Header({ children, backlink }) {
     return (
@@ -336,8 +355,8 @@ function BoulderDetails({ id }) {
 
             {boulder.setters.length > 0 && (
               <ul className={styles.list}>
-                {boulder.setters.map((setter, index) => (
-                  <li className={styles.listItem} key={index}>
+                {boulder.setters.map((setter) => (
+                  <li className={styles.listItem} key={setter.id}>
                     {setter.username}
                   </li>
                 ))}
@@ -350,8 +369,8 @@ function BoulderDetails({ id }) {
               <>
                 <SectionTitle>Tags</SectionTitle>
                 <ul className={styles.list}>
-                  {boulder.tags.map((tag, index) => (
-                    <li className={styles.listItem} key={index}>
+                  {boulder.tags.map((tag) => (
+                    <li className={styles.listItem} key={tag.id}>
                       {tag.emoji} {tag.name}
                     </li>
                   ))}
@@ -381,11 +400,59 @@ function BoulderDetails({ id }) {
 
             <SectionSeparator />
 
+            <div className={styles.rating}>
+              <RateButton
+                onClick={async () => {
+                  try {
+                    await http.post(`/rating`, {
+                      rating: 10,
+                      boulder: boulder.id,
+                    });
+
+                    dispatch(toast("Rating submitted!", null, "success"));
+                  } catch (error) {
+                    console.error(error.response);
+                    dispatch(
+                      toast("Error", extractErrorMessage(error), "error")
+                    );
+                  }
+                }}
+                active={boulder.rating && boulder.rating.rating === 10}
+              >
+                👍
+              </RateButton>
+
+              <span>/</span>
+
+              <RateButton
+                onClick={async () => {
+                  try {
+                    await http.post(`/rating`, {
+                      rating: 0,
+                      boulder: boulder.id,
+                    });
+
+                    dispatch(toast("Rating submitted!", null, "success"));
+                  } catch (error) {
+                    console.error(error.response);
+                    dispatch(
+                      toast("Error", extractErrorMessage(error), "error")
+                    );
+                  }
+                }}
+                active={boulder.rating && boulder.rating.rating === 0}
+              >
+                👎
+              </RateButton>
+            </div>
+
+            <SectionSeparator />
+
             <div className={styles.reportErrorButton}>
               <Button
                 size={"small"}
                 onClick={() => setPage("error")}
-                variant={"danger"}
+                variant={"error"}
               >
                 Report error
               </Button>
