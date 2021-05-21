@@ -3,7 +3,6 @@ import React, {
   useContext,
   useState,
   useMemo,
-  useEffect,
   useCallback,
 } from "react";
 import { Meta } from "../../App";
@@ -44,9 +43,11 @@ import { sortItemsAlphabetically } from "../../helper/sortItemsAlphabetically";
 import { Loader } from "../../components/Loader/Loader";
 import { Select } from "../../components/Select/Select";
 import { mutate } from "swr";
-import { getApiHost, useHttp, useRequest } from "../../hooks/useRequest";
+import { useHttp } from "../../hooks/useRequest";
 import { CollapsedRow } from "./CollapsedRow";
 import { joinClassNames } from "../../helper/classNames";
+import RateButton from "../../components/RateButton/RateButton";
+import { AscentIcon } from "../../components/Ascent/Ascent";
 
 const Index = () => {
   const { isAdmin, contextualizedPath, contextualizedApiPath } = useContext(
@@ -54,7 +55,6 @@ const Index = () => {
   );
   const { dispatch } = useContext(ToastContext);
   const { toggle: toggleDrawer } = useContext(DrawerContext);
-  const { version } = useContext(BoulderDBUIContext);
 
   const [detailBoulder, setDetailBoulder] = useState(null);
   const [detailWall, setDetailWall] = useState(null);
@@ -220,7 +220,58 @@ const Index = () => {
       const { data } = await http.post("/ascent", payload);
       await mutate(contextualizedApiPath("/ascent"));
 
-      dispatch(toast(`${data.me.type}`, `+${data.points}`));
+      dispatch(
+        toast(
+          "Ascent added",
+          <>
+            <span>
+              <AscentIcon type={data.me.type} fill={true} />+{data.points}
+            </span>
+
+            <div className={styles.rating}>
+              <span>Leave a rating:</span>
+
+              <RateButton
+                direction={"up"}
+                onAdd={async () => {
+                  try {
+                    await http.post(`/rating`, {
+                      rating: 10,
+                      boulder: boulderId,
+                    });
+                  } catch (error) {
+                    console.log(error.response);
+                    dispatch(
+                      toast("Error", extractErrorMessage(error), "error")
+                    );
+                  }
+                }}
+              />
+
+              <span>/</span>
+
+              <RateButton
+                direction={"down"}
+                onAdd={async () => {
+                  try {
+                    await http.post(`/rating`, {
+                      rating: 0,
+                      boulder: boulderId,
+                    });
+                  } catch (error) {
+                    console.log(error.response);
+                    dispatch(
+                      toast("Error", extractErrorMessage(error), "error")
+                    );
+                  }
+                }}
+              />
+            </div>
+          </>,
+          "info",
+          4000
+        )
+      );
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "error"));
     }

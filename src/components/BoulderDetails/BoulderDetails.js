@@ -16,8 +16,8 @@ import { BoulderDBUIContext } from "../BoulderDBUI";
 import styles from "./BoulderDetails.module.css";
 import typography from "../../css/typography.module.css";
 import { parseDate } from "../../helper/parseDate";
-import axios from "axios";
 import { extractErrorMessage } from "../../hooks/useApi";
+import RateButton from "../RateButton/RateButton";
 
 function DoubtForm({ ascent }) {
   const { contextualizedApiPath } = useContext(BoulderDBUIContext);
@@ -276,43 +276,7 @@ function Comment({ id, message, author, createdAt, matchesUser = false }) {
   );
 }
 
-function CommentList({}) {
-  const { user } = useContext(BoulderDBUIContext);
-  const { boulder } = useContext(BoulderDetailContext);
-
-  return (
-    <ul className={styles.commentList}>
-      {boulder.comments.length === 0 ? (
-        <li className={joinClassNames(typography.eta)}>Be the first!</li>
-      ) : (
-        boulder.comments.map((comment) => (
-          <Comment
-            key={comment.id}
-            {...comment}
-            createdAt={comment.created_at}
-            matchesUser={user.username === comment.author}
-          />
-        ))
-      )}
-    </ul>
-  );
-}
-
 const BoulderDetailContext = createContext(null);
-
-function RateButton({ onClick, children, active = false }) {
-  return (
-    <button
-      onClick={onClick}
-      className={joinClassNames(
-        styles.rateButton,
-        active ? styles.active : null
-      )}
-    >
-      {children}
-    </button>
-  );
-}
 
 function BoulderDetails({ id }) {
   const { data: boulder } = useRequest(`/boulder/${id}`);
@@ -321,6 +285,7 @@ function BoulderDetails({ id }) {
   const { toggle: toggleDrawer } = useContext(DrawerContext);
   const { dispatch } = useContext(ToastContext);
   const http = useHttp();
+  const { contextualizedApiPath, user } = useContext(BoulderDBUIContext);
 
   function Header({ children, backlink }) {
     return (
@@ -339,6 +304,34 @@ function BoulderDetails({ id }) {
   const pages = useMemo(() => {
     return {
       index: () => {
+        const userRating = boulder.rating;
+
+        const createRating = async (direction) => {
+          try {
+            await http.post(`/rating`, {
+              rating: direction === "up" ? 10 : 0,
+              boulder: boulder.id,
+            });
+
+            await mutate(contextualizedApiPath(`/boulder/${boulder.id}`));
+
+            dispatch(toast("Thanks for your feedback.", null, "success"));
+          } catch (error) {
+            console.error(error.response);
+            dispatch(toast("Error", extractErrorMessage(error), "error"));
+          }
+        };
+
+        const deleteRating = async (id) => {
+          try {
+            await http.delete(`/rating/${id}`);
+            await mutate(contextualizedApiPath(`/boulder/${boulder.id}`));
+          } catch (error) {
+            console.error(error.response);
+            dispatch(toast("Error", extractErrorMessage(error), "error"));
+          }
+        };
+
         return (
           <>
             <Header>
@@ -390,7 +383,22 @@ function BoulderDetails({ id }) {
 
             <SectionTitle>Comments</SectionTitle>
 
-            <CommentList />
+            <ul className={styles.commentList}>
+              {boulder.comments.length === 0 ? (
+                <li className={joinClassNames(typography.eta)}>
+                  Be the first!
+                </li>
+              ) : (
+                boulder.comments.map((comment) => (
+                  <Comment
+                    key={comment.id}
+                    {...comment}
+                    createdAt={comment.created_at}
+                    matchesUser={user.username === comment.author}
+                  />
+                ))
+              )}
+            </ul>
 
             <div className={styles.commentButton}>
               <Button size={"small"} onClick={() => setPage("comment")}>
@@ -402,48 +410,26 @@ function BoulderDetails({ id }) {
 
             <div className={styles.rating}>
               <RateButton
-                onClick={async () => {
-                  try {
-                    await http.post(`/rating`, {
-                      rating: 10,
-                      boulder: boulder.id,
-                    });
-
-                    dispatch(toast("Rating submitted!", null, "success"));
-                  } catch (error) {
-                    console.error(error.response);
-                    dispatch(
-                      toast("Error", extractErrorMessage(error), "error")
-                    );
-                  }
-                }}
-                active={boulder.rating && boulder.rating.rating === 10}
-              >
-                👍
-              </RateButton>
+                direction={"up"}
+                value={userRating}
+                onAdd={async () => createRating("up")}
+                onDelete={async () =>
+                  deleteRating(userRating ? userRating.id : null)
+                }
+                disabled={userRating && userRating.rating !== 10}
+              />
 
               <span>/</span>
 
               <RateButton
-                onClick={async () => {
-                  try {
-                    await http.post(`/rating`, {
-                      rating: 0,
-                      boulder: boulder.id,
-                    });
-
-                    dispatch(toast("Rating submitted!", null, "success"));
-                  } catch (error) {
-                    console.error(error.response);
-                    dispatch(
-                      toast("Error", extractErrorMessage(error), "error")
-                    );
-                  }
-                }}
-                active={boulder.rating && boulder.rating.rating === 0}
-              >
-                👎
-              </RateButton>
+                direction={"down"}
+                value={userRating}
+                onAdd={async () => createRating("down")}
+                onDelete={async () =>
+                  deleteRating(userRating ? userRating.id : null)
+                }
+                disabled={userRating && userRating.rating !== 0}
+              />
             </div>
 
             <SectionSeparator />

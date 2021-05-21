@@ -1,0 +1,14 @@
+.root {
+  cursor: pointer;
+  transition: filter 400ms ease-in-out, transform 50ms ease-in-out;
+}
+
+.root:hover {
+  transform: scale(1.2);
+}
+
+.isDisabled {
+  filter: grayscale(1);
+  opacity: 0.5;
+  pointer-events: none;
+}

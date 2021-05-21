@@ -10,6 +10,8 @@
   border-left: 1px solid var(--color-grey);
   height: 100vh;
   transition: right 200ms ease-in-out;
+  display: flex;
+  align-items: center;
 }
 
 .drawer-overlay {

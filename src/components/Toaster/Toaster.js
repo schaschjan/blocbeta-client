@@ -37,15 +37,19 @@ export const ToastContainer = ({ children }) => {
   };
 
   useEffect(() => {
+    console.log(queue);
+
     if (!queue.length > 0) {
       return;
     }
 
-    setTimeout(() => {
-      queue.shift();
+    queue.forEach((toast) => {
+      setTimeout(() => {
+        queue.shift();
 
-      setQueue([...queue]);
-    }, 2000);
+        setQueue([...queue]);
+      }, toast.timeout);
+    });
   }, [queue]);
 
   return (
