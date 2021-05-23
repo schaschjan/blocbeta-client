@@ -207,7 +207,11 @@ function SetterSelect({ value, ...rest }) {
 }
 
 function WallSelect({ value, ...rest }) {
-  const { data } = useRequest("/wall");
+  const { data } = useRequest("/wall", true, {
+    params: {
+      filter: "active",
+    },
+  });
 
   if (typeof value === "number" && data) {
     value = data.find((item) => item.id === value);

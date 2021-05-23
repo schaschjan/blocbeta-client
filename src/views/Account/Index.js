@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import Label from "../../components/Label/Label";
 import { Input } from "../../components/Input/Input";
@@ -16,12 +16,13 @@ import { Button } from "../../components/Button/Button";
 import { FormRow } from "../../components/Form/Form";
 import { composeFormElement, useForm } from "../../hooks/useForm";
 import Avatar from "../../components/Avatar/Avatar";
-import { getApiHost, useHttp, useRequest } from "../../hooks/useRequest";
+import { useHttp, useRequest } from "../../hooks/useRequest";
 import layouts from "../../css/layouts.module.css";
 import typography from "../../css/typography.module.css";
 import styles from "./Index.module.css";
 import { joinClassNames } from "../../helper/classNames";
 import { mutate } from "swr";
+import { Select } from "../../components/Select/Select";
 
 const UploadField = ({ value, renderValue, onSuccess }) => {
   const { dispatch } = useContext(ToastContext);
@@ -81,7 +82,10 @@ const Form = ({ defaults, onSubmit }) => {
     formData,
     setKeyValue,
     observeField,
-  } = useForm(defaults);
+  } = useForm({
+    ...defaults,
+    notifications: Object.keys(defaults.notifications),
+  });
 
   return (
     <form onSubmit={(event) => handleSubmit(event, onSubmit)}>
@@ -103,6 +107,19 @@ const Form = ({ defaults, onSubmit }) => {
           Switch,
           observeField
         )}
+      </FormRow>
+
+      <FormRow>
+        <Label>E-Mail Notifications</Label>
+        <Select
+          onChange={(event, newValue) => setKeyValue("notifications", newValue)}
+          value={formData.notifications}
+          name={"notifications"}
+          multiple={true}
+          options={Object.keys(defaults.notifications)}
+          renderOption={(option) => option}
+          getOptionLabel={(option) => option}
+        />
       </FormRow>
 
       <FormRow>
@@ -177,6 +194,9 @@ const Index = () => {
   // todo: reload user object after submit to reflect changes immediately
   const onSubmit = async (data) => {
     try {
+      delete data.id;
+      delete data.username;
+
       await globalHttp.put("/me", data);
 
       await mutate("/api/me");

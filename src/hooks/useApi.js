@@ -7,13 +7,11 @@ export const extractErrorMessage = (error) => {
 
   const { data } = error.response;
 
-  console.log(data);
-  // todo improve messages
-
   if (data.type === "formError") {
-    return Object.values(error.response.data.errors)
-      .map((message) => `⚠️ ${message}`)
-      .join("\n");
+    const errors = error.response.data.errors;
+    const fields = Object.keys(errors);
+
+    return fields.map((field) => `${field}: ⚠️ ${errors[field]}`);
   }
 
   return data.message;
