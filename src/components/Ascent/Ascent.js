@@ -41,6 +41,14 @@ const Ascent = ({ type, checked, disabled, asyncHandler, ...rest }) => {
   );
 };
 
+export function isDoubt(type) {
+  if (!type) {
+    return false;
+  }
+
+  return type.includes("-pending-doubt");
+}
+
 function AscentIcon({ type, fill }) {
   if (!type) {
     return null;

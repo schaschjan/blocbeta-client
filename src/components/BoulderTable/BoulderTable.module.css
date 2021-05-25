@@ -43,3 +43,18 @@
 .ascents *:nth-child(2) {
   margin: 0 calc(2 * var(--spacing-unit));
 }
+
+.isDoubted {
+  position: relative;
+}
+
+.isDoubted > * {
+  opacity: 0.1;
+}
+
+.doubtedLabel {
+  position: absolute;
+  top: 12px;
+  left: 22px;
+  opacity: 1;
+}

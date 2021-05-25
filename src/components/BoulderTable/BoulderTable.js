@@ -18,10 +18,11 @@ import styles from "./BoulderTable.module.css";
 import Forward from "../Icon/Forward";
 import Grade from "../Grade/Grade";
 import { Pagination } from "./Pagination";
-import { Ascent } from "../Ascent/Ascent";
+import { Ascent, isDoubt } from "../Ascent/Ascent";
 import { TableHeader, TableRow } from "../Table/Table";
 import { useMediaQuery } from "@material-ui/core";
 import { SwipeOutContext } from "../SwipeOut/SwipeOut";
+import cn from "classnames";
 
 const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = useRef();
@@ -158,8 +159,10 @@ const Ascents = ({ removeHandler, addHandler, value }) => {
   const { close } = useContext(SwipeOutContext);
 
   return useMemo(() => {
+    const isDoubted = isDoubt(value.type);
+
     return (
-      <div className={styles.ascents}>
+      <div className={cn(styles.ascents, isDoubted ? styles.isDoubted : null)}>
         <Ascent
           type="flash"
           disabled={value.id && value.type !== "flash"}
@@ -204,6 +207,10 @@ const Ascents = ({ removeHandler, addHandler, value }) => {
             }
           }}
         />
+
+        {isDoubted && (
+          <span className={styles.doubtedLabel}>Ascent doubted!</span>
+        )}
       </div>
     );
   }, [value]);
