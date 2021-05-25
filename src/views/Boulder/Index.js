@@ -71,11 +71,13 @@ const Index = () => {
   const { boulders } = useBoulders();
   const http = useHttp();
 
-  const grades = useMemo(() => {
-    return filterPresentOptions(boulders, "grade", "id", true).sort((a, b) =>
-      a.name > b.name ? 1 : -1
-    );
-  }, [boulders, isAdmin]);
+  const grades = useMemo(
+    () =>
+      filterPresentOptions(boulders, "grade", "id", isAdmin).sort((a, b) =>
+        a.name > b.name ? 1 : -1
+      ),
+    [boulders, isAdmin]
+  );
 
   console.log(grades);
 

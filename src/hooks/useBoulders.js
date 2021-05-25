@@ -19,7 +19,7 @@ function filterPresentOptions(
   boulders.forEach((boulder) => {
     if (column === "setters") {
       boulder[column].map((item) => map.set(item.id, item));
-    } else if (column === "grade" && admin) {
+    } else if (column === "grade" && admin === true) {
       map.set(
         boulder[column]["internal"][uniqueProperty],
         boulder[column]["internal"]
