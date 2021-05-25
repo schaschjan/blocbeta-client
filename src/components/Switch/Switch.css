@@ -15,7 +15,7 @@
   border-radius: 100px;
   position: relative;
   transition: background-color 0.2s;
-  border: 1px solid var(--color-black);
+  border: 1px solid var(--color-lila);
 }
 
 .checkbox__label .checkbox-label__button {
@@ -37,7 +37,7 @@
 }
 
 .checkbox__switch:checked + label {
-  background: var(--color-black);
+  background: var(--color-lila);
 }
 
 .checkbox__label:active .checkbox-label__button {
