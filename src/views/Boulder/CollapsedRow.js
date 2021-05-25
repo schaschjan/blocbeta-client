@@ -2,10 +2,14 @@ import { SwipeOut } from "../../components/SwipeOut/SwipeOut";
 import { joinClassNames } from "../../helper/classNames";
 import styles from "./CollapsedRow.module.css";
 import typography from "../../css/typography.module.css";
-import React from "react";
+import React, { useContext } from "react";
 import { AscentIcon } from "../../components/Ascent/Ascent";
+import { Link } from "react-router-dom";
+import { BoulderDBUIContext } from "../../components/BoulderDBUI";
 
 function CollapsedRow({ cells }) {
+  const { contextualizedPath, isAdmin } = useContext(BoulderDBUIContext);
+
   const ascentCell = cells.find((cell) => cell.column.id === "ascent");
   const holdTypeCell = cells.find((cell) => cell.column.id === "holdType");
   const starWallCell = cells.find((cell) => cell.column.id === "start");
@@ -27,6 +31,15 @@ function CollapsedRow({ cells }) {
 
         <div className={styles.meta}>
           <div className={joinClassNames(styles.name, styles.metaItem)}>
+            {isAdmin && (
+              <Link
+                to={contextualizedPath(`/admin/boulder/${boulderId}`)}
+                className={styles.editLink}
+              >
+                ✎
+              </Link>
+            )}
+
             {nameCell.render("Cell")}
           </div>
 

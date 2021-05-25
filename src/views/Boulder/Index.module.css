@@ -25,6 +25,10 @@
   align-items: center;
 }
 
+.barButtons > *:last-child {
+  margin-left: 16px;
+}
+
 /* small desktop to ipad */
 @media (max-width: 1280px) and (min-width: 768px) {
   .filters {

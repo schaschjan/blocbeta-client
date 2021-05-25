@@ -23,8 +23,8 @@
   padding: calc(var(--spacing-unit) * 1.25) calc(var(--spacing-unit) * 6);
 }
 
-/* danger */
-.button--default.button--danger {
+/* error */
+.button--default.button--error {
   color: var(--color-white);
   background: var(--color-red);
 }
@@ -44,14 +44,14 @@
   border-radius: calc(var(--spacing-unit));
 }
 
-/* danger */
-.button--small.button--danger {
+/* error */
+.button--small.button--error {
   color: var(--color-red);
   border: 1px solid var(--color-red);
 }
 
-.button--small.button--danger:hover,
-.button--small.button--danger.button--inverted {
+.button--small.button--error:hover,
+.button--small.button--error.button--inverted {
   color: var(--color-white);
   background: var(--color-red);
 }

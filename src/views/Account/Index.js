@@ -76,6 +76,19 @@ const UploadField = ({ value, renderValue, onSuccess }) => {
 };
 
 const Form = ({ defaults, onSubmit }) => {
+  /* filter out false values*/
+  const enabledNotifications = Object.keys(defaults.notifications).reduce(
+    (o, key) => {
+      defaults.notifications[key] === true &&
+        (o[key] = defaults.notifications[key]);
+
+      return o;
+    },
+    {}
+  );
+
+  const notifications = Object.keys(defaults.notifications);
+
   const {
     handleSubmit,
     submitting,
@@ -84,7 +97,7 @@ const Form = ({ defaults, onSubmit }) => {
     observeField,
   } = useForm({
     ...defaults,
-    notifications: Object.keys(defaults.notifications),
+    notifications: Object.keys(enabledNotifications),
   });
 
   return (
@@ -116,7 +129,7 @@ const Form = ({ defaults, onSubmit }) => {
           value={formData.notifications}
           name={"notifications"}
           multiple={true}
-          options={Object.keys(defaults.notifications)}
+          options={notifications}
           renderOption={(option) => option}
           getOptionLabel={(option) => option}
         />
@@ -198,8 +211,8 @@ const Index = () => {
       delete data.username;
 
       await globalHttp.put("/me", data);
-
       await mutate("/api/me");
+
       dispatch(toast("Success", "Account updated!", "success"));
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "error"));
@@ -214,8 +227,6 @@ const Index = () => {
         dispatch(
           toast("Your account was scheduled for deletion and will be removed.")
         );
-
-        history.push(contextualizedPath("/dashboard"));
       } catch (error) {
         dispatch(toast("Error", extractErrorMessage(error), "error"));
       }

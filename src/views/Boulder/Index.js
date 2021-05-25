@@ -71,14 +71,13 @@ const Index = () => {
   const { boulders } = useBoulders();
   const http = useHttp();
 
-  // todo: add internal grade filter for admins
-  const grades = useMemo(
-    () =>
-      filterPresentOptions(boulders, "grade").sort((a, b) =>
-        a.name > b.name ? 1 : -1
-      ),
-    [boulders]
-  );
+  const grades = useMemo(() => {
+    return filterPresentOptions(boulders, "grade", "id", true).sort((a, b) =>
+      a.name > b.name ? 1 : -1
+    );
+  }, [boulders, isAdmin]);
+
+  console.log(grades);
 
   const holdTypes = useMemo(
     () =>
@@ -239,6 +238,10 @@ const Index = () => {
                       rating: 10,
                       boulder: boulderId,
                     });
+
+                    dispatch(
+                      toast("Thanks for your feedback.", null, "success")
+                    );
                   } catch (error) {
                     console.log(error.response);
                     dispatch(
@@ -258,6 +261,9 @@ const Index = () => {
                       rating: 0,
                       boulder: boulderId,
                     });
+                    dispatch(
+                      toast("Thanks for your feedback.", null, "success")
+                    );
                   } catch (error) {
                     console.log(error.response);
                     dispatch(
@@ -420,7 +426,7 @@ const Index = () => {
       <Bar visible={selected.length > 0}>
         <span>Selected ({selected.length})</span>
 
-        <span>
+        <span className={styles.barButtons}>
           <Button
             size={"small"}
             variant={"error"}

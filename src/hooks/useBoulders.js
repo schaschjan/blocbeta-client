@@ -4,7 +4,12 @@ import convertToKeyValueObject from "../helper/convertToKeyValueObject";
 import { parseDate } from "../helper/parseDate";
 import { useRequest } from "./useRequest";
 
-function filterPresentOptions(boulders, column, uniqueProperty = "id") {
+function filterPresentOptions(
+  boulders,
+  column,
+  uniqueProperty = "id",
+  admin = false
+) {
   if (!boulders || !boulders.length) {
     return [];
   }
@@ -14,6 +19,11 @@ function filterPresentOptions(boulders, column, uniqueProperty = "id") {
   boulders.forEach((boulder) => {
     if (column === "setters") {
       boulder[column].map((item) => map.set(item.id, item));
+    } else if (column === "grade" && admin) {
+      map.set(
+        boulder[column]["internal"][uniqueProperty],
+        boulder[column]["internal"]
+      );
     } else {
       map.set(boulder[column][uniqueProperty], boulder[column]);
     }
