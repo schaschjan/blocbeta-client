@@ -1,12 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./Button.css";
 import { Loader } from "../Loader/Loader";
-import { classNames } from "../../helper/classNames";
+import cn from "classnames";
+import styles from "./Button.module.css";
 
 const Button = ({
   variant = "primary",
   size = "default",
+  invert = false,
   modifier = null,
   disabled = false,
   asLink = false,
@@ -18,13 +19,14 @@ const Button = ({
 }) => {
   let loaderVariant = "default";
 
-  const classes = classNames(
+  const classes = cn(
     className,
-    "button",
-    `button--${variant}`,
-    `button--${size}`,
-    modifier ? `button--${modifier}` : null,
-    disabled === true ? "button--disabled" : null
+    styles.root,
+    styles[`is${variant.capitalize()}`],
+    styles[`is${size.capitalize()}Size`],
+    modifier ? styles[`is${modifier.capitalize()}`] : null,
+    invert ? styles.isInverted : null,
+    disabled === true ? styles.isDisabled : null
   );
 
   if (asLink) {
@@ -40,7 +42,6 @@ const Button = ({
   return (
     <button className={classes} {...rest}>
       {children}
-
       {loader && loading && <Loader variant={loaderVariant} />}
     </button>
   );

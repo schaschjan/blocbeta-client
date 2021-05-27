@@ -45,7 +45,7 @@ const Index = () => {
                   <div className={styles.cell}>
                     <Button
                       size={"small"}
-                      variant={setter.active ? "danger" : "primary"}
+                      variant={setter.active ? "error" : "primary"}
                       onClick={async () => {
                         try {
                           await locationHttp.put(`/setter/${setter.id}`, {

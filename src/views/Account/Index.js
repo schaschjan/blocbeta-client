@@ -76,19 +76,6 @@ const UploadField = ({ value, renderValue, onSuccess }) => {
 };
 
 const Form = ({ defaults, onSubmit }) => {
-  /* filter out false values*/
-  const enabledNotifications = Object.keys(defaults.notifications).reduce(
-    (o, key) => {
-      defaults.notifications[key] === true &&
-        (o[key] = defaults.notifications[key]);
-
-      return o;
-    },
-    {}
-  );
-
-  const notifications = Object.keys(defaults.notifications);
-
   const {
     handleSubmit,
     submitting,
@@ -97,7 +84,9 @@ const Form = ({ defaults, onSubmit }) => {
     observeField,
   } = useForm({
     ...defaults,
-    notifications: Object.keys(enabledNotifications),
+    notifications: defaults.notifications.filter(
+      (notification) => notification.active === true
+    ),
   });
 
   return (
@@ -125,13 +114,15 @@ const Form = ({ defaults, onSubmit }) => {
       <FormRow>
         <Label>E-Mail Notifications</Label>
         <Select
-          onChange={(event, newValue) => setKeyValue("notifications", newValue)}
+          onChange={(event, newValue) => {
+            setKeyValue("notifications", newValue);
+          }}
           value={formData.notifications}
           name={"notifications"}
           multiple={true}
-          options={notifications}
-          renderOption={(option) => option}
-          getOptionLabel={(option) => option}
+          options={defaults.notifications}
+          renderOption={(option) => `${option.type}@${option.location}`}
+          getOptionLabel={(option) => `${option.type}@${option.location}`}
         />
       </FormRow>
 
@@ -198,19 +189,22 @@ const Form = ({ defaults, onSubmit }) => {
 const Index = () => {
   const { data } = useRequest("/me", false);
   const globalHttp = useHttp(false);
-
-  const { contextualizedPath } = useContext(BoulderDBUIContext);
-  const history = useHistory();
-
   const { dispatch } = useContext(ToastContext);
 
   // todo: reload user object after submit to reflect changes immediately
   const onSubmit = async (data) => {
     try {
-      delete data.id;
-      delete data.username;
+      await globalHttp.put("/me", {
+        image: data.image,
+        email: data.email,
+        visible: data.visible,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        notifications: data.notifications.map(
+          (notification) => notification.id
+        ),
+      });
 
-      await globalHttp.put("/me", data);
       await mutate("/api/me");
 
       dispatch(toast("Success", "Account updated!", "success"));

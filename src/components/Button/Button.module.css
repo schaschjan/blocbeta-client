@@ -1,42 +1,43 @@
-.button {
+.root {
   cursor: pointer;
   display: inline-flex;
   position: relative;
   text-decoration: none;
+  transition: all 100ms ease-in-out;
 }
 
-.button .loader {
+.root .loader {
   position: absolute;
   right: calc(var(--spacing-unit) * 1.5);
 }
 
-.button--disabled {
+.isDisabled {
   pointer-events: none;
   filter: grayscale(1);
   opacity: 0.5;
 }
 
 /* default */
-.button--default {
+.isDefaultSize {
   font-size: var(--font-size-zeta);
   font-weight: var(--font-weight-bold);
   padding: calc(var(--spacing-unit) * 1.25) calc(var(--spacing-unit) * 6);
 }
 
 /* error */
-.button--default.button--error {
+.isDefaultSize.isError {
   color: var(--color-white);
   background: var(--color-red);
 }
 
 /* primary */
-.button--default.button--primary {
+.isDefaultSize.isPrimary {
   color: var(--color-white);
   background: var(--color-lila);
 }
 
 /* small */
-.button--small {
+.isSmallSize {
   font-size: var(--font-size-eta);
   line-height: 20px;
   font-weight: var(--font-weight-bold);
@@ -45,25 +46,31 @@
 }
 
 /* error */
-.button--small.button--error {
+.isSmallSize.isError {
   color: var(--color-red);
   border: 1px solid var(--color-red);
 }
 
-.button--small.button--error:hover,
-.button--small.button--error.button--inverted {
+.isSmallSize.isError:hover,
+.isSmallSize.isError.isInverted {
   color: var(--color-white);
   background: var(--color-red);
 }
 
 /* primary */
-.button--small.button--primary {
+.isSmallSize.isPrimary {
   color: var(--color-lila);
   border: 1px solid var(--color-lila);
 }
 
-.button--small.button--primary:hover,
-.button--small.button--primary.button--inverted {
+.isSmallSize.isPrimary:hover,
+.isSmallSize.isPrimary.isInverted {
   color: var(--color-white);
   background: var(--color-lila);
+}
+
+.isSmallSize.isPrimary.isInverted:hover {
+  border: 1px solid var(--color-lila);
+  color: var(--color-lila);
+  background: var(--color-white);
 }

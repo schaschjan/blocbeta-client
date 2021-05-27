@@ -333,7 +333,9 @@ const Index = () => {
         Boulder ({boulders.length})
         {isAdmin && (
           <Button
+            invert={true}
             size={"small"}
+            variant={"primary"}
             asLink={true}
             to={contextualizedPath("/admin/boulder/add")}
           >
