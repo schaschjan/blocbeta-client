@@ -131,6 +131,8 @@ const Index = () => {
   }, [rooms]);
 
   const RoomSelect = () => {
+    return null;
+
     return (
       <div className="room-select">
         <h2 className="t--gamma room-select__label">Room:</h2>

@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { Button } from "../Button/Button";
 import { Counter } from "../Counter/Counter";
+import styles from "./BookButton.module.css";
 
 const BookButton = ({
   isFull,
@@ -47,6 +48,7 @@ const BookButton = ({
       />
 
       <Button
+        className={styles.root}
         variant="primary"
         size="small"
         onClick={() => blockHandler(timeSlot, quantity)}

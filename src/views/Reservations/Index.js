@@ -17,7 +17,7 @@ const Index = () => {
   const http = useHttp();
   const { dispatch } = useContext(ToastContext);
   const { data: reservations } = useRequest("/reservation/pending");
-  const { data: location } = useRequest(`/location/${locationId}`);
+  const { data: location } = useRequest(`/location/${locationId}`, false);
 
   return (
     <>
