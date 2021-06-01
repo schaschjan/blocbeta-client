@@ -10,10 +10,13 @@ import { useRequest } from "../../hooks/useRequest";
 import styles from "./Header.module.css";
 import typography from "../../css/typography.module.css";
 
-const NavItem = ({ children, ...rest }) => {
+const NavItem = ({ children, highlighted, ...rest }) => {
   return (
     <NavLink
-      className={styles.navItem}
+      className={classNames(
+        styles.navItem,
+        highlighted ? styles.isHighlightedNavItem : null
+      )}
       activeClassName={styles.isActiveNavItem}
       {...rest}
     >
@@ -39,7 +42,7 @@ const ReservationCountItem = () => {
 
   return (
     <NavItem to={contextualizedPath("/reservations")}>
-      Reservations ({count})
+      Timeslot bookings ({count})
     </NavItem>
   );
 };
@@ -145,7 +148,9 @@ const Header = () => {
         {currentLocation.url === "salon" && (
           <>
             <ReservationCountItem />
-            <NavItem to={contextualizedPath("/schedule")}>Schedule</NavItem>
+            <NavItem to={contextualizedPath("/schedule")} highlighted={true}>
+              Book a timeslot
+            </NavItem>
           </>
         )}
 

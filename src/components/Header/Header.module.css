@@ -53,6 +53,11 @@
   padding-bottom: 0;
 }
 
+.isHighlightedNavItem {
+  color: var(--color-lila);
+  font-weight: 600;
+}
+
 .isActiveNavItem {
   font-weight: var(--font-weight-bold);
 }
