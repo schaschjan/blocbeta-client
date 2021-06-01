@@ -18,6 +18,23 @@ const Index = () => {
       <Meta title="Admin" />
 
       <div className="dashboard-section">
+        <h3 className="t--beta dashboard-section__title">Reservations</h3>
+
+        <ul className="dashboard-links">
+          <li className="dashboard-links__item">
+            <Button
+              size={"small"}
+              variant={"primary"}
+              asLink={true}
+              to={contextualizedPath("/admin/schedule-ticker")}
+            >
+              Ticker
+            </Button>
+          </li>
+        </ul>
+      </div>
+
+      <div className="dashboard-section">
         <h3 className="t--beta dashboard-section__title">Boulder</h3>
 
         <ul className="dashboard-links">

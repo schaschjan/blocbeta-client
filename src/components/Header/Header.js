@@ -33,6 +33,17 @@ const DoubtCountNavItem = () => {
   );
 };
 
+const ReservationCountItem = () => {
+  const { contextualizedPath } = useContext(BoulderDBUIContext);
+  const { data: count } = useRequest(`/reservation/pending/count`);
+
+  return (
+    <NavItem to={contextualizedPath("/reservations")}>
+      Reservations ({count})
+    </NavItem>
+  );
+};
+
 const Header = () => {
   const {
     contextualizedPath,
@@ -130,6 +141,13 @@ const Header = () => {
         {isAuthenticated && currentLocation && <DoubtCountNavItem />}
 
         {isAdmin && <NavItem to={contextualizedPath("/admin")}>Admin</NavItem>}
+
+        {currentLocation.url === "salon" && (
+          <>
+            <ReservationCountItem />
+            <NavItem to={contextualizedPath("/schedule")}>Schedule</NavItem>
+          </>
+        )}
 
         <span onClick={() => reset()} className={styles.navItem}>
           Out!

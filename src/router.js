@@ -17,6 +17,12 @@ import { Current as CompareCurrent } from "./views/Compare/Current";
 import { AllTime as AllTimeRanking } from "./views/Ranking/AllTime";
 import { Index as Doubts } from "./views/Doubt/Index";
 
+/* reservation */
+import { Index as Ticker } from "./views/Ticker/Index";
+import { Cancel } from "./views/Reservations/Cancel";
+import { Index as Schedule } from "./views/Schedule/Index";
+import { Index as Reservations } from "./views/Reservations/Index";
+
 const adminRoutes = [
   {
     title: "Schedule overview",
@@ -52,6 +58,14 @@ const adminRoutes = [
     exact: true,
     admin: true,
     main: () => <BoulderDetail />,
+  },
+  /* reservations */
+  {
+    title: "Schedule overview",
+    path: "/:location/admin/schedule-ticker",
+    exact: true,
+    admin: true,
+    main: () => <Ticker />,
   },
 ];
 
@@ -132,6 +146,29 @@ export const router = [
     exact: true,
     visibleUserOnly: true,
   },
+  /* reservations */
+  {
+    title: "Schedule",
+    id: "schedule",
+    path: "/salon/schedule",
+    exact: true,
+    main: () => <Schedule />,
+  },
+  {
+    title: "Reservations",
+    id: "reservations",
+    path: "/salon/reservations",
+    exact: true,
+    main: () => <Reservations />,
+  },
+  {
+    title: "Cancel reservation",
+    id: "cancelReservation",
+    path: "/cancel-reservation/:hash",
+    public: true,
+    main: () => <Cancel />,
+  },
+
   {
     title: "Not Found",
     path: "*",
