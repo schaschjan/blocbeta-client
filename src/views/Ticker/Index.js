@@ -185,7 +185,7 @@ const Index = () => {
   const handleDeletion = async (id) => {
     try {
       await http.delete(`/reservation/${id}`);
-      await mutate(contextualizedApiPath("/ticker"));
+      await mutate(contextualizedApiPath(`/schedule/rooms/${selectedDate}`));
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "danger"));
     }
@@ -194,7 +194,7 @@ const Index = () => {
   const handleUpdate = async (id, checkedIn) => {
     try {
       await http.put(`/reservation/${id}`, { checkedIn });
-      await mutate(contextualizedApiPath("/ticker"));
+      await mutate(contextualizedApiPath(`/schedule/rooms/${selectedDate}`));
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "danger"));
     }
