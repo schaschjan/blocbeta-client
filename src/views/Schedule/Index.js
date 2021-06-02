@@ -181,6 +181,10 @@ const Index = () => {
             date={selectedDate}
             onDateChange={(date) => setSelectedDate(date)}
             focused={true}
+            isOutsideRange={(day) =>
+              day.isBefore(moment().startOf("day")) ||
+              day.isAfter(moment().add(8, "days").startOf("day"))
+            }
             id="mainPicker"
           />
         </div>
