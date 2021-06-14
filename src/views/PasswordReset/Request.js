@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Meta } from "../../App";
 import { FormRow } from "../../components/Form/Form";
 import { Input } from "../../components/Input/Input";
@@ -10,11 +10,13 @@ import { Button } from "../../components/Button/Button";
 import layouts from "../../css/layouts.module.css";
 import typography from "../../css/typography.module.css";
 import { useHttp } from "../../hooks/useRequest";
+import styles from "./Request.module.css";
 
 const Request = () => {
   const history = useHistory();
   const { dispatch } = useContext(ToastContext);
   const globalHttp = useHttp(false);
+  const [failed, setFailed] = useState(false);
 
   const { handleSubmit, observeField, submitting, formData } = useForm({
     email: null,
@@ -32,6 +34,8 @@ const Request = () => {
       );
       history.push("/login");
     } catch (error) {
+      setFailed(true);
+
       dispatch(toast("Error", extractErrorMessage(error), "error"));
     }
   };
@@ -48,6 +52,17 @@ const Request = () => {
         </div>
 
         <div className={layouts.sideContent}>
+          {failed && (
+            <Button
+              external={true}
+              href={"mailto:support@boulderdb.de"}
+              className={styles.contactButton}
+              asLink={true}
+            >
+              Contact support
+            </Button>
+          )}
+
           <form onSubmit={(event) => handleSubmit(event, onSubmit)}>
             <FormRow>
               {composeFormElement(

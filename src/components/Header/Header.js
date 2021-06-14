@@ -97,7 +97,7 @@ const Header = () => {
     <header className={joinClassNames(styles.root, typography.eta)}>
       <div className={styles.logo}>
         <Link
-          to={contextualizedPath("/boulder")}
+          to={contextualizedPath("/")}
           className={joinClassNames(styles.title)}
         >
           BoulderDB

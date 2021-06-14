@@ -15,6 +15,7 @@ const Button = ({
   loader = false,
   children,
   className,
+  external,
   ...rest
 }) => {
   let loaderVariant = "default";
@@ -30,6 +31,16 @@ const Button = ({
   );
 
   if (asLink) {
+    if (external) {
+      return (
+        <a {...rest} className={classes}>
+          {children}
+
+          {loader && loading && <Loader />}
+        </a>
+      );
+    }
+
     return (
       <Link {...rest} className={classes}>
         {children}

@@ -1,0 +1,7 @@
+.link {
+  margin-top: 32px;
+}
+
+.link:first-child {
+  margin-top: 0;
+}

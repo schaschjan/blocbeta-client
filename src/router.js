@@ -22,6 +22,7 @@ import { Index as Ticker } from "./views/Ticker/Index";
 import { Cancel } from "./views/Reservations/Cancel";
 import { Index as Schedule } from "./views/Schedule/Index";
 import { Index as Reservations } from "./views/Reservations/Index";
+import { Dashboard } from "./views/Dashboard/Dashboard";
 
 const adminRoutes = [
   {
@@ -104,6 +105,13 @@ export const router = [
     path: "/password-reset/:hash",
     public: true,
     main: () => <Reset />,
+  },
+  {
+    title: "Dashboard",
+    path: "/:location",
+    public: true,
+    exact: true,
+    main: () => <Dashboard />,
   },
   {
     title: "Account",

@@ -13,7 +13,7 @@ const Index = () => {
 
   const switchLocation = (location) => {
     setCurrentLocation(location);
-    history.push(`${location.url}/boulder`);
+    history.push(`${location.url}/`);
   };
 
   return (
