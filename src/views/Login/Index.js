@@ -57,7 +57,7 @@ const Index = () => {
       if (!targetLocation) {
         history.push(`/setup`);
       } else {
-        history.push(`${targetLocation}/boulder`);
+        history.push(`${targetLocation}/`);
       }
     } catch (error) {
       dispatch(toast("Error", extractErrorMessage(error), "error"));
