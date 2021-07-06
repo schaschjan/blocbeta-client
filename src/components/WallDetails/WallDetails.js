@@ -16,13 +16,7 @@ function WallDetails({ wall, onClose }) {
 
       <div className={styles.inner}>
         <div>
-          <img
-            className={styles.map}
-            src={
-              "https://storage.boulderdb.de/boulderdb-uploads/99664c5b7f693662213fe8839e186757.jpeg"
-            }
-            alt={"map"}
-          />
+          <img className={styles.map} src={wall.media} alt={"map"} />
         </div>
 
         <div>
