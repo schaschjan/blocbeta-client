@@ -1,6 +1,6 @@
 {
   "name": "@boulderdb/ui",
-  "version": "1.9.7",
+  "version": "1.9.8",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.3",

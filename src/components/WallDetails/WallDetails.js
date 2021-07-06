@@ -8,6 +8,10 @@ import { Loader } from "../Loader/Loader";
 function WallDetails({ wall, onClose }) {
   const { data } = useRequest(`/wall/${wall.id}`);
 
+  if (!data) {
+    return <Loader />;
+  }
+
   return (
     <div className={styles.root}>
       <div className={styles.close}>
@@ -16,19 +20,13 @@ function WallDetails({ wall, onClose }) {
 
       <div className={styles.inner}>
         <div>
-          <img className={styles.map} src={wall.media} alt={"map"} />
+          <img className={styles.map} src={data.media} alt={"map"} />
         </div>
 
         <div>
-          {data ? (
-            <Fragment>
-              <h2>{data.name}</h2>
-              <p>{data.description}</p>
-              <p>{data.active_boulders} active boulders</p>
-            </Fragment>
-          ) : (
-            <Loader />
-          )}
+          <h2>{data.name}</h2>
+          <p>{data.description}</p>
+          <p>{data.active_boulders} active boulders</p>
         </div>
       </div>
 
